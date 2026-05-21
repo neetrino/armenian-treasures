@@ -1,0 +1,271 @@
+// prisma/schema.prisma
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SubmissionType {
+  SUBCATEGORY_REQUEST
+  PROJECT_REQUEST
+  CULTURE_ITEM_REQUEST
+  GENERAL_REQUEST
+}
+
+enum SubmissionStatus {
+  PENDING
+  REVIEWING
+  APPROVED
+  REJECTED
+  ARCHIVED
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+enum CultureItemType {
+  MONUMENT
+  MUSEUM
+  PERSON
+  LEGEND
+  HISTORY_EVENT
+  HERITAGE_OBJECT
+  PUBLICATION
+  MUSIC
+  FOOD
+  DANCE
+  THEATRE
+  OTHER
+}
+
+enum MapType {
+  MONASTERY
+  FORTRESS
+  MUSEUM
+  CHURCH
+  ARCHAEOLOGICAL
+  OTHER
+}
+
+enum MenuRouteType {
+  CATEGORY
+  SUBCATEGORY
+  SUBCATEGORY_FORM
+  PROJECT_SUBMIT_FORM
+  CUSTOM_URL
+}
+
+enum ProjectStatus {
+  UPCOMING
+  ACTIVE
+  FUNDED
+  COMPLETED
+  ARCHIVED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(EDITOR)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CultureMenuItem {
+  id          String            @id @default(cuid())
+  title       String
+  slug        String
+  description String?
+  parentId    String?
+  parent      CultureMenuItem?  @relation("MenuTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children    CultureMenuItem[] @relation("MenuTree")
+  order       Int               @default(0)
+  isActive    Boolean           @default(true)
+  image       String?
+  routeType   MenuRouteType     @default(CATEGORY)
+  customUrl   String?
+  items       CultureItem[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([parentId, slug])
+  @@index([parentId, order])
+}
+
+model CultureItem {
+  id               String          @id @default(cuid())
+  title            String
+  slug             String          @unique
+  description      String?         @db.Text
+  shortDescription String?
+  menuItemId       String
+  menuItem         CultureMenuItem @relation(fields: [menuItemId], references: [id], onDelete: Restrict)
+  region           String?
+  locationName     String?
+  periodLabel      String?
+  century          Int?
+  yearLabel        String?
+  image            String?
+  galleryImages    String[]        @default([])
+  tourUrl          String?
+  videoUrl         String?
+  latitude         Float?
+  longitude        Float?
+  mapType          MapType?
+  showOnMap        Boolean         @default(false)
+  itemType         CultureItemType @default(OTHER)
+  status           ContentStatus   @default(PUBLISHED)
+  order            Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([menuItemId, order])
+  @@index([showOnMap])
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  category     String
+  region       String?
+  description  String?       @db.Text
+  image        String?
+  goalAmount   Int
+  raisedAmount Int           @default(0)
+  status       ProjectStatus @default(UPCOMING)
+  order        Int           @default(0)
+  isPublished  Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  initials  String
+  position  String
+  bio       String?  @db.Text
+  image     String?
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Career {
+  id             String   @id @default(cuid())
+  title          String
+  location       String
+  employmentType String
+  description    String?  @db.Text
+  applyUrl       String?
+  applyEmail     String?
+  order          Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Donator {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  year        Int?
+  description String?
+  order       Int      @default(0)
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Submission {
+  id                  String           @id @default(cuid())
+  type                SubmissionType
+  status              SubmissionStatus @default(PENDING)
+  title               String?
+  category            String?
+  parentCategorySlug  String?
+  parentCategoryTitle String?
+  description         String?          @db.Text
+  message             String?          @db.Text
+  submitterName       String
+  submitterEmail      String
+  submitterPhone      String?
+  files               String[]         @default([])
+  images              String[]         @default([])
+  adminNote           String?          @db.Text
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  @@index([type, status, createdAt])
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  message   String        @db.Text
+  status    ContactStatus @default(NEW)
+  adminNote String?       @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model SiteSettings {
+  id                 String   @id @default(cuid())
+  foundationName     String
+  foundationSubtitle String
+  footerDescription  String   @db.Text
+  contactEmail       String
+  phone              String
+  address            String
+  copyrightText      String
+  socialLinks        Json?
+  updatedAt          DateTime @updatedAt
+}
+
+model HomeContent {
+  id               String   @id @default(cuid())
+  heroBadge        String
+  heroTitle        String
+  heroHighlight    String
+  heroDescription  String   @db.Text
+  heroImage        String?
+  primaryCtaText   String
+  primaryCtaUrl    String
+  secondaryCtaText String
+  secondaryCtaUrl  String
+  stats            Json
+  missionTitle     String
+  missionHighlight String
+  missionText      String   @db.Text
+  techCards        Json
+  ctaTitle         String
+  ctaDescription   String   @db.Text
+  updatedAt        DateTime @updatedAt
+}

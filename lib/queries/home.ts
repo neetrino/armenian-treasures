@@ -1,0 +1,61 @@
+import { unstable_cache } from 'next/cache';
+import { prisma } from '@/lib/db';
+import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
+
+const FALLBACK: PublicHomeContentDTO = {
+  heroBadge: 'Since the 4th century',
+  heroTitle: 'The living archive of',
+  heroHighlight: 'Armenian heritage',
+  heroDescription:
+    "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
+  heroImage: '/images/hero/home.svg',
+  primaryCtaText: 'Explore the Culture Portal',
+  primaryCtaUrl: '/culture',
+  secondaryCtaText: 'Open Interactive Map',
+  secondaryCtaUrl: '/map',
+  stats: [
+    { value: '180+', label: 'Monuments scanned' },
+    { value: '42', label: 'Virtual tours' },
+    { value: '1700+', label: 'Years of history' },
+    { value: '11', label: 'Cultural domains' },
+  ],
+  missionTitle: "A nation's memory, made",
+  missionHighlight: 'eternal.',
+  missionText:
+    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site.',
+  techCards: [
+    {
+      title: 'Matterport Virtual Tours',
+      description: 'Walk through monasteries and museums room by room.',
+      icon: 'Building2',
+    },
+    {
+      title: 'Drone Photogrammetry',
+      description: 'Centimetre-accurate aerial reconstructions of fortresses and cliff churches.',
+      icon: 'Camera',
+    },
+    {
+      title: 'AI Video & Storytelling',
+      description: 'AI-curated narratives bringing context to every stone.',
+      icon: 'Sparkles',
+    },
+  ],
+  ctaTitle: 'Help us digitize the next monument',
+  ctaDescription:
+    'Every donation funds drone flights, 3D scans and the open archive that will outlast all of us.',
+};
+
+async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
+  try {
+    const row = await prisma.homeContent.findFirst();
+    return row ? toPublicHomeContent(row) : FALLBACK;
+  } catch {
+    return FALLBACK;
+  }
+}
+
+export const getHomeContent = unstable_cache(
+  fetchHomeContent,
+  ['home-content'],
+  { tags: ['home-content'], revalidate: 60 },
+);

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4D1118"/>
+      <stop offset="50%" stop-color="#7E1C26"/>
+      <stop offset="100%" stop-color="#141C42"/>
+    </linearGradient>
+    <linearGradient id="mountain" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E2A5E"/>
+      <stop offset="100%" stop-color="#141C42"/>
+    </linearGradient>
+    <linearGradient id="monastery" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A332C"/>
+      <stop offset="100%" stop-color="#1A1714"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.78" cy="0.32" r="0.18">
+      <stop offset="0%" stop-color="#C8843D" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#C8843D" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#sun)"/>
+  <path d="M0 720 L220 540 L380 620 L560 460 L780 600 L1000 480 L1240 560 L1400 460 L1600 540 L1600 900 L0 900 Z" fill="url(#mountain)"/>
+  <g fill="url(#monastery)">
+    <rect x="700" y="540" width="40" height="120"/>
+    <rect x="760" y="510" width="80" height="150"/>
+    <rect x="860" y="540" width="40" height="120"/>
+    <polygon points="700,540 720,500 740,540"/>
+    <polygon points="760,510 800,460 840,510"/>
+    <polygon points="860,540 880,500 900,540"/>
+    <rect x="795" y="560" width="10" height="40" fill="#C8843D" opacity="0.7"/>
+  </g>
+  <g fill="#FAF6EE" opacity="0.15">
+    <circle cx="120" cy="160" r="1.5"/>
+    <circle cx="220" cy="240" r="1"/>
+    <circle cx="380" cy="120" r="1.5"/>
+    <circle cx="540" cy="200" r="1"/>
+    <circle cx="680" cy="80" r="1.5"/>
+    <circle cx="900" cy="180" r="1"/>
+    <circle cx="1100" cy="120" r="1.5"/>
+    <circle cx="1320" cy="200" r="1"/>
+    <circle cx="1480" cy="100" r="1.5"/>
+  </g>
+</svg>
