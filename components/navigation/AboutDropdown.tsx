@@ -3,21 +3,17 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, ChevronRight } from 'lucide-react';
-import { resolveMenuHref, isFormRoute, type MenuNode } from '@/lib/culture-menu';
+import { ChevronDown } from 'lucide-react';
+import { ABOUT_TABS } from './primary-links';
 import { cn } from '@/lib/utils';
 
 const ROW_CLASS =
-  'flex w-full items-center justify-between gap-2 px-3.5 py-2 text-left text-sm font-normal text-ink transition-colors hover:bg-parchment-200/70';
+  'flex w-full items-center px-3 py-2 text-left text-sm font-normal text-ink transition-colors hover:bg-parchment-200/70';
 
 const PANEL_CLASS =
-  'min-w-[14rem] rounded-xl border border-stone-100/80 bg-parchment-100 py-1 shadow-[0_12px_40px_rgba(26,23,20,0.12)]';
+  'w-[10.5rem] rounded-xl border border-stone-100/80 bg-parchment-100 py-1 shadow-[0_12px_40px_rgba(26,23,20,0.12)]';
 
-interface CultureDropdownProps {
-  tree: MenuNode[];
-}
-
-export function CultureDropdown({ tree }: CultureDropdownProps) {
+export function AboutDropdown() {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -59,7 +55,7 @@ export function CultureDropdown({ tree }: CultureDropdownProps) {
         aria-haspopup="menu"
         onClick={() => setOpen((value) => !value)}
       >
-        Culture Portal
+        About Us
         <ChevronDown size={14} aria-hidden className={cn('transition-transform', open && 'rotate-180')} />
       </button>
       <AnimatePresence>
@@ -73,60 +69,21 @@ export function CultureDropdown({ tree }: CultureDropdownProps) {
             className={cn('absolute left-0 z-40 mt-1.5 overflow-visible', PANEL_CLASS)}
           >
             <ul className="flex flex-col">
-              {tree.map((node) => (
-                <CultureDropdownRow key={node.id} node={node} onSelect={() => setOpen(false)} />
+              {ABOUT_TABS.map((tab) => (
+                <li key={tab.href}>
+                  <Link
+                    href={tab.href}
+                    onClick={() => setOpen(false)}
+                    className={ROW_CLASS}
+                  >
+                    {tab.label}
+                  </Link>
+                </li>
               ))}
             </ul>
           </motion.div>
         ) : null}
       </AnimatePresence>
     </div>
-  );
-}
-
-interface RowProps {
-  node: MenuNode;
-  onSelect: () => void;
-}
-
-function CultureDropdownRow({ node, onSelect }: RowProps) {
-  const href = resolveMenuHref(node);
-  const children = (node.children ?? []).filter((child) => child.isActive);
-  const hasSubmenu = children.length > 0 && !isFormRoute(node.routeType);
-
-  if (!hasSubmenu) {
-    return (
-      <li>
-        <Link href={href} onClick={onSelect} className={ROW_CLASS}>
-          {node.title}
-        </Link>
-      </li>
-    );
-  }
-
-  return (
-    <li className="group relative">
-      <Link href={href} onClick={onSelect} className={ROW_CLASS}>
-        <span>{node.title}</span>
-        <ChevronRight size={16} className="shrink-0 text-ink-muted" aria-hidden />
-      </Link>
-      <div className="pointer-events-none invisible absolute left-full top-0 z-50 pl-0.5 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100">
-        <div role="menu" className={PANEL_CLASS}>
-          <ul>
-            {children.map((child) => (
-              <li key={child.id}>
-                <Link
-                  href={resolveMenuHref(child, node)}
-                  onClick={onSelect}
-                  className={ROW_CLASS}
-                >
-                  {child.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </li>
   );
 }

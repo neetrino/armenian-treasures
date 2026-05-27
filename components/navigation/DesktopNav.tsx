@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { PRIMARY_LINKS } from './primary-links';
+import { AboutDropdown } from './AboutDropdown';
 import { CultureDropdown } from './CultureDropdown';
 import type { MenuNode } from '@/lib/culture-menu';
 
@@ -11,7 +12,7 @@ export function DesktopNav({ menuTree }: DesktopNavProps) {
   const visibleTree = menuTree.filter((node) => node.isActive);
   return (
     <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
-      {PRIMARY_LINKS.slice(0, 2).map((link) => (
+      {PRIMARY_LINKS.slice(0, 1).map((link) => (
         <Link
           key={link.href}
           href={link.href}
@@ -20,8 +21,9 @@ export function DesktopNav({ menuTree }: DesktopNavProps) {
           {link.label}
         </Link>
       ))}
+      <AboutDropdown />
       <CultureDropdown tree={visibleTree} />
-      {PRIMARY_LINKS.slice(2).map((link) => (
+      {PRIMARY_LINKS.slice(1).map((link) => (
         <Link
           key={link.href}
           href={link.href}

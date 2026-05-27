@@ -5,7 +5,6 @@ export interface PrimaryLink {
 
 export const PRIMARY_LINKS: PrimaryLink[] = [
   { href: '/', label: 'Home' },
-  { href: '/about/mission', label: 'About Us' },
   { href: '/projects', label: 'Projects' },
   { href: '/map', label: 'Map' },
   { href: '/partnership', label: 'Partnership' },

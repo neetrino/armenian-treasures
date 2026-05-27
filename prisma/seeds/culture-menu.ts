@@ -79,7 +79,7 @@ const TREE: TopNode[] = [
   },
   {
     slug: 'heritage',
-    title: 'Heritage',
+    title: 'Culture',
     description: 'Eleven living domains of Armenian intangible and material heritage.',
     order: 6,
     routeType: 'CATEGORY',

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, Plus, X } from 'lucide-react';
-import { PRIMARY_LINKS } from './primary-links';
+import { ABOUT_TABS, PRIMARY_LINKS } from './primary-links';
 import {
   isFormRoute,
   resolveMenuHref,
@@ -69,7 +69,30 @@ export function MobileMenu({ tree }: MobileMenuProps) {
                 </button>
               </div>
               <nav className="flex flex-col gap-1" aria-label="Mobile primary">
-                {PRIMARY_LINKS.map((link) => (
+                <Link
+                  href="/"
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-base text-ink hover:bg-stone-100"
+                >
+                  Home
+                </Link>
+                <p className="mt-2 px-3 text-xs uppercase tracking-eyebrow text-bronze-700">
+                  About Us
+                </p>
+                <ul className="flex flex-col">
+                  {ABOUT_TABS.map((tab) => (
+                    <li key={tab.href}>
+                      <Link
+                        href={tab.href}
+                        onClick={() => setOpen(false)}
+                        className="rounded-lg px-3 py-2 text-base text-ink-soft hover:bg-stone-100 hover:text-ink"
+                      >
+                        {tab.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                {PRIMARY_LINKS.slice(1).map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
