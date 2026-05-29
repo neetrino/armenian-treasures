@@ -4,7 +4,7 @@ This document records the architectural and editorial choices made during the in
 
 ## Auth
 
-- **Choice**: NextAuth v5 (Auth.js) Credentials Provider with `jwt` session strategy.
+- **Choice**: NextAuth v5 (Auth.js) Credentials Provider with `jwt` session strategy. Admin email/password are read from `ADMIN_EMAIL` / `ADMIN_PASSWORD` env vars at login time — not from the database.
 - **Rationale**: §14 of the masterprompt recommends NextAuth v5 for "cleaner DX" over a hand-rolled `jose` JWT. JWT session strategy avoids a session table in the database and works well with Neon's serverless model.
 
 ## Storage driver default

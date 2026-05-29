@@ -39,8 +39,8 @@ Copy-Item .env.example .env.local
 - `DATABASE_URL`: the **pooled** Neon string. It ends with `-pooler` in the hostname and includes `?sslmode=require`. Used by the app at runtime.
 - `DIRECT_URL`: the **direct** (non-pooled) Neon string. Used by Prisma migrations and introspection.
 - `NEXTAUTH_SECRET` / `AUTH_SECRET`: generate with `openssl rand -base64 32`.
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD`: admin panel login (server-side only; not stored in the database).
 - `STORAGE_DRIVER`: leave as `local` for development.
-- `ADMIN_SEED_EMAIL` / `ADMIN_SEED_PASSWORD`: credentials for the admin user created by the seed script.
 
 ### 4. Database
 
@@ -49,7 +49,7 @@ pnpm prisma migrate dev --name init
 pnpm db:seed
 ```
 
-This applies the schema to your Neon branch and seeds the entire content tree (culture menu, items, projects, team, careers, donators, site settings, home content, admin user).
+This applies the schema to your Neon branch and seeds the entire content tree (culture menu, items, projects, team, careers, donators, site settings, home content).
 
 ### 5. Run the app
 
@@ -101,6 +101,7 @@ public/                       # Static assets
 - Use Vercel's Neon integration to create a Neon branch per preview deployment automatically.
 - Set `STORAGE_DRIVER=r2` and provide R2 credentials in production environment variables.
 - Set `AUTH_SECRET` and `AUTH_URL` (matching your deployed URL).
+- Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` for admin login (redeploy after changing).
 - Run `pnpm prisma migrate deploy` in CI before the deploy step.
 
 ## Editorial policy

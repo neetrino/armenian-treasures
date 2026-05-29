@@ -1,8 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import bcrypt from 'bcryptjs';
-import { prisma } from '@/lib/db';
 import { adminLoginSchema } from '@/lib/validation';
+import { validateAdminCredentials } from './validate-admin-credentials';
 
 export type AdminRole = 'ADMIN' | 'EDITOR';
 
@@ -37,11 +36,14 @@ export const authConfig: NextAuthConfig = {
         const parsed = adminLoginSchema.safeParse(raw);
         if (!parsed.success) return null;
         const { email, password } = parsed.data;
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user) return null;
-        const ok = await bcrypt.compare(password, user.passwordHash);
-        if (!ok) return null;
-        return { id: user.id, name: user.name, email: user.email, role: user.role };
+        const admin = validateAdminCredentials(email, password);
+        if (!admin) return null;
+        return {
+          id: 'admin',
+          name: 'Admin',
+          email: admin.email,
+          role: 'ADMIN' as const,
+        };
       },
     }),
   ],
