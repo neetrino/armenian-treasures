@@ -26,6 +26,7 @@ Expected: unauthenticated requests redirect to login or return `401`.
 
 - Admin users live in `AdminUser` (Prisma).
 - Only `passwordHash` is stored (bcrypt, **12 rounds**).
+- Admin passwords must be at least **8 characters** (CLI validation).
 - No plain admin password in env (`ADMIN_EMAIL`, `ADMIN_PASSWORD`, etc. removed).
 - **Create first admin**: `pnpm admin:create`
 - **Change password (CLI)**: `pnpm admin:change-password`

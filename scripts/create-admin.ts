@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
 
 const BCRYPT_ROUNDS = 12;
-const MIN_PASSWORD_LENGTH = 12;
+const MIN_PASSWORD_LENGTH = 8;
 
 function createPrisma(): PrismaClient {
   return new PrismaClient();
@@ -66,7 +66,7 @@ async function main(): Promise<void> {
       return;
     }
 
-    const password = await promptHidden('Admin password (min 12 chars): ');
+    const password = await promptHidden('Admin password (min 8 chars): ');
     if (password.length < MIN_PASSWORD_LENGTH) {
       console.error(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
       process.exitCode = 1;
