@@ -22,7 +22,7 @@ const FALLBACK: PublicHomeContentDTO = {
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',
   missionText:
-    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site.',
+    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site — accessible to scholars, students and the diaspora worldwide.',
   techCards: [
     {
       title: 'Matterport Virtual Tours',
