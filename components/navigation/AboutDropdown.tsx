@@ -1,11 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { ABOUT_TABS } from './primary-links';
+import { isAboutNavActive, navTriggerClassName } from './nav-styles';
+import { useHeaderTheme } from '@/components/layout/header-theme';
 import { cn } from '@/lib/utils';
+import { navItemInteraction } from '@/components/layout/header-motion';
 
 const ROW_CLASS =
   'flex w-full items-center px-3 py-2 text-left text-sm font-normal text-ink transition-colors hover:bg-parchment-200/70';
@@ -14,6 +18,10 @@ const PANEL_CLASS =
   'w-[10.5rem] rounded-xl border border-stone-100/80 bg-parchment-100 py-1 shadow-[0_12px_40px_rgba(26,23,20,0.12)]';
 
 export function AboutDropdown() {
+  const pathname = usePathname();
+  const theme = useHeaderTheme();
+  const active = isAboutNavActive(pathname);
+  const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,19 +53,25 @@ export function AboutDropdown() {
       }}
       onMouseLeave={scheduleClose}
     >
-      <button
+      <motion.button
         type="button"
-        className={cn(
-          'inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition',
-          open ? 'text-bronze-400' : 'text-parchment-200 hover:text-parchment-50',
-        )}
+        className={navTriggerClassName(active, open, theme)}
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-current={active ? 'page' : undefined}
         onClick={() => setOpen((value) => !value)}
+        {...(reduced ? {} : navItemInteraction)}
       >
         About Us
-        <ChevronDown size={14} aria-hidden className={cn('transition-transform', open && 'rotate-180')} />
-      </button>
+        <motion.span
+          aria-hidden
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="inline-flex text-bronze-400/80"
+        >
+          <ChevronDown size={14} />
+        </motion.span>
+      </motion.button>
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -66,7 +80,7 @@ export function AboutDropdown() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className={cn('absolute left-0 z-40 mt-1.5 overflow-visible', PANEL_CLASS)}
+            className={cn('absolute left-0 z-[60] mt-1.5 overflow-visible', PANEL_CLASS)}
           >
             <ul className="flex flex-col">
               {ABOUT_TABS.map((tab) => (

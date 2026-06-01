@@ -3,21 +3,21 @@ import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 
 const FALLBACK: PublicHomeContentDTO = {
-  heroBadge: 'Since the 4th century',
+  heroBadge: 'SINCE THE 4TH CENTURY',
   heroTitle: 'The living archive of',
   heroHighlight: 'Armenian heritage',
   heroDescription:
     "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
-  heroImage: '/images/hero/home.svg',
+  heroImage: '/images/hero/home-hero.png',
   primaryCtaText: 'Explore the Culture Portal',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'Open Interactive Map',
   secondaryCtaUrl: '/map',
   stats: [
-    { value: '180+', label: 'Monuments scanned' },
-    { value: '42', label: 'Virtual tours' },
-    { value: '1700+', label: 'Years of history' },
-    { value: '11', label: 'Cultural domains' },
+    { value: '180+', label: 'Monuments Scanned' },
+    { value: '42', label: 'Virtual Tours' },
+    { value: '1,700+', label: 'Years of History' },
+    { value: '11', label: 'Cultural Domains' },
   ],
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',

@@ -3,10 +3,10 @@ import { prisma } from '@/lib/db';
 const SINGLETON_ID = 'home-content-singleton';
 
 const STATS = [
-  { value: '180+', label: 'Monuments scanned' },
-  { value: '42', label: 'Virtual tours' },
-  { value: '1700+', label: 'Years of history' },
-  { value: '11', label: 'Cultural domains' },
+  { value: '180+', label: 'Monuments Scanned' },
+  { value: '42', label: 'Virtual Tours' },
+  { value: '1,700+', label: 'Years of History' },
+  { value: '11', label: 'Cultural Domains' },
 ];
 
 const TECH_CARDS = [
@@ -31,12 +31,12 @@ const TECH_CARDS = [
 ];
 
 const PAYLOAD = {
-  heroBadge: 'Since the 4th century',
+  heroBadge: 'SINCE THE 4TH CENTURY',
   heroTitle: 'The living archive of',
   heroHighlight: 'Armenian heritage',
   heroDescription:
     "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
-  heroImage: '/images/hero/home.svg',
+  heroImage: '/images/hero/home-hero.png',
   primaryCtaText: 'Explore the Culture Portal',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'Open Interactive Map',

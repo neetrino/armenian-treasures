@@ -58,6 +58,20 @@ const config: Config = {
       backgroundImage: {
         'brand-gradient':
           'linear-gradient(to right, #6B1820 0%, rgba(77,17,24,0.92) 50%, #141C42 100%)',
+        'hero-overlay':
+          'linear-gradient(90deg, rgba(10,6,24,0.95) 0%, rgba(26,15,40,0.7) 45%, transparent 72%)',
+        'hero-left-fade':
+          'linear-gradient(105deg, rgba(8,4,18,0.82) 0%, rgba(18,10,32,0.62) 32%, rgba(30,18,48,0.32) 48%, rgba(20,12,36,0.1) 58%, transparent 72%)',
+        'hero-left-fade-mobile':
+          'linear-gradient(180deg, rgba(6,3,14,0.82) 0%, rgba(10,5,20,0.62) 35%, rgba(12,7,24,0.45) 58%, rgba(8,4,18,0.28) 100%)',
+        'hero-bottom-fade':
+          'linear-gradient(to top, rgba(8,4,18,0.72) 0%, rgba(12,8,28,0.42) 18%, rgba(14,10,32,0.16) 38%, transparent 58%)',
+        'hero-cinematic-overlay':
+          'linear-gradient(90deg, rgba(8,7,22,0.92) 0%, rgba(20,13,32,0.72) 28%, rgba(30,16,36,0.38) 52%, rgba(10,8,22,0.18) 100%), linear-gradient(180deg, rgba(5,5,18,0.25) 0%, rgba(5,5,18,0.05) 45%, rgba(5,5,18,0.75) 100%)',
+        'hero-gold-text':
+          'linear-gradient(118deg, #f5e6c8 0%, #e8c078 22%, #d89a55 48%, #c8843d 72%, #a86a28 100%)',
+        'hero-gold-btn':
+          'linear-gradient(135deg, #ecc98a 0%, #d89a55 38%, #c8843d 68%, #a86a28 100%)',
       },
       letterSpacing: {
         eyebrow: '0.2em',

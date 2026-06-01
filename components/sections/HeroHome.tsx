@@ -1,10 +1,13 @@
 'use client';
 
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { ButtonLink } from '@/components/ui/Button';
-import { OrnamentRight } from '@/components/brand/OrnamentRight';
-import { Counter } from '@/components/motion/Counter';
+import { motion, useReducedMotion } from 'framer-motion';
+import { HeroCtaButtons } from '@/components/sections/hero/HeroCtaButtons';
 import { Container } from '@/components/layout/Container';
+import { HeroBackground } from '@/components/sections/hero/HeroBackground';
+import { HeroTextBlock } from '@/components/sections/hero/HeroTextBlock';
+import { HeroDecorations, HeroBottomDecor } from '@/components/sections/hero/HeroDecorations';
+import { HeroStatsBar } from '@/components/sections/hero/HeroStatsBar';
+import { resolveHeroImageUrl } from '@/components/sections/hero/hero-image';
 
 interface HomeStat {
   value: string;
@@ -24,59 +27,53 @@ interface HeroHomeProps {
   stats: HomeStat[];
 }
 
+const HEADER_OFFSET =
+  '-mt-[4.5rem] pt-[4.5rem] sm:-mt-[4.75rem] sm:pt-[4.75rem] lg:-mt-[5.5rem] lg:pt-[5.5rem] xl:-mt-24 xl:pt-24';
+
 export function HeroHome(props: HeroHomeProps) {
   const reduced = useReducedMotion();
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 600], reduced ? [0, 0] : [0, 90]);
+  const heroImage = resolveHeroImageUrl(props.imageUrl);
 
   return (
-    <section className="relative isolate overflow-hidden bg-midnight-900 text-parchment-50">
-      <motion.div
-        aria-hidden
-        className="absolute inset-0 -z-10"
-        style={{ y: parallaxY }}
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${props.imageUrl})` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-pomegranate-700/85 via-pomegranate-800/75 to-midnight-900/85" />
-      </motion.div>
-      <OrnamentRight className="pointer-events-none absolute right-4 top-1/2 hidden h-[480px] -translate-y-1/2 text-bronze-400/30 lg:block" />
+    <section
+      id="page-hero"
+      data-site-hero
+      className={`relative isolate w-full overflow-x-hidden bg-midnight-900 text-parchment-50 ${HEADER_OFFSET} min-h-[100svh]`}
+      aria-labelledby="hero-heading"
+    >
+      <HeroBackground imageUrl={heroImage} />
+      <HeroDecorations />
 
-      <Container className="relative flex min-h-[560px] flex-col justify-center gap-10 py-24 lg:min-h-[640px] lg:py-32">
-        <div className="max-w-3xl">
-          <p className="text-xs uppercase tracking-eyebrow text-bronze-400">
-            {props.badge}
-          </p>
-          <h1 className="mt-5 font-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl xl:text-7xl">
-            {props.title}{' '}
-            <span className="italic text-bronze-400">{props.highlight}</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-base text-parchment-200/90 sm:text-lg">
-            {props.description}
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <ButtonLink href={props.primaryCtaUrl} variant="primary" size="lg" withArrow>
-              {props.primaryCtaText}
-            </ButtonLink>
-            <ButtonLink href={props.secondaryCtaUrl} variant="on-dark" size="lg">
-              {props.secondaryCtaText}
-            </ButtonLink>
-          </div>
+      <Container className="relative z-10 flex min-h-[inherit] w-full min-w-0 flex-col justify-center py-7 sm:py-10 md:py-12 lg:py-16 xl:py-20">
+        <div className="grid min-w-0 flex-1 grid-cols-1 items-start gap-6 sm:gap-8 lg:grid-cols-[minmax(0,44%)_minmax(0,1fr)] lg:items-center lg:gap-8 xl:gap-12">
+          <motion.div
+            className="min-w-0 w-full lg:pr-2 xl:pr-4"
+            initial={reduced ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <HeroTextBlock
+              badge={props.badge}
+              title={props.title}
+              highlight={props.highlight}
+              description={props.description}
+            />
+            <HeroCtaButtons
+              className="mt-6 sm:mt-7 md:mt-8"
+              primaryText={props.primaryCtaText}
+              primaryHref={props.primaryCtaUrl}
+              secondaryText={props.secondaryCtaText}
+              secondaryHref={props.secondaryCtaUrl}
+            />
+          </motion.div>
+
+          <div className="hidden min-h-[min(44vh,400px)] min-w-0 lg:block" aria-hidden />
         </div>
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-white/10 pt-8 sm:grid-cols-4">
-          {props.stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1">
-              <dt className="font-display text-4xl text-bronze-400 sm:text-5xl">
-                <Counter value={stat.value} />
-              </dt>
-              <dd className="text-[11px] uppercase tracking-stat text-parchment-200/80">
-                {stat.label}
-              </dd>
-            </div>
-          ))}
-        </dl>
+
+        <div className="relative mt-7 min-w-0 w-full sm:mt-9 lg:mt-11">
+          <HeroBottomDecor className="mb-3 hidden opacity-50 md:mb-4 md:block lg:mb-5 lg:opacity-70" />
+          <HeroStatsBar stats={props.stats} />
+        </div>
       </Container>
     </section>
   );

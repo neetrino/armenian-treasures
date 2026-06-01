@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
+import Image from 'next/image';
 import { Container } from '@/components/layout/Container';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { OrnamentRight } from '@/components/brand/OrnamentRight';
+import { HERO_WEBP_DEFAULT, resolveHeroImageUrl } from '@/components/sections/hero/hero-image';
 import { cn } from '@/lib/utils';
 
 interface HeroPageProps {
@@ -25,7 +27,7 @@ export function HeroPage({
   eyebrow,
   title,
   description,
-  backgroundImage = '/images/hero/about.svg',
+  backgroundImage = HERO_WEBP_DEFAULT,
   size = 'md',
   alignment = 'left',
   children,
@@ -33,21 +35,26 @@ export function HeroPage({
 }: HeroPageProps) {
   return (
     <section
+      id="page-hero"
+      data-site-hero
       className={cn(
         'relative isolate overflow-hidden bg-midnight-900 text-parchment-50',
         SIZE_CLASSES[size],
         className,
       )}
     >
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-b from-pomegranate-700/85 to-midnight-900/85"
-      />
+      <div aria-hidden className="absolute inset-0 -z-10 overflow-hidden bg-midnight-900">
+        <Image
+          src={resolveHeroImageUrl(backgroundImage)}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-contain object-center brightness-[1.1] contrast-[1.04] saturate-[1.06]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-midnight-900/52 via-midnight-900/16 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-pomegranate-700/22 to-midnight-900/38" />
+      </div>
       <OrnamentRight className="pointer-events-none absolute right-4 top-1/2 hidden h-[360px] -translate-y-1/2 text-bronze-400/30 lg:block" />
       <Container
         className={cn(
