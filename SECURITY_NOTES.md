@@ -2,15 +2,15 @@
 
 ## Next.js security upgrade
 
-- **Previous version**: `next@14.2.18` (vulnerable to CVE-2025-29927 middleware authorization bypass).
-- **Upgraded to**: `next@14.2.35` (latest patched 14.x line; fixes middleware bypass advisory).
-- **Reason**: Middleware must not be the only authorization layer; upgrading removes the critical bypass while server-side guards remain mandatory.
+- **Previous version**: `next@14.2.35` (patched 14.x line; middleware bypass advisory fixed in 14.2.35).
+- **Upgraded to**: `next@16.2.6` (Next.js 16 stable; `proxy.ts` convention replaces deprecated `middleware.ts`).
+- **Reason**: Stay on supported Next.js with async request APIs and current security patches. Proxy/middleware must not be the only authorization layer; server-side guards remain mandatory.
 
 ## Admin route protection
 
-- `middleware.ts` still protects `/admin` and `/api/admin` for UX redirects.
+- `proxy.ts` (formerly `middleware.ts`) still protects `/admin` and `/api/admin` for UX redirects via NextAuth `authorized`.
 - **Authoritative enforcement** is server-side via `requireAdmin()` / `requireAdminPage()` in admin layouts, pages, server actions, and API routes.
-- Even if middleware is bypassed (e.g. `x-middleware-subrequest`), unauthenticated requests fail at the handler/layout layer.
+- Even if proxy/middleware is bypassed (e.g. `x-middleware-subrequest`), unauthenticated requests fail at the handler/layout layer.
 
 ### Regression checks
 

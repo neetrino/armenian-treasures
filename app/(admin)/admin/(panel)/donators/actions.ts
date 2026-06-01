@@ -7,7 +7,7 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import { donatorSchema } from '@/lib/validation';
 
 export interface DonatorFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -41,7 +41,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('donators');
+  revalidateTag('donators', 'max');
   revalidatePath('/donators');
   revalidatePath('/admin/donators');
 }
@@ -52,7 +52,7 @@ export async function createDonatorAction(_p: DonatorFormState, formData: FormDa
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   await prisma.donator.create({ data: parsed.data });
   revalidate();
-  redirect('/admin/donators');
+  return { status: 'success' };
 }
 
 export async function updateDonatorAction(

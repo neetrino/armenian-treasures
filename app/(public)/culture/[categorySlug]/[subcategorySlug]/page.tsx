@@ -15,7 +15,7 @@ import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 export const revalidate = 60;
 
 interface PageProps {
-  params: { categorySlug: string; subcategorySlug: string };
+  params: Promise<{ categorySlug: string; subcategorySlug: string }>;
 }
 
 function findChild(tree: MenuNode[], categorySlug: string, subSlug: string): {
@@ -31,7 +31,8 @@ function findChild(tree: MenuNode[], categorySlug: string, subSlug: string): {
   return { parent, child };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   const tree = await getMenuTree();
   const found = findChild(tree, params.categorySlug, params.subcategorySlug);
   if (!found) return { title: 'Subcategory not found' };
@@ -43,7 +44,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-async function CultureSubcategoryPage({ params }: PageProps) {
+async function CultureSubcategoryPage(props: PageProps) {
+  const params = await props.params;
   const tree = await getMenuTree();
   const found = findChild(tree, params.categorySlug, params.subcategorySlug);
   if (!found) notFound();

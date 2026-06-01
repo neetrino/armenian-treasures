@@ -63,7 +63,7 @@ export async function saveHomeContentAction(
     create: { id: SINGLETON_ID, ...data },
     update: data,
   });
-  revalidateTag('home-content');
+  revalidateTag('home-content', 'max');
   revalidatePath('/');
   revalidatePath('/admin/home-content');
   return { status: 'success', message: 'Home content saved.' };

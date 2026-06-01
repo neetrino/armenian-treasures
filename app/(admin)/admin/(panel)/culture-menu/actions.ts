@@ -18,7 +18,7 @@ function emptyToNull(value: string): string | null {
 }
 
 export interface MenuFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -85,7 +85,7 @@ function toData(input: ReturnType<typeof cultureMenuItemSchema.parse>) {
 }
 
 function revalidate(): void {
-  revalidateTag('culture-menu');
+  revalidateTag('culture-menu', 'max');
   revalidatePath('/');
   revalidatePath('/culture');
   revalidatePath('/admin/culture-menu');
@@ -111,7 +111,7 @@ export async function createMenuItemAction(
   }
   await prisma.cultureMenuItem.create({ data });
   revalidate();
-  redirect('/admin/culture-menu');
+  return { status: 'success' };
 }
 
 export async function updateMenuItemAction(

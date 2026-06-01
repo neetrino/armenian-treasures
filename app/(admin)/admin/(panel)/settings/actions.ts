@@ -41,7 +41,7 @@ export async function saveSiteSettingsAction(
     create: { id: SINGLETON_ID, ...parsed.data, socialLinks: parsed.data.socialLinks },
     update: { ...parsed.data, socialLinks: parsed.data.socialLinks },
   });
-  revalidateTag('site-settings');
+  revalidateTag('site-settings', 'max');
   revalidatePath('/');
   revalidatePath('/admin/settings');
   return { status: 'success', message: 'Site settings saved.' };

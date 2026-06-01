@@ -1,29 +1,34 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useMemo } from 'react';
+import { useActionState, useMemo } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField, type SelectOption } from '@/components/forms/fields/SelectField';
 import { Button } from '@/components/ui/Button';
+import { submitProjectMaterial } from '@/app/(public)/culture/submit/actions';
 import {
   GENERAL_CATEGORY_VALUE,
-  submitProjectMaterial,
-  type ProjectSubmissionState,
-} from '@/app/(public)/culture/submit/actions';
+  PROJECT_SUBMISSION_INITIAL,
+} from '@/app/(public)/culture/submit/project-submission-shared';
 
 interface ProjectSubmissionFormProps {
   categories: { slug: string; title: string }[];
 }
 
-const INITIAL: ProjectSubmissionState = { status: 'idle' };
-
 export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps) {
-  const [state, formAction] = useFormState(submitProjectMaterial, INITIAL);
+  const [state, formAction, isPending] = useActionState(
+    submitProjectMaterial,
+    PROJECT_SUBMISSION_INITIAL,
+  );
   const renderedAt = useMemo(() => Date.now(), []);
   const options: SelectOption[] = [
     { value: '', label: 'Select a category…', disabled: true },
-    ...categories.map((c) => ({ value: c.slug, label: c.title })),
+    ...categories
+      .filter((category) => category.slug.length > 0)
+      .map((category) => ({
+        value: String(category.slug),
+        label: category.title,
+      })),
     { value: GENERAL_CATEGORY_VALUE, label: 'General submission' },
   ];
 
@@ -108,16 +113,9 @@ export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps
           {state.message ?? 'Something went wrong. Please try again.'}
         </p>
       ) : null}
-      <SubmitButton />
+      <Button type="submit" disabled={isPending} withArrow>
+        {isPending ? 'Sending…' : 'Send submission'}
+      </Button>
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Sending…' : 'Send submission'}
-    </Button>
   );
 }

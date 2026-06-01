@@ -42,19 +42,21 @@ import type { MenuNode } from '@/lib/culture-menu';
 
 interface CultureMenuTreeProps {
   tree: MenuNode[];
+  onAddChild?: (parentId: string) => void;
 }
 
-export function CultureMenuTree({ tree }: CultureMenuTreeProps) {
-  return <MenuSiblingList siblings={tree} depth={0} />;
+export function CultureMenuTree({ tree, onAddChild }: CultureMenuTreeProps) {
+  return <MenuSiblingList siblings={tree} depth={0} onAddChild={onAddChild} />;
 }
 
 interface SiblingListProps {
   siblings: MenuNode[];
   parent?: MenuNode;
   depth: number;
+  onAddChild?: (parentId: string) => void;
 }
 
-function MenuSiblingList({ siblings, parent, depth }: SiblingListProps) {
+function MenuSiblingList({ siblings, parent, depth, onAddChild }: SiblingListProps) {
   const [items, setItems] = useState(siblings);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -116,7 +118,13 @@ function MenuSiblingList({ siblings, parent, depth }: SiblingListProps) {
         <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
           <ul className="flex flex-col gap-2">
             {items.map((node) => (
-              <SortableMenuRow key={node.id} node={node} parent={parent} depth={depth} />
+              <SortableMenuRow
+                key={node.id}
+                node={node}
+                parent={parent}
+                depth={depth}
+                onAddChild={onAddChild}
+              />
             ))}
           </ul>
         </SortableContext>
@@ -134,9 +142,10 @@ interface SortableRowProps {
   node: MenuNode;
   parent?: MenuNode;
   depth: number;
+  onAddChild?: (parentId: string) => void;
 }
 
-function SortableMenuRow({ node, parent, depth }: SortableRowProps) {
+function SortableMenuRow({ node, parent, depth, onAddChild }: SortableRowProps) {
   const [open, setOpen] = useState(true);
   const children = node.children ?? [];
   const {
@@ -166,10 +175,16 @@ function SortableMenuRow({ node, parent, depth }: SortableRowProps) {
         isDragging={isDragging}
         dragHandleRef={setActivatorNodeRef}
         dragHandleProps={{ ...attributes, ...listeners }}
+        onAddChild={onAddChild}
       />
       {open && children.length > 0 ? (
         <div className="mt-2">
-          <MenuSiblingList siblings={children} parent={node} depth={depth + 1} />
+          <MenuSiblingList
+            siblings={children}
+            parent={node}
+            depth={depth + 1}
+            onAddChild={onAddChild}
+          />
         </div>
       ) : null}
     </li>
@@ -187,6 +202,7 @@ interface SurfaceProps {
   overlay?: boolean;
   dragHandleRef?: (element: HTMLButtonElement | null) => void;
   dragHandleProps?: HTMLAttributes<HTMLButtonElement>;
+  onAddChild?: (parentId: string) => void;
 }
 
 function MenuRowSurface({
@@ -200,6 +216,7 @@ function MenuRowSurface({
   overlay = false,
   dragHandleRef,
   dragHandleProps,
+  onAddChild,
 }: SurfaceProps) {
   const [rowPending, startTransition] = useTransition();
   const children = node.children ?? [];
@@ -290,15 +307,16 @@ function MenuRowSurface({
               <EyeOff size={14} aria-hidden />
             )}
           </button>
-          {!isFormType(node.routeType) ? (
-            <Link
-              href={`/admin/culture-menu/new?parentId=${node.id}`}
+          {!isFormType(node.routeType) && onAddChild ? (
+            <button
+              type="button"
+              onClick={() => onAddChild(node.id)}
               className="inline-flex rounded-md p-1 text-ink-soft hover:bg-stone-100"
               aria-label="Add child"
               title="Add child"
             >
               <GitBranch size={14} aria-hidden />
-            </Link>
+            </button>
           ) : null}
           <Link
             href={`/admin/culture-menu/${node.id}`}

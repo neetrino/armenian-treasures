@@ -4,17 +4,10 @@ import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { HomeContentForm } from '@/components/admin/HomeContentForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { normalizeHomeStats, normalizeHomeTechCards } from '@/lib/types/home-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Home content', robots: { index: false, follow: false } };
-
-function stringifyJson(value: unknown): string {
-  try {
-    return JSON.stringify(value ?? [], null, 2);
-  } catch {
-    return '[]';
-  }
-}
 
 async function AdminHomeContentPage() {
   const user = await requireAdmin();
@@ -29,11 +22,11 @@ async function AdminHomeContentPage() {
     primaryCtaUrl: content?.primaryCtaUrl ?? '',
     secondaryCtaText: content?.secondaryCtaText ?? '',
     secondaryCtaUrl: content?.secondaryCtaUrl ?? '',
-    stats: stringifyJson(content?.stats),
+    stats: normalizeHomeStats(content?.stats),
     missionTitle: content?.missionTitle ?? '',
     missionHighlight: content?.missionHighlight ?? '',
     missionText: content?.missionText ?? '',
-    techCards: stringifyJson(content?.techCards),
+    techCards: normalizeHomeTechCards(content?.techCards),
     ctaTitle: content?.ctaTitle ?? '',
     ctaDescription: content?.ctaDescription ?? '',
   };

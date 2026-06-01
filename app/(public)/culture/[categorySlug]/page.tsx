@@ -16,10 +16,11 @@ import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 export const revalidate = 60;
 
 interface PageProps {
-  params: { categorySlug: string };
+  params: Promise<{ categorySlug: string }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   const tree = await getMenuTree();
   const node = tree.find((n) => n.slug === params.categorySlug);
   if (!node) return { title: 'Category not found' };
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-async function CultureCategoryPage({ params }: PageProps) {
+async function CultureCategoryPage(props: PageProps) {
+  const params = await props.params;
   const tree = await getMenuTree();
   const node = tree.find((n) => n.slug === params.categorySlug && n.isActive);
   if (!node || isFormRoute(node.routeType)) notFound();

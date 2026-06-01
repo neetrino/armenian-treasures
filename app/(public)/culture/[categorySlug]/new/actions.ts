@@ -17,7 +17,7 @@ export async function submitSubcategoryProposal(
   _prev: SubmissionActionState,
   formData: FormData,
 ): Promise<SubmissionActionState> {
-  const ip = extractClientIp(headers());
+  const ip = extractClientIp(await headers());
   const limit = await getPublicRateLimiter().check(`subcategory:${ip}`);
   if (!limit.allowed) {
     return { status: 'error', message: 'Too many submissions. Please try again later.' };
@@ -81,7 +81,7 @@ export async function submitSubcategoryProposal(
     },
   });
 
-  revalidateTag('admin-submissions');
+  revalidateTag('admin-submissions', 'max');
 
   return {
     status: 'success',

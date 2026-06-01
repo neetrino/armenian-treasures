@@ -7,7 +7,7 @@ import { submissionUpdateSchema } from '@/lib/validation';
 import type { SubmissionStatus } from '@prisma/client';
 
 function revalidate(): void {
-  revalidateTag('admin-submissions');
+  revalidateTag('admin-submissions', 'max');
   revalidatePath('/admin/submissions');
 }
 

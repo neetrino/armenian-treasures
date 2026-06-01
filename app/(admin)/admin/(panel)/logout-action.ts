@@ -7,7 +7,7 @@ import { extractClientIp } from '@/lib/rate-limit';
 
 export async function logoutAction(): Promise<void> {
   const session = await auth();
-  const headerStore = headers();
+  const headerStore = await headers();
 
   if (session?.user?.id || session?.user?.email) {
     await writeAdminAuditLog('logout', {

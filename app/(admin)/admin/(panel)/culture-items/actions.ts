@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -57,7 +56,7 @@ function intOrZero(value: FormDataEntryValue | null): number {
 }
 
 export interface CultureItemFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -130,7 +129,7 @@ function toData(input: ReturnType<typeof cultureItemSchema.parse>) {
 }
 
 function revalidate(): void {
-  revalidateTag('culture-items');
+  revalidateTag('culture-items', 'max');
   revalidatePath('/culture');
   revalidatePath('/map');
   revalidatePath('/admin/culture-items');
@@ -155,7 +154,7 @@ export async function createCultureItemAction(
   }
   await prisma.cultureItem.create({ data: parsed.data });
   revalidate();
-  redirect('/admin/culture-items');
+  return { status: 'success' };
 }
 
 export async function updateCultureItemAction(
@@ -178,7 +177,7 @@ export async function updateCultureItemAction(
   }
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
   revalidate();
-  redirect('/admin/culture-items');
+  return { status: 'success' };
 }
 
 export async function deleteCultureItemAction(id: string): Promise<void> {

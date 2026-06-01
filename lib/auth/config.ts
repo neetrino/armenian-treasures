@@ -41,7 +41,7 @@ export const authConfig: NextAuthConfig = {
         const parsed = adminLoginSchema.safeParse(raw);
         if (!parsed.success) return null;
 
-        const headerStore = headers();
+        const headerStore = await headers();
         const ipAddress = extractClientIp(headerStore);
         const userAgent = headerStore.get('user-agent') ?? undefined;
         const normalizedEmail = parsed.data.email.trim().toLowerCase();
