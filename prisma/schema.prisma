@@ -326,3 +326,26 @@ model HomeContent {
   ctaDescription   String   @db.Text
   updatedAt        DateTime @updatedAt
 }
+
+model AboutContent {
+  id               String   @id @default("about-content-singleton")
+  heroEyebrow      String
+  heroTitle        String
+  heroDescription  String   @db.Text
+  missionEyebrow   String
+  missionTitle     String
+  missionIntro     String   @db.Text
+  pillars          Json
+  whyNowHeading    String
+  whyNowBody       String   @db.Text
+  howWeWorkHeading String
+  howWeWorkBody    String   @db.Text
+  teamEyebrow      String
+  teamTitle        String
+  teamIntro        String   @db.Text
+  careerEyebrow    String
+  careerTitle      String
+  careerIntro      String   @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}

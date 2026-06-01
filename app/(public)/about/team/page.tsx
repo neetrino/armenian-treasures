@@ -3,6 +3,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { TeamCard } from '@/components/cards/TeamCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
+import { getAboutContent } from '@/lib/queries/about';
 import { getActiveTeam } from '@/lib/queries/team';
 
 export const revalidate = 60;
@@ -13,18 +14,15 @@ export const metadata: Metadata = {
 };
 
 async function AboutTeamPage() {
-  const members = await getActiveTeam();
+  const [members, content] = await Promise.all([getActiveTeam(), getAboutContent()]);
   return (
     <div className="flex flex-col gap-10">
       <header className="max-w-3xl">
-        <Eyebrow>Team</Eyebrow>
+        <Eyebrow>{content.teamEyebrow}</Eyebrow>
         <h2 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">
-          A small, deeply specialised team.
+          {content.teamTitle}
         </h2>
-        <p className="mt-5 text-base text-ink-soft sm:text-lg">
-          Historians, technologists and curators working full-time on the open digital archive of
-          Armenian heritage.
-        </p>
+        <p className="mt-5 text-base text-ink-soft sm:text-lg">{content.teamIntro}</p>
       </header>
       {members.length === 0 ? (
         <EmptyState

@@ -1,4 +1,6 @@
 import type { MetadataRoute } from 'next';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { getPublishedCultureItemSlugs } from '@/lib/queries/culture-items';
 import { prisma } from '@/lib/db';
 
 const STATIC_PATHS = [
@@ -38,6 +40,20 @@ export async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: row.updatedAt ?? now,
         changeFrequency: 'monthly',
         priority: 0.6,
+      });
+    }
+  } catch {
+    // ignore DB failures (e.g. during local builds without DB)
+  }
+
+  try {
+    const itemRows = await getPublishedCultureItemSlugs();
+    for (const row of itemRows) {
+      entries.push({
+        url: `${base}${resolveCultureItemHref(row.slug)}`,
+        lastModified: row.updatedAt ?? now,
+        changeFrequency: 'monthly',
+        priority: 0.55,
       });
     }
   } catch {

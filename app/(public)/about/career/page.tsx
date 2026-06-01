@@ -3,6 +3,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { CareerCard } from '@/components/cards/CareerCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
+import { getAboutContent } from '@/lib/queries/about';
 import { getActiveCareers } from '@/lib/queries/careers';
 
 export const revalidate = 60;
@@ -13,18 +14,15 @@ export const metadata: Metadata = {
 };
 
 async function AboutCareerPage() {
-  const careers = await getActiveCareers();
+  const [careers, content] = await Promise.all([getActiveCareers(), getAboutContent()]);
   return (
     <div className="flex flex-col gap-10">
       <header className="max-w-3xl">
-        <Eyebrow>Career</Eyebrow>
+        <Eyebrow>{content.careerEyebrow}</Eyebrow>
         <h2 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">
-          Build the archive of a civilisation.
+          {content.careerTitle}
         </h2>
-        <p className="mt-5 text-base text-ink-soft sm:text-lg">
-          We are hiring engineers, drone pilots and cultural researchers across Yerevan, the
-          regions and remote. Send us your work — we read every application.
-        </p>
+        <p className="mt-5 text-base text-ink-soft sm:text-lg">{content.careerIntro}</p>
       </header>
       {careers.length === 0 ? (
         <EmptyState

@@ -231,8 +231,11 @@ export function CultureItemForm({
             Show on public map
           </label>
           <TextField
-            label="3D tour URL"
+            label="Matterport / 3D Tour URL"
             name="tourUrl"
+            type="url"
+            placeholder="https://my.matterport.com/show/?m=XXXX"
+            hint="Paste a Matterport show link or any external 3D tour URL."
             defaultValue={initial?.tourUrl ?? ''}
             error={state.fieldErrors?.tourUrl}
           />

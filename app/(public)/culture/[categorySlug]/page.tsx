@@ -10,6 +10,7 @@ import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ButtonLink } from '@/components/ui/Button';
 import { isFormRoute, resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 
@@ -82,7 +83,7 @@ async function CultureCategoryPage(props: PageProps) {
           <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {items.map((item) => (
               <StaggerItem key={item.id} className="h-full">
-                <CultureItemCard item={item} />
+                <CultureItemCard item={item} href={resolveCultureItemHref(item.slug)} />
               </StaggerItem>
             ))}
           </Stagger>

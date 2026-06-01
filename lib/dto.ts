@@ -5,12 +5,14 @@
  * Prisma rows before serializing them to anything reachable by an unauthenticated
  * client. Every public route handler must use these mappers.
  */
+import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
 import type {
   Career,
   ContactMessage,
   CultureItem,
   CultureMenuItem,
   Donator,
+  AboutContent,
   HomeContent,
   Project,
   SiteSettings,
@@ -53,6 +55,16 @@ export interface PublicCultureItemDTO {
   showOnMap: boolean;
   itemType: CultureItem['itemType'];
   order: number;
+}
+
+export interface CultureItemMenuBreadcrumb {
+  id: string;
+  title: string;
+  slug: string;
+}
+
+export interface PublicCultureItemDetailDTO extends PublicCultureItemDTO {
+  menuItem: (CultureItemMenuBreadcrumb & { parent: CultureItemMenuBreadcrumb | null }) | null;
 }
 
 export interface PublicProjectDTO {
@@ -101,6 +113,9 @@ export interface PublicDonatorDTO {
 
 export type PublicSiteSettingsDTO = Omit<SiteSettings, 'id' | 'updatedAt'>;
 export type PublicHomeContentDTO = Omit<HomeContent, 'id' | 'updatedAt'>;
+export type PublicAboutContentDTO = Omit<AboutContent, 'id' | 'createdAt' | 'updatedAt' | 'pillars'> & {
+  pillars: AboutPillar[];
+};
 
 export function toPublicMenuItem(row: CultureMenuItem): PublicCultureMenuItemDTO {
   return {
@@ -140,6 +155,28 @@ export function toPublicCultureItem(row: CultureItem): PublicCultureItemDTO {
     showOnMap: row.showOnMap,
     itemType: row.itemType,
     order: row.order,
+  };
+}
+
+type CultureItemWithMenu = CultureItem & {
+  menuItem: CultureMenuItem & { parent: CultureMenuItem | null };
+};
+
+export function toPublicCultureItemDetail(row: CultureItemWithMenu): PublicCultureItemDetailDTO {
+  return {
+    ...toPublicCultureItem(row),
+    menuItem: {
+      id: row.menuItem.id,
+      title: row.menuItem.title,
+      slug: row.menuItem.slug,
+      parent: row.menuItem.parent
+        ? {
+            id: row.menuItem.parent.id,
+            title: row.menuItem.parent.title,
+            slug: row.menuItem.parent.slug,
+          }
+        : null,
+    },
   };
 }
 
@@ -203,6 +240,14 @@ export function toPublicSiteSettings(row: SiteSettings): PublicSiteSettingsDTO {
 export function toPublicHomeContent(row: HomeContent): PublicHomeContentDTO {
   const { id: _id, updatedAt: _u, ...rest } = row;
   return rest;
+}
+
+export function toPublicAboutContent(row: AboutContent): PublicAboutContentDTO {
+  const { id: _id, createdAt: _c, updatedAt: _u, pillars, ...rest } = row;
+  return {
+    ...rest,
+    pillars: normalizeAboutPillars(pillars),
+  };
 }
 
 export function toAdminSubmissionView(row: Submission): Submission {

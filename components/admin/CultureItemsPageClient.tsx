@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useCallback, useMemo, useState, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { Pencil, Plus } from 'lucide-react';
+import { Pencil, Plus, ExternalLink } from 'lucide-react';
 import { AdminTopbar } from '@/components/admin/AdminTopbar';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { AdminModal } from '@/components/admin/AdminModal';
@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { deleteCultureItemAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import type { AdminContext } from '@/lib/auth/require-admin';
 
 interface MenuOption {
@@ -165,6 +166,17 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
       align: 'right',
       cell: (row) => (
         <div className="flex items-center justify-end gap-1">
+          {row.status === 'PUBLISHED' ? (
+            <a
+              href={resolveCultureItemHref(row.slug)}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View public page for ${row.title}`}
+              className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-soft transition hover:bg-stone-100 hover:text-ink"
+            >
+              <ExternalLink size={14} aria-hidden />
+            </a>
+          ) : null}
           <button
             type="button"
             aria-label="Edit culture item"

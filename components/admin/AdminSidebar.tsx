@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   Briefcase,
+  BookOpen,
   Folders,
   Gauge,
   HeartHandshake,
@@ -44,6 +45,7 @@ const GROUPS: NavGroup[] = [
       { href: '/admin/careers', label: 'Careers', icon: Briefcase },
       { href: '/admin/donators', label: 'Donators', icon: HeartHandshake },
       { href: '/admin/home-content', label: 'Home Content', icon: Home },
+      { href: '/admin/about-content', label: 'About Content', icon: BookOpen },
     ],
   },
   {

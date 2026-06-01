@@ -3,8 +3,10 @@ import { notFound } from 'next/navigation';
 import { AdminTopbar } from '@/components/admin/AdminTopbar';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { CultureItemForm } from '@/components/admin/CultureItemForm';
+import { ButtonLink } from '@/components/ui/Button';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -31,7 +33,17 @@ async function EditCultureItemPage(props: PageProps) {
     <>
       <AdminTopbar title="Edit culture item" user={user} />
       <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader title={item.title} description={`Editing item with slug “${item.slug}”.`} />
+        <AdminPageHeader
+          title={item.title}
+          description={`Editing item with slug “${item.slug}”.`}
+          actions={
+            item.status === 'PUBLISHED' ? (
+              <ButtonLink href={resolveCultureItemHref(item.slug)} variant="secondary" external>
+                View public page
+              </ButtonLink>
+            ) : null
+          }
+        />
         <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
           <CultureItemForm
             mode="edit"

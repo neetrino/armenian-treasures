@@ -40,7 +40,7 @@ export function createUiId(): string {
 }
 
 export function withStatUiIds(items: HomeStat[]): HomeStatUiItem[] {
-  return items.map((item) => ({ ...item, uiId: createUiId() }));
+  return items.map((item, index) => ({ ...item, uiId: `stat-${index}` }));
 }
 
 export function stripStatUiIds(items: HomeStatUiItem[]): HomeStat[] {
@@ -48,7 +48,7 @@ export function stripStatUiIds(items: HomeStatUiItem[]): HomeStat[] {
 }
 
 export function withTechCardUiIds(items: HomeTechCard[]): HomeTechCardUiItem[] {
-  return items.map((item) => ({ ...item, uiId: createUiId() }));
+  return items.map((item, index) => ({ ...item, uiId: `tech-${index}` }));
 }
 
 export function stripTechCardUiIds(items: HomeTechCardUiItem[]): HomeTechCard[] {

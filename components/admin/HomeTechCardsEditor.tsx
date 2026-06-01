@@ -13,6 +13,7 @@ import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
 import { SortableDragHandle } from '@/components/admin/SortableDragHandle';
+import { ClientMounted } from '@/components/admin/ClientMounted';
 import { HomeContentDndContext } from '@/components/admin/HomeContentDndContext';
 import {
   homeContentDropAnimation,
@@ -156,7 +157,15 @@ function SortableTechCard({
   );
 }
 
-export function HomeTechCardsEditor({
+export function HomeTechCardsEditor(props: HomeTechCardsEditorProps) {
+  return (
+    <ClientMounted fallback={<p className="text-sm text-ink-muted">Loading technology cards editor…</p>}>
+      <HomeTechCardsEditorInner {...props} />
+    </ClientMounted>
+  );
+}
+
+function HomeTechCardsEditorInner({
   techCards,
   onChange,
   sectionError,
@@ -201,6 +210,7 @@ export function HomeTechCardsEditor({
       </p>
 
       <HomeContentDndContext
+        id="home-content-tech-cards"
         sensors={sensors}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}

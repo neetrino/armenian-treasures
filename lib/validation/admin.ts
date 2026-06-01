@@ -217,6 +217,32 @@ export const homeContentSchema = z.object({
   ctaDescription: z.string().trim().min(10).max(800),
 });
 
+export const aboutPillarSchema = z.object({
+  title: z.string().trim().min(2).max(120),
+  description: z.string().trim().min(2).max(400),
+  iconName: z.string().trim().min(1).max(40),
+});
+
+export const aboutContentSchema = z.object({
+  heroEyebrow: z.string().trim().min(1).max(80),
+  heroTitle: z.string().trim().min(1).max(200),
+  heroDescription: z.string().trim().min(10).max(800),
+  missionEyebrow: z.string().trim().min(1).max(80),
+  missionTitle: z.string().trim().min(1).max(200),
+  missionIntro: z.string().trim().min(10).max(2000),
+  pillars: z.array(aboutPillarSchema).min(1).max(8),
+  whyNowHeading: z.string().trim().min(1).max(120),
+  whyNowBody: z.string().trim().min(10).max(4000),
+  howWeWorkHeading: z.string().trim().min(1).max(120),
+  howWeWorkBody: z.string().trim().min(10).max(4000),
+  teamEyebrow: z.string().trim().min(1).max(80),
+  teamTitle: z.string().trim().min(1).max(200),
+  teamIntro: z.string().trim().min(10).max(2000),
+  careerEyebrow: z.string().trim().min(1).max(80),
+  careerTitle: z.string().trim().min(1).max(200),
+  careerIntro: z.string().trim().min(10).max(2000),
+});
+
 export type CultureMenuItemInput = z.infer<typeof cultureMenuItemSchema>;
 export type CultureItemInput = z.infer<typeof cultureItemSchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;
@@ -227,3 +253,4 @@ export type SubmissionUpdateInput = z.infer<typeof submissionUpdateSchema>;
 export type ContactMessageUpdateInput = z.infer<typeof contactMessageUpdateSchema>;
 export type SiteSettingsInput = z.infer<typeof siteSettingsSchema>;
 export type HomeContentInput = z.infer<typeof homeContentSchema>;
+export type AboutContentInput = z.infer<typeof aboutContentSchema>;

@@ -10,6 +10,7 @@ import {
 } from '@dnd-kit/core';
 
 interface HomeContentDndContextProps {
+  id: string;
   sensors: ReturnType<typeof useSensors>;
   onDragStart: (event: DragStartEvent) => void;
   onDragEnd: (event: DragEndEvent) => void;
@@ -18,6 +19,7 @@ interface HomeContentDndContextProps {
 }
 
 export function HomeContentDndContext({
+  id,
   sensors,
   onDragStart,
   onDragEnd,
@@ -26,6 +28,7 @@ export function HomeContentDndContext({
 }: HomeContentDndContextProps) {
   return (
     <DndContext
+      id={id}
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={onDragStart}
