@@ -25,7 +25,6 @@ export function AdminTopbar({ title, user }: AdminTopbarProps) {
           <ExternalLink size={14} aria-hidden /> View site
         </Link>
         <div className="flex items-center gap-2 text-sm text-ink-soft">
-          <span className="hidden text-xs text-ink-muted sm:inline">{user.email}</span>
           <form action={logoutAction}>
             <button
               type="submit"

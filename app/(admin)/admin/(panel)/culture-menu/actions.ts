@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
-import { cultureMenuItemSchema } from '@/lib/validation';
+import { cultureMenuItemSchema, cultureMenuReorderSchema } from '@/lib/validation';
 import type { MenuRouteType } from '@prisma/client';
 
 function toSlug(value: string): string {
@@ -177,4 +177,38 @@ export async function moveMenuItemAction(id: string, direction: 'up' | 'down'): 
     prisma.cultureMenuItem.update({ where: { id: b.id }, data: { order: a.order } }),
   ]);
   revalidate();
+}
+
+export type ReorderMenuResult = { ok: true } | { ok: false; message: string };
+
+export async function reorderMenuSiblingsAction(
+  parentId: string | null,
+  orderedIds: string[],
+): Promise<ReorderMenuResult> {
+  await requireAdmin();
+  const parsed = cultureMenuReorderSchema.safeParse({ parentId, order: orderedIds });
+  if (!parsed.success) {
+    return { ok: false, message: 'Invalid reorder payload.' };
+  }
+
+  const siblings = await prisma.cultureMenuItem.findMany({
+    where: { parentId },
+    select: { id: true },
+  });
+  const siblingIds = new Set(siblings.map((s) => s.id));
+  if (orderedIds.length !== siblings.length || !orderedIds.every((id) => siblingIds.has(id))) {
+    return { ok: false, message: 'Order must include all siblings at this level.' };
+  }
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) =>
+        prisma.cultureMenuItem.update({ where: { id }, data: { order: index } }),
+      ),
+    );
+    revalidate();
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Could not save order. Please try again.' };
+  }
 }

@@ -50,7 +50,11 @@ export class R2Driver implements StorageDriver {
         ContentType: input.contentType,
       }),
     );
-    return { key: input.key, url: this.publicUrl(input.key) };
+    const isPrivate = input.visibility === 'private';
+    return {
+      key: input.key,
+      url: isPrivate ? null : this.publicUrl(input.key),
+    };
   }
 
   async delete(key: string): Promise<void> {

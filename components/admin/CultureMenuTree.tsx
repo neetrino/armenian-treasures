@@ -1,13 +1,41 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
-import { ChevronDown, Pencil, Plus, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { useEffect, useState, useTransition, type HTMLAttributes } from 'react';
+import {
+  DndContext,
+  DragOverlay,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  defaultDropAnimation,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
+  ChevronDown,
+  Eye,
+  EyeOff,
+  GitBranch,
+  GripVertical,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
 import {
   deleteMenuItemAction,
-  moveMenuItemAction,
+  reorderMenuSiblingsAction,
   toggleMenuItemAction,
 } from '@/app/(admin)/admin/(panel)/culture-menu/actions';
 import type { MenuNode } from '@/lib/culture-menu';
@@ -17,25 +45,165 @@ interface CultureMenuTreeProps {
 }
 
 export function CultureMenuTree({ tree }: CultureMenuTreeProps) {
+  return <MenuSiblingList siblings={tree} depth={0} />;
+}
+
+interface SiblingListProps {
+  siblings: MenuNode[];
+  parent?: MenuNode;
+  depth: number;
+}
+
+function MenuSiblingList({ siblings, parent, depth }: SiblingListProps) {
+  const [items, setItems] = useState(siblings);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setItems(siblings);
+  }, [siblings]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  );
+
+  function handleDragStart(event: DragStartEvent): void {
+    setActiveId(String(event.active.id));
+    setSaveError(null);
+  }
+
+  function handleDragEnd(event: DragEndEvent): void {
+    setActiveId(null);
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = items.findIndex((item) => item.id === active.id);
+    const newIndex = items.findIndex((item) => item.id === over.id);
+    if (oldIndex < 0 || newIndex < 0) return;
+
+    const reordered = arrayMove(items, oldIndex, newIndex);
+    const snapshot = items;
+    setItems(reordered);
+
+    void reorderMenuSiblingsAction(
+      parent?.id ?? null,
+      reordered.map((item) => item.id),
+    ).then((result) => {
+      if (!result.ok) {
+        setItems(snapshot);
+        setSaveError(result.message);
+      }
+    });
+  }
+
+  const activeItem = activeId ? items.find((item) => item.id === activeId) : null;
+
   return (
-    <ul className="flex flex-col gap-2">
-      {tree.map((node) => (
-        <MenuTreeRow key={node.id} node={node} />
-      ))}
-    </ul>
+    <div className="flex flex-col gap-2">
+      {saveError ? (
+        <p className="text-xs text-pomegranate" role="alert">
+          {saveError}
+        </p>
+      ) : null}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={() => setActiveId(null)}
+      >
+        <SortableContext items={items.map((item) => item.id)} strategy={verticalListSortingStrategy}>
+          <ul className="flex flex-col gap-2">
+            {items.map((node) => (
+              <SortableMenuRow key={node.id} node={node} parent={parent} depth={depth} />
+            ))}
+          </ul>
+        </SortableContext>
+        <DragOverlay dropAnimation={defaultDropAnimation}>
+          {activeItem ? (
+            <MenuRowSurface node={activeItem} parent={parent} depth={depth} overlay />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </div>
   );
 }
 
-interface RowProps {
+interface SortableRowProps {
   node: MenuNode;
   parent?: MenuNode;
-  depth?: number;
+  depth: number;
 }
 
-function MenuTreeRow({ node, parent, depth = 0 }: RowProps) {
+function SortableMenuRow({ node, parent, depth }: SortableRowProps) {
   const [open, setOpen] = useState(true);
-  const [pending, startTransition] = useTransition();
   const children = node.children ?? [];
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: node.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <li ref={setNodeRef} style={style} className={cn('flex flex-col', isDragging && 'z-0')}>
+      <MenuRowSurface
+        node={node}
+        parent={parent}
+        depth={depth}
+        open={open}
+        onToggleOpen={() => setOpen((value) => !value)}
+        hasChildren={children.length > 0}
+        isDragging={isDragging}
+        dragHandleRef={setActivatorNodeRef}
+        dragHandleProps={{ ...attributes, ...listeners }}
+      />
+      {open && children.length > 0 ? (
+        <div className="mt-2">
+          <MenuSiblingList siblings={children} parent={node} depth={depth + 1} />
+        </div>
+      ) : null}
+    </li>
+  );
+}
+
+interface SurfaceProps {
+  node: MenuNode;
+  parent?: MenuNode;
+  depth: number;
+  open?: boolean;
+  onToggleOpen?: () => void;
+  hasChildren?: boolean;
+  isDragging?: boolean;
+  overlay?: boolean;
+  dragHandleRef?: (element: HTMLButtonElement | null) => void;
+  dragHandleProps?: HTMLAttributes<HTMLButtonElement>;
+}
+
+function MenuRowSurface({
+  node,
+  parent,
+  depth,
+  open = true,
+  onToggleOpen,
+  hasChildren = false,
+  isDragging = false,
+  overlay = false,
+  dragHandleRef,
+  dragHandleProps,
+}: SurfaceProps) {
+  const [rowPending, startTransition] = useTransition();
+  const children = node.children ?? [];
+  const showChevron = hasChildren || children.length > 0;
 
   function handleDelete(): void {
     if (typeof window === 'undefined') return;
@@ -51,117 +219,108 @@ function MenuTreeRow({ node, parent, depth = 0 }: RowProps) {
     });
   }
 
-  function handleMove(direction: 'up' | 'down'): void {
-    startTransition(() => {
-      void moveMenuItemAction(node.id, direction);
-    });
-  }
-
   return (
-    <li className="flex flex-col">
-      <div
+    <div
+      className={cn(
+        'flex items-center gap-3 rounded-xl border border-stone-100 bg-white p-3 shadow-sm transition',
+        !node.isActive && 'opacity-60',
+        isDragging && !overlay && 'opacity-40',
+        overlay && 'scale-[1.02] border-pomegranate/30 shadow-lg ring-1 ring-pomegranate/20',
+      )}
+      style={{ paddingLeft: `${12 + depth * 20}px` }}
+    >
+      <button
+        type="button"
+        ref={dragHandleRef}
+        {...dragHandleProps}
+        disabled={rowPending || overlay}
         className={cn(
-          'flex items-center gap-3 rounded-xl border border-stone-100 bg-white p-3 shadow-sm transition',
-          !node.isActive && 'opacity-60',
+          'shrink-0 touch-none text-ink-muted disabled:opacity-50',
+          overlay ? 'cursor-grabbing' : 'cursor-grab active:cursor-grabbing',
         )}
-        style={{ paddingLeft: `${12 + depth * 20}px` }}
+        aria-label="Drag to reorder"
+        title="Drag to reorder"
       >
-        {children.length > 0 ? (
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? 'Collapse' : 'Expand'}
-            className="rounded p-1 text-ink-muted hover:bg-stone-100"
-          >
-            <ChevronDown
-              size={14}
-              aria-hidden
-              className={cn('transition-transform', !open && '-rotate-90')}
-            />
-          </button>
-        ) : (
-          <span className="w-6" aria-hidden />
-        )}
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          <div className="min-w-0 flex-1">
-            <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
-              <span className="truncate">{node.title}</span>
-              <Badge tone={badgeToneFor(node.routeType)} className="text-[10px]">
-                {formatRouteType(node.routeType)}
-              </Badge>
-              {!node.isActive ? <Badge tone="stone">Hidden</Badge> : null}
-            </p>
-            <p className="truncate text-xs text-ink-muted">
-              /{parent ? `${parent.slug}/` : ''}
-              {node.slug}
-            </p>
-          </div>
+        <GripVertical size={14} aria-hidden />
+      </button>
+      {showChevron ? (
+        <button
+          type="button"
+          onClick={onToggleOpen}
+          aria-label={open ? 'Collapse' : 'Expand'}
+          className="rounded p-1 text-ink-muted hover:bg-stone-100"
+        >
+          <ChevronDown
+            size={14}
+            aria-hidden
+            className={cn('transition-transform', !open && '-rotate-90')}
+          />
+        </button>
+      ) : (
+        <span className="w-6" aria-hidden />
+      )}
+      <div className="flex min-w-0 flex-1 items-center gap-2">
+        <div className="min-w-0 flex-1">
+          <p className="flex flex-wrap items-center gap-2 text-sm font-medium text-ink">
+            <span className="truncate">{node.title}</span>
+            <Badge tone={badgeToneFor(node.routeType)} className="text-[10px]">
+              {formatRouteType(node.routeType)}
+            </Badge>
+            {!node.isActive ? <Badge tone="stone">Hidden</Badge> : null}
+          </p>
+          <p className="truncate text-xs text-ink-muted">
+            /{parent ? `${parent.slug}/` : ''}
+            {node.slug}
+          </p>
         </div>
+      </div>
+      {!overlay ? (
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => handleMove('up')}
-            disabled={pending}
+            onClick={() => handleToggle(!node.isActive)}
+            disabled={rowPending}
             className="rounded p-1 text-ink-muted hover:bg-stone-100 disabled:opacity-50"
-            aria-label="Move up"
+            aria-label="Toggle active"
+            title="Toggle active"
           >
-            <ArrowUp size={14} aria-hidden />
+            {node.isActive ? (
+              <Eye size={14} aria-hidden />
+            ) : (
+              <EyeOff size={14} aria-hidden />
+            )}
           </button>
-          <button
-            type="button"
-            onClick={() => handleMove('down')}
-            disabled={pending}
-            className="rounded p-1 text-ink-muted hover:bg-stone-100 disabled:opacity-50"
-            aria-label="Move down"
-          >
-            <ArrowDown size={14} aria-hidden />
-          </button>
-          <label className="ml-2 inline-flex items-center gap-2 text-xs text-ink-muted">
-            <input
-              type="checkbox"
-              checked={node.isActive}
-              onChange={(event) => handleToggle(event.target.checked)}
-              disabled={pending}
-              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
-              aria-label="Active"
-            />
-            Active
-          </label>
           {!isFormType(node.routeType) ? (
             <Link
               href={`/admin/culture-menu/new?parentId=${node.id}`}
-              className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-ink-soft hover:bg-stone-100"
+              className="inline-flex rounded-md p-1 text-ink-soft hover:bg-stone-100"
               aria-label="Add child"
+              title="Add child"
             >
-              <Plus size={12} aria-hidden /> Child
+              <GitBranch size={14} aria-hidden />
             </Link>
           ) : null}
           <Link
             href={`/admin/culture-menu/${node.id}`}
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-ink-soft hover:bg-stone-100"
-            aria-label="Edit"
+            className="inline-flex rounded-md p-1 text-ink-soft hover:bg-stone-100"
+            aria-label="Edit item"
+            title="Edit item"
           >
-            <Pencil size={12} aria-hidden /> Edit
+            <Pencil size={14} aria-hidden />
           </Link>
           <button
             type="button"
             onClick={handleDelete}
-            disabled={pending}
-            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-pomegranate hover:bg-pomegranate/10 disabled:opacity-50"
-            aria-label="Delete"
+            disabled={rowPending}
+            className="inline-flex rounded-md p-1 text-pomegranate hover:bg-pomegranate/10 disabled:opacity-50"
+            aria-label="Delete item"
+            title="Delete item"
           >
-            <Trash2 size={12} aria-hidden /> Delete
+            <Trash2 size={14} aria-hidden />
           </button>
         </div>
-      </div>
-      {open && children.length > 0 ? (
-        <ul className="mt-2 flex flex-col gap-2">
-          {children.map((child) => (
-            <MenuTreeRow key={child.id} node={child} parent={node} depth={depth + 1} />
-          ))}
-        </ul>
       ) : null}
-    </li>
+    </div>
   );
 }
 

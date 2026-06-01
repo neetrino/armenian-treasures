@@ -1,9 +1,14 @@
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { headers } from 'next/headers';
 import { adminLoginSchema } from '@/lib/validation';
+import {
+  extractClientIp,
+  getAdminLoginRateLimiter,
+} from '@/lib/rate-limit';
 import { validateAdminCredentials } from './validate-admin-credentials';
 
-export type AdminRole = 'ADMIN' | 'EDITOR';
+export type AdminRole = 'ADMIN';
 
 declare module 'next-auth' {
   interface User {
@@ -35,13 +40,29 @@ export const authConfig: NextAuthConfig = {
       async authorize(raw) {
         const parsed = adminLoginSchema.safeParse(raw);
         if (!parsed.success) return null;
-        const { email, password } = parsed.data;
-        const admin = validateAdminCredentials(email, password);
-        if (!admin) return null;
+
+        const headerStore = headers();
+        const ipAddress = extractClientIp(headerStore);
+        const userAgent = headerStore.get('user-agent') ?? undefined;
+        const normalizedEmail = parsed.data.email.trim().toLowerCase();
+
+        const limiter = getAdminLoginRateLimiter();
+        const rateKey = `login:${normalizedEmail}:${ipAddress}`;
+        const rateCheck = await limiter.check(rateKey);
+        if (!rateCheck.allowed) {
+          throw new Error('RATE_LIMITED');
+        }
+
+        const result = await validateAdminCredentials(parsed.data.email, parsed.data.password, {
+          ipAddress,
+          userAgent,
+        });
+        if (!result.success) return null;
+
         return {
-          id: 'admin',
-          name: 'Admin',
-          email: admin.email,
+          id: result.adminUser.id,
+          name: result.adminUser.email,
+          email: result.adminUser.email,
           role: 'ADMIN' as const,
         };
       },
@@ -60,7 +81,7 @@ export const authConfig: NextAuthConfig = {
       if (token && session.user) {
         if (token.sub) session.user.id = token.sub;
         const role = (token as Record<string, unknown>).role;
-        if (role === 'ADMIN' || role === 'EDITOR') {
+        if (role === 'ADMIN') {
           session.user.role = role;
         }
       }
@@ -76,3 +97,7 @@ export const authConfig: NextAuthConfig = {
     },
   },
 };
+
+export function isRateLimitAuthError(error: unknown): boolean {
+  return error instanceof Error && error.message === 'RATE_LIMITED';
+}

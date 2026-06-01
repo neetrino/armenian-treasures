@@ -2,6 +2,7 @@
 
 import { AuthError } from 'next-auth';
 import { signIn } from '@/lib/auth';
+import { isRateLimitAuthError } from '@/lib/auth/config';
 import { adminLoginSchema } from '@/lib/validation';
 
 export interface LoginActionState {
@@ -33,6 +34,9 @@ export async function loginAction(
       redirectTo: '/admin/dashboard',
     });
   } catch (error) {
+    if (isRateLimitAuthError(error)) {
+      return { status: 'error', message: 'Too many login attempts. Please try again later.' };
+    }
     if (error instanceof AuthError) {
       return { status: 'error', message: 'Invalid email or password.' };
     }

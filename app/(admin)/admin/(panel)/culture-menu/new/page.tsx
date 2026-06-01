@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
-import { CultureMenuForm } from '@/components/admin/CultureMenuForm';
+import { CultureMenuCreateModal } from '@/components/admin/CultureMenuCreateModal';
+import { CultureMenuPageContent } from '@/components/admin/CultureMenuPageContent';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
 
@@ -18,30 +17,33 @@ interface PageProps {
 
 async function NewCultureMenuItemPage({ searchParams }: PageProps) {
   const user = await requireAdmin();
-  const parents = await prisma.cultureMenuItem.findMany({
-    orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
-    select: { id: true, title: true, parentId: true },
-  });
-  const parentOptions = parents
-    .filter((p) => p.parentId === null)
-    .map((p) => ({ id: p.id, title: p.title }));
+  const parentId = searchParams.parentId?.trim() || undefined;
+
+  const [parents, parent] = await Promise.all([
+    prisma.cultureMenuItem.findMany({
+      where: { parentId: null },
+      orderBy: { order: 'asc' },
+      select: { id: true, title: true },
+    }),
+    parentId
+      ? prisma.cultureMenuItem.findUnique({
+          where: { id: parentId },
+          select: { title: true },
+        })
+      : Promise.resolve(null),
+  ]);
+
   return (
-    <>
-      <AdminTopbar title="New menu item" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Create a menu item"
-          description="Add a new entry to the Culture Portal menu. Top-level items become categories; child items appear inside their parent."
+    <CultureMenuPageContent
+      user={user}
+      modal={
+        <CultureMenuCreateModal
+          parents={parents}
+          defaultParentId={parentId}
+          parentTitle={parent?.title}
         />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <CultureMenuForm
-            mode="create"
-            parents={parentOptions}
-            defaultParentId={searchParams.parentId}
-          />
-        </div>
-      </div>
-    </>
+      }
+    />
   );
 }
 

@@ -39,8 +39,8 @@ Copy-Item .env.example .env.local
 - `DATABASE_URL`: the **pooled** Neon string. It ends with `-pooler` in the hostname and includes `?sslmode=require`. Used by the app at runtime.
 - `DIRECT_URL`: the **direct** (non-pooled) Neon string. Used by Prisma migrations and introspection.
 - `NEXTAUTH_SECRET` / `AUTH_SECRET`: generate with `openssl rand -base64 32`.
-- `ADMIN_EMAIL` / `ADMIN_PASSWORD`: admin panel login (server-side only; not stored in the database).
 - `STORAGE_DRIVER`: leave as `local` for development.
+- Create an admin user after migration: `pnpm admin:create` (see [`SECURITY_NOTES.md`](SECURITY_NOTES.md)).
 
 ### 4. Database
 
@@ -75,7 +75,7 @@ lib/
   storage/                    # Local + R2 storage drivers
   validation/                 # Zod schemas (public + admin)
   culture-menu.ts             # resolveMenuHref()
-  rate-limit.ts               # in-memory token bucket
+  rate-limit/                 # Upstash + in-memory rate limiting
   utils.ts                    # cn() + small helpers
 prisma/
   schema.prisma               # Database schema
@@ -94,14 +94,17 @@ public/                       # Static assets
 | `pnpm typecheck` | TypeScript noEmit |
 | `pnpm prisma:migrate` | Run migrations against your Neon branch |
 | `pnpm prisma:studio` | Open Prisma Studio |
-| `pnpm db:seed` | Apply seed data |
+| `pnpm test` | Run Vitest security/unit tests |
+| `pnpm admin:create` | Create a DB-backed admin user (interactive CLI) |
+| `pnpm admin:change-password` | Change an admin password (interactive CLI) |
 
 ## Deployment notes
 
 - Use Vercel's Neon integration to create a Neon branch per preview deployment automatically.
 - Set `STORAGE_DRIVER=r2` and provide R2 credentials in production environment variables.
 - Set `AUTH_SECRET` and `AUTH_URL` (matching your deployed URL).
-- Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` for admin login (redeploy after changing).
+- Create admin users with `pnpm admin:create` (do not use env admin passwords).
+- Enable Upstash rate limiting in production (`RATE_LIMIT_ENABLED=true`).
 - Run `pnpm prisma migrate deploy` in CI before the deploy step.
 
 ## Editorial policy

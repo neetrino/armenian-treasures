@@ -5,10 +5,11 @@ export interface UploadInput {
   key: string;
   body: Buffer | Uint8Array;
   contentType: string;
+  visibility?: 'public' | 'private';
 }
 
 export interface UploadResult {
-  url: string;
+  url: string | null;
   key: string;
 }
 
