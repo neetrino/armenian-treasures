@@ -26,17 +26,20 @@ const FALLBACK: PublicHomeContentDTO = {
   techCards: [
     {
       title: 'Matterport Virtual Tours',
-      description: 'Walk through monasteries and museums room by room.',
+      description:
+        'Walk through monasteries and museums room by room with photo-real 3D capture.',
       icon: 'Building2',
     },
     {
       title: 'Drone Photogrammetry',
-      description: 'Centimetre-accurate aerial reconstructions of fortresses and cliff churches.',
+      description:
+        'Centimetre-accurate aerial reconstructions of fortresses, cliff churches and archaeological sites.',
       icon: 'Camera',
     },
     {
       title: 'AI Video & Storytelling',
-      description: 'AI-curated narratives bringing context to every stone.',
+      description:
+        'AI-curated narratives in multiple languages, bringing context to every stone and manuscript.',
       icon: 'Sparkles',
     },
   ],
