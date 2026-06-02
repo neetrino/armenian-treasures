@@ -74,33 +74,6 @@ function MarqueeStrip({ nodes, duplicate = false, animated = false }: MarqueeStr
   );
 }
 
-function MarqueeDots({ count, visible }: { count: number; visible: boolean }) {
-  const reduced = useReducedMotion();
-
-  return (
-    <motion.div
-      className="mt-8 flex items-center justify-center gap-2"
-      aria-hidden
-      initial={reduced ? false : { opacity: 0, y: 10 }}
-      animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-      transition={{ duration: 0.55, ease: EASE, delay: visible ? 0.12 : 0 }}
-    >
-      {Array.from({ length: count }, (_, i) => (
-        <motion.span
-          key={i}
-          className={cn(
-            'rounded-full bg-stone-300/80',
-            i === 1 ? 'h-2.5 w-2.5 bg-bronze-500' : 'h-2 w-2',
-          )}
-          initial={reduced ? false : { opacity: 0, scale: 0.6 }}
-          animate={visible ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.6 }}
-          transition={{ duration: 0.4, ease: EASE, delay: visible ? 0.2 + i * 0.06 : 0 }}
-        />
-      ))}
-    </motion.div>
-  );
-}
-
 function marqueeDelayMs(count: number): number {
   return 520 + count * 120;
 }
@@ -108,7 +81,6 @@ function marqueeDelayMs(count: number): number {
 export function CulturePortalCarousel({ nodes, className }: CulturePortalCarouselProps) {
   const reduced = useReducedMotion();
   const [marqueeReady, setMarqueeReady] = useState(Boolean(reduced));
-  const dotCount = Math.min(nodes.length, 7);
 
   useEffect(() => {
     if (reduced || nodes.length === 0) {
@@ -173,8 +145,6 @@ export function CulturePortalCarousel({ nodes, className }: CulturePortalCarouse
           {marqueeReady ? <MarqueeStrip nodes={nodes} duplicate /> : null}
         </motion.div>
       </div>
-
-      <MarqueeDots count={dotCount} visible={marqueeReady} />
     </motion.div>
   );
 }

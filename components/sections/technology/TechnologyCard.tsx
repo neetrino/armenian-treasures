@@ -133,13 +133,13 @@ export function TechnologyCard({
         'hover:-translate-y-1 motion-reduce:hover:translate-y-0',
       )}
     >
-      <div className="relative aspect-[7/4.5] w-full shrink-0 overflow-hidden">
+      <div className="relative aspect-[7/4.5] w-full shrink-0 overflow-hidden rounded-t-[1.25rem] sm:rounded-t-[1.375rem] lg:rounded-t-[1.5rem]">
         {imageBackdropClassName ? (
           <div className={cn('absolute inset-0 z-0', imageBackdropClassName)} aria-hidden />
         ) : null}
         <div
           className={cn(
-            'absolute inset-0 z-[1] origin-bottom transition-transform duration-[400ms] ease-cinematic group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+            'absolute -inset-px z-[1] origin-bottom scale-[1.02] transition-transform duration-[400ms] ease-cinematic group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-[1.02]',
             imageZoomClassName,
           )}
         >
@@ -148,7 +148,7 @@ export function TechnologyCard({
             alt={imageAlt}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className={cn('h-full w-full object-cover object-center', imageObjectClassName)}
+            className={cn('block h-full w-full object-cover object-top', imageObjectClassName)}
           />
         </div>
         <div className={cn('absolute inset-0 z-[2] bg-gradient-to-b', theme.imageCinematic)} />
