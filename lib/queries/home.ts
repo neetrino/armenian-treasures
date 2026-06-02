@@ -27,20 +27,20 @@ const FALLBACK: PublicHomeContentDTO = {
     {
       title: 'Matterport Virtual Tours',
       description:
-        'Walk through monasteries and museums room by room with photo-real 3D capture.',
-      icon: 'Building2',
+        'Walk through monasteries and museums from anywhere with photo-real 3D capture and immersive experiences.',
+      icon: 'ScanEye',
     },
     {
       title: 'Drone Photogrammetry',
       description:
-        'Centimetre-accurate aerial reconstructions of fortresses, cliff churches and archaeological sites.',
-      icon: 'Camera',
+        'Centimeter-accurate aerial reconstructions of fortresses, cliff churches, and archaeological sites.',
+      icon: 'Drone',
     },
     {
       title: 'AI Video & Storytelling',
       description:
         'AI-curated narratives in multiple languages, bringing context to every stone and manuscript.',
-      icon: 'Sparkles',
+      icon: 'AudioLines',
     },
   ],
   ctaTitle: 'Help us digitize the next monument',

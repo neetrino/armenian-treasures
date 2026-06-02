@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import { Container } from '@/components/layout/Container';
-import { TechCard } from '@/components/cards/TechCard';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { TechnologyBackground } from '@/components/sections/technology/TechnologyBackground';
+import { TechnologyCard } from '@/components/sections/technology/TechnologyCard';
 import {
   TECHNOLOGY_SECTION,
   enrichTechCards,
@@ -16,59 +16,71 @@ interface TechnologySectionProps {
   items: TechItemInput[];
 }
 
+function TechnologySectionHeader() {
+  return (
+    <header className="mx-auto flex max-w-4xl flex-col items-center gap-5 text-center sm:gap-6 lg:gap-7">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <Image
+          src={HEADER_DIVIDER}
+          alt=""
+          width={48}
+          height={12}
+          className="h-2.5 w-11 object-contain opacity-50 sm:w-12"
+          aria-hidden
+        />
+        <Eyebrow className="text-bronze-600/90">{TECHNOLOGY_SECTION.eyebrow}</Eyebrow>
+        <Image
+          src={HEADER_DIVIDER}
+          alt=""
+          width={48}
+          height={12}
+          className="h-2.5 w-11 scale-x-[-1] object-contain opacity-50 sm:w-12"
+          aria-hidden
+        />
+      </div>
+
+      <h2
+        id="technology-heading"
+        className="font-display text-[clamp(2.125rem,5.8vw,4rem)] leading-[1.08] tracking-tight text-ink"
+      >
+        <span className="block">{TECHNOLOGY_SECTION.titleLine1}</span>
+        <span className="block">{TECHNOLOGY_SECTION.titleLine2}</span>
+      </h2>
+
+      <p className="max-w-[36rem] text-[0.9375rem] leading-relaxed text-ink-soft sm:text-base sm:leading-[1.75] lg:max-w-[40rem] lg:text-[1.0625rem]">
+        <span className="block">{TECHNOLOGY_SECTION.descriptionLine1}</span>
+        <span className="block">{TECHNOLOGY_SECTION.descriptionLine2}</span>
+      </p>
+    </header>
+  );
+}
+
 export function TechnologySection({ items }: TechnologySectionProps) {
   const cards = enrichTechCards(items);
 
   return (
     <section
-      className="relative isolate overflow-hidden py-16 sm:py-20 lg:py-28"
+      className="relative isolate -mt-[clamp(3.5rem,8vw,6.5rem)] overflow-hidden py-[clamp(4rem,9vw,7rem)] pt-[clamp(3.5rem,8vw,6.5rem)] sm:pt-[clamp(4rem,9vw,7rem)] lg:py-[clamp(5rem,10vw,8.5rem)] lg:pt-[clamp(4.5rem,10vw,7.5rem)]"
       aria-labelledby="technology-heading"
     >
       <TechnologyBackground />
       <Container className="relative z-10">
-        <header className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center sm:gap-5">
-          <Image
-            src={HEADER_DIVIDER}
-            alt=""
-            width={56}
-            height={14}
-            className="h-3.5 w-14 object-contain opacity-50"
-            aria-hidden
-          />
-          <Eyebrow className="text-bronze-600">{TECHNOLOGY_SECTION.eyebrow}</Eyebrow>
-          <h2
-            id="technology-heading"
-            className="font-display text-[clamp(1.85rem,5vw,3.25rem)] leading-[1.12] tracking-tight text-ink"
-          >
-            <span className="block">{TECHNOLOGY_SECTION.titleLine1}</span>
-            <span className="block">{TECHNOLOGY_SECTION.titleLine2}</span>
-          </h2>
-          <Image
-            src={HEADER_DIVIDER}
-            alt=""
-            width={72}
-            height={14}
-            className="h-3 w-[4.5rem] object-contain opacity-45"
-            aria-hidden
-          />
-          <p className="max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-            {TECHNOLOGY_SECTION.description}
-          </p>
-        </header>
+        <TechnologySectionHeader />
 
-        <Stagger className="mt-10 grid gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-7 lg:mt-14 lg:grid-cols-3 lg:gap-8">
+        <Stagger className="mt-10 grid auto-rows-fr gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-7 lg:mt-[4.25rem] lg:grid-cols-3 lg:gap-8">
           {cards.map((card, index) => (
             <StaggerItem
               key={card.title}
               className={cnCardPlacement(cards.length, index)}
             >
-              <TechCard
+              <TechnologyCard
                 title={card.title}
                 description={card.description}
                 iconName={card.icon}
                 imageSrc={card.imageSrc}
                 imageAlt={card.imageAlt}
                 accent={card.accent}
+                tags={card.tags}
               />
             </StaggerItem>
           ))}

@@ -1,8 +1,10 @@
-const READABILITY_OVERLAY =
-  'linear-gradient(90deg, rgba(248,245,239,0.98) 0%, rgba(248,245,239,0.92) 35%, rgba(248,245,239,0.70) 55%, rgba(248,245,239,0.20) 75%, rgba(248,245,239,0.00) 100%)';
+const PARCHMENT = '250,246,238';
 
-const MOBILE_BOTTOM_OVERLAY =
-  'linear-gradient(180deg, rgba(248,245,239,0.00) 0%, rgba(248,245,239,0.45) 72%, rgba(248,245,239,0.82) 100%)';
+const READABILITY_OVERLAY = `linear-gradient(90deg, rgba(${PARCHMENT},0.98) 0%, rgba(${PARCHMENT},0.92) 35%, rgba(${PARCHMENT},0.70) 55%, rgba(${PARCHMENT},0.20) 75%, rgba(${PARCHMENT},0.00) 100%)`;
+
+const BOTTOM_BLEND_OVERLAY = `linear-gradient(180deg, rgba(${PARCHMENT},0.00) 0%, rgba(${PARCHMENT},0.06) 30%, rgba(${PARCHMENT},0.22) 52%, rgba(${PARCHMENT},0.48) 72%, rgba(${PARCHMENT},0.76) 88%, rgba(${PARCHMENT},0.94) 100%)`;
+
+const BOTTOM_LEFT_FEATHER = `radial-gradient(ellipse 80% 110% at 14% 100%, rgba(${PARCHMENT},0.88) 0%, rgba(${PARCHMENT},0.42) 48%, rgba(${PARCHMENT},0.00) 70%)`;
 
 export function MissionFoundationOverlay() {
   return (
@@ -14,8 +16,13 @@ export function MissionFoundationOverlay() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] lg:hidden"
-        style={{ background: MOBILE_BOTTOM_OVERLAY }}
+        className="pointer-events-none absolute inset-0 z-[1]"
+        style={{ background: BOTTOM_BLEND_OVERLAY }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[clamp(5rem,14vw,10.5rem)]"
+        style={{ background: BOTTOM_LEFT_FEATHER }}
       />
     </>
   );
