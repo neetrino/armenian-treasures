@@ -80,6 +80,15 @@ const config: Config = {
       transitionTimingFunction: {
         cinematic: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
+      keyframes: {
+        'portal-marquee': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        'portal-marquee': 'portal-marquee 32s linear infinite',
+      },
     },
   },
   plugins: [typography],

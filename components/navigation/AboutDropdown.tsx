@@ -80,7 +80,7 @@ export function AboutDropdown() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className={cn('absolute left-0 z-[60] mt-1.5 overflow-visible', PANEL_CLASS)}
+            className={cn('absolute left-0 z-[110] mt-1.5 overflow-visible', PANEL_CLASS)}
           >
             <ul className="flex flex-col">
               {ABOUT_TABS.map((tab) => (

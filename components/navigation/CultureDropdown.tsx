@@ -84,7 +84,7 @@ export function CultureDropdown({ tree }: CultureDropdownProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className={cn('absolute left-0 z-[60] mt-1.5 overflow-visible', PANEL_CLASS)}
+            className={cn('absolute left-0 z-[110] mt-1.5 overflow-visible', PANEL_CLASS)}
           >
             <ul className="flex flex-col">
               {tree.map((node) => (
@@ -124,7 +124,7 @@ function CultureDropdownRow({ node, onSelect }: RowProps) {
         <span>{node.title}</span>
         <ChevronRight size={16} className="shrink-0 text-ink-muted" aria-hidden />
       </Link>
-      <div className="pointer-events-none invisible absolute left-full top-0 z-[70] pl-0.5 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100">
+      <div className="pointer-events-none invisible absolute left-full top-0 z-[120] pl-0.5 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100">
         <div role="menu" className={PANEL_CLASS}>
           <ul>
             {children.map((child) => (

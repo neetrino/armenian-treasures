@@ -22,22 +22,25 @@ const FALLBACK: PublicHomeContentDTO = {
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',
   missionText:
-    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site.',
+    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site — accessible to scholars, students and the diaspora worldwide.',
   techCards: [
     {
       title: 'Matterport Virtual Tours',
-      description: 'Walk through monasteries and museums room by room.',
-      icon: 'Building2',
+      description:
+        'Walk through monasteries and museums from anywhere with photo-real 3D capture and immersive experiences.',
+      icon: 'ScanEye',
     },
     {
       title: 'Drone Photogrammetry',
-      description: 'Centimetre-accurate aerial reconstructions of fortresses and cliff churches.',
-      icon: 'Camera',
+      description:
+        'Centimeter-accurate aerial reconstructions of fortresses, cliff churches, and archaeological sites.',
+      icon: 'Drone',
     },
     {
       title: 'AI Video & Storytelling',
-      description: 'AI-curated narratives bringing context to every stone.',
-      icon: 'Sparkles',
+      description:
+        'AI-curated narratives in multiple languages, bringing context to every stone and manuscript.',
+      icon: 'AudioLines',
     },
   ],
   ctaTitle: 'Help us digitize the next monument',
