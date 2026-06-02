@@ -36,7 +36,7 @@ function ManuscriptLines({ className }: { className?: string }) {
 export function TechnologySectionDecorations() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_0%,rgba(255,250,242,0.28)_0%,transparent_58%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_50%_0%,rgba(255,250,242,0.16)_0%,transparent_55%)]" />
 
       <Image
         src="/images/technology/section-heritage-bg.png"
@@ -46,9 +46,9 @@ export function TechnologySectionDecorations() {
         className="absolute -left-[2%] top-[8%] h-auto w-[min(42vw,20rem)] opacity-[0.06] mix-blend-multiply"
       />
 
-      <TopographicRings className="absolute right-[6%] top-[14%] h-[min(22vw,11rem)] w-[min(22vw,11rem)] text-[#0d6b59]/18" />
+      <TopographicRings className="absolute right-[6%] top-[14%] h-[min(22vw,11rem)] w-[min(22vw,11rem)] text-emerald-700/15" />
 
-      <ManuscriptLines className="absolute right-[10%] top-[26%] h-16 w-28 text-[#4f4a44]/20 sm:h-20 sm:w-32" />
+      <ManuscriptLines className="absolute right-[10%] top-[26%] h-16 w-28 text-ink-muted/20 sm:h-20 sm:w-32" />
 
       <Image
         src="/images/technology/ornament-left.png"

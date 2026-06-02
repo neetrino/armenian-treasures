@@ -111,7 +111,7 @@ export function CulturePortalCarousel({ nodes, className }: CulturePortalCarouse
         transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
       />
       <motion.div
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
         aria-hidden
         initial={reduced ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}

@@ -19,7 +19,7 @@ export function MissionPreviewSection({ title, highlight, text }: MissionPreview
 
   return (
     <section
-      className={`foundation-section relative isolate w-full overflow-hidden ${SECTION_MIN_H}`}
+      className={`relative isolate w-full overflow-hidden ${SECTION_MIN_H}`}
       aria-labelledby="foundation-heading"
     >
       <MissionFoundationBackground />

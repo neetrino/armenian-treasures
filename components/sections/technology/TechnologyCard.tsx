@@ -125,7 +125,7 @@ export function TechnologyCard({
   return (
     <article
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border bg-[#fffdf8] backface-hidden transform-gpu transition-[transform,box-shadow,border-color] duration-[400ms] ease-cinematic motion-reduce:transition-none sm:rounded-[1.375rem] lg:rounded-[1.5rem]',
+        'group relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border bg-parchment-50 backface-hidden transform-gpu transition-[transform,box-shadow,border-color] duration-[400ms] ease-cinematic motion-reduce:transition-none sm:rounded-[1.375rem] lg:rounded-[1.5rem]',
         theme.cardBorder,
         theme.cardBorderHover,
         theme.cardShadow,
@@ -154,15 +154,15 @@ export function TechnologyCard({
         <div className={cn('absolute inset-0 z-[2] bg-gradient-to-b', theme.imageCinematic)} />
         <div className={cn('absolute inset-0 z-[2] bg-gradient-to-t', theme.imageOverlay)} />
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-10 bg-gradient-to-t from-[#fffdf8] via-[#fffdf8]/80 to-transparent sm:h-12"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-10 bg-gradient-to-t from-parchment-50 via-parchment-50/80 to-transparent sm:h-12"
           aria-hidden
         />
       </div>
 
-      <div className="relative flex flex-1 flex-col items-center bg-[#fffdf8] px-5 pb-4 pt-9 text-center sm:px-6 sm:pb-5 sm:pt-10 lg:px-7 lg:pb-5 lg:pt-11">
+      <div className="relative flex flex-1 flex-col items-center bg-parchment-50 px-5 pb-4 pt-9 text-center sm:px-6 sm:pb-5 sm:pt-10 lg:px-7 lg:pb-5 lg:pt-11">
         <div
           className={cn(
-            'absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[#fffdf8] transition-[box-shadow,transform] duration-[400ms] ease-cinematic motion-reduce:transition-none',
+            'absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-parchment-50 transition-[box-shadow,transform] duration-[400ms] ease-cinematic motion-reduce:transition-none',
             'h-[3.5rem] w-[3.5rem] sm:h-[4rem] sm:w-[4rem]',
             theme.badge,
             theme.badgeRing,
@@ -172,13 +172,13 @@ export function TechnologyCard({
           <CardIcon iconName={iconName} />
         </div>
 
-        <h3 className="max-w-[16rem] font-display text-[1.125rem] leading-[1.22] tracking-tight text-[#2d2926] sm:text-[1.25rem] lg:text-[1.3125rem]">
+        <h3 className="max-w-[16rem] font-display text-[1.125rem] leading-[1.22] tracking-tight text-ink sm:text-[1.25rem] lg:text-[1.3125rem]">
           {title}
         </h3>
 
         <CardTitleDivider accent={accent} />
 
-        <p className="mt-2 max-w-[18rem] flex-1 text-[0.8125rem] leading-[1.58] text-[#545454] sm:text-[0.875rem] sm:leading-[1.6]">
+        <p className="mt-2 max-w-[18rem] flex-1 text-[0.8125rem] leading-[1.58] text-ink-soft sm:text-[0.875rem] sm:leading-[1.6]">
           {description}
         </p>
 

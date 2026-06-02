@@ -12,7 +12,7 @@ interface FinalCtaSectionProps {
 
 export function FinalCtaSection({ title, description }: FinalCtaSectionProps) {
   return (
-    <section className="pt-0 pb-20 lg:pb-28">
+    <section className="pt-10 pb-20 sm:pt-12 lg:pt-14 lg:pb-28">
       <Container>
         <div className="relative isolate min-h-[18rem] overflow-hidden rounded-3xl p-8 sm:min-h-[20rem] sm:p-10 lg:min-h-[22rem] lg:p-14 xl:p-16">
           <FinalCtaBackground />
