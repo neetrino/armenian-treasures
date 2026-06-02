@@ -38,23 +38,23 @@ export function CultureCategoryCard({
       )}
       style={{ borderWidth: 1, borderStyle: 'solid', borderColor: `${theme.accentColor}55` }}
     >
-      <div className="relative h-[11.5rem] shrink-0 overflow-hidden sm:h-[12.5rem]">
+      <div className="relative h-[11.5rem] shrink-0 overflow-hidden -mb-px sm:h-[12.5rem]">
         <Image
           src={imageSrc}
           alt=""
           fill
           sizes="(max-width: 640px) 52vw, 15rem"
-          className="object-cover transition duration-500 group-hover:scale-[1.03]"
+          className="origin-bottom object-cover transition duration-500 group-hover:scale-[1.03]"
           style={{ objectPosition: theme.objectPosition }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/15" />
         <CultureCategoryWave
           fill="#FDFBF6"
-          className="absolute bottom-0 left-0 h-7 w-full"
+          className="absolute bottom-0 left-0 h-8 w-full"
         />
       </div>
 
-      <div className="relative flex flex-1 flex-col items-center px-5 pb-6 pt-5 text-center">
+      <div className="relative -mt-px flex flex-1 flex-col items-center bg-[#FDFBF6] px-5 pb-6 pt-5 text-center">
         <span
           className="font-display text-[2.75rem] leading-none tracking-tight"
           style={{ color: theme.accentColor }}

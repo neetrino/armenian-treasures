@@ -96,7 +96,7 @@ export const ACCENT_THEME: Record<
     cardHoverShadow:
       'group-hover:shadow-[0_28px_60px_rgba(50,35,20,0.14),0_12px_32px_rgba(184,116,47,0.16)]',
     badge:
-      'bg-[radial-gradient(circle_at_32%_28%,#d4924a_0%,#b8742f_48%,#8b4f1d_100%)]',
+      'bg-[#6a3a14] bg-[radial-gradient(circle_at_32%_28%,#b8742f_0%,#8b4f1d_52%,#5c3210_100%)]',
     badgeRing: 'ring-4 ring-[#fffdf8]',
     badgeGlow: 'group-hover:shadow-[0_0_0_6px_rgba(184,116,47,0.12),0_12px_28px_rgba(139,79,29,0.28)]',
     dividerLine: 'via-[#b8742f]/45',
@@ -115,7 +115,7 @@ export const ACCENT_THEME: Record<
     cardHoverShadow:
       'group-hover:shadow-[0_32px_64px_rgba(50,35,20,0.16),0_16px_40px_rgba(13,107,89,0.22)]',
     badge:
-      'bg-[radial-gradient(circle_at_32%_28%,#128a72_0%,#0d6b59_48%,#084d40_100%)]',
+      'bg-[#053830] bg-[radial-gradient(circle_at_32%_28%,#0d6b59_0%,#084d40_52%,#052e26_100%)]',
     badgeRing: 'ring-4 ring-[#fffdf8]',
     badgeGlow: 'group-hover:shadow-[0_0_0_6px_rgba(13,107,89,0.12),0_12px_28px_rgba(8,77,64,0.3)]',
     dividerLine: 'via-[#0d6b59]/42',
@@ -134,7 +134,7 @@ export const ACCENT_THEME: Record<
     cardHoverShadow:
       'group-hover:shadow-[0_28px_60px_rgba(50,35,20,0.14),0_12px_32px_rgba(166,74,52,0.16)]',
     badge:
-      'bg-[radial-gradient(circle_at_32%_28%,#c45a42_0%,#a64a34_48%,#7f3324_100%)]',
+      'bg-[#5a2218] bg-[radial-gradient(circle_at_32%_28%,#a64a34_0%,#7f3324_52%,#5a2218_100%)]',
     badgeRing: 'ring-4 ring-[#fffdf8]',
     badgeGlow: 'group-hover:shadow-[0_0_0_6px_rgba(166,74,52,0.12),0_12px_28px_rgba(127,51,36,0.28)]',
     dividerLine: 'via-[#a64a34]/42',

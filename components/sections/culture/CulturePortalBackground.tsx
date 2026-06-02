@@ -45,9 +45,7 @@ function MandalaOutline({ className }: { className?: string }) {
 export function CulturePortalBackground() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 bg-parchment" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_-8%,#fffaf2_0%,transparent_55%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_50%_100%,#f2eadb_0%,transparent_62%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(242,234,219,0.22)_0%,transparent_58%)]" />
 
       <MandalaOutline className="absolute -left-[4%] top-[4%] h-[min(42vw,21rem)] w-[min(42vw,21rem)] text-bronze/25" />
       <MandalaOutline className="absolute -right-[8%] top-[18%] h-[min(34vw,17rem)] w-[min(34vw,17rem)] text-bronze/18" />
@@ -63,7 +61,6 @@ export function CulturePortalBackground() {
         className="absolute bottom-0 left-0 right-0 h-auto w-full opacity-[0.05]"
       />
 
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-stone-200/80 to-transparent" />
     </div>
   );
 }

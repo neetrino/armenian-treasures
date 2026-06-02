@@ -36,9 +36,7 @@ function ManuscriptLines({ className }: { className?: string }) {
 export function TechnologySectionDecorations() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <div className="absolute inset-0 bg-[#fdfbf7]" />
-
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_0%,#fffaf2_0%,transparent_62%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_0%,rgba(255,250,242,0.28)_0%,transparent_58%)]" />
 
       <Image
         src="/images/technology/section-heritage-bg.png"

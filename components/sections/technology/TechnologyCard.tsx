@@ -99,22 +99,6 @@ function CardTagPill({ tags, accent }: { tags: readonly string[]; accent: TechAc
   );
 }
 
-function ImageWaveSeparator({ fill }: { fill: string }) {
-  return (
-    <svg
-      viewBox="0 0 400 28"
-      preserveAspectRatio="none"
-      className="absolute -bottom-px left-0 z-[2] block h-6 w-full sm:h-7"
-      aria-hidden
-    >
-      <path
-        d="M0 18 C 80 4, 120 26, 200 14 C 280 2, 320 24, 400 10 L 400 28 L 0 28 Z"
-        fill={fill}
-      />
-    </svg>
-  );
-}
-
 function CardIcon({ iconName }: { iconName: string }) {
   if (iconName === 'Drone') {
     return <DroneIcon className="relative z-[1] h-[1.375rem] w-[1.375rem] sm:h-6 sm:w-6" />;
@@ -141,7 +125,7 @@ export function TechnologyCard({
   return (
     <article
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border bg-[#fffdf8] transition-[transform,box-shadow,border-color] duration-[400ms] ease-cinematic motion-reduce:transition-none sm:rounded-[1.375rem] lg:rounded-[1.5rem]',
+        'group relative flex h-full flex-col overflow-hidden rounded-[1.25rem] border bg-[#fffdf8] backface-hidden transform-gpu transition-[transform,box-shadow,border-color] duration-[400ms] ease-cinematic motion-reduce:transition-none sm:rounded-[1.375rem] lg:rounded-[1.5rem]',
         theme.cardBorder,
         theme.cardBorderHover,
         theme.cardShadow,
@@ -155,7 +139,7 @@ export function TechnologyCard({
         ) : null}
         <div
           className={cn(
-            'absolute inset-0 z-[1] transition-transform duration-[400ms] ease-cinematic group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100',
+            'absolute inset-0 z-[1] origin-bottom transition-transform duration-[400ms] ease-cinematic group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100',
             imageZoomClassName,
           )}
         >
@@ -169,10 +153,13 @@ export function TechnologyCard({
         </div>
         <div className={cn('absolute inset-0 z-[2] bg-gradient-to-b', theme.imageCinematic)} />
         <div className={cn('absolute inset-0 z-[2] bg-gradient-to-t', theme.imageOverlay)} />
-        <ImageWaveSeparator fill={theme.waveFill} />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-10 bg-gradient-to-t from-[#fffdf8] via-[#fffdf8]/80 to-transparent sm:h-12"
+          aria-hidden
+        />
       </div>
 
-      <div className="relative flex flex-1 flex-col items-center px-5 pb-4 pt-9 text-center sm:px-6 sm:pb-5 sm:pt-10 lg:px-7 lg:pb-5 lg:pt-11">
+      <div className="relative flex flex-1 flex-col items-center bg-[#fffdf8] px-5 pb-4 pt-9 text-center sm:px-6 sm:pb-5 sm:pt-10 lg:px-7 lg:pb-5 lg:pt-11">
         <div
           className={cn(
             'absolute left-1/2 top-0 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-[#fffdf8] transition-[box-shadow,transform] duration-[400ms] ease-cinematic motion-reduce:transition-none',

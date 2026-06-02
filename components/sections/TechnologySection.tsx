@@ -132,7 +132,7 @@ export function TechnologySection({ items }: TechnologySectionProps) {
 
     <section
 
-      className="relative isolate -mt-[clamp(2.5rem,6vw,4.5rem)] overflow-hidden bg-[#fdfbf7] px-4 py-14 sm:px-5 sm:py-[4.5rem] lg:px-6 lg:py-[5.625rem] lg:pb-[6.25rem]"
+      className="relative isolate overflow-hidden px-4 py-14 sm:px-5 sm:py-[4.5rem] lg:px-6 lg:py-[5.625rem] lg:pb-[6.25rem]"
 
       aria-labelledby="technology-heading"
 
