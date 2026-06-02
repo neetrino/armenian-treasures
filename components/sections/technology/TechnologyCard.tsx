@@ -45,7 +45,7 @@ function CardTitleDivider({ accent }: { accent: TechAccent }) {
 
   return (
     <div
-      className="mt-3 flex w-full max-w-[9.5rem] items-center justify-center gap-2 sm:mt-3.5"
+      className="mt-1.5 flex w-full max-w-[7rem] items-center justify-center gap-1 sm:mt-2"
       aria-hidden
     >
       <span
@@ -65,14 +65,14 @@ function CardTagPill({ tags, accent }: { tags: readonly string[]; accent: TechAc
   return (
     <div
       className={cn(
-        'relative mt-5 flex w-full items-center rounded-full border px-4 py-2.5 sm:mt-6 sm:px-5 sm:py-2.5',
+        'relative mt-2 flex w-full items-center rounded-full border px-3 py-1 sm:mt-2.5 sm:px-3.5 sm:py-1.5',
         theme.tagPill,
       )}
     >
-      <HeritageCrossMark className={cn('absolute left-4 sm:left-5', theme.tagMark)} />
+      <HeritageCrossMark className={cn('absolute left-3.5 sm:left-4', theme.tagMark)} />
       <p
         className={cn(
-          'w-full text-center text-[0.625rem] font-medium uppercase tracking-[0.15em] sm:text-[0.6875rem] sm:tracking-[0.17em]',
+          'w-full text-center text-[0.5625rem] font-medium uppercase tracking-[0.14em] sm:text-[0.625rem] sm:tracking-[0.15em]',
           theme.tagText,
         )}
       >
@@ -102,7 +102,7 @@ function ImageFadeOverlay({ accent }: { accent: TechAccent }) {
         )}
       />
       <div
-        className="absolute -bottom-px left-1/2 h-9 w-[112%] -translate-x-1/2 rounded-[100%] bg-parchment-50 sm:h-10"
+        className="absolute -bottom-px left-1/2 h-6 w-[112%] -translate-x-1/2 rounded-[100%] bg-parchment-50 sm:h-7"
         aria-hidden
       />
     </>
@@ -124,15 +124,15 @@ export function TechnologyCard({
   return (
     <article
       className={cn(
-        'group relative grid h-full min-h-[27rem] grid-rows-[minmax(10.75rem,42%)_1fr] overflow-hidden rounded-[1.375rem] border bg-parchment-50 transition-[transform,box-shadow,border-color] duration-500 ease-cinematic sm:min-h-[28.5rem] sm:rounded-[1.625rem] lg:min-h-[30rem] lg:rounded-[1.75rem]',
+        'group relative grid h-full min-h-[17rem] grid-rows-[minmax(6.25rem,34%)_1fr] overflow-hidden rounded-[1rem] border bg-parchment-50 transition-[transform,box-shadow,border-color] duration-500 ease-cinematic sm:min-h-[18rem] sm:rounded-[1.125rem] lg:min-h-[19rem] lg:rounded-[1.25rem]',
         theme.cardBorder,
         theme.cardBorderHover,
         theme.cardShadow,
         theme.cardHoverShadow,
-        'hover:-translate-y-[6px]',
+        'hover:-translate-y-1',
       )}
     >
-      <div className="relative min-h-[10.75rem] overflow-hidden">
+      <div className="relative min-h-[6.25rem] overflow-hidden">
         <Image
           src={imageSrc}
           alt={imageAlt}
@@ -143,35 +143,35 @@ export function TechnologyCard({
         <ImageFadeOverlay accent={accent} />
       </div>
 
-      <div className="relative flex h-full flex-col items-center bg-parchment-50 px-5 pb-6 pt-[3.5rem] text-center sm:px-6 sm:pb-7 sm:pt-[3.75rem] lg:px-7 lg:pb-8">
+      <div className="relative flex h-full flex-col items-center bg-parchment-50 px-3.5 pb-3.5 pt-[2.125rem] text-center sm:px-4 sm:pb-3.5 sm:pt-[2.25rem] lg:px-4 lg:pb-4">
         <div
           className={cn(
-            'absolute left-1/2 top-0 z-10 flex h-[4.125rem] w-[4.125rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-parchment-50 shadow-[0_10px_28px_-8px_rgba(26,23,20,0.38)] transition-[box-shadow,transform] duration-500 ease-cinematic sm:h-[4.375rem] sm:w-[4.375rem] lg:h-[4.75rem] lg:w-[4.75rem]',
+            'absolute left-1/2 top-0 z-10 flex h-[2.875rem] w-[2.875rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-parchment-50 shadow-[0_6px_18px_-8px_rgba(26,23,20,0.32)] transition-[box-shadow,transform] duration-500 ease-cinematic sm:h-[3rem] sm:w-[3rem] lg:h-[3.125rem] lg:w-[3.125rem]',
             theme.badge,
             theme.badgeRing,
             theme.badgeGlow,
             'group-hover:scale-[1.03]',
           )}
         >
-          <Icon size={24} strokeWidth={1.45} aria-hidden />
+          <Icon size={18} strokeWidth={1.45} aria-hidden />
         </div>
 
         <Image
           src={CARD_ORNAMENT}
           alt=""
-          width={36}
-          height={10}
-          className={cn('h-2 w-9 object-contain object-center', theme.ornament)}
+          width={26}
+          height={7}
+          className={cn('h-1.5 w-6 object-contain object-center', theme.ornament)}
           aria-hidden
         />
 
-        <h3 className="mt-2.5 max-w-[17rem] font-display text-[1.3125rem] leading-[1.2] tracking-tight text-ink sm:max-w-none sm:text-[1.5rem] lg:text-[1.625rem]">
+        <h3 className="mt-1.5 max-w-[14rem] font-display text-[0.9375rem] leading-[1.18] tracking-tight text-ink sm:max-w-none sm:text-[1.0625rem] lg:text-[1.125rem]">
           {title}
         </h3>
 
         <CardTitleDivider accent={accent} />
 
-        <p className="mt-3.5 max-w-[19rem] flex-1 text-[0.9375rem] leading-[1.7] text-ink-soft sm:mt-4 sm:max-w-[21rem] sm:text-base sm:leading-[1.68]">
+        <p className="mt-2 max-w-[15rem] flex-1 text-[0.75rem] leading-[1.55] text-ink-soft sm:max-w-[16rem] sm:text-[0.8125rem] sm:leading-[1.5]">
           {description}
         </p>
 

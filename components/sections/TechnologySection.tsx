@@ -18,36 +18,36 @@ interface TechnologySectionProps {
 
 function TechnologySectionHeader() {
   return (
-    <header className="mx-auto flex max-w-4xl flex-col items-center gap-5 text-center sm:gap-6 lg:gap-7">
-      <div className="flex items-center gap-3 sm:gap-4">
+    <header className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center sm:gap-2.5">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Image
           src={HEADER_DIVIDER}
           alt=""
-          width={48}
-          height={12}
-          className="h-2.5 w-11 object-contain opacity-50 sm:w-12"
+          width={40}
+          height={10}
+          className="h-2 w-9 object-contain opacity-50 sm:w-10"
           aria-hidden
         />
         <Eyebrow className="text-bronze-600/90">{TECHNOLOGY_SECTION.eyebrow}</Eyebrow>
         <Image
           src={HEADER_DIVIDER}
           alt=""
-          width={48}
-          height={12}
-          className="h-2.5 w-11 scale-x-[-1] object-contain opacity-50 sm:w-12"
+          width={40}
+          height={10}
+          className="h-2 w-9 scale-x-[-1] object-contain opacity-50 sm:w-10"
           aria-hidden
         />
       </div>
 
       <h2
         id="technology-heading"
-        className="font-display text-[clamp(2.125rem,5.8vw,4rem)] leading-[1.08] tracking-tight text-ink"
+        className="font-display text-[clamp(1.625rem,4.2vw,2.75rem)] leading-[1.08] tracking-tight text-ink"
       >
         <span className="block">{TECHNOLOGY_SECTION.titleLine1}</span>
         <span className="block">{TECHNOLOGY_SECTION.titleLine2}</span>
       </h2>
 
-      <p className="max-w-[36rem] text-[0.9375rem] leading-relaxed text-ink-soft sm:text-base sm:leading-[1.75] lg:max-w-[40rem] lg:text-[1.0625rem]">
+      <p className="max-w-[28rem] text-[0.8125rem] leading-snug text-ink-soft sm:max-w-[30rem] sm:text-[0.875rem] sm:leading-[1.55]">
         <span className="block">{TECHNOLOGY_SECTION.descriptionLine1}</span>
         <span className="block">{TECHNOLOGY_SECTION.descriptionLine2}</span>
       </p>
@@ -60,14 +60,14 @@ export function TechnologySection({ items }: TechnologySectionProps) {
 
   return (
     <section
-      className="relative isolate -mt-[clamp(3.5rem,8vw,6.5rem)] overflow-hidden py-[clamp(4rem,9vw,7rem)] pt-[clamp(3.5rem,8vw,6.5rem)] sm:pt-[clamp(4rem,9vw,7rem)] lg:py-[clamp(5rem,10vw,8.5rem)] lg:pt-[clamp(4.5rem,10vw,7.5rem)]"
+      className="relative isolate -mt-[clamp(2.5rem,6vw,4.5rem)] overflow-hidden pb-[clamp(1.25rem,3.5vw,2.25rem)] pt-[clamp(2.5rem,6vw,4.5rem)] sm:pb-[clamp(1.5rem,4vw,2.5rem)] lg:pb-[clamp(1.75rem,4.5vw,2.75rem)] lg:pt-[clamp(2.75rem,6.5vw,4.75rem)]"
       aria-labelledby="technology-heading"
     >
       <TechnologyBackground />
       <Container className="relative z-10">
         <TechnologySectionHeader />
 
-        <Stagger className="mt-10 grid auto-rows-fr gap-6 sm:mt-12 sm:grid-cols-2 sm:gap-7 lg:mt-[4.25rem] lg:grid-cols-3 lg:gap-8">
+        <Stagger className="mx-auto mt-3.5 grid max-w-4xl auto-rows-fr gap-3.5 sm:mt-4 sm:grid-cols-2 sm:gap-4 lg:mt-5 lg:max-w-5xl lg:grid-cols-3 lg:gap-4">
           {cards.map((card, index) => (
             <StaggerItem
               key={card.title}
