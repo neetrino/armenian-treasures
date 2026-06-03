@@ -16,7 +16,7 @@ export async function Footer() {
   const settings = await getSiteSettings();
 
   return (
-    <footer className="relative overflow-hidden pt-16 pb-8 text-parchment-200">
+    <footer className="relative overflow-hidden rounded-t-3xl pt-16 pb-8 text-parchment-200">
       <FooterBackground />
       <Container className="relative z-10">
         <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-12 md:gap-x-8 md:gap-y-10 xl:gap-x-10">
