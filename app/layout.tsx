@@ -43,8 +43,13 @@ export const viewport: Viewport = {
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
-      <body className="min-h-screen bg-parchment text-ink antialiased">{children}</body>
+    <html
+      lang="en"
+      className={`scrollbar-none ${cormorant.variable} ${inter.variable}`}
+    >
+      <body className="scrollbar-none min-h-screen bg-parchment text-ink antialiased">
+        {children}
+      </body>
     </html>
   );
 }

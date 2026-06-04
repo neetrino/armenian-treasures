@@ -3,41 +3,44 @@ import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 
 const FALLBACK: PublicHomeContentDTO = {
-  heroBadge: 'Since the 4th century',
+  heroBadge: 'SINCE THE 4TH CENTURY',
   heroTitle: 'The living archive of',
   heroHighlight: 'Armenian heritage',
   heroDescription:
     "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
-  heroImage: '/images/hero/home.svg',
+  heroImage: '/images/hero/home-hero.png',
   primaryCtaText: 'Explore the Culture Portal',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'Open Interactive Map',
   secondaryCtaUrl: '/map',
   stats: [
-    { value: '180+', label: 'Monuments scanned' },
-    { value: '42', label: 'Virtual tours' },
-    { value: '1700+', label: 'Years of history' },
-    { value: '11', label: 'Cultural domains' },
+    { value: '180+', label: 'Monuments Scanned' },
+    { value: '42', label: 'Virtual Tours' },
+    { value: '1,700+', label: 'Years of History' },
+    { value: '11', label: 'Cultural Domains' },
   ],
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',
   missionText:
-    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site.',
+    'For over a millennium, Armenian craftsmen carved khachkars and built cliff-top monasteries that survived empires. Today many remain at risk. Armenian Treasures creates a permanent, open digital twin of every site — accessible to scholars, students and the diaspora worldwide.',
   techCards: [
     {
       title: 'Matterport Virtual Tours',
-      description: 'Walk through monasteries and museums room by room.',
-      icon: 'Building2',
+      description:
+        'Walk through monasteries and museums from anywhere with photo-real 3D capture and immersive experiences.',
+      icon: 'ScanEye',
     },
     {
       title: 'Drone Photogrammetry',
-      description: 'Centimetre-accurate aerial reconstructions of fortresses and cliff churches.',
-      icon: 'Camera',
+      description:
+        'Centimeter-accurate aerial reconstructions of fortresses, cliff churches, and archaeological sites.',
+      icon: 'Drone',
     },
     {
       title: 'AI Video & Storytelling',
-      description: 'AI-curated narratives bringing context to every stone.',
-      icon: 'Sparkles',
+      description:
+        'AI-curated narratives in multiple languages, bringing context to every stone and manuscript.',
+      icon: 'AudioLines',
     },
   ],
   ctaTitle: 'Help us digitize the next monument',

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Container } from '@/components/layout/Container';
 import { HeroPage } from '@/components/sections/HeroPage';
-import { CultureCategoryCard } from '@/components/cards/CultureCategoryCard';
-import { Stagger, StaggerItem } from '@/components/motion/Stagger';
-import { isFormRoute } from '@/lib/culture-menu';
+import { CulturePortalBackground } from '@/components/sections/culture/CulturePortalBackground';
+import { CulturePortalCarousel } from '@/components/sections/culture/CulturePortalCarousel';
+import { CulturePortalSectionIntro } from '@/components/sections/culture/CulturePortalSectionIntro';
+import { filterCulturePortalCarouselNodes } from '@/lib/culture-menu';
 import { getMenuTree } from '@/lib/queries/menu';
 
 export const revalidate = 60;
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 
 async function CulturePortalLandingPage() {
   const tree = await getMenuTree();
-  const visible = tree.filter((node) => node.isActive && !isFormRoute(node.routeType));
+  const visible = filterCulturePortalCarouselNodes(tree);
   return (
     <>
       <HeroPage
@@ -23,15 +24,23 @@ async function CulturePortalLandingPage() {
         title="The full archive of Armenian heritage."
         description="From cliff-top monasteries to UNESCO-recognised bread — every curated entry into the Armenian cultural world."
       />
-      <Container className="py-20 lg:py-28">
-        <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {visible.map((node) => (
-            <StaggerItem key={node.id} className="h-full">
-              <CultureCategoryCard node={node} size="md" />
-            </StaggerItem>
-          ))}
-        </Stagger>
-      </Container>
+      <section className="relative isolate overflow-hidden pb-20 lg:pb-28">
+        <CulturePortalBackground />
+        <Container className="relative z-10 max-w-[82.5rem]">
+          <CulturePortalSectionIntro
+            eyebrow="Explore"
+            title={
+              <>
+                Five curated gateways into{' '}
+                <span className="italic text-bronze-600">Armenian culture</span>
+              </>
+            }
+            description="Scroll through the living domains of the archive — legends, museums, people, history and culture."
+            showCta={false}
+          />
+          <CulturePortalCarousel nodes={visible} className="mt-10 sm:mt-12" />
+        </Container>
+      </section>
     </>
   );
 }

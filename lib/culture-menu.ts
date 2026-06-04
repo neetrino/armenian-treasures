@@ -34,6 +34,13 @@ export function isFormRoute(routeType: MenuRouteType): boolean {
   return routeType === 'SUBCATEGORY_FORM' || routeType === 'PROJECT_SUBMIT_FORM';
 }
 
+/** Top-level categories shown in the home / culture portal carousel. */
+export function filterCulturePortalCarouselNodes(nodes: MenuNode[]): MenuNode[] {
+  return nodes.filter(
+    (node) => node.isActive && !isFormRoute(node.routeType) && node.slug !== 'architecture',
+  );
+}
+
 export function buildMenuTree<T extends MenuNode>(nodes: T[]): T[] {
   const byId = new Map<string, T & { children: T[] }>();
   for (const node of nodes) {
