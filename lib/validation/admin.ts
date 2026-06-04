@@ -198,12 +198,24 @@ export const homeTechCardSchema = z.object({
   icon: z.string().min(1).max(40),
 });
 
+const optionalHeroImagePath = z
+  .string()
+  .trim()
+  .max(160)
+  .optional()
+  .or(z.literal(''))
+  .refine(
+    (value) => !value || value.startsWith('/') || /^https?:\/\//i.test(value),
+    'Must be an internal path starting with / or a full http(s) URL',
+  );
+
 export const homeContentSchema = z.object({
   heroBadge: z.string().trim().min(1).max(80),
   heroTitle: z.string().trim().min(1).max(140),
   heroHighlight: z.string().trim().min(1).max(80),
   heroDescription: z.string().trim().min(10).max(800),
-  heroImage: optionalShortString,
+  heroImage: optionalHeroImagePath,
+  heroMobileImage: optionalHeroImagePath,
   primaryCtaText: z.string().trim().min(1).max(60),
   primaryCtaUrl: z.string().trim().min(1).max(200),
   secondaryCtaText: z.string().trim().min(1).max(60),

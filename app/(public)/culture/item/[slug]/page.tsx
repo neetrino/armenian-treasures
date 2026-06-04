@@ -9,6 +9,7 @@ import { HeroPage } from '@/components/sections/HeroPage';
 import { CultureItemTourSection } from '@/components/sections/CultureItemTourSection';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { getCultureItemDetailBySlug } from '@/lib/queries/culture-items';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
 
@@ -105,7 +106,7 @@ async function CultureItemDetailPage(props: PageProps) {
             <div className="relative overflow-hidden rounded-2xl border border-stone-100 bg-stone-100 shadow-card">
               <div className="aspect-[16/10] w-full">
                 <Image
-                  src={item.image ?? '/images/placeholder.svg'}
+                  src={item.image ? resolvePublicAssetUrl(item.image) : resolvePublicAssetUrl('/images/placeholder.svg')}
                   alt={item.title}
                   width={1200}
                   height={750}
@@ -140,7 +141,7 @@ async function CultureItemDetailPage(props: PageProps) {
                       className="relative aspect-[4/3] overflow-hidden rounded-xl border border-stone-100 bg-stone-100"
                     >
                       <Image
-                        src={src}
+                        src={resolvePublicAssetUrl(src)}
                         alt=""
                         width={600}
                         height={450}

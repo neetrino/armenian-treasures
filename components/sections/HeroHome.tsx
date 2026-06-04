@@ -7,7 +7,7 @@ import { HeroBackground } from '@/components/sections/hero/HeroBackground';
 import { HeroTextBlock } from '@/components/sections/hero/HeroTextBlock';
 import { HeroDecorations, HeroBottomDecor } from '@/components/sections/hero/HeroDecorations';
 import { HeroStatsBar } from '@/components/sections/hero/HeroStatsBar';
-import { resolveHeroImageUrl } from '@/components/sections/hero/hero-image';
+import { resolveHomeHeroImageUrls } from '@/components/sections/hero/hero-image';
 
 interface HomeStat {
   value: string;
@@ -24,6 +24,7 @@ interface HeroHomeProps {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   imageUrl: string;
+  mobileImageUrl?: string | null;
   stats: HomeStat[];
 }
 
@@ -32,7 +33,7 @@ const HEADER_OFFSET =
 
 export function HeroHome(props: HeroHomeProps) {
   const reduced = useReducedMotion();
-  const heroImage = resolveHeroImageUrl(props.imageUrl);
+  const { desktop, mobile } = resolveHomeHeroImageUrls(props.imageUrl, props.mobileImageUrl);
 
   return (
     <section
@@ -41,7 +42,7 @@ export function HeroHome(props: HeroHomeProps) {
       className={`relative isolate w-full overflow-x-hidden bg-midnight-900 text-parchment-50 ${HEADER_OFFSET} min-h-[100svh]`}
       aria-labelledby="hero-heading"
     >
-      <HeroBackground imageUrl={heroImage} />
+      <HeroBackground desktopImageUrl={desktop} mobileImageUrl={mobile} />
       <HeroDecorations />
 
       <Container className="relative z-10 flex min-h-[inherit] w-full min-w-0 flex-col justify-center py-7 sm:py-10 md:py-12 lg:py-16 xl:py-20">

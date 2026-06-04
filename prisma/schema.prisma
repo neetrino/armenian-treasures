@@ -313,6 +313,7 @@ model HomeContent {
   heroHighlight    String
   heroDescription  String   @db.Text
   heroImage        String?
+  heroMobileImage  String?
   primaryCtaText   String
   primaryCtaUrl    String
   secondaryCtaText String

@@ -1,14 +1,16 @@
 import { unstable_cache } from 'next/cache';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 
-const FALLBACK: PublicHomeContentDTO = {
+export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   heroBadge: 'SINCE THE 4TH CENTURY',
   heroTitle: 'The living archive of',
   heroHighlight: 'Armenian heritage',
   heroDescription:
     "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
-  heroImage: '/images/hero/home-hero.png',
+  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.png'),
+  heroMobileImage: null,
   primaryCtaText: 'Explore the Culture Portal',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'Open Interactive Map',
@@ -51,9 +53,9 @@ const FALLBACK: PublicHomeContentDTO = {
 async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
   try {
     const row = await prisma.homeContent.findFirst();
-    return row ? toPublicHomeContent(row) : FALLBACK;
+    return row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
   } catch {
-    return FALLBACK;
+    return HOME_CONTENT_FALLBACK;
   }
 }
 

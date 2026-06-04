@@ -1,3 +1,5 @@
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+
 export const TECHNOLOGY_SECTION = {
   eyebrow: 'Technology',
   title: 'Heritage preserved with modern instruments',
@@ -21,21 +23,21 @@ export interface TechVisualPreset {
 
 export const TECH_VISUAL_PRESETS: readonly TechVisualPreset[] = [
   {
-    imageSrc: '/images/technology/card-matterport.jpg',
+    imageSrc: resolvePublicAssetUrl('/images/technology/card-matterport.jpg'),
     imageAlt: 'Stone monastery interior with arched hall and warm light',
     accent: 'copper',
     icon: 'Headset',
     tags: ['IMMERSIVE', 'ACCURATE', 'ACCESSIBLE'],
   },
   {
-    imageSrc: '/images/technology/card-drone.jpg',
+    imageSrc: resolvePublicAssetUrl('/images/technology/card-drone.jpg'),
     imageAlt: 'Aerial view of a mountain fortress and monastery landscape',
     accent: 'emerald',
     icon: 'Drone',
     tags: ['PRECISE', 'SCALABLE', 'CONSISTENT'],
   },
   {
-    imageSrc: '/images/technology/card-ai-storytelling.jpg',
+    imageSrc: resolvePublicAssetUrl('/images/technology/card-ai-storytelling.jpg'),
     imageAlt: 'Ancient manuscript with digital waveform overlay',
     accent: 'terracotta',
     icon: 'SquarePlay',

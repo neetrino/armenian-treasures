@@ -3,24 +3,38 @@
 import Image from 'next/image';
 
 interface HeroBackgroundProps {
-  imageUrl: string;
+  desktopImageUrl: string;
+  mobileImageUrl: string;
 }
 
-export function HeroBackground({ imageUrl }: HeroBackgroundProps) {
+const IMAGE_CLASS =
+  'scale-[1.28] object-contain object-center brightness-[1.06] contrast-[1.05] saturate-[1.08]';
+
+export function HeroBackground({ desktopImageUrl, mobileImageUrl }: HeroBackgroundProps) {
   return (
     <div
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-[#0a0612]"
     >
       <Image
-        src={imageUrl}
+        src={desktopImageUrl}
         alt=""
         fill
         priority
         quality={100}
         unoptimized
         sizes="100vw"
-        className="scale-[1.28] object-contain object-center brightness-[1.06] contrast-[1.05] saturate-[1.08]"
+        className={`hidden md:block ${IMAGE_CLASS}`}
+      />
+      <Image
+        src={mobileImageUrl}
+        alt=""
+        fill
+        priority
+        quality={100}
+        unoptimized
+        sizes="100vw"
+        className={`md:hidden ${IMAGE_CLASS}`}
       />
 
       {/* Left fade keeps hero copy readable without hiding the landscape */}

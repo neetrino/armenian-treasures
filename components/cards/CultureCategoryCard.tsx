@@ -1,3 +1,4 @@
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -27,7 +28,7 @@ export function CultureCategoryCard({
   const themeSlug = parent?.slug ?? node.slug;
   const theme = resolveCultureCategoryTheme(themeSlug);
   const displayIndex = index ?? node.order;
-  const imageSrc = node.image ?? theme.cardSrc;
+  const imageSrc = node.image ? resolvePublicAssetUrl(node.image) : theme.cardSrc;
 
   return (
     <Link

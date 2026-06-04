@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-const BACKGROUND_SRC = '/images/final-cta/foundation-support-bg.png';
+const BACKGROUND_SRC = resolvePublicAssetUrl('/images/final-cta/foundation-support-bg.png');
 
 export function FinalCtaBackground() {
   return (

@@ -65,6 +65,7 @@ async function HomePage() {
         secondaryCtaText={content.secondaryCtaText}
         secondaryCtaUrl={content.secondaryCtaUrl}
         imageUrl={content.heroImage ?? '/images/hero/home-hero.png'}
+        mobileImageUrl={content.heroMobileImage}
         stats={stats}
       />
       <MissionPreviewSection

@@ -11,6 +11,7 @@ import {
   Users,
   Wheat,
 } from 'lucide-react';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 export type CultureCategoryAccent =
   | 'architecture'
@@ -38,7 +39,7 @@ const DEFAULT_THEME: CultureCategoryTheme = {
   accent: 'default',
   accentColor: '#5C3D7A',
   icon: BookOpen,
-  cardSrc: '/images/culture/card-heritage.png',
+  cardSrc: resolvePublicAssetUrl('/images/culture/card-heritage.png'),
   objectPosition: 'center center',
 };
 
@@ -53,7 +54,7 @@ function theme(
     accent,
     accentColor,
     icon,
-    cardSrc,
+    cardSrc: resolvePublicAssetUrl(cardSrc),
     objectPosition,
   };
 }

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import Link from 'next/link';
 import { Box, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
@@ -16,7 +17,7 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
   const imageElement = (
     <div className="aspect-[4/3] w-full">
       <Image
-        src={item.image ?? '/images/placeholder.svg'}
+        src={item.image ? resolvePublicAssetUrl(item.image) : resolvePublicAssetUrl('/images/placeholder.svg')}
         alt={item.title}
         width={800}
         height={600}
