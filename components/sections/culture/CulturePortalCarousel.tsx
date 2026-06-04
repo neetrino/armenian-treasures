@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { CultureCategoryCard } from '@/components/cards/CultureCategoryCard';
 import type { MenuNode } from '@/lib/culture-menu';
 import { cn } from '@/lib/utils';
@@ -74,16 +74,27 @@ function MarqueeStrip({ nodes, duplicate = false, animated = false }: MarqueeStr
   );
 }
 
+const STAGGER_CHILDREN = 0.11;
+const DELAY_CHILDREN = 0.08;
+const CARD_DURATION = 0.72;
+
 function marqueeDelayMs(count: number): number {
-  return 520 + count * 120;
+  const lastChildStart = DELAY_CHILDREN + Math.max(0, count - 1) * STAGGER_CHILDREN;
+  return Math.round((lastChildStart + CARD_DURATION) * 1000) + 180;
 }
 
 export function CulturePortalCarousel({ nodes, className }: CulturePortalCarouselProps) {
   const reduced = useReducedMotion();
-  const [marqueeReady, setMarqueeReady] = useState(Boolean(reduced));
+  const rootRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(rootRef, { once: true, amount: 0.25 });
+  const [marqueeReady, setMarqueeReady] = useState(false);
 
   useEffect(() => {
-    if (reduced || nodes.length === 0) {
+    if (!inView || nodes.length === 0) {
+      return;
+    }
+
+    if (reduced) {
       setMarqueeReady(true);
       return;
     }
@@ -91,60 +102,64 @@ export function CulturePortalCarousel({ nodes, className }: CulturePortalCarouse
     setMarqueeReady(false);
     const timer = window.setTimeout(() => setMarqueeReady(true), marqueeDelayMs(nodes.length));
     return () => window.clearTimeout(timer);
-  }, [nodes.length, reduced]);
+  }, [inView, nodes.length, reduced]);
 
   if (nodes.length === 0) return null;
 
-  return (
-    <motion.div
-      className={cn('relative left-1/2 w-screen -translate-x-1/2', className)}
-      initial={reduced ? false : { opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 0.45, ease: EASE }}
-    >
-      <motion.div
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
-        aria-hidden
-        initial={reduced ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
-      />
-      <motion.div
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
-        aria-hidden
-        initial={reduced ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.35, ease: EASE }}
-      />
+  const showCarousel = inView;
 
-      <div className="overflow-hidden motion-reduce:overflow-x-auto">
-        <motion.div
-          className={cn(
-            'flex w-max gap-5 py-1 pl-4 sm:gap-6 sm:pl-6',
-            'motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:px-4 motion-reduce:gap-5',
-            marqueeReady &&
-              'motion-safe:animate-portal-marquee motion-safe:hover:[animation-play-state:paused]',
-          )}
-          role="list"
-          aria-label="Culture portal categories"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: reduced ? 0 : 0.11,
-                delayChildren: reduced ? 0 : 0.08,
-              },
-            },
-          }}
-        >
-          <MarqueeStrip nodes={nodes} animated />
-          {marqueeReady ? <MarqueeStrip nodes={nodes} duplicate /> : null}
-        </motion.div>
-      </div>
-    </motion.div>
+  return (
+    <div
+      ref={rootRef}
+      className={cn('relative left-1/2 w-screen -translate-x-1/2', className)}
+    >
+      {showCarousel ? (
+        <>
+          <motion.div
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
+            aria-hidden
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: reduced ? 0 : 0.35, ease: EASE }}
+          />
+          <motion.div
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-parchment via-parchment/90 to-transparent sm:w-20 lg:w-28"
+            aria-hidden
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: reduced ? 0 : 0.35, ease: EASE }}
+          />
+
+          <div className="overflow-hidden motion-reduce:overflow-x-auto">
+            <motion.div
+              className={cn(
+                'flex w-max gap-5 py-1 pl-4 sm:gap-6 sm:pl-6',
+                'motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:px-4 motion-reduce:gap-5',
+                marqueeReady &&
+                  'motion-safe:animate-portal-marquee motion-safe:hover:[animation-play-state:paused]',
+              )}
+              role="list"
+              aria-label="Culture portal categories"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: reduced ? 0 : STAGGER_CHILDREN,
+                    delayChildren: reduced ? 0 : DELAY_CHILDREN,
+                  },
+                },
+              }}
+            >
+              <MarqueeStrip nodes={nodes} animated />
+              {marqueeReady ? <MarqueeStrip nodes={nodes} duplicate /> : null}
+            </motion.div>
+          </div>
+        </>
+      ) : (
+        <div className="min-h-[23rem]" aria-hidden />
+      )}
+    </div>
   );
 }
