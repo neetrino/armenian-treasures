@@ -1,8 +1,11 @@
-import { Mail, MapPin, Phone } from 'lucide-react';
-import { Logo } from '@/components/brand/Logo';
-import { FooterDivider } from '@/components/layout/footer/FooterDivider';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FOOTER_BRAND_DESCRIPTION } from '@/components/layout/footer/footer-links';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { PublicSiteSettingsDTO } from '@/lib/dto';
 import { cn } from '@/lib/utils';
+
+const FOOTER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.png');
 
 interface FooterBrandProps {
   settings: PublicSiteSettingsDTO;
@@ -11,38 +14,20 @@ interface FooterBrandProps {
 
 export function FooterBrand({ settings, className }: FooterBrandProps) {
   return (
-    <div className={cn('flex min-w-0 max-w-sm flex-col gap-5', className)}>
-      <Logo
-        variant="on-dark"
-        title={settings.foundationName}
-        subtitle={settings.foundationSubtitle}
-      />
-      <FooterDivider className="max-w-[12rem]" />
-      <p className="text-sm leading-relaxed text-parchment-200/88">{settings.footerDescription}</p>
-      <ul className="flex flex-col gap-3 text-sm text-parchment-200/82">
-        <li className="flex items-start gap-2.5">
-          <MapPin size={15} className="mt-0.5 shrink-0 text-bronze-400/85" aria-hidden />
-          <span>{settings.address}</span>
-        </li>
-        <li className="flex items-start gap-2.5">
-          <Mail size={15} className="mt-0.5 shrink-0 text-bronze-400/85" aria-hidden />
-          <a
-            href={`mailto:${settings.contactEmail}`}
-            className="transition hover:text-parchment-50"
-          >
-            {settings.contactEmail}
-          </a>
-        </li>
-        <li className="flex items-start gap-2.5">
-          <Phone size={15} className="mt-0.5 shrink-0 text-bronze-400/85" aria-hidden />
-          <a
-            href={`tel:${settings.phone.replace(/\s+/g, '')}`}
-            className="transition hover:text-parchment-50"
-          >
-            {settings.phone}
-          </a>
-        </li>
-      </ul>
+    <div className={cn('flex min-w-0 max-w-[18.75rem] flex-col', className)}>
+      <Link href="/" className="inline-flex w-fit outline-none" aria-label={`${settings.foundationName} — home`}>
+        <Image
+          src={FOOTER_LOGO_SRC}
+          alt=""
+          width={700}
+          height={923}
+          className="h-auto max-h-[4.5rem] w-auto object-contain sm:max-h-[5rem]"
+        />
+      </Link>
+
+      <p className="mt-6 font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] italic leading-[1.55] text-[rgba(232,216,155,0.58)]">
+        {settings.footerDescription || FOOTER_BRAND_DESCRIPTION}
+      </p>
     </div>
   );
 }

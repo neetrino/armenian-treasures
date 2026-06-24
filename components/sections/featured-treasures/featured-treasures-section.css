@@ -1,0 +1,209 @@
+.featured-treasures-grid {
+  display: grid;
+  width: 100%;
+  max-width: 73.75rem;
+  border-top: 1px solid rgba(214, 184, 90, 0.18);
+  border-left: 1px solid rgba(214, 184, 90, 0.18);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.featured-treasure-card {
+  position: relative;
+  z-index: 1;
+  min-height: 13.75rem;
+  overflow: hidden;
+  padding: 1.75rem 1.375rem 1.75rem;
+  background: rgba(8, 10, 9, 0.92);
+  border-right: 1px solid rgba(214, 184, 90, 0.18);
+  border-bottom: 1px solid rgba(214, 184, 90, 0.18);
+  transition:
+    background 240ms ease,
+    border-color 240ms ease,
+    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate3d(0, 0, 0);
+}
+
+.featured-treasure-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #27c6c8 0%, #d6b85a 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.featured-treasure-card__categories {
+  color: #27c6c8;
+}
+
+.featured-treasure-card__title {
+  color: #d6b85a;
+  transition: color 240ms ease;
+}
+
+.featured-treasure-card__description {
+  color: rgba(232, 216, 155, 0.58);
+  transition: color 240ms ease;
+}
+
+.featured-treasure-card__number {
+  color: rgba(214, 184, 90, 0.035);
+  transition: color 240ms ease;
+}
+
+.featured-treasure-card__arrow {
+  position: absolute;
+  right: 1.375rem;
+  bottom: 1.375rem;
+  z-index: 3;
+  font-family: var(--font-cinzel), Georgia, serif;
+  font-size: 0.875rem;
+  line-height: 1;
+  color: #27c6c8;
+  opacity: 0;
+  transform: translateX(-0.375rem);
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease;
+}
+
+.featured-treasure-card:focus-visible {
+  outline: 1px solid rgba(39, 198, 200, 0.7);
+  outline-offset: 4px;
+  z-index: 3;
+  border-color: rgba(214, 184, 90, 0.52);
+  box-shadow:
+    inset 0 0 0 1px rgba(214, 184, 90, 0.28),
+    0 14px 36px rgba(0, 0, 0, 0.24);
+  transform: translate3d(0, -4px, 0);
+}
+
+.featured-treasure-card:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.featured-treasure-card:focus-visible .featured-treasure-card__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.featured-treasure-card--tall {
+  min-height: 18.75rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .featured-treasure-card:hover {
+    z-index: 2;
+    background: rgba(8, 10, 9, 0.96);
+    border-color: rgba(214, 184, 90, 0.52);
+    box-shadow:
+      inset 0 0 0 1px rgba(214, 184, 90, 0.28),
+      0 14px 36px rgba(0, 0, 0, 0.24);
+    transform: translate3d(0, -4px, 0);
+  }
+
+  .featured-treasure-card:hover::after {
+    transform: scaleX(1);
+  }
+
+  .featured-treasure-card:hover .featured-treasure-card__title {
+    color: #e6c766;
+  }
+
+  .featured-treasure-card:hover .featured-treasure-card__description {
+    color: rgba(232, 216, 155, 0.72);
+  }
+
+  .featured-treasure-card:hover .featured-treasure-card__number {
+    color: rgba(214, 184, 90, 0.055);
+  }
+
+  .featured-treasure-card:hover .featured-treasure-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .featured-treasures-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: repeat(3, minmax(11.25rem, 1fr));
+  }
+
+  .featured-treasure-card--tall {
+    grid-column: 1;
+    grid-row: 1 / 4;
+    min-height: 100%;
+    padding: 2rem 1.625rem 1.875rem;
+  }
+
+  .featured-treasure-card--top-mid {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .featured-treasure-card--top-right {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .featured-treasure-card--bottom-mid {
+    grid-column: 2;
+    grid-row: 3;
+  }
+}
+
+@media (min-width: 1024px) {
+  .featured-treasures-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(13.75rem, 1fr) minmax(13.75rem, 1fr);
+  }
+
+  .featured-treasure-card--tall {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .featured-treasure-card--top-mid {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .featured-treasure-card--bottom-mid {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .featured-treasure-card--top-right {
+    grid-column: 3;
+    grid-row: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-treasure-card,
+  .featured-treasure-card__arrow,
+  .featured-treasure-card::after {
+    transition: none;
+  }
+
+  .featured-treasure-card:hover,
+  .featured-treasure-card:focus-visible {
+    transform: none;
+  }
+
+  .featured-treasure-card:hover::after,
+  .featured-treasure-card:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .featured-treasure-card__arrow {
+    transform: none;
+  }
+}

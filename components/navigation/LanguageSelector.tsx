@@ -1,7 +1,6 @@
 'use client';
 
 import { ChevronDown, Globe } from 'lucide-react';
-import { useHeaderTheme } from '@/components/layout/header-theme';
 import { cn } from '@/lib/utils';
 
 interface LanguageSelectorProps {
@@ -12,9 +11,6 @@ interface LanguageSelectorProps {
 const CURRENT_LOCALE = 'EN';
 
 export function LanguageSelector({ className }: LanguageSelectorProps) {
-  const theme = useHeaderTheme();
-  const isSolid = theme === 'solid';
-
   return (
     <button
       type="button"
@@ -25,7 +21,6 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
         'transition-[color,border-color,box-shadow] duration-200 ease-out',
         'hover:border-[rgba(39,198,200,0.45)] hover:text-heritage-teal hover:shadow-[0_0_22px_rgba(39,198,200,0.08)]',
         'focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)]',
-        isSolid && 'focus-visible:outline-offset-parchment',
         className,
       )}
       aria-label="Select language"

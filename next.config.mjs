@@ -32,13 +32,18 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: buildR2RemotePatterns(),
-  },  serverExternalPackages: [
+  },
+  outputFileTracingExcludes: {
+    '*': ['next.config.mjs'],
+  },
+  serverExternalPackages: [
     '@prisma/client',
     '@prisma/adapter-neon',
     '@neondatabase/serverless',
     'ws',
     'bcryptjs',
   ],
+  turbopack: {},
 };
 
 export default nextConfig;

@@ -6,30 +6,19 @@ interface FooterNavColumnProps {
   links: FooterLinkItem[];
 }
 
-function ColumnDiamond() {
-  return (
-    <svg viewBox="0 0 10 10" className="mb-2 h-2 w-2 text-bronze-400/75" aria-hidden>
-      <path
-        d="M5 0.5 L6 4 L9.5 5 L6 6 L5 9.5 L4 6 L0.5 5 L4 4 Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.75"
-      />
-    </svg>
-  );
-}
-
 export function FooterNavColumn({ title, links }: FooterNavColumnProps) {
   return (
     <nav aria-label={title} className="min-w-0">
-      <ColumnDiamond />
-      <p className="text-[11px] uppercase tracking-eyebrow text-bronze-400">{title}</p>
-      <ul className="mt-5 flex flex-col gap-3.5">
+      <p className="font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
+        {title}
+      </p>
+
+      <ul className="mt-5 flex flex-col gap-3">
         {links.map((link) => (
-          <li key={link.href}>
+          <li key={`${link.href}-${link.label}`}>
             <Link
               href={link.href}
-              className="text-sm text-parchment-200/88 transition hover:text-parchment-50"
+              className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-[rgba(232,216,155,0.58)] transition-colors duration-[240ms] hover:text-[rgba(232,216,155,0.82)]"
             >
               {link.label}
             </Link>

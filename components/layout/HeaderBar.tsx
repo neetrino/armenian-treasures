@@ -5,7 +5,6 @@ import { Logo } from '@/components/brand/Logo';
 import { DesktopNav } from '@/components/navigation/DesktopNav';
 import { MobileMenu } from '@/components/navigation/MobileMenu';
 import { LanguageSelector } from '@/components/navigation/LanguageSelector';
-import { useHeaderTheme } from '@/components/layout/header-theme';
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import type { MenuNode } from '@/lib/culture-menu';
 
@@ -20,8 +19,6 @@ export function HeaderBar({
   foundationName,
   foundationSubtitle,
 }: HeaderBarProps) {
-  const theme = useHeaderTheme();
-  const isSolid = theme === 'solid';
   const reduced = useReducedMotion();
 
   return (
@@ -33,22 +30,7 @@ export function HeaderBar({
       className="fixed inset-x-0 top-0 z-[1000] isolate w-full overflow-visible border-b border-[rgba(214,184,90,0.16)]"
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute inset-0 -z-20 backdrop-blur-[10px]"
-          animate={{
-            opacity: isSolid ? 0 : 1,
-            backgroundColor: 'rgba(2, 4, 3, 0.96)',
-          }}
-          transition={{ duration: 0.4, ease: HEADER_EASE }}
-        />
-        <motion.div
-          className="absolute inset-0 -z-20 backdrop-blur-md"
-          animate={{
-            opacity: isSolid ? 1 : 0,
-            backgroundColor: 'rgba(250, 246, 238, 0.96)',
-          }}
-          transition={{ duration: 0.4, ease: HEADER_EASE }}
-        />
+        <div className="absolute inset-0 -z-20 bg-[rgba(2,4,3,0.96)] backdrop-blur-[10px]" />
       </div>
 
       <div className="relative mx-auto flex h-site-header w-full items-center justify-between gap-2 px-[clamp(1.25rem,2.6vw,3rem)]">
@@ -60,7 +42,7 @@ export function HeaderBar({
             transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.08 }}
           >
             <Logo
-              variant={isSolid ? 'on-light' : 'on-dark'}
+              variant="on-dark"
               title={foundationName}
               subtitle={foundationSubtitle}
               compact

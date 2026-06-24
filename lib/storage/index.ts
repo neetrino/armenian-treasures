@@ -1,6 +1,3 @@
-import { LocalDriver } from './local';
-import { R2Driver } from './r2';
-
 export interface UploadInput {
   key: string;
   body: Buffer | Uint8Array;
@@ -21,18 +18,23 @@ export interface StorageDriver {
 
 let cachedDriver: StorageDriver | undefined;
 
-export function getStorage(): StorageDriver {
-  if (cachedDriver) return cachedDriver;
+function loadDriver(): StorageDriver {
   const driver = process.env.STORAGE_DRIVER ?? 'local';
-  cachedDriver = driver === 'r2' ? new R2Driver() : new LocalDriver();
-  return cachedDriver;
+  if (driver === 'r2') {
+    // Lazy require keeps local filesystem paths out of the static import graph.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { R2Driver } = require('./r2') as typeof import('./r2');
+    return new R2Driver();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { LocalDriver } = require('./local') as typeof import('./local');
+  return new LocalDriver();
 }
 
-export { LocalDriver } from './local';
-export {
-  R2Driver,
-  uploadBufferToR2,
-  getR2EnvConfig,
-  getR2EnvPresence,
-} from './r2';
-export type { R2BufferUploadInput, R2BufferUploadResult, R2EnvConfig } from './r2';
+export function getStorage(): StorageDriver {
+  if (!cachedDriver) {
+    cachedDriver = loadDriver();
+  }
+  return cachedDriver;
+}

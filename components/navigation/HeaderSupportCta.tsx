@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useHeaderTheme } from '@/components/layout/header-theme';
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import { cn } from '@/lib/utils';
 
@@ -18,8 +17,6 @@ export function HeaderSupportCta({
   className,
   onNavigate,
 }: HeaderSupportCtaProps) {
-  const theme = useHeaderTheme();
-  const isSolid = theme === 'solid';
   const reduced = useReducedMotion();
 
   const motionProps = reduced
@@ -38,9 +35,7 @@ export function HeaderSupportCta({
           onClick={onNavigate}
           className={cn(
             'inline-flex h-10 w-10 items-center justify-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500 focus-visible:ring-offset-2',
-            isSolid
-              ? 'border border-bronze-600/35 bg-bronze-500/10 text-bronze-700 hover:bg-bronze-500/18 focus-visible:ring-offset-parchment'
-              : 'border border-bronze-500/40 bg-bronze-500/15 text-bronze-400 hover:bg-bronze-500/25 hover:text-parchment-50 focus-visible:ring-offset-[#0c0818]',
+            'border border-bronze-500/40 bg-bronze-500/15 text-bronze-400 hover:bg-bronze-500/25 hover:text-parchment-50 focus-visible:ring-offset-[#0c0818]',
             className,
           )}
           aria-label="Support our mission"
@@ -65,9 +60,7 @@ export function HeaderSupportCta({
         onClick={onNavigate}
         className={cn(
           'inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-medium tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500 focus-visible:ring-offset-2',
-          isSolid
-            ? 'border border-bronze-600/40 bg-bronze-500/10 text-ink hover:border-bronze-600/55 hover:bg-bronze-500/16 focus-visible:ring-offset-parchment'
-            : 'border border-bronze-500/45 bg-bronze-500/15 text-parchment-50 shadow-[0_4px_24px_-8px_rgba(200,132,61,0.35)] hover:border-bronze-400/60 hover:bg-bronze-500/25 focus-visible:ring-offset-[#0c0818]',
+          'border border-bronze-500/45 bg-bronze-500/15 text-parchment-50 shadow-[0_4px_24px_-8px_rgba(200,132,61,0.35)] hover:border-bronze-400/60 hover:bg-bronze-500/25 focus-visible:ring-offset-[#0c0818]',
         )}
       >
         <motion.span

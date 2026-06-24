@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { HOME_HERO_STATS } from '@/lib/constants/home-hero';
 import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 
@@ -15,12 +16,7 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'SUPPORT THE MISSION',
   secondaryCtaUrl: '/partnership',
-  stats: [
-    { value: '180+', label: 'Monuments Scanned' },
-    { value: '42', label: 'Virtual Tours' },
-    { value: '1,700+', label: 'Years of History' },
-    { value: '11', label: 'Cultural Domains' },
-  ],
+  stats: [...HOME_HERO_STATS],
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',
   missionText:
