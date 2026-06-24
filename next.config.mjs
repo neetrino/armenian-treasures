@@ -3,6 +3,7 @@ function buildR2RemotePatterns() {
   const patterns = [
     { protocol: 'https', hostname: '**.r2.cloudflarestorage.com' },
     { protocol: 'https', hostname: '**.r2.dev' },
+    { protocol: 'https', hostname: 'khndzoresk.armeniantreasures.com' },
     { protocol: 'http', hostname: 'localhost' },
   ];
 
