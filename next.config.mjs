@@ -4,6 +4,8 @@ function buildR2RemotePatterns() {
     { protocol: 'https', hostname: '**.r2.cloudflarestorage.com' },
     { protocol: 'https', hostname: '**.r2.dev' },
     { protocol: 'https', hostname: 'khndzoresk.armeniantreasures.com' },
+    { protocol: 'https', hostname: 'armeniantreasures.com' },
+    { protocol: 'https', hostname: 'akhachaturianmuseum.am' },
     { protocol: 'http', hostname: 'localhost' },
   ];
 
