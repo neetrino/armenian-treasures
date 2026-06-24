@@ -32,11 +32,18 @@ export function SelectField({
         {label}
       </Label>
       <Select id={inputId} aria-invalid={Boolean(error)} {...props}>
-        {options.map((option) => (
-          <option key={option.value} value={option.value} disabled={option.disabled}>
-            {option.label}
-          </option>
-        ))}
+        {options.map((option) => {
+          const optionValue = String(option.value ?? '');
+          return (
+            <option
+              key={`${optionValue}-${option.label}`}
+              value={optionValue}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </option>
+          );
+        })}
       </Select>
       {error ? (
         <p className="text-xs text-pomegranate">{error}</p>

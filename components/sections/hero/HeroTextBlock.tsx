@@ -1,9 +1,11 @@
-import { HeroTitleDivider } from '@/components/sections/hero/HeroTitleDivider';
+import { cn } from '@/lib/utils';
 
 interface HeroTextBlockProps {
   badge: string;
   title: string;
   highlight: string;
+  subtitle: string;
+  tagline: string;
   description: string;
 }
 
@@ -11,31 +13,42 @@ export function HeroTextBlock({
   badge,
   title,
   highlight,
+  subtitle,
+  tagline,
   description,
 }: HeroTextBlockProps) {
+  const subtitleLines = subtitle.split('\n').filter(Boolean);
+
   return (
-    <div className="relative min-w-0 max-w-full">
-      <p className="font-sans text-[10px] font-semibold uppercase tracking-[0.22em] text-bronze-300 drop-shadow-[0_1px_6px_rgba(0,0,0,0.65)] sm:text-[11px] sm:tracking-[0.24em]">
+    <div className="relative mx-auto w-full min-w-0 max-w-[61.25rem] text-center">
+      <p className="mb-[26px] font-cinzel text-[clamp(0.625rem,0.65vw,0.75rem)] font-semibold uppercase leading-none tracking-[0.42em] text-heritage-teal">
         {badge}
       </p>
 
-      <HeroTitleDivider className="mt-3 sm:mt-4 md:mt-5" variant="above" />
-
       <h1
         id="hero-heading"
-        className="mt-4 min-w-0 max-w-full text-balance break-words font-display font-medium tracking-tight sm:mt-5 md:mt-6"
+        className="mx-auto max-w-[820px] min-w-0 font-cinzel text-[clamp(2.625rem,13vw,3.875rem)] font-bold uppercase leading-[0.88] tracking-[0.025em] text-transparent bg-hero-gold-title bg-clip-text sm:text-[clamp(3rem,10vw,4.75rem)] lg:text-[clamp(4.25rem,6.1vw,6.75rem)]"
       >
-        <span className="block text-[clamp(1.625rem,4.8vw,2.15rem)] leading-[1.14] text-parchment-50 drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)] sm:text-[clamp(1.75rem,5vw,2.35rem)] sm:leading-[1.12] md:text-[clamp(1.9rem,3.8vw,2.55rem)] lg:text-[clamp(2.25rem,3.2vw,2.85rem)] xl:text-[2.95rem]">
-          {title}
-        </span>
-        <span className="mt-1 block bg-hero-gold-text bg-clip-text text-[clamp(1.875rem,7vw,2.5rem)] font-semibold leading-[1.06] text-transparent drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] sm:mt-1.5 sm:text-[clamp(2rem,7.5vw,2.85rem)] md:text-[clamp(2.35rem,5.5vw,3.2rem)] md:leading-[1.05] lg:mt-2 lg:text-[clamp(3rem,4.5vw,4.15rem)] xl:mt-2.5 xl:text-[4.35rem] xl:leading-[1.02]">
-          {highlight}
-        </span>
+        <span className="block">{title.trim()}</span>
+        <span className="block">{highlight.trim()}</span>
       </h1>
 
-      <HeroTitleDivider className="mt-4 sm:mt-5 md:mt-6" variant="below" />
+      <p
+        aria-label={subtitle.replace('\n', ' ')}
+        className="mx-auto mt-[26px] max-w-[820px] font-cinzel text-[clamp(1.4375rem,7vw,2.125rem)] font-normal uppercase leading-[1.12] tracking-[0.12em] text-heritage-champagne lg:text-[clamp(1.75rem,2.8vw,3rem)] lg:tracking-[0.32em]"
+      >
+        {subtitleLines.map((line, index) => (
+          <span key={line} className={cn('block', index > 0 && 'mt-0.5')}>
+            {line}
+          </span>
+        ))}
+      </p>
 
-      <p className="mt-4 max-w-lg min-w-0 text-[15px] font-normal leading-[1.65] text-parchment-50 drop-shadow-[0_1px_8px_rgba(0,0,0,0.7)] sm:mt-5 sm:text-base sm:leading-[1.72] md:mt-6 md:text-[16px] lg:max-w-md lg:text-[17px] xl:max-w-lg xl:text-lg">
+      <p className="mx-auto mt-8 max-w-[820px] font-cinzel text-[clamp(0.75rem,0.85vw,1rem)] font-normal uppercase leading-normal tracking-[0.26em] text-heritage-champagne lg:mt-8">
+        {tagline}
+      </p>
+
+      <p className="mx-auto mt-[18px] max-w-[600px] min-w-0 font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-normal text-heritage-text-muted">
         {description}
       </p>
     </div>

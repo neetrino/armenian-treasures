@@ -17,7 +17,7 @@ export async function submitContactMessage(
   _prev: ContactActionState,
   formData: FormData,
 ): Promise<ContactActionState> {
-  const ip = extractClientIp(headers());
+  const ip = extractClientIp(await headers());
   const limit = await getPublicRateLimiter().check(`contact:${ip}`);
   if (!limit.allowed) {
     return {
@@ -65,7 +65,7 @@ export async function submitContactMessage(
     },
   });
 
-  revalidateTag('admin-contact');
+  revalidateTag('admin-contact', 'max');
 
   return { status: 'success', message: 'Thank you. We have received your message.' };
 }

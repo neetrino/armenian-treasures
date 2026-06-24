@@ -1,4 +1,6 @@
-const HERO_VISUAL_SRC = '/images/mission/foundation-hero-visual.png';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+
+const HERO_VISUAL_SRC = resolvePublicAssetUrl('/images/mission/foundation-hero-visual.png');
 
 const BACKGROUND_STYLE = {
   backgroundImage: `url(${HERO_VISUAL_SRC})`,

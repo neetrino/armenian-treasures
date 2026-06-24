@@ -17,9 +17,10 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Message', robots: { index: false, follow: false } };
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: Promise<{ id: string }> }
 
-async function AdminContactMessageDetailPage({ params }: PageProps) {
+async function AdminContactMessageDetailPage(props: PageProps) {
+  const params = await props.params;
   const user = await requireAdmin();
   const message = await prisma.contactMessage.findUnique({ where: { id: params.id } });
   if (!message) notFound();

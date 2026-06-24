@@ -7,7 +7,7 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import { careerSchema } from '@/lib/validation';
 
 export interface CareerFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -43,7 +43,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('careers');
+  revalidateTag('careers', 'max');
   revalidatePath('/about/career');
   revalidatePath('/admin/careers');
 }
@@ -54,7 +54,7 @@ export async function createCareerAction(_p: CareerFormState, formData: FormData
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   await prisma.career.create({ data: parsed.data });
   revalidate();
-  redirect('/admin/careers');
+  return { status: 'success' };
 }
 
 export async function updateCareerAction(

@@ -9,13 +9,14 @@ import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ButtonLink } from '@/components/ui/Button';
 import { isFormRoute, type MenuNode } from '@/lib/culture-menu';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 
 export const revalidate = 60;
 
 interface PageProps {
-  params: { categorySlug: string; subcategorySlug: string };
+  params: Promise<{ categorySlug: string; subcategorySlug: string }>;
 }
 
 function findChild(tree: MenuNode[], categorySlug: string, subSlug: string): {
@@ -31,7 +32,8 @@ function findChild(tree: MenuNode[], categorySlug: string, subSlug: string): {
   return { parent, child };
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   const tree = await getMenuTree();
   const found = findChild(tree, params.categorySlug, params.subcategorySlug);
   if (!found) return { title: 'Subcategory not found' };
@@ -43,7 +45,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-async function CultureSubcategoryPage({ params }: PageProps) {
+async function CultureSubcategoryPage(props: PageProps) {
+  const params = await props.params;
   const tree = await getMenuTree();
   const found = findChild(tree, params.categorySlug, params.subcategorySlug);
   if (!found) notFound();
@@ -78,7 +81,7 @@ async function CultureSubcategoryPage({ params }: PageProps) {
           <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
             {items.map((item) => (
               <StaggerItem key={item.id} className="h-full">
-                <CultureItemCard item={item} />
+                <CultureItemCard item={item} href={resolveCultureItemHref(item.slug)} />
               </StaggerItem>
             ))}
           </Stagger>

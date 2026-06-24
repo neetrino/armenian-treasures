@@ -14,10 +14,11 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-async function EditCultureMenuItemPage({ params }: PageProps) {
+async function EditCultureMenuItemPage(props: PageProps) {
+  const params = await props.params;
   const user = await requireAdmin();
   const [item, parents] = await Promise.all([
     prisma.cultureMenuItem.findUnique({ where: { id: params.id } }),

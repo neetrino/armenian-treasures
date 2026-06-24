@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
@@ -27,6 +27,8 @@ interface MenuFormProps {
   };
   parents: { id: string; title: string }[];
   defaultParentId?: string;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
 const ROUTE_OPTIONS = [
@@ -39,14 +41,28 @@ const ROUTE_OPTIONS = [
 
 const INITIAL: MenuFormState = { status: 'idle' };
 
-export function CultureMenuForm({ mode, itemId, initial, parents, defaultParentId }: MenuFormProps) {
+export function CultureMenuForm({
+  mode,
+  itemId,
+  initial,
+  parents,
+  defaultParentId,
+  onSuccess,
+  onCancel,
+}: MenuFormProps) {
   const updateBound = itemId
     ? updateMenuItemAction.bind(null, itemId)
     : undefined;
-  const [state, formAction] = useFormState(
+  const [state, formAction, isPending] = useActionState(
     mode === 'edit' && updateBound ? updateBound : createMenuItemAction,
     INITIAL,
   );
+
+  useEffect(() => {
+    if (mode === 'create' && state.status === 'success') {
+      onSuccess?.();
+    }
+  }, [mode, state.status, onSuccess]);
 
   const parentOptions = [
     { value: '', label: 'Top-level (no parent)' },
@@ -128,20 +144,20 @@ export function CultureMenuForm({ mode, itemId, initial, parents, defaultParentI
           {state.message}
         </p>
       ) : null}
-      <SubmitButton mode={mode} />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button type="submit" disabled={isPending} withArrow>
+          {isPending
+            ? 'Saving…'
+            : mode === 'create'
+              ? 'Create menu item'
+              : 'Save changes'}
+        </Button>
+        {onCancel ? (
+          <Button type="button" variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        ) : null}
+      </div>
     </form>
-  );
-}
-
-function SubmitButton({ mode }: { mode: 'create' | 'edit' }) {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending
-        ? 'Saving…'
-        : mode === 'create'
-        ? 'Create menu item'
-        : 'Save changes'}
-    </Button>
   );
 }

@@ -7,41 +7,37 @@ export function isNavActive(pathname: string, href: string): boolean {
 }
 
 export function isAboutNavActive(pathname: string): boolean {
-  return pathname === '/about' || pathname.startsWith('/about/');
+  return pathname === '/about' || pathname.startsWith('/about/') || pathname === '/contacts';
 }
 
 export function isCultureNavActive(pathname: string): boolean {
   return pathname === '/culture' || pathname.startsWith('/culture/');
 }
 
-export function navTriggerClassName(
-  active: boolean,
-  open?: boolean,
-  theme: HeaderTheme = 'over-hero',
-): string {
-  const base =
-    'relative inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-2.5 py-2 text-[13px] font-medium tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500/80 focus-visible:ring-offset-2 xl:px-3';
-  const underline =
-    'after:absolute after:bottom-0 after:left-2.5 after:right-2.5 after:h-px after:origin-center after:scale-x-0 after:transition-transform xl:after:left-3 xl:after:right-3';
+export function isProjectsNavActive(pathname: string): boolean {
+  return pathname === '/projects' || pathname.startsWith('/projects/');
+}
+
+const NAV_ITEM_BASE =
+  'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent font-cinzel text-[8px] font-bold uppercase leading-none tracking-[0.09em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none xl:text-[9px]';
+
+export function navItemClassName(active: boolean, open?: boolean, theme: HeaderTheme = 'over-hero'): string {
+  const isHighlighted = active || open;
 
   if (theme === 'solid') {
     return cn(
-      base,
-      underline,
-      'focus-visible:ring-offset-parchment after:bg-pomegranate',
-      active || open
-        ? 'text-pomegranate-700 after:scale-x-100'
-        : 'text-ink-soft hover:text-ink hover:after:scale-x-100',
+      NAV_ITEM_BASE,
+      isHighlighted
+        ? 'text-heritage-teal'
+        : 'text-heritage-nav hover:text-heritage-teal hover:[text-shadow:0_0_14px_rgba(39,198,200,0.18)]',
     );
   }
 
   return cn(
-    base,
-    underline,
-    'focus-visible:ring-offset-[#0c0818] after:bg-bronze-500',
-    active || open
-      ? 'text-parchment-50 after:scale-x-100'
-      : 'text-parchment-200/90 hover:text-parchment-50 hover:after:scale-x-100',
+    NAV_ITEM_BASE,
+    isHighlighted
+      ? 'text-heritage-teal [text-shadow:0_0_14px_rgba(39,198,200,0.18)]'
+      : 'text-heritage-nav hover:text-heritage-teal hover:[text-shadow:0_0_14px_rgba(39,198,200,0.18)]',
   );
 }
 
@@ -50,5 +46,23 @@ export function navLinkClassName(
   className?: string,
   theme: HeaderTheme = 'over-hero',
 ): string {
-  return cn(navTriggerClassName(active, false, theme), className);
+  return cn(navItemClassName(active, false, theme), 'no-underline', className);
 }
+
+export const SIMPLE_DROPDOWN_PANEL =
+  'pointer-events-auto min-w-[210px] border border-[rgba(214,184,90,0.18)] border-t-2 border-t-heritage-teal bg-[rgba(3,5,4,0.96)] px-5 py-4 shadow-[0_18px_48px_rgba(0,0,0,0.5)] backdrop-blur-[10px]';
+
+export const MEGA_MENU_PANEL =
+  'pointer-events-auto w-[min(920px,calc(100vw-80px))] border border-[rgba(214,184,90,0.18)] border-t-2 border-t-heritage-teal bg-[rgba(3,5,4,0.96)] px-7 py-7 shadow-[0_22px_56px_rgba(0,0,0,0.5),0_0_32px_rgba(39,198,200,0.04)] backdrop-blur-[10px] sm:px-9';
+
+export const SIMPLE_DROPDOWN_ITEM =
+  'block py-1.5 font-display text-base leading-[1.25] text-[rgba(232,216,155,0.84)] no-underline transition-[color,transform] duration-200 ease-out hover:translate-x-1 hover:text-[#F2DA83] motion-reduce:transform-none';
+
+export const MEGA_MENU_HEADING =
+  'mb-4 font-cinzel text-[10px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal';
+
+export const MEGA_MENU_ITEM =
+  'group flex items-center gap-2.5 py-1.5 font-display text-base leading-[1.25] text-[rgba(232,216,155,0.82)] no-underline transition-[color,transform] duration-200 ease-out hover:translate-x-1 hover:text-[#F2DA83] motion-reduce:transform-none';
+
+export const MEGA_MENU_ICON =
+  'h-3.5 w-3.5 shrink-0 text-[rgba(232,216,155,0.65)] transition-colors duration-200 group-hover:text-[rgba(242,218,131,0.85)]';

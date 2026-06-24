@@ -7,7 +7,7 @@ import { contactMessageUpdateSchema } from '@/lib/validation';
 import type { ContactStatus } from '@prisma/client';
 
 function revalidate(): void {
-  revalidateTag('admin-contact');
+  revalidateTag('admin-contact', 'max');
   revalidatePath('/admin/contact-messages');
 }
 

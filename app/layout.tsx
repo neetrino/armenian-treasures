@@ -1,11 +1,26 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
+import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
 import './globals.css';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   variable: '--font-cormorant',
+  display: 'swap',
+});
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-cinzel',
+  display: 'swap',
+});
+
+const cinzelDeco = Cinzel_Decorative({
+  subsets: ['latin'],
+  weight: ['400', '700', '900'],
+  variable: '--font-cinzel-deco',
   display: 'swap',
 });
 
@@ -45,7 +60,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`scrollbar-none ${cormorant.variable} ${inter.variable}`}
+      className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable}`}
     >
       <body className="scrollbar-none min-h-screen bg-parchment text-ink antialiased">
         {children}

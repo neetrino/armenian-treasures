@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function SiteSettingsForm({ initial }: Props) {
-  const [state, formAction] = useFormState(saveSiteSettingsAction, INITIAL);
+  const [state, formAction, isPending] = useActionState(saveSiteSettingsAction, INITIAL);
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
@@ -88,16 +88,9 @@ export function SiteSettingsForm({ initial }: Props) {
       {state.status === 'success' ? (
         <p className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">{state.message}</p>
       ) : null}
-      <Submit />
+      <Button type="submit" disabled={isPending} withArrow>
+        {isPending ? 'Saving…' : 'Save settings'}
+      </Button>
     </form>
-  );
-}
-
-function Submit() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Saving…' : 'Save settings'}
-    </Button>
   );
 }

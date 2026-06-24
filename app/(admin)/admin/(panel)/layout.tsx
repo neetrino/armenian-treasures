@@ -1,15 +1,13 @@
 import type { ReactNode } from 'react';
-import { redirect } from 'next/navigation';
 import { AdminSidebar } from '@/components/admin/AdminSidebar';
-import { getAdminOrNull } from '@/lib/auth/require-admin';
+import { requireAdminPage } from '@/lib/auth/require-admin';
 
 async function AdminPanelLayout({ children }: { children: ReactNode }) {
-  const user = await getAdminOrNull();
-  if (!user) redirect('/admin/login');
+  await requireAdminPage();
   return (
-    <div className="flex min-h-screen bg-parchment-200/30">
+    <div className="flex h-screen overflow-hidden bg-parchment-200/30">
       <AdminSidebar />
-      <div className="flex min-h-screen flex-1 flex-col">{children}</div>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">{children}</div>
     </div>
   );
 }

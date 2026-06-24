@@ -1,18 +1,20 @@
 import { unstable_cache } from 'next/cache';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 
-const FALLBACK: PublicHomeContentDTO = {
-  heroBadge: 'SINCE THE 4TH CENTURY',
-  heroTitle: 'The living archive of',
-  heroHighlight: 'Armenian heritage',
+export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
+  heroBadge: '✦ DISCOVER · PRESERVE · CELEBRATE ✦',
+  heroTitle: 'ARMENIAN',
+  heroHighlight: 'TREASURES',
   heroDescription:
-    "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
-  heroImage: '/images/hero/home-hero.png',
-  primaryCtaText: 'Explore the Culture Portal',
+    "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
+  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.png'),
+  heroMobileImage: null,
+  primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
-  secondaryCtaText: 'Open Interactive Map',
-  secondaryCtaUrl: '/map',
+  secondaryCtaText: 'SUPPORT THE MISSION',
+  secondaryCtaUrl: '/partnership',
   stats: [
     { value: '180+', label: 'Monuments Scanned' },
     { value: '42', label: 'Virtual Tours' },
@@ -51,9 +53,9 @@ const FALLBACK: PublicHomeContentDTO = {
 async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
   try {
     const row = await prisma.homeContent.findFirst();
-    return row ? toPublicHomeContent(row) : FALLBACK;
+    return row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
   } catch {
-    return FALLBACK;
+    return HOME_CONTENT_FALLBACK;
   }
 }
 

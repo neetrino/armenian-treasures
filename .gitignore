@@ -31,3 +31,4 @@ next-env.d.ts
 
 # uploads (local storage driver)
 public/uploads/
+storage/private/

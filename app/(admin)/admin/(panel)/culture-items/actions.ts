@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -57,7 +56,7 @@ function intOrZero(value: FormDataEntryValue | null): number {
 }
 
 export interface CultureItemFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -129,11 +128,16 @@ function toData(input: ReturnType<typeof cultureItemSchema.parse>) {
   };
 }
 
-function revalidate(): void {
-  revalidateTag('culture-items');
+function revalidateCultureItem(slugs: string[]): void {
+  revalidateTag('culture-items', 'max');
   revalidatePath('/culture');
   revalidatePath('/map');
   revalidatePath('/admin/culture-items');
+  for (const slug of slugs) {
+    if (slug.trim().length > 0) {
+      revalidatePath(`/culture/item/${slug}`);
+    }
+  }
 }
 
 export async function createCultureItemAction(
@@ -154,8 +158,8 @@ export async function createCultureItemAction(
     };
   }
   await prisma.cultureItem.create({ data: parsed.data });
-  revalidate();
-  redirect('/admin/culture-items');
+  revalidateCultureItem([parsed.data.slug]);
+  return { status: 'success' };
 }
 
 export async function updateCultureItemAction(
@@ -168,6 +172,10 @@ export async function updateCultureItemAction(
   if (!parsed.ok) {
     return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   }
+  const current = await prisma.cultureItem.findUnique({
+    where: { id },
+    select: { slug: true },
+  });
   const existing = await prisma.cultureItem.findUnique({ where: { slug: parsed.data.slug } });
   if (existing && existing.id !== id) {
     return {
@@ -177,18 +185,28 @@ export async function updateCultureItemAction(
     };
   }
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
-  revalidate();
-  redirect('/admin/culture-items');
+  const slugs = new Set<string>([parsed.data.slug]);
+  if (current?.slug) slugs.add(current.slug);
+  revalidateCultureItem([...slugs]);
+  return { status: 'success' };
 }
 
 export async function deleteCultureItemAction(id: string): Promise<void> {
   await requireAdmin();
+  const item = await prisma.cultureItem.findUnique({
+    where: { id },
+    select: { slug: true },
+  });
   await prisma.cultureItem.delete({ where: { id } });
-  revalidate();
+  revalidateCultureItem(item?.slug ? [item.slug] : []);
 }
 
 export async function toggleCultureItemMapAction(id: string, showOnMap: boolean): Promise<void> {
   await requireAdmin();
+  const item = await prisma.cultureItem.findUnique({
+    where: { id },
+    select: { slug: true },
+  });
   await prisma.cultureItem.update({ where: { id }, data: { showOnMap } });
-  revalidate();
+  revalidateCultureItem(item?.slug ? [item.slug] : []);
 }

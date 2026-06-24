@@ -15,6 +15,7 @@ interface AdminTableProps<T> {
   getRowId: (row: T) => string;
   empty?: ReactNode;
   className?: string;
+  onRowClick?: (row: T) => void;
 }
 
 export function AdminTable<T>({
@@ -23,6 +24,7 @@ export function AdminTable<T>({
   getRowId,
   empty,
   className,
+  onRowClick,
 }: AdminTableProps<T>) {
   if (rows.length === 0) {
     return (
@@ -51,7 +53,27 @@ export function AdminTable<T>({
           </thead>
           <tbody className="divide-y divide-stone-100">
             {rows.map((row) => (
-              <tr key={getRowId(row)} className="hover:bg-parchment-50/60">
+              <tr
+                key={getRowId(row)}
+                className={
+                  onRowClick
+                    ? 'cursor-pointer transition-colors hover:bg-stone-100'
+                    : 'hover:bg-parchment-50/60'
+                }
+                onClick={onRowClick ? () => onRowClick(row) : undefined}
+                onKeyDown={
+                  onRowClick
+                    ? (event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          onRowClick(row);
+                        }
+                      }
+                    : undefined
+                }
+                tabIndex={onRowClick ? 0 : undefined}
+                role={onRowClick ? 'button' : undefined}
+              >
                 {columns.map((col) => (
                   <td
                     key={col.key}

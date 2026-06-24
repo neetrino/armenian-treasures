@@ -5,10 +5,11 @@ export interface UploadInput {
   key: string;
   body: Buffer | Uint8Array;
   contentType: string;
+  visibility?: 'public' | 'private';
 }
 
 export interface UploadResult {
-  url: string;
+  url: string | null;
   key: string;
 }
 
@@ -27,4 +28,11 @@ export function getStorage(): StorageDriver {
   return cachedDriver;
 }
 
-export { LocalDriver, R2Driver };
+export { LocalDriver } from './local';
+export {
+  R2Driver,
+  uploadBufferToR2,
+  getR2EnvConfig,
+  getR2EnvPresence,
+} from './r2';
+export type { R2BufferUploadInput, R2BufferUploadResult, R2EnvConfig } from './r2';

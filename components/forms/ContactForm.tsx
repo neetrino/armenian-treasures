@@ -1,7 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useMemo } from 'react';
+import { useActionState, useMemo } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
@@ -10,7 +9,7 @@ import { submitContactMessage, type ContactActionState } from '@/app/(public)/co
 const INITIAL: ContactActionState = { status: 'idle' };
 
 export function ContactForm() {
-  const [state, formAction] = useFormState(submitContactMessage, INITIAL);
+  const [state, formAction, isPending] = useActionState(submitContactMessage, INITIAL);
   const renderedAt = useMemo(() => Date.now(), []);
 
   if (state.status === 'success') {
@@ -60,16 +59,9 @@ export function ContactForm() {
           {state.message ?? 'Something went wrong. Please try again.'}
         </p>
       ) : null}
-      <SubmitButton />
+      <Button type="submit" disabled={isPending} withArrow>
+        {isPending ? 'Sending…' : 'Send message'}
+      </Button>
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Sending…' : 'Send message'}
-    </Button>
   );
 }

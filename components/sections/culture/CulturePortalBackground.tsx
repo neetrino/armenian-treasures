@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 function TopographicRings({ className }: { className?: string }) {
   return (
@@ -54,7 +55,7 @@ export function CulturePortalBackground() {
       <TopographicRings className="absolute right-[5%] top-[10%] h-[min(26vw,13rem)] w-[min(26vw,13rem)] text-bronze/18" />
 
       <Image
-        src="/images/technology/mountain-silhouette.png"
+        src={resolvePublicAssetUrl('/images/technology/mountain-silhouette.png')}
         alt=""
         width={640}
         height={180}

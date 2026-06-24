@@ -1,7 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
-import { useMemo } from 'react';
+import { useActionState, useMemo } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
@@ -14,7 +13,7 @@ interface SubcategoryProposalFormProps {
 const INITIAL_STATE: SubmissionActionState = { status: 'idle' };
 
 export function SubcategoryProposalForm({ parentCategorySlug }: SubcategoryProposalFormProps) {
-  const [state, formAction] = useFormState(submitSubcategoryProposal, INITIAL_STATE);
+  const [state, formAction, isPending] = useActionState(submitSubcategoryProposal, INITIAL_STATE);
   const renderedAt = useMemo(() => Date.now(), []);
 
   if (state.status === 'success') {
@@ -91,16 +90,9 @@ export function SubcategoryProposalForm({ parentCategorySlug }: SubcategoryPropo
           {state.message ?? 'Something went wrong. Please try again.'}
         </p>
       ) : null}
-      <SubmitButton />
+      <Button type="submit" disabled={isPending} withArrow>
+        {isPending ? 'Submitting…' : 'Submit proposal'}
+      </Button>
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Submitting…' : 'Submit proposal'}
-    </Button>
   );
 }

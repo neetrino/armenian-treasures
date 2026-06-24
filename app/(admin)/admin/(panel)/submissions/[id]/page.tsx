@@ -18,9 +18,10 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Submission', robots: { index: false, follow: false } };
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: Promise<{ id: string }> }
 
-async function AdminSubmissionDetailPage({ params }: PageProps) {
+async function AdminSubmissionDetailPage(props: PageProps) {
+  const params = await props.params;
   const user = await requireAdmin();
   const submission = await prisma.submission.findUnique({ where: { id: params.id } });
   if (!submission) notFound();

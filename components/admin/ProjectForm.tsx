@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
@@ -32,14 +33,29 @@ interface Props {
   mode: 'create' | 'edit';
   itemId?: string;
   initial?: Initial;
+  onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export function ProjectForm({ mode, itemId, initial }: Props) {
+export function ProjectForm({ mode, itemId, initial, onSuccess, onCancel }: Props) {
+  const router = useRouter();
   const updateBound = itemId ? updateProjectAction.bind(null, itemId) : undefined;
-  const [state, formAction] = useFormState(
+  const [state, formAction, isPending] = useActionState(
     mode === 'edit' && updateBound ? updateBound : createProjectAction,
     INITIAL,
   );
+
+  useEffect(() => {
+    if (state.status !== 'success') return;
+    if (onSuccess) {
+      onSuccess();
+      return;
+    }
+    if (mode === 'edit') {
+      router.refresh();
+    }
+  }, [mode, onSuccess, router, state.status]);
+
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
@@ -93,16 +109,16 @@ export function ProjectForm({ mode, itemId, initial }: Props) {
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
       ) : null}
-      <Submit mode={mode} />
+      <div className="flex flex-wrap items-center gap-3">
+        <Button type="submit" disabled={isPending} withArrow>
+          {isPending ? 'Saving…' : mode === 'create' ? 'Create project' : 'Save changes'}
+        </Button>
+        {onCancel ? (
+          <Button type="button" variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+        ) : null}
+      </div>
     </form>
-  );
-}
-
-function Submit({ mode }: { mode: 'create' | 'edit' }) {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Saving…' : mode === 'create' ? 'Create project' : 'Save changes'}
-    </Button>
   );
 }

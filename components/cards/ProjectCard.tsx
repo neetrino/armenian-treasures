@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
@@ -19,7 +20,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="relative overflow-hidden rounded-t-2xl bg-stone-100">
         <div className="aspect-[4/3] w-full">
           <Image
-            src={project.image ?? '/images/placeholder.svg'}
+            src={project.image ? resolvePublicAssetUrl(project.image) : resolvePublicAssetUrl('/images/placeholder.svg')}
             alt={project.title}
             width={800}
             height={600}
