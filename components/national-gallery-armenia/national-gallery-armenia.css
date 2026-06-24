@@ -1,0 +1,35 @@
+.khndzoresk-page .exh-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:48px}
+.khndzoresk-page .exh-card{background:var(--card);border:1px solid var(--border);padding:28px 26px;position:relative;overflow:hidden;transition:border-color .25s,background .25s}
+.khndzoresk-page .exh-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold-dk),var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.khndzoresk-page .exh-card:hover{border-color:rgba(201,168,76,.45);background:var(--card2)}
+.khndzoresk-page .exh-card:hover::before{transform:scaleX(1)}
+.khndzoresk-page .exh-dates{font-family:var(--font-inter),sans-serif;font-size:9px;letter-spacing:.24em;color:var(--teal);text-transform:uppercase;margin-bottom:10px}
+.khndzoresk-page .exh-title{font-family:var(--font-cinzel),serif;font-size:17px;font-weight:700;color:var(--gold);margin-bottom:10px;line-height:1.2}
+.khndzoresk-page .exh-desc{font-size:14px;color:var(--text);opacity:.68;line-height:1.55}
+.khndzoresk-page .exh-status{display:inline-block;padding:3px 12px;font-family:var(--font-inter),sans-serif;font-size:8px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px}
+.khndzoresk-page .status-current{background:rgba(42,191,191,.12);color:var(--teal)}
+.khndzoresk-page .status-upcoming{background:rgba(201,168,76,.12);color:var(--gold)}
+.khndzoresk-page .exh-num{position:absolute;bottom:14px;right:18px;font-family:var(--font-cinzel),serif;font-size:64px;font-weight:900;color:rgba(201,168,76,.04);line-height:1;pointer-events:none}
+
+.khndzoresk-page .ticket-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.khndzoresk-page .ticket-card{background:var(--card);border:1px solid var(--border);padding:28px 24px;transition:border-color .25s,background .25s}
+.khndzoresk-page .ticket-card:hover{border-color:var(--teal);background:var(--card2)}
+.khndzoresk-page .ticket-label{font-family:var(--font-inter),sans-serif;font-size:9px;letter-spacing:.28em;color:var(--teal);text-transform:uppercase;margin-bottom:10px}
+.khndzoresk-page .ticket-title{font-family:var(--font-cinzel),serif;font-size:16px;color:var(--gold);margin-bottom:8px;white-space:pre-line}
+.khndzoresk-page .ticket-title.ticket-title-sm{font-size:13px;margin-bottom:10px}
+.khndzoresk-page .ticket-price{font-family:var(--font-cinzel),serif;font-size:28px;font-weight:900;color:var(--gold-lt);line-height:1;margin-bottom:4px}
+.khndzoresk-page .ticket-price.ticket-price-sm{font-size:22px;padding-top:4px}
+.khndzoresk-page .ticket-sub{font-size:13px;color:var(--muted)}
+
+.khndzoresk-page .hero-content{max-width:920px}
+.khndzoresk-page .hero h1{font-size:clamp(32px,5.8vw,74px)}
+.khndzoresk-page .hero-sub{max-width:600px;font-size:18.5px}
+.khndzoresk-page .stat-item{min-width:120px;padding:30px 28px}
+.khndzoresk-page .stat-num{font-size:34px}
+.khndzoresk-page .stat-label{font-size:9px}
+.khndzoresk-page .map-embed{height:400px}
+
+@media(max-width:900px){
+  .khndzoresk-page .exh-grid{grid-template-columns:1fr}
+  .khndzoresk-page .ticket-grid{grid-template-columns:1fr 1fr}
+}

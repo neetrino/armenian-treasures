@@ -12,6 +12,9 @@ import {
   PROJECTS_MENU,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
+import { MobileSectionLink } from './MobileSectionLink';
+import { useHomeSectionNav } from './useHomeSectionNav';
+import { HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import {
   isAboutNavActive,
   isCultureNavActive,
@@ -71,6 +74,24 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
     setOpenColumn(null);
   };
 
+  const cultureNav = useHomeSectionNav({
+    homeSectionId: HOME_SECTION_IDS.culturalPortal,
+    fallbackHref: '/culture',
+    onScroll: close,
+  });
+
+  const projectsNav = useHomeSectionNav({
+    homeSectionId: HOME_SECTION_IDS.upcomingProjects,
+    fallbackHref: '/projects',
+    onScroll: close,
+  });
+
+  const aboutNav = useHomeSectionNav({
+    homeSectionId: HOME_SECTION_IDS.aboutUs,
+    fallbackHref: '/about/mission',
+    onScroll: close,
+  });
+
   return (
     <div className="lg:hidden">
       <motion.button
@@ -122,18 +143,26 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
               </div>
 
               <nav className="flex flex-col gap-1" aria-label="Mobile primary">
-                <Link
+                <MobileSectionLink
                   href={PRIMARY_LINKS[0]!.href}
-                  onClick={close}
-                  className={cn(MOBILE_SECTION, 'py-3', isNavActive(pathname, PRIMARY_LINKS[0]!.href) && 'text-heritage-teal')}
+                  homeSectionId={PRIMARY_LINKS[0]!.homeSectionId}
+                  onNavigate={close}
+                  className={cn(
+                    MOBILE_SECTION,
+                    'py-3',
+                    isNavActive(pathname, PRIMARY_LINKS[0]!.href) && 'text-heritage-teal',
+                  )}
                 >
                   {PRIMARY_LINKS[0]!.label}
-                </Link>
+                </MobileSectionLink>
 
                 <MobileAccordion
                   label="Cultural Portal"
                   open={cultureOpen}
                   onToggle={() => setCultureOpen((v) => !v)}
+                  onLabelClick={() => {
+                    cultureNav.handleSectionTriggerClick();
+                  }}
                   active={isCultureNavActive(pathname)}
                 >
                   {CULTURE_MEGA_MENU.map((column) => (
@@ -181,6 +210,9 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
                   label="Upcoming Projects"
                   open={projectsOpen}
                   onToggle={() => setProjectsOpen((v) => !v)}
+                  onLabelClick={() => {
+                    projectsNav.handleSectionTriggerClick();
+                  }}
                   active={isProjectsNavActive(pathname)}
                 >
                   <ul>
@@ -195,20 +227,28 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
                 </MobileAccordion>
 
                 {PRIMARY_LINKS.slice(1).map((link) => (
-                  <Link
+                  <MobileSectionLink
                     key={link.href}
                     href={link.href}
-                    onClick={close}
-                    className={cn(MOBILE_SECTION, 'py-3', isNavActive(pathname, link.href) && 'text-heritage-teal')}
+                    homeSectionId={link.homeSectionId}
+                    onNavigate={close}
+                    className={cn(
+                      MOBILE_SECTION,
+                      'py-3',
+                      isNavActive(pathname, link.href) && 'text-heritage-teal',
+                    )}
                   >
                     {link.label}
-                  </Link>
+                  </MobileSectionLink>
                 ))}
 
                 <MobileAccordion
                   label="About Us"
                   open={aboutOpen}
                   onToggle={() => setAboutOpen((v) => !v)}
+                  onLabelClick={() => {
+                    aboutNav.handleSectionTriggerClick();
+                  }}
                   active={isAboutNavActive(pathname)}
                 >
                   <ul>
@@ -238,30 +278,47 @@ interface MobileAccordionProps {
   label: string;
   open: boolean;
   onToggle: () => void;
+  onLabelClick?: () => void;
   active: boolean;
   children: React.ReactNode;
 }
 
-function MobileAccordion({ label, open, onToggle, active, children }: MobileAccordionProps) {
+function MobileAccordion({
+  label,
+  open,
+  onToggle,
+  onLabelClick,
+  active,
+  children,
+}: MobileAccordionProps) {
   return (
     <div className="border-b border-[rgba(214,184,90,0.1)]">
-      <button
-        type="button"
-        onClick={onToggle}
-        className={cn(
-          'flex w-full items-center justify-between py-3 text-left',
-          MOBILE_SECTION,
-          active && 'text-heritage-teal',
-        )}
-        aria-expanded={open}
-      >
-        {label}
-        <ChevronDown
-          size={16}
-          className={cn('opacity-70 transition-transform', open && 'rotate-180')}
-          aria-hidden
-        />
-      </button>
+      <div className="flex w-full items-center justify-between">
+        <button
+          type="button"
+          onClick={onLabelClick ?? onToggle}
+          className={cn(
+            'min-w-0 flex-1 py-3 text-left',
+            MOBILE_SECTION,
+            active && 'text-heritage-teal',
+          )}
+        >
+          {label}
+        </button>
+        <button
+          type="button"
+          onClick={onToggle}
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-heritage-nav hover:text-heritage-teal"
+          aria-expanded={open}
+          aria-label={`${open ? 'Collapse' : 'Expand'} ${label}`}
+        >
+          <ChevronDown
+            size={16}
+            className={cn('opacity-70 transition-transform', open && 'rotate-180')}
+            aria-hidden
+          />
+        </button>
+      </div>
       {open ? <div className="pb-3 pl-1">{children}</div> : null}
     </div>
   );

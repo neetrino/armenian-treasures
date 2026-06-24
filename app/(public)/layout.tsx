@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { HomeSectionHashScroll } from '@/components/navigation/HomeSectionHashScroll';
 
 function PublicLayout({ children }: { children: ReactNode }) {
   return (
@@ -12,6 +13,7 @@ function PublicLayout({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
+      <HomeSectionHashScroll />
       <main id="main-content" className="flex-1">
         {children}
       </main>
