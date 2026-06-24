@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import type { HomeSectionId } from '@/lib/navigation/home-sections';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
+import { useHomeSectionNav } from '@/components/navigation/useHomeSectionNav';
 import {
   navItemClassName,
   SIMPLE_DROPDOWN_ITEM,
@@ -18,14 +20,33 @@ interface SimpleDropdownProps {
   items: NavDropdownLink[];
   isActive: (pathname: string) => boolean;
   menuId: string;
+  homeSectionId?: HomeSectionId;
+  fallbackHref?: string;
 }
 
-export function SimpleDropdown({ label, items, isActive, menuId }: SimpleDropdownProps) {
+export function SimpleDropdown({
+  label,
+  items,
+  isActive,
+  menuId,
+  homeSectionId,
+  fallbackHref,
+}: SimpleDropdownProps) {
   const pathname = usePathname();
   const active = isActive(pathname);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [panelStyle, setPanelStyle] = useState<{ left: number } | null>(null);
   const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { handleSectionTriggerClick } = useHomeSectionNav({
+    homeSectionId,
+    fallbackHref,
+    onScroll: close,
+  });
+
+  const handleTriggerClick = (): void => {
+    if (handleSectionTriggerClick()) return;
+    toggle();
+  };
 
   useEffect(() => {
     if (!open || !triggerRef.current) return;
@@ -62,7 +83,7 @@ export function SimpleDropdown({ label, items, isActive, menuId }: SimpleDropdow
         aria-haspopup="true"
         aria-controls={panelId}
         aria-current={active ? 'page' : undefined}
-        onClick={toggle}
+        onClick={handleTriggerClick}
       >
         {label}
         <NavDropdownArrow open={open} />

@@ -35,10 +35,11 @@ function VirtualMuseumHeader() {
 export function VirtualMuseumSection({ embedded = false }: { embedded?: boolean }) {
   return (
     <section
+      id="virtual-museum"
       className={
         embedded
-          ? 'relative px-5 pb-[clamp(2.5rem,4vw,3.5rem)] pt-[clamp(4.375rem,8vw,8.125rem)] sm:px-6'
-          : 'relative isolate overflow-hidden bg-heritage-black px-5 pb-[clamp(2.5rem,4vw,3.5rem)] pt-[clamp(4.375rem,8vw,8.125rem)] sm:px-6'
+          ? 'relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(2.5rem,4vw,3.5rem)] pt-[clamp(4.375rem,8vw,8.125rem)] sm:px-6'
+          : 'relative isolate scroll-mt-[calc(var(--site-header-height)+1rem)] overflow-hidden bg-heritage-black px-5 pb-[clamp(2.5rem,4vw,3.5rem)] pt-[clamp(4.375rem,8vw,8.125rem)] sm:px-6'
       }
       aria-labelledby="virtual-museum-heading"
     >

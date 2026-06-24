@@ -6,7 +6,8 @@ import { CulturalPortalOrnament } from '@/components/sections/cultural-portal/Cu
 export function CulturalPortalSection() {
   return (
     <section
-      className="relative bg-transparent px-5 pb-[clamp(6.875rem,9vw,8.75rem)] pt-[clamp(3rem,5vw,4.5rem)] sm:px-6"
+      id="cultural-portal"
+      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] bg-transparent px-5 pb-[clamp(6.875rem,9vw,8.75rem)] pt-[clamp(3rem,5vw,4.5rem)] sm:px-6"
       aria-labelledby="cultural-portal-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">

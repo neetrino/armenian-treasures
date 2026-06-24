@@ -4,8 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRef } from 'react';
 import { CULTURE_MEGA_MENU } from '@/lib/navigation/culture-mega-menu';
+import { HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
+import { useHomeSectionNav } from '@/components/navigation/useHomeSectionNav';
 import {
   isCultureNavActive,
   MEGA_MENU_HEADING,
@@ -22,6 +24,16 @@ export function CultureMegaMenu() {
   const active = isCultureNavActive(pathname);
   const panelRef = useRef<HTMLDivElement>(null);
   const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { handleSectionTriggerClick } = useHomeSectionNav({
+    homeSectionId: HOME_SECTION_IDS.culturalPortal,
+    fallbackHref: '/culture',
+    onScroll: close,
+  });
+
+  const handleTriggerClick = (): void => {
+    if (handleSectionTriggerClick()) return;
+    toggle();
+  };
 
   const panelId = 'culture-mega-menu-panel';
 
@@ -39,7 +51,7 @@ export function CultureMegaMenu() {
         aria-haspopup="true"
         aria-controls={panelId}
         aria-current={active ? 'page' : undefined}
-        onClick={toggle}
+        onClick={handleTriggerClick}
       >
         Cultural Portal
         <NavDropdownArrow open={open} />
