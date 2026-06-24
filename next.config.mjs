@@ -33,6 +33,9 @@ const nextConfig = {
   images: {
     remotePatterns: buildR2RemotePatterns(),
   },
+  outputFileTracingExcludes: {
+    '*': ['next.config.mjs'],
+  },
   serverExternalPackages: [
     '@prisma/client',
     '@prisma/adapter-neon',

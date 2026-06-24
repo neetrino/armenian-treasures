@@ -12,7 +12,6 @@ import {
   PROJECTS_MENU,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
-import { useHeaderTheme } from '@/components/layout/header-theme';
 import {
   isAboutNavActive,
   isCultureNavActive,
@@ -42,8 +41,6 @@ function mobileLinkClass(pathname: string, href: string): string {
 
 export function MobileMenu({ tree: _tree }: MobileMenuProps) {
   const pathname = usePathname();
-  const theme = useHeaderTheme();
-  const isSolid = theme === 'solid';
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [cultureOpen, setCultureOpen] = useState(false);
@@ -81,9 +78,7 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
         onClick={() => setOpen(true)}
         className={cn(
           'inline-flex h-10 w-10 items-center justify-center border transition',
-          isSolid
-            ? 'border-stone-200 text-ink hover:bg-stone-100'
-            : 'border-[rgba(214,184,90,0.28)] text-heritage-nav hover:border-[rgba(39,198,200,0.45)] hover:text-heritage-teal',
+          'border-[rgba(214,184,90,0.28)] text-heritage-nav hover:border-[rgba(39,198,200,0.45)] hover:text-heritage-teal',
         )}
         aria-label="Open menu"
         aria-expanded={open}

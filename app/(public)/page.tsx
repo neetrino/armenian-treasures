@@ -1,12 +1,8 @@
 import type { Metadata } from 'next';
+
 import { HeroHome } from '@/components/sections/HeroHome';
-import { MissionPreviewSection } from '@/components/sections/MissionPreviewSection';
-import { TechnologySection } from '@/components/sections/TechnologySection';
-import { CulturePortalGrid } from '@/components/sections/CulturePortalGrid';
-import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { HOME_HERO_COPY } from '@/lib/constants/home-hero';
-import { getMenuTree } from '@/lib/queries/menu';
-import { getHomeContent } from '@/lib/queries/home';
+import { HomeHeritageSections } from '@/components/sections/HomeHeritageSections';
+import { HOME_HERO_COPY, HOME_HERO_STATS } from '@/lib/constants/home-hero';
 
 export const revalidate = 60;
 
@@ -15,27 +11,7 @@ export const metadata: Metadata = {
   description: HOME_HERO_COPY.description,
 };
 
-interface HomeTechCard {
-  title: string;
-  description: string;
-  icon: string;
-}
-
-function asTechCards(value: unknown): HomeTechCard[] {
-  if (!Array.isArray(value)) return [];
-  return value.filter(
-    (item): item is HomeTechCard =>
-      typeof item === 'object' &&
-      item !== null &&
-      typeof (item as Record<string, unknown>).title === 'string' &&
-      typeof (item as Record<string, unknown>).description === 'string' &&
-      typeof (item as Record<string, unknown>).icon === 'string',
-  );
-}
-
-async function HomePage() {
-  const [tree, content] = await Promise.all([getMenuTree(), getHomeContent()]);
-  const techCards = asTechCards(content.techCards);
+function HomePage() {
   return (
     <>
       <HeroHome
@@ -49,15 +25,10 @@ async function HomePage() {
         primaryCtaUrl={HOME_HERO_COPY.primaryCtaUrl}
         secondaryCtaText={HOME_HERO_COPY.secondaryCtaText}
         secondaryCtaUrl={HOME_HERO_COPY.secondaryCtaUrl}
+        stats={[...HOME_HERO_STATS]}
       />
-      <MissionPreviewSection
-        title={content.missionTitle}
-        highlight={content.missionHighlight}
-        text={content.missionText}
-      />
-      <TechnologySection items={techCards} />
-      <CulturePortalGrid tree={tree} />
-      <FinalCtaSection title={content.ctaTitle} description={content.ctaDescription} />
+
+      <HomeHeritageSections />
     </>
   );
 }

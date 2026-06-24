@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
 
-const LOGO_SRC = resolvePublicAssetUrl('/images/footer/monastery-emblem.png');
+const HEADER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.png');
 
 interface LogoProps {
   className?: string;
@@ -17,13 +17,13 @@ function LogoMark({ isDark, compact }: { isDark: boolean; compact?: boolean }) {
   if (isDark) {
     return (
       <Image
-        src={LOGO_SRC}
+        src={HEADER_LOGO_SRC}
         alt=""
-        width={44}
-        height={44}
+        width={700}
+        height={923}
         className={cn(
-          'h-auto max-h-10 shrink-0 object-contain',
-          compact ? 'w-8 sm:w-9 lg:w-10' : 'w-9 lg:w-10',
+          'h-auto w-auto shrink-0 object-contain',
+          compact ? 'max-h-10 sm:max-h-11 lg:max-h-12' : 'max-h-16 sm:max-h-[4.5rem]',
         )}
         priority
       />
@@ -60,14 +60,16 @@ export function Logo({
       <LogoMark isDark={isDark} compact={compact} />
       {!compact ? (
         <span className="flex min-w-0 flex-col leading-tight">
-          <span
-            className={cn(
-              'truncate font-cinzel text-base font-semibold tracking-wide sm:text-lg',
-              isDark ? 'text-heritage-champagne' : 'text-ink',
-            )}
-          >
-            {title}
-          </span>
+          {!isDark ? (
+            <span
+              className={cn(
+                'truncate font-cinzel text-base font-semibold tracking-wide sm:text-lg',
+                'text-ink',
+              )}
+            >
+              {title}
+            </span>
+          ) : null}
           <span
             className={cn(
               'truncate font-cinzel text-[9px] font-medium uppercase tracking-[0.16em] sm:text-[10px]',

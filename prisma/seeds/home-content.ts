@@ -1,13 +1,9 @@
 import { prisma } from '@/lib/db';
+import { HOME_HERO_STATS } from '@/lib/constants/home-hero';
 
 const SINGLETON_ID = 'home-content-singleton';
 
-const STATS = [
-  { value: '180+', label: 'Monuments Scanned' },
-  { value: '42', label: 'Virtual Tours' },
-  { value: '1,700+', label: 'Years of History' },
-  { value: '11', label: 'Cultural Domains' },
-];
+const STATS = [...HOME_HERO_STATS];
 
 const TECH_CARDS = [
   {

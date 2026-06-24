@@ -1,0 +1,42 @@
+import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection';
+import { CulturalPortalSection } from '@/components/sections/CulturalPortalSection';
+import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasuresSection';
+import { HeritageMapSection } from '@/components/sections/HeritageMapSection';
+import { UpcomingProjectsSection } from '@/components/sections/UpcomingProjectsSection';
+import { PartnershipSection } from '@/components/sections/PartnershipSection';
+import { DonationsSection } from '@/components/sections/DonationsSection';
+import { AboutUsSection } from '@/components/sections/AboutUsSection';
+import { HomeNewsletterSection } from '@/components/sections/HomeNewsletterSection';
+
+export function HomeHeritageSections() {
+  return (
+    <div className="relative isolate overflow-hidden bg-heritage-black">
+      <div
+        className="pointer-events-none absolute inset-0 bg-heritage-radial opacity-90"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-heritage-teal-glow opacity-70"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-hero-diamond-grid opacity-40"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(214,184,90,0.03)_0%,transparent_18%,transparent_82%,rgba(214,184,90,0.025)_100%)]"
+        aria-hidden
+      />
+
+      <VirtualMuseumSection embedded />
+      <CulturalPortalSection />
+      <FeaturedTreasuresSection />
+      <HeritageMapSection />
+      <UpcomingProjectsSection />
+      <PartnershipSection />
+      <DonationsSection />
+      <AboutUsSection />
+      <HomeNewsletterSection />
+    </div>
+  );
+}

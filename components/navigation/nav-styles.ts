@@ -1,4 +1,3 @@
-import type { HeaderTheme } from '@/components/layout/header-theme';
 import { cn } from '@/lib/utils';
 
 export function isNavActive(pathname: string, href: string): boolean {
@@ -21,17 +20,8 @@ export function isProjectsNavActive(pathname: string): boolean {
 const NAV_ITEM_BASE =
   'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent font-cinzel text-[8px] font-bold uppercase leading-none tracking-[0.09em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none xl:text-[9px]';
 
-export function navItemClassName(active: boolean, open?: boolean, theme: HeaderTheme = 'over-hero'): string {
+export function navItemClassName(active: boolean, open?: boolean): string {
   const isHighlighted = active || open;
-
-  if (theme === 'solid') {
-    return cn(
-      NAV_ITEM_BASE,
-      isHighlighted
-        ? 'text-heritage-teal'
-        : 'text-heritage-nav hover:text-heritage-teal hover:[text-shadow:0_0_14px_rgba(39,198,200,0.18)]',
-    );
-  }
 
   return cn(
     NAV_ITEM_BASE,
@@ -41,12 +31,8 @@ export function navItemClassName(active: boolean, open?: boolean, theme: HeaderT
   );
 }
 
-export function navLinkClassName(
-  active: boolean,
-  className?: string,
-  theme: HeaderTheme = 'over-hero',
-): string {
-  return cn(navItemClassName(active, false, theme), 'no-underline', className);
+export function navLinkClassName(active: boolean, className?: string): string {
+  return cn(navItemClassName(active), 'no-underline', className);
 }
 
 export const SIMPLE_DROPDOWN_PANEL =
