@@ -4,6 +4,7 @@ import { MissionPreviewSection } from '@/components/sections/MissionPreviewSecti
 import { TechnologySection } from '@/components/sections/TechnologySection';
 import { CulturePortalGrid } from '@/components/sections/CulturePortalGrid';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { HOME_HERO_COPY } from '@/lib/constants/home-hero';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getHomeContent } from '@/lib/queries/home';
 
@@ -11,30 +12,13 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Armenian Treasures',
-  description:
-    "The living archive of Armenian heritage — monasteries, fortresses, museums and folk arts, digitized for the world.",
+  description: HOME_HERO_COPY.description,
 };
-
-interface HomeStat {
-  value: string;
-  label: string;
-}
 
 interface HomeTechCard {
   title: string;
   description: string;
   icon: string;
-}
-
-function asStats(value: unknown): HomeStat[] {
-  if (!Array.isArray(value)) return [];
-  return value.filter(
-    (item): item is HomeStat =>
-      typeof item === 'object' &&
-      item !== null &&
-      typeof (item as Record<string, unknown>).value === 'string' &&
-      typeof (item as Record<string, unknown>).label === 'string',
-  );
 }
 
 function asTechCards(value: unknown): HomeTechCard[] {
@@ -51,21 +35,20 @@ function asTechCards(value: unknown): HomeTechCard[] {
 
 async function HomePage() {
   const [tree, content] = await Promise.all([getMenuTree(), getHomeContent()]);
-  const stats = asStats(content.stats);
   const techCards = asTechCards(content.techCards);
   return (
     <>
       <HeroHome
-        badge={content.heroBadge}
-        title={content.heroTitle}
-        highlight={content.heroHighlight}
-        description={content.heroDescription}
-        primaryCtaText={content.primaryCtaText}
-        primaryCtaUrl={content.primaryCtaUrl}
-        secondaryCtaText={content.secondaryCtaText}
-        secondaryCtaUrl={content.secondaryCtaUrl}
-        imageUrl={content.heroImage ?? '/images/hero/home-hero.png'}
-        stats={stats}
+        badge={HOME_HERO_COPY.badge}
+        title={HOME_HERO_COPY.title}
+        highlight={HOME_HERO_COPY.highlight}
+        subtitle={HOME_HERO_COPY.subtitle}
+        tagline={HOME_HERO_COPY.tagline}
+        description={HOME_HERO_COPY.description}
+        primaryCtaText={HOME_HERO_COPY.primaryCtaText}
+        primaryCtaUrl={HOME_HERO_COPY.primaryCtaUrl}
+        secondaryCtaText={HOME_HERO_COPY.secondaryCtaText}
+        secondaryCtaUrl={HOME_HERO_COPY.secondaryCtaUrl}
       />
       <MissionPreviewSection
         title={content.missionTitle}

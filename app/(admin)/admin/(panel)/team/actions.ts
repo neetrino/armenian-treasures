@@ -7,7 +7,7 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import { teamMemberSchema } from '@/lib/validation';
 
 export interface TeamFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -41,7 +41,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('team');
+  revalidateTag('team', 'max');
   revalidatePath('/about/team');
   revalidatePath('/admin/team');
 }
@@ -52,7 +52,7 @@ export async function createTeamMemberAction(_p: TeamFormState, formData: FormDa
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   await prisma.teamMember.create({ data: parsed.data });
   revalidate();
-  redirect('/admin/team');
+  return { status: 'success' };
 }
 
 export async function updateTeamMemberAction(

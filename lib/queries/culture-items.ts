@@ -1,6 +1,11 @@
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
-import { toPublicCultureItem, type PublicCultureItemDTO } from '@/lib/dto';
+import {
+  toPublicCultureItem,
+  toPublicCultureItemDetail,
+  type PublicCultureItemDTO,
+  type PublicCultureItemDetailDTO,
+} from '@/lib/dto';
 
 async function fetchPublishedItemsByMenu(menuItemId: string): Promise<PublicCultureItemDTO[]> {
   try {
@@ -36,6 +41,31 @@ export const getCultureItemBySlug = unstable_cache(
   { tags: ['culture-items'], revalidate: 60 },
 );
 
+async function fetchCultureItemDetailBySlug(
+  slug: string,
+): Promise<PublicCultureItemDetailDTO | null> {
+  try {
+    const row = await prisma.cultureItem.findFirst({
+      where: { slug, status: 'PUBLISHED' },
+      include: {
+        menuItem: {
+          include: { parent: true },
+        },
+      },
+    });
+    if (!row) return null;
+    return toPublicCultureItemDetail(row);
+  } catch {
+    return null;
+  }
+}
+
+export const getCultureItemDetailBySlug = unstable_cache(
+  fetchCultureItemDetailBySlug,
+  ['culture-item-detail-by-slug'],
+  { tags: ['culture-items'], revalidate: 60 },
+);
+
 async function fetchMapItems(): Promise<PublicCultureItemDTO[]> {
   try {
     const rows = await prisma.cultureItem.findMany({
@@ -57,3 +87,17 @@ export const getMapItems = unstable_cache(fetchMapItems, ['culture-map-items'], 
   tags: ['culture-items'],
   revalidate: 60,
 });
+
+export async function getPublishedCultureItemSlugs(): Promise<
+  { slug: string; updatedAt: Date }[]
+> {
+  try {
+    return await prisma.cultureItem.findMany({
+      where: { status: 'PUBLISHED' },
+      select: { slug: true, updatedAt: true },
+      orderBy: { slug: 'asc' },
+    });
+  } catch {
+    return [];
+  }
+}

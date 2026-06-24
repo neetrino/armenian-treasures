@@ -249,6 +249,63 @@ model SiteSettings {
   updatedAt          DateTime @updatedAt
 }
 
+model AdminUser {
+  id               String          @id @default(cuid())
+  email            String          @unique
+  passwordHash     String
+  isActive         Boolean         @default(true)
+  failedLoginCount Int             @default(0)
+  lockedUntil      DateTime?
+  lastLoginAt      DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  auditLogs AdminAuditLog[]
+}
+
+model AdminAuditLog {
+  id          String     @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+
+  email     String?
+  event     String
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([adminUserId])
+  @@index([email])
+  @@index([event])
+  @@index([createdAt])
+}
+
+enum UploadStatus {
+  PENDING_SCAN
+  APPROVED
+  REJECTED
+}
+
+model UploadMetadata {
+  id               String       @id @default(cuid())
+  ownerType        String
+  ownerId          String
+  originalFilename String
+  detectedMime     String
+  fileSize         Int
+  storageKey       String       @unique
+  status           UploadStatus @default(PENDING_SCAN)
+  publicUrl        String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@index([ownerType, ownerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
 model HomeContent {
   id               String   @id @default(cuid())
   heroBadge        String
@@ -256,6 +313,7 @@ model HomeContent {
   heroHighlight    String
   heroDescription  String   @db.Text
   heroImage        String?
+  heroMobileImage  String?
   primaryCtaText   String
   primaryCtaUrl    String
   secondaryCtaText String
@@ -267,5 +325,28 @@ model HomeContent {
   techCards        Json
   ctaTitle         String
   ctaDescription   String   @db.Text
+  updatedAt        DateTime @updatedAt
+}
+
+model AboutContent {
+  id               String   @id @default("about-content-singleton")
+  heroEyebrow      String
+  heroTitle        String
+  heroDescription  String   @db.Text
+  missionEyebrow   String
+  missionTitle     String
+  missionIntro     String   @db.Text
+  pillars          Json
+  whyNowHeading    String
+  whyNowBody       String   @db.Text
+  howWeWorkHeading String
+  howWeWorkBody    String   @db.Text
+  teamEyebrow      String
+  teamTitle        String
+  teamIntro        String   @db.Text
+  careerEyebrow    String
+  careerTitle      String
+  careerIntro      String   @db.Text
+  createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }

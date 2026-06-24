@@ -18,6 +18,7 @@ export interface UploadValidationResult {
   reason?: string;
 }
 
+/** @deprecated Use validateFileBuffer from ./file-signature for server-side validation */
 export function validateUpload(file: File, kind: UploadKind): UploadValidationResult {
   if (!file) return { ok: false, reason: 'No file provided' };
   const type = file.type.toLowerCase();
@@ -49,16 +50,26 @@ export function validateUpload(file: File, kind: UploadKind): UploadValidationRe
 }
 
 export function safeFilename(name: string): string {
-  return name
-    .normalize('NFKD')
-    .replace(/[^a-zA-Z0-9._-]+/g, '-')
-    .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(-120)
-    .toLowerCase() || 'file';
+  return (
+    name
+      .normalize('NFKD')
+      .replace(/[^a-zA-Z0-9._-]+/g, '-')
+      .replace(/-{2,}/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(-120)
+      .toLowerCase() || 'file'
+  );
 }
 
 export function generateKey(prefix: string, filename: string): string {
   const random = randomBytes(8).toString('hex');
   return `${prefix}/${random}-${safeFilename(filename)}`;
 }
+
+export {
+  createUploadSessionId,
+  createUploadToken,
+  verifyUploadToken,
+} from './uploads/upload-token';
+export { validateFileBuffer, detectMimeFromBuffer, getExtension } from './uploads/file-signature';
+export { storeValidatedUpload, generateStorageKey } from './uploads/store-upload';

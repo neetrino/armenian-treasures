@@ -10,6 +10,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        heritage: {
+          black: '#030504',
+          'green-black': '#07110F',
+          'dark-teal': '#061B1B',
+          gold: '#D6B85A',
+          'gold-muted': '#B9963E',
+          nav: '#E8D5A3',
+          champagne: '#E8D89B',
+          teal: '#27C6C8',
+          'text-muted': 'rgba(232, 216, 155, 0.68)',
+          'border-gold': 'rgba(214, 184, 90, 0.25)',
+          'grid-line': 'rgba(214, 184, 90, 0.045)',
+          'glow-teal': 'rgba(39, 198, 200, 0.18)',
+          'glow-gold': 'rgba(214, 184, 90, 0.18)',
+        },
         parchment: {
           DEFAULT: '#FAF6EE',
           50: '#FDFBF6',
@@ -48,7 +63,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-cormorant)', 'Playfair Display', 'serif'],
+        display: ['var(--font-cormorant)', 'Playfair Display', 'Georgia', 'serif'],
+        cinzel: ['var(--font-cinzel)', 'Georgia', 'serif'],
+        'cinzel-deco': ['var(--font-cinzel-deco)', 'var(--font-cinzel)', 'Georgia', 'serif'],
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
@@ -56,6 +73,16 @@ const config: Config = {
         'card-hover': '0 18px 40px -20px rgba(26,23,20,0.32)',
       },
       backgroundImage: {
+        'heritage-radial':
+          'radial-gradient(ellipse 120% 80% at 50% 50%, #07110F 0%, #030504 55%, #030504 100%)',
+        'heritage-gold-glow':
+          'radial-gradient(ellipse 55% 45% at 8% 92%, rgba(214, 184, 90, 0.18) 0%, transparent 70%)',
+        'heritage-teal-glow':
+          'radial-gradient(ellipse 50% 40% at 92% 8%, rgba(39, 198, 200, 0.14) 0%, transparent 65%)',
+        'hero-diamond-grid':
+          'repeating-linear-gradient(45deg, rgba(214, 184, 90, 0.035) 0, rgba(214, 184, 90, 0.035) 1px, transparent 1px, transparent 24px), repeating-linear-gradient(-45deg, rgba(214, 184, 90, 0.035) 0, rgba(214, 184, 90, 0.035) 1px, transparent 1px, transparent 24px)',
+        'hero-gold-title':
+          'linear-gradient(180deg, #F2DA83 0%, #D6B85A 45%, #A9822F 100%)',
         'brand-gradient':
           'linear-gradient(to right, #6B1820 0%, rgba(77,17,24,0.92) 50%, #141C42 100%)',
         'hero-overlay':
@@ -76,6 +103,21 @@ const config: Config = {
       letterSpacing: {
         eyebrow: '0.2em',
         stat: '0.15em',
+        'nav-heritage': '0.14em',
+        'hero-eyebrow': '0.42em',
+        'hero-subtitle': '0.34em',
+        'hero-subtitle-mobile': '0.12em',
+        'hero-tagline': '0.28em',
+        'cta-heritage': '0.16em',
+      },
+      height: {
+        'site-header': 'var(--site-header-height)',
+      },
+      inset: {
+        'site-header': 'var(--site-header-height)',
+      },
+      minHeight: {
+        'hero-viewport': 'calc(100svh - var(--site-header-height))',
       },
       transitionTimingFunction: {
         cinematic: 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -85,9 +127,19 @@ const config: Config = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        'particle-float': {
+          '0%, 100%': { opacity: '0.25', transform: 'translateY(0)' },
+          '50%': { opacity: '0.65', transform: 'translateY(-6px)' },
+        },
+        'hero-fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'portal-marquee': 'portal-marquee 32s linear infinite',
+        'particle-float': 'particle-float 8s ease-in-out infinite',
+        'hero-fade-in': 'hero-fade-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards',
       },
     },
   },

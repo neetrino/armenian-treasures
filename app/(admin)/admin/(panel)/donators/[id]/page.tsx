@@ -9,9 +9,10 @@ import { prisma } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Edit donator', robots: { index: false, follow: false } };
 
-interface PageProps { params: { id: string } }
+interface PageProps { params: Promise<{ id: string }> }
 
-async function EditDonatorPage({ params }: PageProps) {
+async function EditDonatorPage(props: PageProps) {
+  const params = await props.params;
   const user = await requireAdmin();
   const donator = await prisma.donator.findUnique({ where: { id: params.id } });
   if (!donator) notFound();

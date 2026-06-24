@@ -8,7 +8,7 @@ interface AdminTopbarProps {
   user: AdminContext;
 }
 
-export function AdminTopbar({ title, user }: AdminTopbarProps) {
+export function AdminTopbar({ title, user: _user }: AdminTopbarProps) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 bg-white px-6 py-4">
       <div>
@@ -25,7 +25,6 @@ export function AdminTopbar({ title, user }: AdminTopbarProps) {
           <ExternalLink size={14} aria-hidden /> View site
         </Link>
         <div className="flex items-center gap-2 text-sm text-ink-soft">
-          <span className="hidden text-xs text-ink-muted sm:inline">{user.email}</span>
           <form action={logoutAction}>
             <button
               type="submit"

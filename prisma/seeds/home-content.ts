@@ -31,16 +31,16 @@ const TECH_CARDS = [
 ];
 
 const PAYLOAD = {
-  heroBadge: 'SINCE THE 4TH CENTURY',
-  heroTitle: 'The living archive of',
-  heroHighlight: 'Armenian heritage',
+  heroBadge: '✦ DISCOVER · PRESERVE · CELEBRATE ✦',
+  heroTitle: 'ARMENIAN',
+  heroHighlight: 'TREASURES',
   heroDescription:
-    "We digitize Armenia's monasteries, fortresses, museums and folk arts using Matterport virtual tours, drone photogrammetry and AI — preserving a civilization, one stone at a time.",
+    "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
   heroImage: '/images/hero/home-hero.png',
-  primaryCtaText: 'Explore the Culture Portal',
+  primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
-  secondaryCtaText: 'Open Interactive Map',
-  secondaryCtaUrl: '/map',
+  secondaryCtaText: 'SUPPORT THE MISSION',
+  secondaryCtaUrl: '/partnership',
   stats: STATS,
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',

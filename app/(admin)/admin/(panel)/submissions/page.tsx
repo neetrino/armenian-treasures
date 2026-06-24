@@ -44,10 +44,11 @@ const TABS: { value: 'ALL' | SubmissionType; label: string }[] = [
 ];
 
 interface PageProps {
-  searchParams: { type?: string };
+  searchParams: Promise<{ type?: string }>;
 }
 
-async function AdminSubmissionsPage({ searchParams }: PageProps) {
+async function AdminSubmissionsPage(props: PageProps) {
+  const searchParams = await props.searchParams;
   const user = await requireAdmin();
   const filter = TABS.find((tab) => tab.value === searchParams.type) ?? TABS[0]!;
   const where = filter.value === 'ALL' ? {} : { type: filter.value };

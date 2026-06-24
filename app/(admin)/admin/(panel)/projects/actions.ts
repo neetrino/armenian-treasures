@@ -1,7 +1,6 @@
 'use server';
 
 import { revalidatePath, revalidateTag } from 'next/cache';
-import { redirect } from 'next/navigation';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -15,7 +14,7 @@ function asStatus(value: string): ProjectStatus {
 }
 
 export interface ProjectFormState {
-  status: 'idle' | 'error';
+  status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
 }
@@ -64,7 +63,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('projects');
+  revalidateTag('projects', 'max');
   revalidatePath('/projects');
   revalidatePath('/admin/projects');
 }
@@ -79,7 +78,7 @@ export async function createProjectAction(_p: ProjectFormState, formData: FormDa
   }
   await prisma.project.create({ data: parsed.data });
   revalidate();
-  redirect('/admin/projects');
+  return { status: 'success' };
 }
 
 export async function updateProjectAction(
@@ -96,7 +95,28 @@ export async function updateProjectAction(
   }
   await prisma.project.update({ where: { id }, data: parsed.data });
   revalidate();
-  redirect('/admin/projects');
+  return { status: 'success' };
+}
+
+export type UpdateProjectRaisedResult =
+  | { ok: true; raisedAmount: number }
+  | { ok: false; error: string };
+
+export async function updateProjectRaisedAmountAction(
+  id: string,
+  raisedAmount: number,
+): Promise<UpdateProjectRaisedResult> {
+  await requireAdmin();
+  if (!Number.isFinite(raisedAmount) || !Number.isInteger(raisedAmount) || raisedAmount < 0) {
+    return { ok: false, error: 'Enter a valid whole dollar amount.' };
+  }
+  const updated = await prisma.project.update({
+    where: { id },
+    data: { raisedAmount },
+    select: { raisedAmount: true },
+  });
+  revalidate();
+  return { ok: true, raisedAmount: updated.raisedAmount };
 }
 
 export async function deleteProjectAction(id: string): Promise<void> {

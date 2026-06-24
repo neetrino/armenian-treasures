@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { loginAction, type LoginActionState } from '@/app/(admin)/admin/login/actions';
@@ -8,7 +8,7 @@ import { loginAction, type LoginActionState } from '@/app/(admin)/admin/login/ac
 const INITIAL: LoginActionState = { status: 'idle' };
 
 export function AdminAuthForm() {
-  const [state, formAction] = useFormState(loginAction, INITIAL);
+  const [state, formAction, isPending] = useActionState(loginAction, INITIAL);
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <TextField
@@ -32,16 +32,9 @@ export function AdminAuthForm() {
           {state.message}
         </p>
       ) : null}
-      <SubmitButton />
+      <Button type="submit" disabled={isPending} withArrow>
+        {isPending ? 'Signing in…' : 'Sign in'}
+      </Button>
     </form>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <Button type="submit" disabled={pending} withArrow>
-      {pending ? 'Signing in…' : 'Sign in'}
-    </Button>
   );
 }

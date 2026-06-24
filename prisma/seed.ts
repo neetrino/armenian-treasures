@@ -4,15 +4,17 @@
  * Order (per spec §13):
  *   1. SiteSettings singleton
  *   2. HomeContent singleton
- *   3. CultureMenuItem tree (parents → children → form nodes)
- *   4. CultureItem records
- *   5. Project records
- *   6. TeamMember records
- *   7. Career records
- *   8. Donator records
+ *   3. AboutContent singleton
+ *   4. CultureMenuItem tree (parents → children → form nodes)
+ *   5. CultureItem records
+ *   6. Project records
+ *   7. TeamMember records
+ *   8. Career records
+ *   9. Donator records
  *
  * Run with `pnpm db:seed`. Safe to re-run — every model is upserted by a stable key.
  */
+import { seedAboutContent } from './seeds/about-content';
 import { seedCareers } from './seeds/careers';
 import { seedCultureItems } from './seeds/culture-items';
 import { seedCultureMenu } from './seeds/culture-menu';
@@ -27,6 +29,7 @@ async function main(): Promise<void> {
   console.log('Seeding Armenian Treasures…');
   await seedSiteSettings();
   await seedHomeContent();
+  await seedAboutContent();
   const menuMap = await seedCultureMenu();
   await seedCultureItems(menuMap);
   await seedProjects();

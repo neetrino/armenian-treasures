@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 import { Container } from '@/components/layout/Container';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
@@ -47,7 +48,7 @@ function TechnologySectionHeader() {
       </h2>
 
       <Image
-        src="/images/technology/divider-decoration.png"
+        src={resolvePublicAssetUrl('/images/technology/divider-decoration.png')}
         alt=""
         width={471}
         height={120}
