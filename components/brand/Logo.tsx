@@ -1,33 +1,42 @@
+import Image from 'next/image';
 import Link from 'next/link';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
+
+const LOGO_SRC = resolvePublicAssetUrl('/images/footer/monastery-emblem.png');
 
 interface LogoProps {
   className?: string;
   variant?: 'on-dark' | 'on-light';
   subtitle?: string;
   title?: string;
+  compact?: boolean;
 }
 
-function LogoMark({ isDark }: { isDark: boolean }) {
+function LogoMark({ isDark, compact }: { isDark: boolean; compact?: boolean }) {
+  if (isDark) {
+    return (
+      <Image
+        src={LOGO_SRC}
+        alt=""
+        width={44}
+        height={44}
+        className={cn(
+          'h-auto max-h-10 shrink-0 object-contain',
+          compact ? 'w-8 sm:w-9 lg:w-10' : 'w-9 lg:w-10',
+        )}
+        priority
+      />
+    );
+  }
+
   return (
     <span
-      className={cn(
-        'relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full ring-1',
-        isDark
-          ? 'bg-gradient-to-br from-bronze-500 to-bronze-600 text-midnight-900 ring-white/25 shadow-[0_0_20px_-4px_rgba(200,132,61,0.55)]'
-          : 'bg-pomegranate text-parchment-50 ring-pomegranate-700/30',
-      )}
+      className="relative inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-pomegranate text-parchment-50 ring-1 ring-pomegranate-700/30"
       aria-hidden
     >
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
         <path d="M12 3 L14 9 H19 L15 12.5 L16.5 19 L12 15.5 L7.5 19 L9 12.5 L5 9 H10 Z" opacity="0.9" />
-        <path
-          d="M12 7 V17 M9 10 H15 M9 14 H15"
-          stroke="currentColor"
-          strokeWidth="1.25"
-          fill="none"
-          strokeLinecap="round"
-        />
       </svg>
     </span>
   );
@@ -38,33 +47,37 @@ export function Logo({
   variant = 'on-dark',
   subtitle = 'Cultural Heritage Foundation',
   title = 'Armenian Treasures',
+  compact = false,
 }: LogoProps) {
   const isDark = variant === 'on-dark';
+
   return (
     <Link
       href="/"
       className={cn('group inline-flex min-w-0 items-center gap-3 text-left', className)}
       aria-label={`${title} — home`}
     >
-      <LogoMark isDark={isDark} />
-      <span className="flex min-w-0 flex-col leading-tight">
-        <span
-          className={cn(
-            'truncate font-display text-lg font-semibold tracking-tight sm:text-xl',
-            isDark ? 'text-parchment-50' : 'text-ink',
-          )}
-        >
-          {title}
+      <LogoMark isDark={isDark} compact={compact} />
+      {!compact ? (
+        <span className="flex min-w-0 flex-col leading-tight">
+          <span
+            className={cn(
+              'truncate font-cinzel text-base font-semibold tracking-wide sm:text-lg',
+              isDark ? 'text-heritage-champagne' : 'text-ink',
+            )}
+          >
+            {title}
+          </span>
+          <span
+            className={cn(
+              'truncate font-cinzel text-[9px] font-medium uppercase tracking-[0.16em] sm:text-[10px]',
+              isDark ? 'text-heritage-gold-muted/90' : 'text-bronze-700',
+            )}
+          >
+            {subtitle}
+          </span>
         </span>
-        <span
-          className={cn(
-            'truncate text-[10px] font-medium uppercase tracking-[0.18em] sm:text-[11px]',
-            isDark ? 'text-bronze-400/95' : 'text-bronze-700',
-          )}
-        >
-          {subtitle}
-        </span>
-      </span>
+      ) : null}
     </Link>
   );
 }

@@ -98,6 +98,4 @@ export const authConfig: NextAuthConfig = {
   },
 };
 
-export function isRateLimitAuthError(error: unknown): boolean {
-  return error instanceof Error && error.message === 'RATE_LIMITED';
-}
+export { isRateLimitAuthError } from './rate-limit-error';

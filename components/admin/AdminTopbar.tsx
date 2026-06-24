@@ -8,7 +8,7 @@ interface AdminTopbarProps {
   user: AdminContext;
 }
 
-export function AdminTopbar({ title, user }: AdminTopbarProps) {
+export function AdminTopbar({ title, user: _user }: AdminTopbarProps) {
   return (
     <header className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 bg-white px-6 py-4">
       <div>

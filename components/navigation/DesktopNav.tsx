@@ -1,48 +1,26 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
 import { NavLink } from './NavLink';
 import { PRIMARY_LINKS } from './primary-links';
 import { AboutDropdown } from './AboutDropdown';
-import { CultureDropdown } from './CultureDropdown';
-import {
-  headerStaggerContainer,
-  headerStaggerItem,
-} from '@/components/layout/header-motion';
-import type { MenuNode } from '@/lib/culture-menu';
+import { CultureMegaMenu } from './CultureMegaMenu';
+import { ProjectsDropdown } from './ProjectsDropdown';
 
-interface DesktopNavProps {
-  menuTree: MenuNode[];
-}
-
-export function DesktopNav({ menuTree }: DesktopNavProps) {
-  const visibleTree = menuTree.filter((node) => node.isActive);
-  const reduced = useReducedMotion();
-
+export function DesktopNav() {
   return (
-    <motion.nav
+    <nav
       aria-label="Primary"
-      className="relative z-10 hidden min-w-0 flex-1 flex-nowrap items-center justify-center gap-0.5 lg:flex xl:gap-1"
-      variants={headerStaggerContainer}
-      initial={reduced ? false : 'hidden'}
-      animate="show"
+      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-[clamp(1rem,1.45vw,1.75rem)] lg:ml-5 xl:ml-6 lg:flex"
     >
-      {PRIMARY_LINKS.slice(0, 1).map((link) => (
-        <motion.div key={link.href} variants={headerStaggerItem} className="inline-flex">
-          <NavLink href={link.href}>{link.label}</NavLink>
-        </motion.div>
-      ))}
-      <motion.div variants={headerStaggerItem} className="inline-flex">
-        <AboutDropdown />
-      </motion.div>
-      <motion.div variants={headerStaggerItem} className="inline-flex">
-        <CultureDropdown tree={visibleTree} />
-      </motion.div>
+      <NavLink href={PRIMARY_LINKS[0]!.href}>{PRIMARY_LINKS[0]!.label}</NavLink>
+      <CultureMegaMenu />
+      <ProjectsDropdown />
       {PRIMARY_LINKS.slice(1).map((link) => (
-        <motion.div key={link.href} variants={headerStaggerItem} className="inline-flex">
-          <NavLink href={link.href}>{link.label}</NavLink>
-        </motion.div>
+        <NavLink key={link.href} href={link.href}>
+          {link.label}
+        </NavLink>
       ))}
-    </motion.nav>
+      <AboutDropdown />
+    </nav>
   );
 }

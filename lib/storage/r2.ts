@@ -33,15 +33,14 @@ export interface R2BufferUploadResult {
   url: string;
 }
 
-const R2_ENV_KEYS = [
-  'R2_ACCOUNT_ID',
-  'R2_ACCESS_KEY_ID',
-  'R2_SECRET_ACCESS_KEY',
-  'R2_BUCKET',
-  'R2_PUBLIC_URL',
-] as const;
+type R2EnvKey =
+  | 'R2_ACCOUNT_ID'
+  | 'R2_ACCESS_KEY_ID'
+  | 'R2_SECRET_ACCESS_KEY'
+  | 'R2_BUCKET'
+  | 'R2_PUBLIC_URL';
 
-export function getR2EnvPresence(): Record<(typeof R2_ENV_KEYS)[number], boolean> {
+export function getR2EnvPresence(): Record<R2EnvKey, boolean> {
   return {
     R2_ACCOUNT_ID: Boolean(process.env.R2_ACCOUNT_ID),
     R2_ACCESS_KEY_ID: Boolean(process.env.R2_ACCESS_KEY_ID),

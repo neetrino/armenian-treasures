@@ -15,7 +15,7 @@ export async function Header() {
       />
       <div
         aria-hidden
-        className="h-[4.5rem] shrink-0 sm:h-[4.75rem] lg:h-[5.5rem] xl:h-24"
+        className="h-site-header shrink-0"
       />
     </HeaderThemeProvider>
   );

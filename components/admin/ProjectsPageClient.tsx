@@ -147,7 +147,7 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
         ),
       },
     ],
-    [handleEditClick, handleRaisedSaved, raisedById],
+    [handleEditClick, handleRaisedSaved, raisedById, handleDelete],
   );
 
   return (
