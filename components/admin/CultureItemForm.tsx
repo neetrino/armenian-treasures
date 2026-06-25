@@ -2,6 +2,8 @@
 
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
+import { GalleryImagesField } from '@/components/forms/fields/GalleryImagesField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
@@ -29,6 +31,7 @@ interface Initial {
   century: string;
   yearLabel: string;
   image: string;
+  galleryImages: string[];
   tourUrl: string;
   videoUrl: string;
   latitude: string;
@@ -159,9 +162,10 @@ export function CultureItemForm({
           defaultValue={initial?.order ?? 0}
           error={state.fieldErrors?.order}
         />
-        <TextField
-          label="Image URL"
+        <AdminImageDropzoneField
+          label="Main image"
           name="image"
+          folder="culture"
           defaultValue={initial?.image ?? ''}
           error={state.fieldErrors?.image}
         />
@@ -187,6 +191,11 @@ export function CultureItemForm({
         rows={6}
         defaultValue={initial?.description ?? ''}
         error={state.fieldErrors?.description}
+      />
+
+      <GalleryImagesField
+        defaultValue={initial?.galleryImages ?? []}
+        error={state.fieldErrors?.galleryImages}
       />
 
       <section className="rounded-2xl border border-stone-100 bg-parchment-50 p-5">

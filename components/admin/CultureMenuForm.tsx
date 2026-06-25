@@ -1,6 +1,8 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+import { CultureMenuCatalogFields } from '@/components/admin/CultureMenuCatalogFields';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
@@ -24,6 +26,7 @@ interface MenuFormProps {
     image: string;
     routeType: string;
     customUrl: string;
+    catalogContent?: unknown;
   };
   parents: { id: string; title: string }[];
   defaultParentId?: string;
@@ -71,6 +74,10 @@ export function CultureMenuForm({
       .map((p) => ({ value: p.id, label: p.title })),
   ];
 
+  const showCatalogFields =
+    (initial?.routeType ?? 'CATEGORY') === 'CATEGORY' ||
+    (initial?.routeType ?? 'CATEGORY') === 'SUBCATEGORY';
+
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
@@ -110,10 +117,12 @@ export function CultureMenuForm({
           defaultValue={initial?.order ?? 0}
           error={state.fieldErrors?.order}
         />
-        <TextField
-          label="Image URL (optional)"
+        <AdminImageDropzoneField
+          label="Card / fallback hero image"
           name="image"
+          folder="culture"
           defaultValue={initial?.image ?? ''}
+          hint="Used on category cards and as hero fallback when no custom hero banner is set."
           error={state.fieldErrors?.image}
         />
         <TextField
@@ -139,6 +148,12 @@ export function CultureMenuForm({
         defaultValue={initial?.description ?? ''}
         error={state.fieldErrors?.description}
       />
+      {showCatalogFields ? (
+        <CultureMenuCatalogFields
+          catalogContent={initial?.catalogContent}
+          fieldErrors={state.fieldErrors}
+        />
+      ) : null}
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">
           {state.message}

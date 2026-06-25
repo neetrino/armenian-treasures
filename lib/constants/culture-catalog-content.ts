@@ -1,4 +1,8 @@
 import type { MenuNode } from '@/lib/culture-menu';
+import {
+  mergeCultureCatalogLayers,
+  parseMenuCatalogContent,
+} from '@/lib/types/culture-catalog-content';
 
 export interface CultureCatalogFact {
   label: string;
@@ -209,7 +213,12 @@ function mergeContent(
   return {
     ...base,
     ...override,
-    about: { ...base.about, ...override.about },
+    about: {
+      ...base.about,
+      ...override.about,
+      paragraphs: override.about?.paragraphs ?? base.about.paragraphs,
+      facts: override.about?.facts ?? base.about.facts,
+    },
     items: { ...base.items, ...override.items },
     map: { ...base.map, ...override.map },
     statLabels: { ...base.statLabels, ...override.statLabels },
@@ -274,8 +283,17 @@ export function resolveCultureCatalogContent(
     node.description ?? '',
     parent?.title,
   );
-  const override = OVERRIDES[key] ?? OVERRIDES[node.slug];
-  return mergeContent(base, override);
+  const codeOverride = OVERRIDES[key] ?? OVERRIDES[node.slug];
+  const dbOverride = parseMenuCatalogContent(node.catalogContent);
+  const merged = mergeCultureCatalogLayers(base, codeOverride, dbOverride);
+
+  const heroImage =
+    dbOverride?.heroImage?.trim() ||
+    node.image?.trim() ||
+    merged.heroImage ||
+    DEFAULT_HERO_IMAGE;
+
+  return { ...merged, heroImage };
 }
 
 export function resolveCultureCatalogFormContent(

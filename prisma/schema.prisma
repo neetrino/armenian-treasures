@@ -103,8 +103,9 @@ model CultureMenuItem {
   children    CultureMenuItem[] @relation("MenuTree")
   order       Int               @default(0)
   isActive    Boolean           @default(true)
-  image       String?
-  routeType   MenuRouteType     @default(CATEGORY)
+  image           String?
+  catalogContent  Json?
+  routeType       MenuRouteType     @default(CATEGORY)
   customUrl   String?
   items       CultureItem[]
   createdAt   DateTime          @default(now())

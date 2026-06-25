@@ -80,7 +80,10 @@ function parseForm(formData: FormData):
     century: numberOrNull(formData.get('century')),
     yearLabel: formData.get('yearLabel')?.toString() ?? '',
     image: formData.get('image')?.toString() ?? '',
-    galleryImages: [],
+    galleryImages: formData
+      .getAll('galleryImages')
+      .map((value) => value.toString().trim())
+      .filter((value) => value.length > 0),
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
     videoUrl: formData.get('videoUrl')?.toString() ?? '',
     latitude: numberOrNull(formData.get('latitude')),

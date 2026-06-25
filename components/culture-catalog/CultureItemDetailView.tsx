@@ -68,6 +68,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
         accent={item.periodLabel ?? item.region ?? 'Heritage Entry'}
         slogan={item.region ? `${item.region}${item.yearLabel ? ` · ${item.yearLabel}` : ''}` : 'Armenian cultural archive'}
         description={description}
+        heroImage={item.image?.trim() || undefined}
         breadcrumb={breadcrumb}
         ctas={[
           { label: 'View Details', href: '#detail', variant: 'gold' },

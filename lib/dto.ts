@@ -33,6 +33,7 @@ export interface PublicCultureMenuItemDTO {
   slug: string;
   description: string | null;
   image: string | null;
+  catalogContent: unknown | null;
   routeType: CultureMenuItem['routeType'];
   customUrl: string | null;
   order: number;
@@ -139,6 +140,7 @@ export function toPublicMenuItem(row: CultureMenuItem): PublicCultureMenuItemDTO
     slug: row.slug,
     description: row.description,
     image: row.image,
+    catalogContent: row.catalogContent ?? null,
     routeType: row.routeType,
     customUrl: row.customUrl,
     order: row.order,

@@ -6,6 +6,7 @@ export interface MenuNode {
   slug: string;
   description?: string | null;
   image?: string | null;
+  catalogContent?: unknown | null;
   routeType: MenuRouteType;
   customUrl?: string | null;
   order: number;
