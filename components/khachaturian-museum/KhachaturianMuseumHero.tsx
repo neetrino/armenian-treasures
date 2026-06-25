@@ -1,5 +1,9 @@
 import Link from 'next/link';
-import { khachaturianImg } from '@/lib/constants/khachaturian-museum';
+import { khachaturianImg } from '@/lib/queries/page-content';
+
+type KhachaturianMuseumHeroProps = {
+  imgBase: string;
+};
 
 function LocationIcon() {
   return (
@@ -24,14 +28,14 @@ function KhachaturianBreadcrumb() {
   );
 }
 
-export function KhachaturianMuseumHero() {
+export function KhachaturianMuseumHero({ imgBase }: KhachaturianMuseumHeroProps) {
   return (
     <div className="hero">
       <KhachaturianBreadcrumb />
       <div
         className="hero-img-overlay"
         style={{
-          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.88) 0%,rgba(9,9,9,.38) 40%,rgba(9,9,9,.82) 100%),url('${khachaturianImg('khachaturyan1-thegem-blog-timeline-large.jpg')}')`,
+          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.88) 0%,rgba(9,9,9,.38) 40%,rgba(9,9,9,.82) 100%),url('${khachaturianImg(imgBase, 'khachaturyan1-thegem-blog-timeline-large.jpg')}')`,
         }}
       />
       <div className="hero-bg" />

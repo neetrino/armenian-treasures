@@ -213,6 +213,8 @@ export const homeContentSchema = z.object({
   heroBadge: z.string().trim().min(1).max(80),
   heroTitle: z.string().trim().min(1).max(140),
   heroHighlight: z.string().trim().min(1).max(80),
+  heroSubtitle: z.string().trim().min(1).max(160),
+  heroTagline: z.string().trim().min(1).max(200),
   heroDescription: z.string().trim().min(10).max(800),
   heroImage: optionalHeroImagePath,
   heroMobileImage: optionalHeroImagePath,
@@ -227,6 +229,7 @@ export const homeContentSchema = z.object({
   techCards: z.array(homeTechCardSchema).min(1).max(6),
   ctaTitle: z.string().trim().min(2).max(140),
   ctaDescription: z.string().trim().min(10).max(800),
+  sections: z.record(z.unknown()).optional().nullable(),
 });
 
 export const aboutPillarSchema = z.object({

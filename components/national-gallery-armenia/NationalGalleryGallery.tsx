@@ -1,7 +1,11 @@
 import Image from 'next/image';
-import { NGA_GALLERY } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 
-export function NationalGalleryGallery() {
+type NationalGalleryGalleryProps = {
+  gallery: NationalGalleryPageContent['gallery'];
+};
+
+export function NationalGalleryGallery({ gallery }: NationalGalleryGalleryProps) {
   return (
     <section id="gallery">
       <p className="sec-label">Photography Archive</p>
@@ -10,7 +14,7 @@ export function NationalGalleryGallery() {
         The Aivazovsky halls, Armenian painting rooms, and the galleries that hold masterpieces from across the world.
       </p>
       <div className="gallery-grid">
-        {NGA_GALLERY.map((item) => (
+        {gallery.map((item) => (
           <div key={item.label} className={`g-item reveal${'wide' in item && item.wide ? ' wide' : ''}`}>
             <Image src={item.src} alt={item.label} width={900} height={600} />
             <div className="g-overlay">

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { khndzoreskImg, KHNDZORESK_RELATED } from '@/lib/constants/khndzoresk';
+import { khndzoreskImg, type KhndzoreskPageContent } from '@/lib/queries/page-content';
 
 export function KhndzoreskMap() {
   return (
@@ -38,7 +38,11 @@ export function KhndzoreskMap() {
   );
 }
 
-export function KhndzoreskCredits() {
+type KhndzoreskCreditsProps = {
+  imgBase: string;
+};
+
+export function KhndzoreskCredits({ imgBase }: KhndzoreskCreditsProps) {
   return (
     <section style={{ paddingBottom: 40 }}>
       <p className="sec-label">Digitization Credits</p>
@@ -46,7 +50,7 @@ export function KhndzoreskCredits() {
       <div className="credits-wrap reveal">
         <div className="credits-logo">
           <Image
-            src={khndzoreskImg('new-logos-AT-SAM.png')}
+            src={khndzoreskImg(imgBase, 'new-logos-AT-SAM.png')}
             alt="Armenian Treasures & Safe Armenian Monuments"
             width={280}
             height={56}
@@ -71,13 +75,17 @@ export function KhndzoreskCredits() {
   );
 }
 
-export function KhndzoreskRelated() {
+type KhndzoreskRelatedProps = {
+  related: KhndzoreskPageContent['related'];
+};
+
+export function KhndzoreskRelated({ related }: KhndzoreskRelatedProps) {
   return (
     <section style={{ paddingTop: 48, paddingBottom: 64 }}>
       <p className="sec-label">Explore Further</p>
       <h2 className="sec-title">More Digitized Heritage Sites</h2>
       <div className="related-grid">
-        {KHNDZORESK_RELATED.map((site) => (
+        {related.map((site) => (
           <Link key={site.num} href={site.href} className="rel-card reveal">
             <div className="rel-num">{site.num}</div>
             <div>

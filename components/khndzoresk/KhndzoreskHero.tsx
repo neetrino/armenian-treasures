@@ -1,5 +1,9 @@
 import Link from 'next/link';
-import { khndzoreskImg } from '@/lib/constants/khndzoresk';
+import { khndzoreskImg } from '@/lib/queries/page-content';
+
+type KhndzoreskHeroProps = {
+  imgBase: string;
+};
 
 function LocationIcon() {
   return (
@@ -24,14 +28,14 @@ function KhndzoreskBreadcrumb() {
   );
 }
 
-export function KhndzoreskHero() {
+export function KhndzoreskHero({ imgBase }: KhndzoreskHeroProps) {
   return (
     <div className="hero">
       <KhndzoreskBreadcrumb />
       <div
         className="hero-img-overlay"
         style={{
-          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.85) 0%,rgba(9,9,9,.4) 40%,rgba(9,9,9,.8) 100%),url('${khndzoreskImg('khndzoresk-Sputnik-1.jpg')}')`,
+          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.85) 0%,rgba(9,9,9,.4) 40%,rgba(9,9,9,.8) 100%),url('${khndzoreskImg(imgBase, 'khndzoresk-Sputnik-1.jpg')}')`,
         }}
       />
       <div className="hero-bg" />

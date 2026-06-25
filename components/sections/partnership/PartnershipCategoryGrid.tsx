@@ -1,10 +1,14 @@
-import { HOME_PARTNERSHIP_CATEGORIES } from '@/lib/constants/home-partnership-section';
+import type { PartnershipCategory } from '@/lib/constants/home-partnership-section';
 import { PartnershipCategoryCard } from '@/components/sections/partnership/PartnershipCategoryCard';
 
-export function PartnershipCategoryGrid() {
+interface PartnershipCategoryGridProps {
+  categories: PartnershipCategory[];
+}
+
+export function PartnershipCategoryGrid({ categories }: PartnershipCategoryGridProps) {
   return (
     <div className="partnership-grid">
-      {HOME_PARTNERSHIP_CATEGORIES.map((category) => (
+      {categories.map((category) => (
         <PartnershipCategoryCard key={category.title} category={category} />
       ))}
     </div>

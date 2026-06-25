@@ -1,9 +1,13 @@
-import { KHNDZORESK_FACTS, KHNDZORESK_STATS } from '@/lib/constants/khndzoresk';
+import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 
-export function KhndzoreskStatsBar() {
+type KhndzoreskStatsBarProps = {
+  stats: KhndzoreskPageContent['stats'];
+};
+
+export function KhndzoreskStatsBar({ stats }: KhndzoreskStatsBarProps) {
   return (
     <div className="stats-bar">
-      {KHNDZORESK_STATS.map((stat) => (
+      {stats.map((stat) => (
         <div key={stat.label} className="stat-item reveal">
           <div className="stat-num">
             {stat.num}
@@ -20,7 +24,11 @@ export function KhndzoreskStatsBar() {
   );
 }
 
-export function KhndzoreskAbout() {
+type KhndzoreskAboutProps = {
+  facts: KhndzoreskPageContent['facts'];
+};
+
+export function KhndzoreskAbout({ facts }: KhndzoreskAboutProps) {
   return (
     <section id="about">
       <p className="sec-label">Heritage Profile</p>
@@ -57,7 +65,7 @@ export function KhndzoreskAbout() {
           </p>
         </div>
         <div className="about-aside">
-          {KHNDZORESK_FACTS.map((fact) => (
+          {facts.map((fact) => (
             <div key={fact.label} className="fact-card reveal">
               <div className="fact-label">{fact.label}</div>
               <div className="fact-value">{fact.value}</div>

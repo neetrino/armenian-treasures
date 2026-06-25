@@ -23,6 +23,7 @@ import { seedHomeContent } from './seeds/home-content';
 import { seedProjects } from './seeds/projects';
 import { seedSiteSettings } from './seeds/site-settings';
 import { seedTeam } from './seeds/team';
+import { seedPageContent } from './seeds/page-content';
 import { prisma } from '@/lib/db';
 
 async function main(): Promise<void> {
@@ -30,6 +31,7 @@ async function main(): Promise<void> {
   await seedSiteSettings();
   await seedHomeContent();
   await seedAboutContent();
+  await seedPageContent();
   const menuMap = await seedCultureMenu();
   await seedCultureItems(menuMap);
   await seedProjects();

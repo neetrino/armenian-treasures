@@ -311,6 +311,8 @@ model HomeContent {
   heroBadge        String
   heroTitle        String
   heroHighlight    String
+  heroSubtitle     String   @default("CULTURAL HERITAGE\nPORTAL")
+  heroTagline      String   @default("BRINGING ARMENIAN HISTORY INTO THE DIGITAL FUTURE")
   heroDescription  String   @db.Text
   heroImage        String?
   heroMobileImage  String?
@@ -325,7 +327,16 @@ model HomeContent {
   techCards        Json
   ctaTitle         String
   ctaDescription   String   @db.Text
+  sections         Json?
   updatedAt        DateTime @updatedAt
+}
+
+model PageContent {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  content   Json
+  updatedAt DateTime @updatedAt
 }
 
 model AboutContent {

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { PARTNERSHIP_CATEGORIES, type PartnerLogo } from '@/lib/constants/partnership-page';
+import type { PartnerLogo } from '@/lib/constants/partnership-page';
+import { getPartnershipPageContent } from '@/lib/queries/page-content';
 
 function PlaceholderIcon() {
   return (
@@ -42,7 +43,9 @@ function PartnerMedallion({ logo }: { logo: PartnerLogo }) {
   );
 }
 
-export function PartnershipShowcase() {
+export async function PartnershipShowcase() {
+  const { categories } = await getPartnershipPageContent();
+
   return (
     <div className="partners-outer" id="partners">
       <div className="partners-cosmetic-bg" aria-hidden />
@@ -59,7 +62,7 @@ export function PartnershipShowcase() {
             civilisation-level stewardship.
           </p>
         </div>
-        {PARTNERSHIP_CATEGORIES.map((category) => (
+        {categories.map((category) => (
           <div key={category.label} className="partner-category">
             <div className="partner-cat-label">
               <span className="pcat-text">{category.label}</span>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { KHACHATURIAN_WORKS } from '@/lib/constants/khachaturian-museum';
+import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 import {
   FilmMusicIcon,
   GayaneIcon,
@@ -18,7 +18,11 @@ const WORK_ICONS = {
   film: FilmMusicIcon,
 } as const;
 
-export function KhachaturianMuseumWorks() {
+type KhachaturianMuseumWorksProps = {
+  works: KhachaturianPageContent['works'];
+};
+
+export function KhachaturianMuseumWorks({ works }: KhachaturianMuseumWorksProps) {
   return (
     <section id="works">
       <p className="sec-label">Musical Legacy</p>
@@ -28,7 +32,7 @@ export function KhachaturianMuseumWorks() {
         classic.
       </p>
       <div className="cat-grid">
-        {KHACHATURIAN_WORKS.map((work) => {
+        {works.map((work) => {
           const Icon = WORK_ICONS[work.icon];
           return (
             <Link key={work.id} href={work.href} className="cat-card reveal">

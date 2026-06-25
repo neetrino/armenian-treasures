@@ -1,9 +1,13 @@
-import { KHACHATURIAN_FACTS, KHACHATURIAN_STATS } from '@/lib/constants/khachaturian-museum';
+import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 
-export function KhachaturianMuseumStatsBar() {
+type KhachaturianMuseumStatsBarProps = {
+  stats: KhachaturianPageContent['stats'];
+};
+
+export function KhachaturianMuseumStatsBar({ stats }: KhachaturianMuseumStatsBarProps) {
   return (
     <div className="stats-bar">
-      {KHACHATURIAN_STATS.map((stat) => (
+      {stats.map((stat) => (
         <div key={stat.label} className="stat-item reveal">
           <div className="stat-num">
             {stat.num}
@@ -16,7 +20,11 @@ export function KhachaturianMuseumStatsBar() {
   );
 }
 
-export function KhachaturianMuseumBiography() {
+type KhachaturianMuseumBiographyProps = {
+  facts: KhachaturianPageContent['facts'];
+};
+
+export function KhachaturianMuseumBiography({ facts }: KhachaturianMuseumBiographyProps) {
   return (
     <section id="biography">
       <p className="sec-label">Biography</p>
@@ -56,7 +64,7 @@ export function KhachaturianMuseumBiography() {
           </p>
         </div>
         <div className="about-aside">
-          {KHACHATURIAN_FACTS.map((fact) => (
+          {facts.map((fact) => (
             <div key={fact.label} className="fact-card reveal">
               <div className="fact-label">{fact.label}</div>
               <div className="fact-value">{fact.value}</div>

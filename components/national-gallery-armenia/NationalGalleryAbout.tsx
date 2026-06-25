@@ -1,9 +1,13 @@
-import { NGA_FACTS, NGA_STATS } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 
-export function NationalGalleryStatsBar() {
+type NationalGalleryStatsBarProps = {
+  stats: NationalGalleryPageContent['stats'];
+};
+
+export function NationalGalleryStatsBar({ stats }: NationalGalleryStatsBarProps) {
   return (
     <div className="stats-bar">
-      {NGA_STATS.map((stat) => (
+      {stats.map((stat) => (
         <div key={stat.label} className="stat-item reveal">
           <div className="stat-num">
             {stat.num}
@@ -25,7 +29,11 @@ export function NationalGalleryStatsBar() {
   );
 }
 
-export function NationalGalleryAbout() {
+type NationalGalleryAboutProps = {
+  facts: NationalGalleryPageContent['facts'];
+};
+
+export function NationalGalleryAbout({ facts }: NationalGalleryAboutProps) {
   return (
     <section id="about">
       <p className="sec-label">About the Gallery</p>
@@ -68,7 +76,7 @@ export function NationalGalleryAbout() {
           </p>
         </div>
         <div className="about-aside">
-          {NGA_FACTS.map((fact) => (
+          {facts.map((fact) => (
             <div key={fact.label} className="fact-card reveal">
               <div className="fact-label">{fact.label}</div>
               <div className="fact-value">{fact.value}</div>

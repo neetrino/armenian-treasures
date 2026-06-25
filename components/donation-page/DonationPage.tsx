@@ -9,21 +9,42 @@ import { DonationEngine } from '@/components/donation-page/DonationEngine';
 import { DonationLedger } from '@/components/donation-page/DonationLedger';
 import { DonationPatronWall } from '@/components/donation-page/DonationPatronWall';
 import { DonationClosingSections } from '@/components/donation-page/DonationClosingSections';
+import { getPublicDonators } from '@/lib/queries/donators';
+import { getDonationPageContent } from '@/lib/queries/page-content';
 
-export function DonationPage() {
+export async function DonationPage() {
+  const [content, donators] = await Promise.all([
+    getDonationPageContent(),
+    getPublicDonators(),
+  ]);
+
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
-      <DonationBreadcrumb />
-      <DonationHero />
-      <DonationStatsBar />
-      <DonationMission />
+      <DonationBreadcrumb breadcrumb={content.page.breadcrumb} />
+      <DonationHero hero={content.page.hero} />
+      <DonationStatsBar stats={content.stats} />
+      <DonationMission mission={content.page.mission} pillars={content.pillars} />
       <KhndzoreskDivider />
-      <DonationEngine />
+      <DonationEngine
+        engine={content.page.engine}
+        tiers={content.tiers}
+        impactRanges={content.impactRanges}
+        patronSliderTicks={content.patronSliderTicks}
+        patronQuickChips={content.patronQuickChips}
+      />
       <KhndzoreskDivider />
-      <DonationLedger />
-      <DonationPatronWall />
-      <DonationClosingSections />
+      <DonationLedger ledger={content.page.ledger} items={content.ledger} />
+      <DonationPatronWall
+        patronWall={content.page.patronWall}
+        wallBadges={content.wall}
+        donators={donators}
+      />
+      <DonationClosingSections
+        quote={content.page.quote}
+        newsletter={content.page.newsletter}
+        trustItems={content.trustItems}
+      />
     </div>
   );
 }

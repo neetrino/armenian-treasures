@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { KHNDZORESK_SITES } from '@/lib/constants/khndzoresk';
+import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 import {
   CaveDwellingsIcon,
   SparapetTombIcon,
@@ -18,7 +18,11 @@ const SITE_ICONS = {
   museum: VillageMuseumIcon,
 } as const;
 
-export function KhndzoreskSites() {
+type KhndzoreskSitesProps = {
+  sites: KhndzoreskPageContent['sites'];
+};
+
+export function KhndzoreskSites({ sites }: KhndzoreskSitesProps) {
   return (
     <section id="sites">
       <p className="sec-label">Sacred Monuments</p>
@@ -28,7 +32,7 @@ export function KhndzoreskSites() {
         and daily life.
       </p>
       <div className="cat-grid">
-        {KHNDZORESK_SITES.map((site) => {
+        {sites.map((site) => {
           const Icon = SITE_ICONS[site.icon];
           return (
             <Link key={site.id} href={site.href} className="cat-card reveal">

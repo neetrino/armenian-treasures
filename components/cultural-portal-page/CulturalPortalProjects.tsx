@@ -12,6 +12,9 @@ interface CulturalPortalProject {
 }
 
 interface CulturalPortalProjectsProps {
+  eyebrow: string;
+  title: string;
+  description: string;
   projects: CulturalPortalProject[];
 }
 
@@ -83,15 +86,12 @@ function ProjectIcon({ type }: { type: CulturalPortalProjectIcon }) {
   }
 }
 
-export function CulturalPortalProjects({ projects }: CulturalPortalProjectsProps) {
+export function CulturalPortalProjects({ eyebrow, title, description, projects }: CulturalPortalProjectsProps) {
   return (
     <section id="projects">
-      <p className="sec-label">Upcoming Projects</p>
-      <h2 className="sec-title">What We Are Building</h2>
-      <p className="sec-desc">
-        Landmark initiatives to digitise, broadcast, educate, and connect Armenian heritage with the
-        global community.
-      </p>
+      <p className="sec-label">{eyebrow}</p>
+      <h2 className="sec-title">{title}</h2>
+      <p className="sec-desc">{description}</p>
       {projects.length === 0 ? (
         <p className="sec-desc">Projects will appear here once published in the admin panel.</p>
       ) : (

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { HOME_HERO_STATS } from '@/lib/constants/home-hero';
+import { buildDefaultHomeSections } from '@/lib/types/home-sections';
 
 const SINGLETON_ID = 'home-content-singleton';
 
@@ -30,6 +31,8 @@ const PAYLOAD = {
   heroBadge: '✦ DISCOVER · PRESERVE · CELEBRATE ✦',
   heroTitle: 'ARMENIAN',
   heroHighlight: 'TREASURES',
+  heroSubtitle: 'CULTURAL HERITAGE\nPORTAL',
+  heroTagline: 'BRINGING ARMENIAN HISTORY INTO THE DIGITAL FUTURE',
   heroDescription:
     "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
   heroImage: '/images/hero/home-hero.webp',
@@ -46,7 +49,8 @@ const PAYLOAD = {
   ctaTitle: 'Help us digitize the next monument',
   ctaDescription:
     'Every donation funds drone flights, 3D scans and the open archive that will outlast all of us.',
-} as const;
+  sections: buildDefaultHomeSections(),
+};
 
 export async function seedHomeContent(): Promise<void> {
   await prisma.homeContent.upsert({

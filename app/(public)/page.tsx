@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 
 import { HeroHome } from '@/components/sections/HeroHome';
 import { HomeHeritageSections } from '@/components/sections/HomeHeritageSections';
-import { HOME_HERO_COPY, HOME_HERO_STATS } from '@/lib/constants/home-hero';
 import { getHomeContent } from '@/lib/queries/home';
 
 export const revalidate = 60;
@@ -15,21 +14,25 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-function HomePage() {
+async function HomePage() {
+  const home = await getHomeContent();
+
   return (
     <>
       <HeroHome
-        badge={HOME_HERO_COPY.badge}
-        title={HOME_HERO_COPY.title}
-        highlight={HOME_HERO_COPY.highlight}
-        subtitle={HOME_HERO_COPY.subtitle}
-        tagline={HOME_HERO_COPY.tagline}
-        description={HOME_HERO_COPY.description}
-        primaryCtaText={HOME_HERO_COPY.primaryCtaText}
-        primaryCtaUrl={HOME_HERO_COPY.primaryCtaUrl}
-        secondaryCtaText={HOME_HERO_COPY.secondaryCtaText}
-        secondaryCtaUrl={HOME_HERO_COPY.secondaryCtaUrl}
-        stats={[...HOME_HERO_STATS]}
+        badge={home.heroBadge}
+        title={home.heroTitle}
+        highlight={home.heroHighlight}
+        subtitle={home.heroSubtitle}
+        tagline={home.heroTagline}
+        description={home.heroDescription}
+        primaryCtaText={home.primaryCtaText}
+        primaryCtaUrl={home.primaryCtaUrl}
+        secondaryCtaText={home.secondaryCtaText}
+        secondaryCtaUrl={home.secondaryCtaUrl}
+        stats={home.stats}
+        heroImage={home.heroImage}
+        heroMobileImage={home.heroMobileImage}
       />
 
       <HomeHeritageSections />

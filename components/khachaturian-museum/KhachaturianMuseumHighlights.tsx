@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { KHACHATURIAN_HIGHLIGHTS } from '@/lib/constants/khachaturian-museum';
+import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 
-function HighlightIcon({ type }: { type: (typeof KHACHATURIAN_HIGHLIGHTS)[number]['icon'] }) {
+function HighlightIcon({ type }: { type: KhachaturianPageContent['highlights'][number]['icon'] }) {
   if (type === 'rooms') {
     return (
       <svg className="hl-icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -38,13 +38,17 @@ function HighlightIcon({ type }: { type: (typeof KHACHATURIAN_HIGHLIGHTS)[number
   );
 }
 
-export function KhachaturianMuseumHighlights() {
+type KhachaturianMuseumHighlightsProps = {
+  highlights: KhachaturianPageContent['highlights'];
+};
+
+export function KhachaturianMuseumHighlights({ highlights }: KhachaturianMuseumHighlightsProps) {
   return (
     <section>
       <p className="sec-label">Museum Highlights</p>
       <h2 className="sec-title">What You Will Discover</h2>
       <div className="hl-grid">
-        {KHACHATURIAN_HIGHLIGHTS.map((item) => (
+        {highlights.map((item) => (
           <Link
             key={item.num}
             href={item.href}

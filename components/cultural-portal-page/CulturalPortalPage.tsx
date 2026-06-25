@@ -14,23 +14,20 @@ import { CulturalPortalProjects } from '@/components/cultural-portal-page/Cultur
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
 import { buildCulturePortalCategories } from '@/lib/mappers/culture-portal-categories';
 import { mapCultureItemsToHighlights } from '@/lib/mappers/cultural-portal-highlights';
+import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
+import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
 import { groupDonatorsForHomeSection } from '@/lib/mappers/donations-patrons';
 import { getFeaturedCultureItems, getMapItems } from '@/lib/queries/culture-items';
 import { getHomeContent } from '@/lib/queries/home';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getPublishedProjects } from '@/lib/queries/projects';
 import { getPublicDonators } from '@/lib/queries/donators';
-import { HOME_HERO_COPY } from '@/lib/constants/home-hero';
-import { CULTURAL_PORTAL_SECTION } from '@/lib/constants/cultural-portal';
-import { HOME_DONATIONS_SECTION } from '@/lib/constants/home-donations-section';
-import { HOME_ABOUT_CARDS } from '@/lib/constants/home-about-section';
-import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
-import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
-import { HERITAGE_MAP_LEGEND, HERITAGE_MAP_SECTION } from '@/lib/constants/heritage-map-section';
 import { getAboutContent } from '@/lib/queries/about';
+import { getCulturalPortalPageContent } from '@/lib/queries/page-content';
 
 export async function CulturalPortalPage() {
-  const [home, menuTree, featuredItems, mapItems, projects, donators, about] = await Promise.all([
+  const [pageContent, home, menuTree, featuredItems, mapItems, projects, donators, about] = await Promise.all([
+    getCulturalPortalPageContent(),
     getHomeContent(),
     getMenuTree(),
     getFeaturedCultureItems(4),
@@ -44,6 +41,9 @@ export async function CulturalPortalPage() {
   const highlights = mapCultureItemsToHighlights(featuredItems);
   const mapNodes = mapItemsToHeritageMapNodes(mapItems);
   const donorGroups = groupDonatorsForHomeSection(donators);
+  const mapSection = pageContent.CULTURAL_PORTAL_MAP;
+  const donorsSection = pageContent.CULTURAL_PORTAL_DONORS;
+  const projectsSection = pageContent.CULTURAL_PORTAL_PROJECTS_SECTION;
 
   return (
     <div className="khndzoresk-page">
@@ -51,26 +51,26 @@ export async function CulturalPortalPage() {
       <CulturalPortalHero
         eyebrow={home.heroBadge}
         title={`${home.heroTitle} ${home.heroHighlight}`.trim()}
-        accent={HOME_HERO_COPY.subtitle.replace('\n', ' ')}
+        accent={(home.heroSubtitle || 'CULTURAL HERITAGE PORTAL').replace('\n', ' ')}
         subtitle={home.heroDescription}
       />
-      <CulturalPortalStatsBar stats={home.stats as { value: string; label: string }[]} />
+      <CulturalPortalStatsBar stats={home.stats} />
       <CulturalPortalCategories
-        section={CULTURAL_PORTAL_SECTION}
+        section={pageContent.CULTURAL_PORTAL_SECTION}
         categories={categories}
       />
       <KhndzoreskDivider />
       <CulturalPortalHighlights highlights={highlights} />
       <CulturalPortalMap
-        eyebrow="Interactive Map"
-        title={HERITAGE_MAP_SECTION.title}
-        description={HERITAGE_MAP_SECTION.description}
-        ctaHref={HERITAGE_MAP_SECTION.ctaUrl}
-        placeholderTitle={HERITAGE_MAP_SECTION.placeholderTitle}
+        eyebrow={mapSection.eyebrow}
+        title={mapSection.title}
+        description={mapSection.description}
+        ctaHref={mapSection.ctaHref}
+        placeholderTitle={mapSection.placeholderTitle}
         placeholderSubtitle={
           mapItems.length > 0
             ? `${mapItems.length} mapped locations`
-            : HERITAGE_MAP_SECTION.placeholderSubtitle
+            : mapSection.placeholderSubtitle
         }
         pins={mapNodes.map((node, index) => ({
           top: `${node.y}%`,
@@ -78,18 +78,26 @@ export async function CulturalPortalPage() {
           tone: node.tone,
           delay: `${index * 0.15}s`,
         }))}
-        legend={HERITAGE_MAP_LEGEND}
+        legend={[...mapSection.legend]}
       />
       <KhndzoreskDivider />
-      <CulturalPortalProjects projects={mapProjectsToCulturalPortalProjects(projects)} />
-      <CulturalPortalPartnership />
+      <CulturalPortalProjects
+        eyebrow={projectsSection.eyebrow}
+        title={projectsSection.title}
+        description={projectsSection.description}
+        projects={mapProjectsToCulturalPortalProjects(projects)}
+      />
+      <CulturalPortalPartnership
+        section={pageContent.HOME_PARTNERSHIP_SECTION}
+        categories={pageContent.HOME_PARTNERSHIP_CATEGORIES}
+      />
       <CulturalPortalDonors
-        eyebrow={HOME_DONATIONS_SECTION.eyebrow}
-        title={HOME_DONATIONS_SECTION.title}
-        description={HOME_DONATIONS_SECTION.description}
+        eyebrow={donorsSection.eyebrow}
+        title={donorsSection.title}
+        description={donorsSection.description}
         groups={donorGroups}
-        ctaHref={HOME_DONATIONS_SECTION.ctaUrl}
-        ctaLabel={HOME_DONATIONS_SECTION.ctaLabel}
+        ctaHref={donorsSection.ctaHref}
+        ctaLabel={donorsSection.ctaLabel}
       />
       <KhndzoreskDivider />
       <CulturalPortalAbout
@@ -98,9 +106,12 @@ export async function CulturalPortalPage() {
           title: about.teamTitle,
           description: about.teamIntro,
         }}
-        cards={HOME_ABOUT_CARDS}
+        cards={pageContent.CULTURAL_PORTAL_ABOUT.cards}
       />
-      <CulturalPortalNewsletter />
+      <CulturalPortalNewsletter
+        title={pageContent.CULTURAL_PORTAL_NEWSLETTER.title}
+        description={pageContent.CULTURAL_PORTAL_NEWSLETTER.description}
+      />
     </div>
   );
 }

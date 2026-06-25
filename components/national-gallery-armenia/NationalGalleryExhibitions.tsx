@@ -1,6 +1,10 @@
-import { NGA_EXHIBITIONS } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 
-export function NationalGalleryExhibitions() {
+type NationalGalleryExhibitionsProps = {
+  exhibitions: NationalGalleryPageContent['exhibitions'];
+};
+
+export function NationalGalleryExhibitions({ exhibitions }: NationalGalleryExhibitionsProps) {
   return (
     <section id="exhibitions">
       <p className="sec-label">Exhibitions</p>
@@ -10,7 +14,7 @@ export function NationalGalleryExhibitions() {
         gallery.am for the latest programme.
       </p>
       <div className="exh-grid">
-        {NGA_EXHIBITIONS.map((item) => (
+        {exhibitions.map((item) => (
           <div key={item.num} className="exh-card reveal">
             <div className={`exh-status ${item.status === 'current' ? 'status-current' : 'status-upcoming'}`}>
               {item.statusLabel}

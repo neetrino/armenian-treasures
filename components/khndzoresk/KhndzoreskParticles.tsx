@@ -1,9 +1,11 @@
-import { KHNDZORESK_PARTICLES } from '@/lib/constants/khndzoresk';
+import { getKhndzoreskPageContent } from '@/lib/queries/page-content';
 
-export function KhndzoreskParticles() {
+export async function KhndzoreskParticles() {
+  const { particles } = await getKhndzoreskPageContent();
+
   return (
     <div className="pt-wrap" aria-hidden="true">
-      {KHNDZORESK_PARTICLES.map((p, i) => (
+      {particles.map((p, i) => (
         <div
           key={i}
           className="pt"

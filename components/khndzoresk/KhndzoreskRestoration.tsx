@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useCallback, useRef } from 'react';
-import { KHNDZORESK_RESTORATIONS } from '@/lib/constants/khndzoresk';
+import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 
 function RestorationCard({
   before,
@@ -44,7 +44,11 @@ function RestorationCard({
   );
 }
 
-export function KhndzoreskRestoration() {
+type KhndzoreskRestorationProps = {
+  restorations: KhndzoreskPageContent['restorations'];
+};
+
+export function KhndzoreskRestoration({ restorations }: KhndzoreskRestorationProps) {
   return (
     <section id="restoration">
       <p className="sec-label">Visual Restoration</p>
@@ -54,7 +58,7 @@ export function KhndzoreskRestoration() {
         Drag the slider to compare.
       </p>
       <div className="restoration-grid">
-        {KHNDZORESK_RESTORATIONS.map((item) => (
+        {restorations.map((item) => (
           <RestorationCard key={item.caption} {...item} />
         ))}
       </div>

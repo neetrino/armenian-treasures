@@ -19,6 +19,8 @@ interface HeroHomeProps {
   secondaryCtaText: string;
   secondaryCtaUrl: string;
   stats: HomeStat[];
+  heroImage?: string | null;
+  heroMobileImage?: string | null;
 }
 
 export function HeroHome(props: HeroHomeProps) {
@@ -31,7 +33,10 @@ export function HeroHome(props: HeroHomeProps) {
       className="relative isolate -mt-[var(--site-header-height)] flex min-h-[100svh] w-full flex-col overflow-x-hidden bg-heritage-black pt-[calc(var(--site-header-height)+clamp(4.5rem,9vh,6.5rem)+30px)] text-heritage-champagne"
       aria-labelledby="hero-heading"
     >
-      <HeroBackground />
+      <HeroBackground
+        desktopImage={props.heroImage}
+        mobileImage={props.heroMobileImage}
+      />
 
       <div className="relative z-10 flex min-h-[calc(100svh-var(--site-header-height)-clamp(4.5rem,9vh,6.5rem)-30px)] flex-1 flex-col">
         <div className="mx-auto flex w-full min-w-0 max-w-[61.25rem] flex-1 flex-col items-center justify-center px-6 pb-6 text-center">

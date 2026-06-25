@@ -1,6 +1,7 @@
 'use client';
 
-import { DONATION_PAGE, DONATION_TRUST_ITEMS } from '@/lib/constants/donation-page';
+import type { DonationTrustItem } from '@/lib/constants/donation-page';
+import type { DonationPageContent } from '@/lib/queries/page-content';
 import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
 
 function StarIcon() {
@@ -28,13 +29,17 @@ function TrustIcon() {
   );
 }
 
-export function DonationClosingSections() {
-  const { quote, newsletter } = DONATION_PAGE;
+type DonationClosingSectionsProps = {
+  quote: DonationPageContent['page']['quote'];
+  newsletter: DonationPageContent['page']['newsletter'];
+  trustItems: DonationTrustItem[];
+};
 
+export function DonationClosingSections({ quote, newsletter, trustItems }: DonationClosingSectionsProps) {
   return (
     <>
       <div className="trust-row reveal" role="list" aria-label="Trust and security signals">
-        {DONATION_TRUST_ITEMS.map((item) => (
+        {trustItems.map((item) => (
           <div key={item.label} className="trust-item" role="listitem">
             <TrustIcon />
             {item.label}

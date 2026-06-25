@@ -1,6 +1,7 @@
-import { PARTNERSHIP_IMPACT } from '@/lib/constants/partnership-page';
+import { getPartnershipPageContent } from '@/lib/queries/page-content';
+import type { PartnershipPageContent } from '@/lib/queries/page-content';
 
-function ImpactIcon({ type }: { type: (typeof PARTNERSHIP_IMPACT)[number]['icon'] }) {
+function ImpactIcon({ type }: { type: PartnershipPageContent['impact'][number]['icon'] }) {
   if (type === 'shield') {
     return (
       <svg className="impact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
@@ -49,7 +50,9 @@ function ImpactIcon({ type }: { type: (typeof PARTNERSHIP_IMPACT)[number]['icon'
   );
 }
 
-export function PartnershipImpact() {
+export async function PartnershipImpact() {
+  const { impact } = await getPartnershipPageContent();
+
   return (
     <section className="reveal">
       <div className="sec-label">Strategic Impact Ecosystem</div>
@@ -59,7 +62,7 @@ export function PartnershipImpact() {
         build an unbreakable infrastructure for heritage.
       </p>
       <div className="impact-grid">
-        {PARTNERSHIP_IMPACT.map((item) => (
+        {impact.map((item) => (
           <div key={item.ghost} className="impact-card reveal">
             <ImpactIcon type={item.icon} />
             <div className="impact-tag">{item.tag}</div>

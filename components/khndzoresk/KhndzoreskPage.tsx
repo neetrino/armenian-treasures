@@ -10,32 +10,35 @@ import { KhndzoreskRestoration } from '@/components/khndzoresk/KhndzoreskRestora
 import { KhndzoreskSites } from '@/components/khndzoresk/KhndzoreskSites';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { SvgDefs } from '@/components/khndzoresk/site-icons';
+import { getKhndzoreskPageContent } from '@/lib/queries/page-content';
 
-export function KhndzoreskPage() {
+export async function KhndzoreskPage() {
+  const content = await getKhndzoreskPageContent();
+
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <KhndzoreskHero />
-      <KhndzoreskStatsBar />
-      <KhndzoreskAbout />
+      <KhndzoreskHero imgBase={content.imgBase} />
+      <KhndzoreskStatsBar stats={content.stats} />
+      <KhndzoreskAbout facts={content.facts} />
       <KhndzoreskDivider />
-      <KhndzoreskSites />
+      <KhndzoreskSites sites={content.sites} />
       <KhndzoreskDivider />
-      <KhndzoreskVirtualTour />
+      <KhndzoreskVirtualTour tours={content.tours} />
       <KhndzoreskDivider />
       <KhndzoreskAerial />
       <KhndzoreskDivider />
       <KhndzoreskPanorama />
       <KhndzoreskDivider />
-      <KhndzoreskGallery />
+      <KhndzoreskGallery gallery={content.gallery} />
       <KhndzoreskDivider />
-      <KhndzoreskRestoration />
+      <KhndzoreskRestoration restorations={content.restorations} />
       <KhndzoreskDivider />
       <KhndzoreskMap />
       <KhndzoreskDivider />
-      <KhndzoreskCredits />
-      <KhndzoreskRelated />
+      <KhndzoreskCredits imgBase={content.imgBase} />
+      <KhndzoreskRelated related={content.related} />
       <KhndzoreskNewsletter />
     </div>
   );

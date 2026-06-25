@@ -1,10 +1,14 @@
-import { HOME_ABOUT_CARDS } from '@/lib/constants/home-about-section';
+import type { HomeAboutCard } from '@/lib/constants/home-about-section';
 import { AboutUsCard } from '@/components/sections/about-us/AboutUsCard';
 
-export function AboutUsGrid() {
+interface AboutUsGridProps {
+  cards: HomeAboutCard[];
+}
+
+export function AboutUsGrid({ cards }: AboutUsGridProps) {
   return (
     <div className="about-us-grid">
-      {HOME_ABOUT_CARDS.map((card) => (
+      {cards.map((card) => (
         <AboutUsCard key={card.title} card={card} />
       ))}
     </div>

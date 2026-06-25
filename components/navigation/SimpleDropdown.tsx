@@ -59,8 +59,11 @@ export function SimpleDropdown({
   const pathname = usePathname();
   const active = isActive(pathname);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [panelStyle, setPanelStyle] = useState<{ left: number } | null>(null);
-  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
+    panelRef,
+  });
   const { handleSectionTriggerClick } = useHomeSectionNav({
     homeSectionId,
     fallbackHref,
@@ -115,6 +118,7 @@ export function SimpleDropdown({
 
       <NavDropdownPortal open={open && panelStyle !== null}>
         <div
+          ref={panelRef}
           id={panelId}
           role="menu"
           className={SIMPLE_DROPDOWN_PANEL}

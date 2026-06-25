@@ -11,29 +11,32 @@ import { KhachaturianMuseumNewsletter } from '@/components/khachaturian-museum/K
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { SvgDefs } from '@/components/khachaturian-museum/site-icons';
+import { getKhachaturianPageContent } from '@/lib/queries/page-content';
 
-export function KhachaturianMuseumPage() {
+export async function KhachaturianMuseumPage() {
+  const content = await getKhachaturianPageContent();
+
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <KhachaturianMuseumHero />
-      <KhachaturianMuseumStatsBar />
-      <KhachaturianMuseumBiography />
+      <KhachaturianMuseumHero imgBase={content.imgBase} />
+      <KhachaturianMuseumStatsBar stats={content.stats} />
+      <KhachaturianMuseumBiography facts={content.facts} />
       <KhndzoreskDivider />
-      <KhachaturianMuseumWorks />
+      <KhachaturianMuseumWorks works={content.works} />
       <KhndzoreskDivider />
       <KhachaturianMuseumVirtualTour />
       <KhndzoreskDivider />
-      <KhachaturianMuseumAudio />
+      <KhachaturianMuseumAudio audioTracks={content.audioTracks} />
       <KhndzoreskDivider />
-      <KhachaturianMuseumGallery />
+      <KhachaturianMuseumGallery gallery={content.gallery} />
       <KhndzoreskDivider />
-      <KhachaturianMuseumHighlights />
+      <KhachaturianMuseumHighlights highlights={content.highlights} />
       <KhndzoreskDivider />
       <KhachaturianMuseumVisit />
       <KhndzoreskDivider />
-      <KhachaturianMuseumRelated />
+      <KhachaturianMuseumRelated related={content.related} />
       <KhachaturianMuseumNewsletter />
     </div>
   );

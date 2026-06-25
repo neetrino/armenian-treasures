@@ -1,7 +1,11 @@
 'use client';
 
-import { CULTURAL_PORTAL_NEWSLETTER } from '@/lib/constants/cultural-portal-page';
 import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
+
+type CulturalPortalNewsletterProps = {
+  title: string;
+  description: string;
+};
 
 function StarIcon() {
   return (
@@ -18,13 +22,13 @@ function StarIcon() {
   );
 }
 
-export function CulturalPortalNewsletter() {
+export function CulturalPortalNewsletter({ title, description }: CulturalPortalNewsletterProps) {
   return (
     <div className="nl-outer">
       <div className="newsletter reveal">
         <StarIcon />
-        <h2>{CULTURAL_PORTAL_NEWSLETTER.title}</h2>
-        <p>{CULTURAL_PORTAL_NEWSLETTER.description}</p>
+        <h2>{title}</h2>
+        <p>{description}</p>
         <NewsletterSubscribeForm />
       </div>
     </div>

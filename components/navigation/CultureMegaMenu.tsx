@@ -24,7 +24,9 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
   const pathname = usePathname();
   const active = isCultureNavActive(pathname);
   const panelRef = useRef<HTMLDivElement>(null);
-  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
+    panelRef,
+  });
   const { handleSectionTriggerClick } = useHomeSectionNav({
     homeSectionId: HOME_SECTION_IDS.culturalPortal,
     fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.culturalPortal),
@@ -60,12 +62,12 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
 
       <NavDropdownPortal open={open}>
         <div
+          ref={panelRef}
           className="fixed inset-x-0 top-[var(--site-header-height)] z-[1001] flex justify-center px-6"
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
           <div
-            ref={panelRef}
             id={panelId}
             role="menu"
             className={cn(MEGA_MENU_PANEL, 'w-[min(860px,calc(100vw-80px))]')}

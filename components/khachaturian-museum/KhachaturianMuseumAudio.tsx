@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useRef, useState } from 'react';
-import { KHACHATURIAN_AUDIO_TRACKS } from '@/lib/constants/khachaturian-museum';
+import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 
 function PlayIcon() {
   return (
@@ -20,7 +20,11 @@ function PauseIcon() {
   );
 }
 
-export function KhachaturianMuseumAudio() {
+type KhachaturianMuseumAudioProps = {
+  audioTracks: KhachaturianPageContent['audioTracks'];
+};
+
+export function KhachaturianMuseumAudio({ audioTracks }: KhachaturianMuseumAudioProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -54,7 +58,7 @@ export function KhachaturianMuseumAudio() {
       <div className="audio-section reveal">
         <div className="audio-title">✦ Selected Works — Audio Library</div>
         <div className="audio-grid">
-          {KHACHATURIAN_AUDIO_TRACKS.map((track, index) => (
+          {audioTracks.map((track, index) => (
             <button
               key={track.url}
               type="button"

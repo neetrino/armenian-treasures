@@ -1,11 +1,15 @@
 import Link from 'next/link';
-import { HOME_PARTNERSHIP_SECTION } from '@/lib/constants/home-partnership-section';
 
-export function PartnershipApplyCta() {
+interface PartnershipApplyCtaProps {
+  ctaLabel: string;
+  ctaUrl: string;
+}
+
+export function PartnershipApplyCta({ ctaLabel, ctaUrl }: PartnershipApplyCtaProps) {
   return (
     <div className="partnership-apply-cta">
-      <Link href={HOME_PARTNERSHIP_SECTION.ctaUrl} className="partnership-apply-cta__link">
-        {HOME_PARTNERSHIP_SECTION.ctaLabel}
+      <Link href={ctaUrl} className="partnership-apply-cta__link">
+        {ctaLabel}
       </Link>
     </div>
   );

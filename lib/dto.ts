@@ -6,6 +6,13 @@
  * client. Every public route handler must use these mappers.
  */
 import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
+import {
+  normalizeHomeStats,
+  normalizeHomeTechCards,
+  type HomeStat,
+  type HomeTechCard,
+} from '@/lib/types/home-content';
+import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import type {
   Career,
   ContactMessage,
@@ -112,7 +119,15 @@ export interface PublicDonatorDTO {
 }
 
 export type PublicSiteSettingsDTO = Omit<SiteSettings, 'id' | 'updatedAt'>;
-export type PublicHomeContentDTO = Omit<HomeContent, 'id' | 'updatedAt'>;
+
+export type PublicHomeContentDTO = Omit<
+  HomeContent,
+  'id' | 'updatedAt' | 'stats' | 'techCards' | 'sections'
+> & {
+  stats: HomeStat[];
+  techCards: HomeTechCard[];
+  sections: HomeSections;
+};
 export type PublicAboutContentDTO = Omit<AboutContent, 'id' | 'createdAt' | 'updatedAt' | 'pillars'> & {
   pillars: AboutPillar[];
 };
@@ -238,8 +253,15 @@ export function toPublicSiteSettings(row: SiteSettings): PublicSiteSettingsDTO {
 }
 
 export function toPublicHomeContent(row: HomeContent): PublicHomeContentDTO {
-  const { id: _id, updatedAt: _u, ...rest } = row;
-  return rest;
+  const { id: _id, updatedAt: _u, stats, techCards, sections, ...rest } = row;
+  return {
+    ...rest,
+    heroSubtitle: row.heroSubtitle ?? '',
+    heroTagline: row.heroTagline ?? '',
+    stats: normalizeHomeStats(stats),
+    techCards: normalizeHomeTechCards(techCards),
+    sections: normalizeHomeSections(sections),
+  };
 }
 
 export function toPublicAboutContent(row: AboutContent): PublicAboutContentDTO {

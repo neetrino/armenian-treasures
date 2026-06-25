@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { NGA_ARTISTS } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 
-function ArtistIcon({ type }: { type: (typeof NGA_ARTISTS)[number]['icon'] }) {
+function ArtistIcon({ type }: { type: NationalGalleryPageContent['artists'][number]['icon'] }) {
   if (type === 'aivazovsky') {
     return (
       <svg className="hl-icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden>
@@ -35,7 +35,11 @@ function ArtistIcon({ type }: { type: (typeof NGA_ARTISTS)[number]['icon'] }) {
   );
 }
 
-export function NationalGalleryArtists() {
+type NationalGalleryArtistsProps = {
+  artists: NationalGalleryPageContent['artists'];
+};
+
+export function NationalGalleryArtists({ artists }: NationalGalleryArtistsProps) {
   return (
     <section id="artists">
       <p className="sec-label">Master Artists</p>
@@ -45,7 +49,7 @@ export function NationalGalleryArtists() {
         Yerevan&apos;s walls.
       </p>
       <div className="hl-grid">
-        {NGA_ARTISTS.map((item) => (
+        {artists.map((item) => (
           <Link
             key={item.num}
             href={item.href}
