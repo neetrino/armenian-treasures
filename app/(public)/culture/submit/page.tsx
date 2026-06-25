@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { Container } from '@/components/layout/Container';
-import { HeroPage } from '@/components/sections/HeroPage';
+import { CultureFormPageView } from '@/components/culture-catalog/CultureFormPageView';
 import { ProjectSubmissionForm } from '@/components/forms/ProjectSubmissionForm';
 import { isFormRoute } from '@/lib/culture-menu';
 import { getMenuTree } from '@/lib/queries/menu';
@@ -26,32 +25,27 @@ async function SubmitProjectPage() {
   }
 
   return (
-    <>
-      <HeroPage
-        eyebrow="Add your project"
-        title="Contribute to the archive."
-        description="Researchers, photographers, families and institutions can submit projects, materials or proposals. We review every submission by hand."
-      />
-      <Container className="grid gap-10 py-16 lg:grid-cols-[2fr_1fr] lg:py-24">
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card lg:p-10">
-          <ProjectSubmissionForm categories={categories} />
-        </div>
-        <aside className="rounded-2xl border border-dashed border-stone-200 bg-parchment-50 p-6 text-sm text-ink-soft lg:p-8">
-          <p className="eyebrow">What we accept</p>
-          <h2 className="mt-3 font-display text-2xl text-ink">
-            Field reports, photography, manuscripts, oral history.
-          </h2>
-          <p className="mt-4 leading-relaxed">
+    <CultureFormPageView
+      kind="submit"
+      title="Contribute to the archive."
+      description="Researchers, photographers, families and institutions can submit projects, materials or proposals. We review every submission by hand."
+      breadcrumb={[{ label: 'Add your project' }]}
+      form={<ProjectSubmissionForm categories={categories} />}
+      aside={
+        <>
+          <p className="sec-label">What we accept</p>
+          <h2 className="sec-title">Field reports, photography, manuscripts, oral history.</h2>
+          <p>
             We accept proposals from individuals and institutions. Tell us what you have, where
             it&apos;s located, and how we can verify the material with you.
           </p>
-          <p className="mt-4 leading-relaxed">
+          <p>
             Submissions are queued for curatorial review. We will not auto-publish your material
             and will only contact you if we need to follow up.
           </p>
-        </aside>
-      </Container>
-    </>
+        </>
+      }
+    />
   );
 }
 

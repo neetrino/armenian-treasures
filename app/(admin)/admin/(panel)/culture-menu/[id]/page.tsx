@@ -49,6 +49,7 @@ async function EditCultureMenuItemPage(props: PageProps) {
               image: item.image ?? '',
               routeType: item.routeType,
               customUrl: item.customUrl ?? '',
+              catalogContent: item.catalogContent,
             }}
           />
         </div>

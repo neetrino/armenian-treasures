@@ -1,5 +1,9 @@
 import Link from 'next/link';
-import { ngaImg } from '@/lib/constants/national-gallery-armenia';
+import { ngaImg } from '@/lib/queries/page-content';
+
+type NationalGalleryHeroProps = {
+  imgBase: string;
+};
 
 function LocationIcon() {
   return (
@@ -24,14 +28,14 @@ function NationalGalleryBreadcrumb() {
   );
 }
 
-export function NationalGalleryHero() {
+export function NationalGalleryHero({ imgBase }: NationalGalleryHeroProps) {
   return (
     <div className="hero">
       <NationalGalleryBreadcrumb />
       <div
         className="hero-img-overlay"
         style={{
-          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.9) 0%,rgba(9,9,9,.38) 42%,rgba(9,9,9,.84) 100%),url('${ngaImg('national-gallery-logo-thegem-blog-timeline-large.jpg')}')`,
+          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.9) 0%,rgba(9,9,9,.38) 42%,rgba(9,9,9,.84) 100%),url('${ngaImg(imgBase, 'national-gallery-logo-thegem-blog-timeline-large.jpg')}')`,
         }}
       />
       <div className="hero-bg" />

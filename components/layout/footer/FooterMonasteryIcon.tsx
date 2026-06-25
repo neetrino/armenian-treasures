@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
 
-const ICON_SRC = resolvePublicAssetUrl('/images/footer/support-heritage-icon.png');
+const ICON_SRC = resolvePublicAssetUrl('/images/footer/support-heritage-icon.webp');
 
 interface FooterMonasteryIconProps {
   className?: string;

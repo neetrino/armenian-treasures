@@ -5,7 +5,7 @@
 @layer base {
   :root {
     color-scheme: light;
-    --site-header-height: 4.25rem;
+    --site-header-height: 4.5rem;
     --heritage-black: #030504;
     --heritage-green-black: #07110F;
     --heritage-dark-teal: #061B1B;
@@ -33,7 +33,7 @@
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-height: 5rem;
+      --site-header-height: 4.5rem;
     }
   }
 

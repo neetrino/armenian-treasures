@@ -6,7 +6,8 @@ import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { cultureMenuItemSchema, cultureMenuReorderSchema } from '@/lib/validation';
-import type { MenuRouteType } from '@prisma/client';
+import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
+import { Prisma, type MenuRouteType } from '@prisma/client';
 
 function toSlug(value: string): string {
   return slugify(value, { lower: true, strict: true });
@@ -67,10 +68,18 @@ function parseForm(formData: FormData): { ok: true; data: ReturnType<typeof toDa
     }
     return { ok: false, errors };
   }
-  return { ok: true, data: toData(parsed.data) };
+  return { ok: true, data: toData(parsed.data, formData) };
 }
 
-function toData(input: ReturnType<typeof cultureMenuItemSchema.parse>) {
+function toData(
+  input: ReturnType<typeof cultureMenuItemSchema.parse>,
+  formData: FormData,
+) {
+  const catalogContent =
+    input.routeType === 'CATEGORY' || input.routeType === 'SUBCATEGORY'
+      ? catalogContentFromFormFields(formData)
+      : null;
+
   return {
     title: input.title,
     slug: input.slug,
@@ -81,11 +90,16 @@ function toData(input: ReturnType<typeof cultureMenuItemSchema.parse>) {
     image: input.image?.trim() ? input.image.trim() : null,
     routeType: input.routeType,
     customUrl: input.customUrl?.trim() ? input.customUrl.trim() : null,
+    catalogContent:
+      catalogContent === null
+        ? Prisma.DbNull
+        : (catalogContent as Prisma.InputJsonValue),
   };
 }
 
 function revalidate(): void {
   revalidateTag('culture-menu', 'max');
+  revalidateTag('culture-items', 'max');
   revalidatePath('/');
   revalidatePath('/culture');
   revalidatePath('/admin/culture-menu');

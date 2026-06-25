@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { DONATION_PAGE, type DonationTierId } from '@/lib/constants/donation-page';
+import type { DonationImpactRange, DonationTier, DonationTierId } from '@/lib/constants/donation-page';
+import type { DonationPageContent } from '@/lib/queries/page-content';
 import { NarrativeOrnamentIcon, ToastCheckIcon } from '@/components/donation-page/donation-icons';
 import { DonationPatronSlider } from '@/components/donation-page/DonationPatronSlider';
 import { DonationTierCards } from '@/components/donation-page/DonationTierCards';
@@ -9,8 +10,21 @@ import { PATRON_DEFAULT, clampPatronAmount, formatAmd } from '@/components/donat
 
 type BillingMode = 'monthly' | 'annual';
 
-export function DonationEngine() {
-  const { engine } = DONATION_PAGE;
+type DonationEngineProps = {
+  engine: DonationPageContent['page']['engine'];
+  tiers: DonationTier[];
+  impactRanges: DonationImpactRange[];
+  patronSliderTicks: readonly number[];
+  patronQuickChips: readonly number[];
+};
+
+export function DonationEngine({
+  engine,
+  tiers,
+  impactRanges,
+  patronSliderTicks,
+  patronQuickChips,
+}: DonationEngineProps) {
   const patronCardRef = useRef<HTMLDivElement>(null);
   const customInputRef = useRef<HTMLInputElement>(null);
   const toastTimerRef = useRef<number | null>(null);
@@ -113,6 +127,7 @@ export function DonationEngine() {
         </div>
 
         <DonationTierCards
+          tiers={tiers}
           billing={billing}
           selectedId={selectedId}
           onSelect={setSelectedId}
@@ -125,6 +140,9 @@ export function DonationEngine() {
           inputRef={customInputRef}
           sliderVal={sliderVal}
           inputNudge={inputNudge}
+          impactRanges={impactRanges}
+          patronSliderTicks={patronSliderTicks}
+          patronQuickChips={patronQuickChips}
           onSliderChange={(value) => setSliderVal(clampPatronAmount(value))}
           onCustomBlur={handleCustomBlur}
           onConfirm={confirmPatron}

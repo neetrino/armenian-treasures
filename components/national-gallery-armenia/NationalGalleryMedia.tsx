@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { NGA_COLLECTIONS } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 import {
   AivazovskyCollectionIcon,
   ArmenianPaintingIcon,
@@ -18,7 +18,11 @@ const COLLECTION_ICONS = {
   decorative: DecorativeArtIcon,
 } as const;
 
-export function NationalGalleryCollection() {
+type NationalGalleryCollectionProps = {
+  collections: NationalGalleryPageContent['collections'];
+};
+
+export function NationalGalleryCollection({ collections }: NationalGalleryCollectionProps) {
   return (
     <section id="collection">
       <p className="sec-label">Permanent Collection</p>
@@ -28,7 +32,7 @@ export function NationalGalleryCollection() {
         visual culture.
       </p>
       <div className="cat-grid">
-        {NGA_COLLECTIONS.map((item) => {
+        {collections.map((item) => {
           const Icon = COLLECTION_ICONS[item.icon];
           return (
             <Link key={item.id} href={item.href} className="cat-card reveal">

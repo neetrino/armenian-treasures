@@ -1,7 +1,6 @@
 'use client';
 
 import { useActionState } from 'react';
-import { HOME_NEWSLETTER_SECTION } from '@/lib/constants/home-newsletter-section';
 import {
   subscribeNewsletter,
   type NewsletterActionState,
@@ -9,7 +8,12 @@ import {
 
 const INITIAL_STATE: NewsletterActionState = { status: 'idle' };
 
-export function HomeNewsletterForm() {
+interface HomeNewsletterFormProps {
+  placeholder: string;
+  submitLabel: string;
+}
+
+export function HomeNewsletterForm({ placeholder, submitLabel }: HomeNewsletterFormProps) {
   const [state, formAction, pending] = useActionState(subscribeNewsletter, INITIAL_STATE);
 
   return (
@@ -27,7 +31,7 @@ export function HomeNewsletterForm() {
           type="email"
           required
           autoComplete="email"
-          placeholder={HOME_NEWSLETTER_SECTION.placeholder}
+          placeholder={placeholder}
           aria-invalid={Boolean(state.fieldErrors?.email)}
           aria-describedby={
             state.message ? 'home-newsletter-feedback' : state.fieldErrors?.email ? 'home-newsletter-email-error' : undefined
@@ -36,7 +40,7 @@ export function HomeNewsletterForm() {
         />
 
         <button type="submit" disabled={pending} className="home-newsletter-form__submit">
-          {pending ? 'SUBSCRIBING…' : HOME_NEWSLETTER_SECTION.submitLabel}
+          {pending ? 'SUBSCRIBING…' : submitLabel}
         </button>
       </div>
 

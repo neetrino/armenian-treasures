@@ -1,12 +1,19 @@
-import { CULTURAL_PORTAL_CATEGORIES } from '@/lib/constants/cultural-portal';
+import { getMenuTree } from '@/lib/queries/menu';
+import { buildCulturePortalCategories } from '@/lib/mappers/culture-portal-categories';
+import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { CulturalCategoryCard } from '@/components/sections/cultural-portal/CulturalCategoryCard';
 
-export function CulturalCategoryGrid() {
+export async function CulturalCategoryGrid() {
+  const tree = await getMenuTree();
+  const categories = buildCulturePortalCategories(tree);
+
   return (
-    <div className="cultural-portal-grid">
-      {CULTURAL_PORTAL_CATEGORIES.map((category) => (
-        <CulturalCategoryCard key={category.title} category={category} />
+    <Stagger className="cultural-portal-grid">
+      {categories.map((category) => (
+        <StaggerItem key={category.icon} className="h-full">
+          <CulturalCategoryCard category={category} />
+        </StaggerItem>
       ))}
-    </div>
+    </Stagger>
   );
 }

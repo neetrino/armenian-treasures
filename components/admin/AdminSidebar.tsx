@@ -46,6 +46,7 @@ const GROUPS: NavGroup[] = [
       { href: '/admin/donators', label: 'Donators', icon: HeartHandshake },
       { href: '/admin/home-content', label: 'Home Content', icon: Home },
       { href: '/admin/about-content', label: 'About Content', icon: BookOpen },
+      { href: '/admin/page-content', label: 'Page Content', icon: BookOpen },
     ],
   },
   {

@@ -1,11 +1,17 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 
 const CLOSE_DELAY_MS = 120;
 
-export function useNavDropdown() {
+interface UseNavDropdownOptions {
+  /** Portal-rendered panel — included in outside-click detection. */
+  panelRef?: RefObject<HTMLElement | null>;
+}
+
+export function useNavDropdown(options?: UseNavDropdownOptions) {
+  const panelRef = options?.panelRef;
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +34,9 @@ export function useNavDropdown() {
 
     const onPointerDown = (event: MouseEvent): void => {
       const target = event.target as Node;
-      if (!containerRef.current?.contains(target)) close();
+      const insideTrigger = containerRef.current?.contains(target) ?? false;
+      const insidePanel = panelRef?.current?.contains(target) ?? false;
+      if (!insideTrigger && !insidePanel) close();
     };
 
     document.addEventListener('keydown', onKeyDown);
@@ -37,7 +45,7 @@ export function useNavDropdown() {
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('mousedown', onPointerDown);
     };
-  }, [open, close]);
+  }, [open, close, panelRef]);
 
   const cancelClose = useCallback((): void => {
     if (closeTimer.current) clearTimeout(closeTimer.current);

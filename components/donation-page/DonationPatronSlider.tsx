@@ -1,5 +1,5 @@
 import { RefObject } from 'react';
-import { PATRON_QUICK_CHIPS, PATRON_SLIDER_TICKS } from '@/lib/constants/donation-page';
+import type { DonationImpactRange } from '@/lib/constants/donation-page';
 import { PATRON_MAX, PATRON_MIN, formatAmd, getImpactText, logFill } from '@/components/donation-page/donation-utils';
 
 const TICK_LABELS = ['500', '1K', '1.5K', '5K', '10K', '25K', '50K'] as const;
@@ -9,6 +9,9 @@ type DonationPatronSliderProps = {
   inputRef: RefObject<HTMLInputElement | null>;
   sliderVal: number;
   inputNudge: boolean;
+  impactRanges: DonationImpactRange[];
+  patronSliderTicks: readonly number[];
+  patronQuickChips: readonly number[];
   onSliderChange: (value: number) => void;
   onCustomBlur: (value: string) => void;
   onConfirm: () => void;
@@ -19,6 +22,9 @@ export function DonationPatronSlider({
   inputRef,
   sliderVal,
   inputNudge,
+  impactRanges,
+  patronSliderTicks,
+  patronQuickChips,
   onSliderChange,
   onCustomBlur,
   onConfirm,
@@ -36,7 +42,7 @@ export function DonationPatronSlider({
           <div className="impact-amd">
             {formatAmd(sliderVal)} <small>AMD</small>
           </div>
-          <div className="impact-what">{getImpactText(sliderVal)}</div>
+          <div className="impact-what">{getImpactText(sliderVal, impactRanges)}</div>
         </div>
       </div>
 
@@ -59,7 +65,7 @@ export function DonationPatronSlider({
           onChange={(event) => onSliderChange(Number(event.target.value))}
         />
         <div className="tick-row" aria-hidden>
-          {PATRON_SLIDER_TICKS.map((tick, index) => {
+          {patronSliderTicks.map((tick, index) => {
             const passed = tick < sliderVal;
             const lit = Math.abs(tick - sliderVal) < 120;
             return (
@@ -67,7 +73,7 @@ export function DonationPatronSlider({
                 key={tick}
                 className={['tick', passed ? 'passed' : '', lit ? 'lit' : ''].filter(Boolean).join(' ')}
               >
-                {TICK_LABELS[index]}
+                {TICK_LABELS[index] ?? formatAmd(tick)}
               </span>
             );
           })}
@@ -75,7 +81,7 @@ export function DonationPatronSlider({
       </div>
 
       <div className="chips" role="group" aria-label="Quick amount selection">
-        {PATRON_QUICK_CHIPS.map((chip) => (
+        {patronQuickChips.map((chip) => (
           <button
             key={chip}
             type="button"

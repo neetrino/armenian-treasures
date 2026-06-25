@@ -66,8 +66,8 @@ export const VIRTUAL_MUSEUM_SECTION = {
     withIconSource({
       number: '04',
       icon: 'events',
-      badge: 'LAUNCHING 2027',
-      badgeTone: 'gold',
+      badge: 'LIVE',
+      badgeTone: 'teal',
       title: 'LIVE HERITAGE EVENTS',
       description:
         'Join live-streamed guided tours and cultural lectures with world-leading historians, archaeologists, and Armenian cultural ambassadors — broadcast to every corner of the diaspora.',

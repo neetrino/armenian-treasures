@@ -1,10 +1,11 @@
 import { KeyboardEvent } from 'react';
-import { DONATION_TIERS, type DonationTierId } from '@/lib/constants/donation-page';
+import type { DonationTier, DonationTierId } from '@/lib/constants/donation-page';
 import { FeatureCheckIcon, FeatureLockedIcon } from '@/components/donation-page/donation-icons';
 import { TierIcon } from '@/components/donation-page/TierIcon';
 import { formatAmd } from '@/components/donation-page/donation-utils';
 
 type DonationTierCardsProps = {
+  tiers: DonationTier[];
   billing: 'monthly' | 'annual';
   selectedId: DonationTierId | null;
   onSelect: (tierId: DonationTierId) => void;
@@ -13,6 +14,7 @@ type DonationTierCardsProps = {
 };
 
 export function DonationTierCards({
+  tiers,
   billing,
   selectedId,
   onSelect,
@@ -38,7 +40,7 @@ export function DonationTierCards({
 
   return (
     <div className="donation-tiers reveal" role="radiogroup" aria-label="Patronage tiers">
-      {DONATION_TIERS.map((tier) => {
+      {tiers.map((tier) => {
         const checkColor = tier.primary ? '#2ABFBF' : '#C9A84C';
         const displayAmount = tier.customPrice ? null : isAnnual ? tier.annualAmd : tier.monthlyAmd;
 

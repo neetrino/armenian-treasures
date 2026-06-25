@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRef } from 'react';
-import { CULTURE_MEGA_MENU } from '@/lib/navigation/culture-mega-menu';
-import { HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
+import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
+import { resolveMenuLucideIcon } from '@/lib/navigation/menu-icons';
+import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
 import { useHomeSectionNav } from '@/components/navigation/useHomeSectionNav';
@@ -19,14 +20,16 @@ import {
 import { useNavDropdown } from '@/components/navigation/useNavDropdown';
 import { cn } from '@/lib/utils';
 
-export function CultureMegaMenu() {
+export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
   const pathname = usePathname();
   const active = isCultureNavActive(pathname);
   const panelRef = useRef<HTMLDivElement>(null);
-  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
+    panelRef,
+  });
   const { handleSectionTriggerClick } = useHomeSectionNav({
     homeSectionId: HOME_SECTION_IDS.culturalPortal,
-    fallbackHref: '/culture',
+    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.culturalPortal),
     onScroll: close,
   });
 
@@ -59,32 +62,33 @@ export function CultureMegaMenu() {
 
       <NavDropdownPortal open={open}>
         <div
+          ref={panelRef}
           className="fixed inset-x-0 top-[var(--site-header-height)] z-[1001] flex justify-center px-6"
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
           <div
-            ref={panelRef}
             id={panelId}
             role="menu"
-            className={cn(MEGA_MENU_PANEL, 'w-[min(920px,calc(100vw-80px))]')}
+            className={cn(MEGA_MENU_PANEL, 'w-[min(860px,calc(100vw-80px))]')}
             style={{
               backgroundImage:
                 'radial-gradient(circle at 70% 20%, rgba(39, 198, 200, 0.06), transparent 35%)',
             }}
           >
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-5">
-              {CULTURE_MEGA_MENU.map((column, columnIndex) => (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0 lg:gap-y-5">
+              {columns.map((column, columnIndex) => (
                 <div
                   key={column.heading}
                   className={cn(
-                    columnIndex > 0 && 'lg:border-l lg:border-[rgba(214,184,90,0.12)] lg:pl-8',
+                    'px-[18px]',
+                    columnIndex > 0 && 'lg:border-l lg:border-[rgba(201,168,76,0.08)]',
                   )}
                 >
                   <p className={MEGA_MENU_HEADING}>{column.heading}</p>
                   <ul className="flex flex-col">
                     {column.items.map((item) => {
-                      const Icon = item.icon;
+                      const Icon = resolveMenuLucideIcon(item.icon);
                       return (
                         <li key={item.label}>
                           <Link

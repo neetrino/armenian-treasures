@@ -12,6 +12,7 @@ export interface CultureItemFormInitial {
   century: string;
   yearLabel: string;
   image: string;
+  galleryImages: string[];
   tourUrl: string;
   videoUrl: string;
   latitude: string;
@@ -36,6 +37,7 @@ export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInit
     century: item.century !== null ? String(item.century) : '',
     yearLabel: item.yearLabel ?? '',
     image: item.image ?? '',
+    galleryImages: item.galleryImages ?? [],
     tourUrl: item.tourUrl ?? '',
     videoUrl: item.videoUrl ?? '',
     latitude: item.latitude !== null ? String(item.latitude) : '',

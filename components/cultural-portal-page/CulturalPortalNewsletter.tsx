@@ -1,7 +1,11 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import { CULTURAL_PORTAL_NEWSLETTER } from '@/lib/constants/cultural-portal-page';
+import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
+
+type CulturalPortalNewsletterProps = {
+  title: string;
+  description: string;
+};
 
 function StarIcon() {
   return (
@@ -18,41 +22,14 @@ function StarIcon() {
   );
 }
 
-export function CulturalPortalNewsletter() {
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const email = new FormData(form).get('email');
-    if (typeof email === 'string' && email.trim()) {
-      setSubmitted(true);
-    }
-  }
-
+export function CulturalPortalNewsletter({ title, description }: CulturalPortalNewsletterProps) {
   return (
     <div className="nl-outer">
       <div className="newsletter reveal">
         <StarIcon />
-        <h2>{CULTURAL_PORTAL_NEWSLETTER.title}</h2>
-        <p>{CULTURAL_PORTAL_NEWSLETTER.description}</p>
-        {submitted ? (
-          <p className="nl-success">✦ Thank you — you are now part of the heritage community.</p>
-        ) : (
-          <form className="nl-form" onSubmit={handleSubmit}>
-            <input
-              className="nl-input"
-              type="email"
-              name="email"
-              placeholder="Your email address"
-              required
-              aria-label="Email address"
-            />
-            <button type="submit" className="nl-btn">
-              Subscribe
-            </button>
-          </form>
-        )}
+        <h2>{title}</h2>
+        <p>{description}</p>
+        <NewsletterSubscribeForm />
       </div>
     </div>
   );

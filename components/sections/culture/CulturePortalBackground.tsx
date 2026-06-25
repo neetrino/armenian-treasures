@@ -55,7 +55,7 @@ export function CulturePortalBackground() {
       <TopographicRings className="absolute right-[5%] top-[10%] h-[min(26vw,13rem)] w-[min(26vw,13rem)] text-bronze/18" />
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/mountain-silhouette.png')}
+        src={resolvePublicAssetUrl('/images/technology/mountain-silhouette.webp')}
         alt=""
         width={640}
         height={180}

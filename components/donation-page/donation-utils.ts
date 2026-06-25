@@ -1,4 +1,4 @@
-import { DONATION_IMPACT_RANGES } from '@/lib/constants/donation-page';
+import type { DonationImpactRange } from '@/lib/constants/donation-page';
 
 export const PATRON_MIN = 500;
 export const PATRON_MAX = 50000;
@@ -15,9 +15,9 @@ export function logFill(value: number): string {
   return `${(((Math.log(value) - lo) / (hi - lo)) * 100).toFixed(1)}%`;
 }
 
-export function getImpactText(value: number): string {
-  const entry = DONATION_IMPACT_RANGES.find((range) => value >= range.min && value < range.max);
-  return entry?.text ?? DONATION_IMPACT_RANGES[0]?.text ?? '';
+export function getImpactText(value: number, impactRanges: DonationImpactRange[]): string {
+  const entry = impactRanges.find((range) => value >= range.min && value < range.max);
+  return entry?.text ?? impactRanges[0]?.text ?? '';
 }
 
 export function clampPatronAmount(value: number): number {

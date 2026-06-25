@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { HomeSectionId } from '@/lib/navigation/home-sections';
+import { parseHomeSectionHash } from '@/lib/navigation/home-sections';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
 import { useHomeSectionNav } from '@/components/navigation/useHomeSectionNav';
@@ -13,7 +14,30 @@ import {
   SIMPLE_DROPDOWN_PANEL,
 } from '@/components/navigation/nav-styles';
 import { useNavDropdown } from '@/components/navigation/useNavDropdown';
-import type { NavDropdownLink } from '@/components/navigation/primary-links';
+import { navDropdownLinkKey, type NavDropdownLink } from '@/components/navigation/primary-links';
+
+function DropdownNavLink({
+  item,
+  onClose,
+}: {
+  item: NavDropdownLink;
+  onClose: () => void;
+}) {
+  const hashMatch = item.href.match(/^\/#(.+)$/);
+  const homeSectionId = hashMatch
+    ? (parseHomeSectionHash(`#${hashMatch[1]}`) ?? undefined)
+    : undefined;
+  const { handleHomeSectionClick } = useHomeSectionNav({
+    homeSectionId,
+    onScroll: onClose,
+  });
+
+  return (
+    <Link href={item.href} role="menuitem" onClick={handleHomeSectionClick} className={SIMPLE_DROPDOWN_ITEM}>
+      {item.label}
+    </Link>
+  );
+}
 
 interface SimpleDropdownProps {
   label: string;
@@ -35,8 +59,11 @@ export function SimpleDropdown({
   const pathname = usePathname();
   const active = isActive(pathname);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const [panelStyle, setPanelStyle] = useState<{ left: number } | null>(null);
-  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown();
+  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
+    panelRef,
+  });
   const { handleSectionTriggerClick } = useHomeSectionNav({
     homeSectionId,
     fallbackHref,
@@ -91,6 +118,7 @@ export function SimpleDropdown({
 
       <NavDropdownPortal open={open && panelStyle !== null}>
         <div
+          ref={panelRef}
           id={panelId}
           role="menu"
           className={SIMPLE_DROPDOWN_PANEL}
@@ -106,10 +134,8 @@ export function SimpleDropdown({
         >
           <ul>
             {items.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} role="menuitem" onClick={close} className={SIMPLE_DROPDOWN_ITEM}>
-                  {item.label}
-                </Link>
+              <li key={navDropdownLinkKey(item)}>
+                <DropdownNavLink item={item} onClose={close} />
               </li>
             ))}
           </ul>

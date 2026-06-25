@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { DONATION_PAGE } from '@/lib/constants/donation-page';
+import type { DonationPageContent } from '@/lib/queries/page-content';
 import { HeroBadgeCheckIcon, HeroBadgeClockIcon, HeroBadgeStarIcon } from '@/components/donation-page/donation-icons';
 
 const BADGE_ICONS = {
@@ -8,19 +8,25 @@ const BADGE_ICONS = {
   check: HeroBadgeCheckIcon,
 } as const;
 
-export function DonationBreadcrumb() {
+type DonationBreadcrumbProps = {
+  breadcrumb: string;
+};
+
+export function DonationBreadcrumb({ breadcrumb }: DonationBreadcrumbProps) {
   return (
     <div className="breadcrumb" aria-label="Breadcrumb">
       <Link href="/">Armenian Treasures</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <span>{DONATION_PAGE.breadcrumb}</span>
+      <span>{breadcrumb}</span>
     </div>
   );
 }
 
-export function DonationHero() {
-  const { hero } = DONATION_PAGE;
+type DonationHeroProps = {
+  hero: DonationPageContent['page']['hero'];
+};
 
+export function DonationHero({ hero }: DonationHeroProps) {
   return (
     <div className="hero donation-hero">
       <div className="hero-bg" />

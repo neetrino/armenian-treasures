@@ -3,14 +3,22 @@ import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { HOME_HERO_STATS } from '@/lib/constants/home-hero';
 import { prisma } from '@/lib/db';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
+import {
+  buildDefaultHomeSections,
+  normalizeHomeSections,
+  type HomeSections,
+} from '@/lib/types/home-sections';
+import { normalizeHomeStats, normalizeHomeTechCards } from '@/lib/types/home-content';
 
 export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   heroBadge: '✦ DISCOVER · PRESERVE · CELEBRATE ✦',
   heroTitle: 'ARMENIAN',
   heroHighlight: 'TREASURES',
+  heroSubtitle: 'CULTURAL HERITAGE\nPORTAL',
+  heroTagline: 'BRINGING ARMENIAN HISTORY INTO THE DIGITAL FUTURE',
   heroDescription:
     "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
-  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.png'),
+  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.webp'),
   heroMobileImage: null,
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
@@ -44,14 +52,57 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   ctaTitle: 'Help us digitize the next monument',
   ctaDescription:
     'Every donation funds drone flights, 3D scans and the open archive that will outlast all of us.',
+  sections: buildDefaultHomeSections(),
 };
+
+function applyHomeContentFallback(content: PublicHomeContentDTO): PublicHomeContentDTO {
+  const fallback = HOME_CONTENT_FALLBACK;
+  return {
+    ...fallback,
+    ...content,
+    heroBadge: content.heroBadge || fallback.heroBadge,
+    heroTitle: content.heroTitle || fallback.heroTitle,
+    heroHighlight: content.heroHighlight || fallback.heroHighlight,
+    heroSubtitle: content.heroSubtitle || fallback.heroSubtitle,
+    heroTagline: content.heroTagline || fallback.heroTagline,
+    heroDescription: content.heroDescription || fallback.heroDescription,
+    primaryCtaText: content.primaryCtaText || fallback.primaryCtaText,
+    primaryCtaUrl: content.primaryCtaUrl || fallback.primaryCtaUrl,
+    secondaryCtaText: content.secondaryCtaText || fallback.secondaryCtaText,
+    secondaryCtaUrl: content.secondaryCtaUrl || fallback.secondaryCtaUrl,
+    missionTitle: content.missionTitle || fallback.missionTitle,
+    missionHighlight: content.missionHighlight || fallback.missionHighlight,
+    missionText: content.missionText || fallback.missionText,
+    ctaTitle: content.ctaTitle || fallback.ctaTitle,
+    ctaDescription: content.ctaDescription || fallback.ctaDescription,
+    stats: normalizeHomeStats(content.stats ?? fallback.stats),
+    techCards: normalizeHomeTechCards(content.techCards ?? fallback.techCards),
+    sections: normalizeHomeSections(content.sections ?? fallback.sections),
+  };
+}
+
+function resolveHomeContentAssets(content: PublicHomeContentDTO): PublicHomeContentDTO {
+  const merged = applyHomeContentFallback(content);
+  return {
+    ...merged,
+    heroImage: merged.heroImage ? resolvePublicAssetUrl(merged.heroImage) : null,
+    heroMobileImage: merged.heroMobileImage
+      ? resolvePublicAssetUrl(merged.heroMobileImage)
+      : null,
+  };
+}
+
+export function getHomeSections(content: PublicHomeContentDTO): HomeSections {
+  return normalizeHomeSections(content.sections);
+}
 
 async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
   try {
     const row = await prisma.homeContent.findFirst();
-    return row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
+    const content = row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
+    return resolveHomeContentAssets(content);
   } catch {
-    return HOME_CONTENT_FALLBACK;
+    return resolveHomeContentAssets(HOME_CONTENT_FALLBACK);
   }
 }
 

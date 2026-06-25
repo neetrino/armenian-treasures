@@ -1,5 +1,14 @@
 import Link from 'next/link';
-import { CULTURAL_PORTAL_DONORS } from '@/lib/constants/cultural-portal-page';
+import type { DonationsPatronGroup } from '@/lib/mappers/donations-patrons';
+
+interface CulturalPortalDonorsProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  groups: DonationsPatronGroup[];
+  ctaHref: string;
+  ctaLabel: string;
+}
 
 function DonorTierIcon({ stroke }: { stroke: string }) {
   if (stroke === 'var(--gold)') {
@@ -26,26 +35,41 @@ function DonorTierIcon({ stroke }: { stroke: string }) {
   );
 }
 
-export function CulturalPortalDonors() {
-  const donors = CULTURAL_PORTAL_DONORS;
+const ICON_STROKE: Record<string, string> = {
+  gold: 'var(--gold)',
+  silver: '#B0B0B0',
+  bronze: '#CD7F32',
+};
 
+export function CulturalPortalDonors({
+  eyebrow,
+  title,
+  description,
+  groups,
+  ctaHref,
+  ctaLabel,
+}: CulturalPortalDonorsProps) {
   return (
     <section id="donors">
-      <p className="sec-label">{donors.eyebrow}</p>
-      <h2 className="sec-title">{donors.title}</h2>
-      <p className="sec-desc">{donors.description}</p>
-      <div className="donor-list">
-        {donors.tiers.map((tier) => (
-          <div key={tier.badge} className="donor-row reveal">
-            <DonorTierIcon stroke={tier.iconStroke} />
-            <div className={`donor-badge ${tier.badgeClass}`}>{tier.badge}</div>
-            <div className="donor-names">{tier.names}</div>
-          </div>
-        ))}
-      </div>
+      <p className="sec-label">{eyebrow}</p>
+      <h2 className="sec-title">{title}</h2>
+      <p className="sec-desc">{description}</p>
+      {groups.length === 0 ? (
+        <p className="sec-desc">Public patrons will appear here once published in the admin panel.</p>
+      ) : (
+        <div className="donor-list">
+          {groups.map((tier) => (
+            <div key={tier.id} className="donor-row reveal">
+              <DonorTierIcon stroke={ICON_STROKE[tier.icon] ?? '#CD7F32'} />
+              <div className={`donor-badge badge-${tier.icon}`}>{tier.label}</div>
+              <div className="donor-names">{tier.description}</div>
+            </div>
+          ))}
+        </div>
+      )}
       <div className="section-cta">
-        <Link href={donors.ctaHref} className="btn-gold">
-          {donors.ctaLabel}
+        <Link href={ctaHref} className="btn-gold">
+          {ctaLabel}
         </Link>
       </div>
     </section>

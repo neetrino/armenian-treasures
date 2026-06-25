@@ -1,7 +1,8 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import { DONATION_PAGE, DONATION_TRUST_ITEMS } from '@/lib/constants/donation-page';
+import type { DonationTrustItem } from '@/lib/constants/donation-page';
+import type { DonationPageContent } from '@/lib/queries/page-content';
+import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
 
 function StarIcon() {
   return (
@@ -28,22 +29,17 @@ function TrustIcon() {
   );
 }
 
-export function DonationClosingSections() {
-  const { quote, newsletter } = DONATION_PAGE;
-  const [submitted, setSubmitted] = useState(false);
+type DonationClosingSectionsProps = {
+  quote: DonationPageContent['page']['quote'];
+  newsletter: DonationPageContent['page']['newsletter'];
+  trustItems: DonationTrustItem[];
+};
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const email = new FormData(event.currentTarget).get('email');
-    if (typeof email === 'string' && email.trim()) {
-      setSubmitted(true);
-    }
-  }
-
+export function DonationClosingSections({ quote, newsletter, trustItems }: DonationClosingSectionsProps) {
   return (
     <>
       <div className="trust-row reveal" role="list" aria-label="Trust and security signals">
-        {DONATION_TRUST_ITEMS.map((item) => (
+        {trustItems.map((item) => (
           <div key={item.label} className="trust-item" role="listitem">
             <TrustIcon />
             {item.label}
@@ -61,23 +57,11 @@ export function DonationClosingSections() {
           <StarIcon />
           <h2>{newsletter.title}</h2>
           <p>{newsletter.description}</p>
-          {submitted ? (
-            <p className="nl-success">{newsletter.successMessage}</p>
-          ) : (
-            <form className="nl-form" onSubmit={handleSubmit}>
-              <input
-                className="nl-input"
-                type="email"
-                name="email"
-                placeholder={newsletter.placeholder}
-                required
-                aria-label="Email address for newsletter"
-              />
-              <button type="submit" className="nl-btn">
-                {newsletter.buttonLabel}
-              </button>
-            </form>
-          )}
+          <NewsletterSubscribeForm
+            placeholder={newsletter.placeholder}
+            submitLabel={newsletter.buttonLabel}
+            successMessage={newsletter.successMessage}
+          />
         </div>
       </div>
     </>

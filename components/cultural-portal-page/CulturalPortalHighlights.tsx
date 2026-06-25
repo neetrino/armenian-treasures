@@ -1,8 +1,19 @@
 import Link from 'next/link';
-import {
-  CULTURAL_PORTAL_HIGHLIGHTS,
-  type CulturalPortalHighlightIcon,
-} from '@/lib/constants/cultural-portal-page';
+import type { CulturalPortalHighlightIcon } from '@/lib/constants/cultural-portal-page';
+
+interface CulturalPortalHighlight {
+  num: string;
+  icon: CulturalPortalHighlightIcon;
+  tag: string;
+  title: string;
+  excerpt: string;
+  href: string;
+  featured?: boolean;
+}
+
+interface CulturalPortalHighlightsProps {
+  highlights: CulturalPortalHighlight[];
+}
 
 function HighlightIcon({ type }: { type: CulturalPortalHighlightIcon }) {
   if (type === 'geghard') {
@@ -48,26 +59,30 @@ function HighlightIcon({ type }: { type: CulturalPortalHighlightIcon }) {
   );
 }
 
-export function CulturalPortalHighlights() {
+export function CulturalPortalHighlights({ highlights }: CulturalPortalHighlightsProps) {
   return (
     <section>
       <p className="sec-label">Featured Treasures</p>
       <h2 className="sec-title">Stories Worth Discovering</h2>
-      <div className="hl-grid">
-        {CULTURAL_PORTAL_HIGHLIGHTS.map((item) => (
-          <Link
-            key={item.num}
-            href={item.href}
-            className={`hl-card reveal${item.featured ? ' featured' : ''}`}
-          >
-            <HighlightIcon type={item.icon} />
-            <span className="hl-tag">{item.tag}</span>
-            <div className="hl-title">{item.title}</div>
-            <p className="hl-excerpt">{item.excerpt}</p>
-            <div className="hl-num">{item.num}</div>
-          </Link>
-        ))}
-      </div>
+      {highlights.length === 0 ? (
+        <p className="sec-desc">Featured culture items will appear here once published in the admin panel.</p>
+      ) : (
+        <div className="hl-grid">
+          {highlights.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`hl-card reveal${item.featured ? ' featured' : ''}`}
+            >
+              <HighlightIcon type={item.icon} />
+              <span className="hl-tag">{item.tag}</span>
+              <div className="hl-title">{item.title}</div>
+              <p className="hl-excerpt">{item.excerpt}</p>
+              <div className="hl-num">{item.num}</div>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

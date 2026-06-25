@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
 import { DonationPage } from '@/components/donation-page/DonationPage';
-import { DONATION_PAGE } from '@/lib/constants/donation-page';
+import { getDonationPageContent } from '@/lib/queries/page-content';
 
-export const metadata: Metadata = {
-  title: DONATION_PAGE.metadata.title,
-  description: DONATION_PAGE.metadata.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getDonationPageContent();
+  return {
+    title: content.metadata.title,
+    description: content.metadata.description,
+  };
+}
 
-function DonateRoutePage() {
+async function DonateRoutePage() {
   return <DonationPage />;
 }
 

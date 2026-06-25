@@ -1,9 +1,6 @@
 import Link from 'next/link';
+import type { CulturalPortalPageContent } from '@/lib/queries/page-content';
 import type { PartnershipCategoryIconKey } from '@/lib/constants/home-partnership-section';
-import {
-  HOME_PARTNERSHIP_CATEGORIES,
-  HOME_PARTNERSHIP_SECTION,
-} from '@/lib/constants/cultural-portal-page';
 
 function PartnerIcon({ type }: { type: PartnershipCategoryIconKey }) {
   const props = {
@@ -83,14 +80,19 @@ function PartnerIcon({ type }: { type: PartnershipCategoryIconKey }) {
   }
 }
 
-export function CulturalPortalPartnership() {
+type CulturalPortalPartnershipProps = {
+  section: CulturalPortalPageContent['HOME_PARTNERSHIP_SECTION'];
+  categories: CulturalPortalPageContent['HOME_PARTNERSHIP_CATEGORIES'];
+};
+
+export function CulturalPortalPartnership({ section, categories }: CulturalPortalPartnershipProps) {
   return (
     <section id="partners">
-      <p className="sec-label">{HOME_PARTNERSHIP_SECTION.eyebrow}</p>
-      <h2 className="sec-title">{HOME_PARTNERSHIP_SECTION.title}</h2>
-      <p className="sec-desc">{HOME_PARTNERSHIP_SECTION.description}</p>
+      <p className="sec-label">{section.eyebrow}</p>
+      <h2 className="sec-title">{section.title}</h2>
+      <p className="sec-desc">{section.description}</p>
       <div className="partner-grid">
-        {HOME_PARTNERSHIP_CATEGORIES.map((category) => {
+        {categories.map((category) => {
           const isCta = category.variant === 'cta';
           const className = `partner-card reveal${isCta ? ' partner-cta' : ''}`;
 
@@ -112,8 +114,8 @@ export function CulturalPortalPartnership() {
         })}
       </div>
       <div className="section-cta">
-        <Link href={HOME_PARTNERSHIP_SECTION.ctaUrl} className="btn-outline">
-          {HOME_PARTNERSHIP_SECTION.ctaLabel}
+        <Link href={section.ctaUrl} className="btn-outline">
+          {section.ctaLabel}
         </Link>
       </div>
     </section>

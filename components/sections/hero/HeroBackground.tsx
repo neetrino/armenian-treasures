@@ -1,5 +1,7 @@
 'use client';
 
+import { resolveHomeHeroImageUrls } from '@/components/sections/hero/hero-image';
+
 const PARTICLES = [
   { top: '8%', left: '12%', size: 2, color: 'gold', opacity: 0.45, delay: '0s' },
   { top: '14%', left: '78%', size: 1.5, color: 'teal', opacity: 0.35, delay: '1.2s' },
@@ -17,12 +19,27 @@ const PARTICLES = [
   { top: '90%', left: '55%', size: 1, color: 'gold', opacity: 0.25, delay: '1.4s' },
 ] as const;
 
-export function HeroBackground() {
+interface HeroBackgroundProps {
+  desktopImage?: string | null;
+  mobileImage?: string | null;
+}
+
+export function HeroBackground({ desktopImage, mobileImage }: HeroBackgroundProps) {
+  const { desktop, mobile } = resolveHomeHeroImageUrls(desktopImage, mobileImage);
+
   return (
     <div
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-heritage-black"
     >
+      <picture>
+        <source media="(max-width: 767px)" srcSet={mobile} />
+        <img
+          src={desktop}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-35"
+        />
+      </picture>
       <div className="absolute inset-0 bg-heritage-radial" />
       <div className="absolute inset-0 bg-heritage-gold-glow" />
       <div className="absolute inset-0 bg-heritage-teal-glow" />

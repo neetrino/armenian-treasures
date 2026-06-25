@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { KHNDZORESK_TOURS } from '@/lib/constants/khndzoresk';
+import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 
 function PlayIcon() {
   return (
@@ -9,8 +9,12 @@ function PlayIcon() {
   );
 }
 
-export function KhndzoreskVirtualTour() {
-  const { featured, mini } = KHNDZORESK_TOURS;
+type KhndzoreskVirtualTourProps = {
+  tours: KhndzoreskPageContent['tours'];
+};
+
+export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
+  const { featured, mini } = tours;
 
   return (
     <section id="virtual-tour">

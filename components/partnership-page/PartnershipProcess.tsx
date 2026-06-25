@@ -1,6 +1,7 @@
-import { PARTNERSHIP_TIMELINE, PARTNERSHIP_VALUES } from '@/lib/constants/partnership-page';
+import { getPartnershipPageContent } from '@/lib/queries/page-content';
+import type { PartnershipPageContent } from '@/lib/queries/page-content';
 
-function ValueIcon({ type }: { type: (typeof PARTNERSHIP_VALUES)[number]['icon'] }) {
+function ValueIcon({ type }: { type: PartnershipPageContent['values'][number]['icon'] }) {
   if (type === 'shield-check') {
     return (
       <svg className="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
@@ -32,7 +33,9 @@ function ValueIcon({ type }: { type: (typeof PARTNERSHIP_VALUES)[number]['icon']
   );
 }
 
-export function PartnershipTimeline() {
+export async function PartnershipTimeline() {
+  const { timeline } = await getPartnershipPageContent();
+
   return (
     <section className="reveal">
       <div className="sec-label">Collaboration Lifecycle</div>
@@ -42,7 +45,7 @@ export function PartnershipTimeline() {
       </p>
       <div className="timeline-wrap">
         <div className="timeline-track">
-          {PARTNERSHIP_TIMELINE.map((step) => (
+          {timeline.map((step) => (
             <div key={step.num} className="tl-step reveal">
               <div className="tl-dot">{step.num}</div>
               <div>
@@ -57,7 +60,9 @@ export function PartnershipTimeline() {
   );
 }
 
-export function PartnershipValues() {
+export async function PartnershipValues() {
+  const { values } = await getPartnershipPageContent();
+
   return (
     <section className="reveal">
       <div className="sec-label">Why Elite Institutions Choose Us</div>
@@ -71,7 +76,7 @@ export function PartnershipValues() {
         reputation.
       </p>
       <div className="value-grid">
-        {PARTNERSHIP_VALUES.map((item) => (
+        {values.map((item) => (
           <div key={item.title} className="value-card reveal">
             <ValueIcon type={item.icon} />
             <div>

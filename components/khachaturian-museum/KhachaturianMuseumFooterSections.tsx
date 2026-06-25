@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { KHACHATURIAN_RELATED } from '@/lib/constants/khachaturian-museum';
+import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 
 export function KhachaturianMuseumVisit() {
   return (
@@ -123,14 +123,18 @@ export function KhachaturianMuseumVisit() {
   );
 }
 
-export function KhachaturianMuseumRelated() {
+type KhachaturianMuseumRelatedProps = {
+  related: KhachaturianPageContent['related'];
+};
+
+export function KhachaturianMuseumRelated({ related }: KhachaturianMuseumRelatedProps) {
   return (
     <section style={{ paddingTop: 48, paddingBottom: 64 }}>
       <p className="sec-label">Explore Further</p>
       <h2 className="sec-title">More Museum Heritage Sites</h2>
       <p className="sec-desc">Discover other digitally preserved Armenian cultural institutions and heritage sites.</p>
       <div className="related-grid">
-        {KHACHATURIAN_RELATED.map((site) => (
+        {related.map((site) => (
           <Link key={site.num} href={site.href} className="rel-card reveal">
             <div className="rel-num">{site.num}</div>
             <div>

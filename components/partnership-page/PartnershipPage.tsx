@@ -10,7 +10,7 @@ import { PartnershipStatsBar } from '@/components/partnership-page/PartnershipSt
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 
-export function PartnershipPage() {
+export async function PartnershipPage() {
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />

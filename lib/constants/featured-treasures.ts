@@ -17,6 +17,7 @@ export const FEATURED_TREASURES_SECTION = {
   title: 'STORIES WORTH DISCOVERING',
 } as const;
 
+/** Canonical homepage featured stories — matches Figma landing spec. */
 export const FEATURED_TREASURES: FeaturedTreasure[] = [
   {
     number: '01',
@@ -24,37 +25,37 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
     categories: ['HERITAGE SITE', 'ARCHITECTURE'],
     title: 'GEGHARD MONASTERY — CARVED INTO LIVING ROCK',
     description:
-      'A UNESCO World Heritage monastery where chapels and khachkars are hewn directly from the cliff — a masterpiece of medieval Armenian devotion.',
+      'A UNESCO World Heritage site where the monastery is literally hewn from the mountainside. Founded in the 4th century, Geghard enshrines the lance said to have wounded Christ — and an acoustic beauty that stills every visitor.',
     href: '/culture/architecture/churches',
     layout: 'tall',
   },
   {
     number: '02',
     icon: 'music',
-    categories: ['MUSIC', 'PEOPLE'],
-    title: 'KOMITAS — THE SOUL OF ARMENIAN MUSIC',
+    categories: ['MUSIC', 'TRADITION'],
+    title: 'THE DUDUK — SOUL OF A NATION',
     description:
-      'The priest-composer who rescued thousands of folk melodies from oblivion and gave Armenian music its eternal voice.',
+      'UNESCO-listed intangible heritage, the apricot-wood wind instrument has voiced Armenian sorrow and joy for over 1,500 years.',
     href: '/culture/heritage/music',
     layout: 'top-mid',
   },
   {
     number: '03',
     icon: 'kings',
-    categories: ['HISTORY', 'PEOPLE'],
-    title: 'TIGRANES THE GREAT — EMPEROR OF KINGS',
+    categories: ['HISTORY', 'KINGS'],
+    title: "TIGRANES THE GREAT'S EMPIRE",
     description:
-      'The Artaxiad ruler who forged one of antiquity’s greatest empires and placed Armenian power at the heart of the Near East.',
+      'At its zenith, the Armenian Empire stretched from the Caspian to the Mediterranean — the largest state in the Roman era.',
     href: '/culture/people',
     layout: 'top-right',
   },
   {
     number: '04',
     icon: 'foodDrink',
-    categories: ['CULTURE', 'GASTRONOMY'],
-    title: 'ARMENIAN WINE — 6,100 YEARS OF TRADITION',
+    categories: ['FOOD & DRINK', 'DISCOVERY'],
+    title: "ARENI-1: WORLD'S OLDEST WINERY",
     description:
-      'From the Areni cave discovery to village karases — the world’s oldest continuous winemaking lineage, still poured today.',
+      "A 6,100-year-old winery discovered in Armenia's Vayots Dzor — the earliest evidence of wine production anywhere on Earth.",
     href: '/culture/heritage/food',
     layout: 'bottom-mid',
   },

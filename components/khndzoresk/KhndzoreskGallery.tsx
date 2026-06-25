@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { KHNDZORESK_GALLERY } from '@/lib/constants/khndzoresk';
+import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 
 type GalleryItem = {
   src: string;
@@ -37,7 +37,11 @@ function GalleryGrid({
   );
 }
 
-export function KhndzoreskGallery() {
+type KhndzoreskGalleryProps = {
+  gallery: KhndzoreskPageContent['gallery'];
+};
+
+export function KhndzoreskGallery({ gallery }: KhndzoreskGalleryProps) {
   return (
     <section id="gallery">
       <p className="sec-label">Photography Archive</p>
@@ -63,9 +67,9 @@ export function KhndzoreskGallery() {
             </label>
           </div>
           <div className="gallery-panels">
-            <GalleryGrid items={KHNDZORESK_GALLERY.now} variant="now" />
-            <GalleryGrid items={KHNDZORESK_GALLERY.hist} variant="hist" />
-            <GalleryGrid items={KHNDZORESK_GALLERY.fut} variant="fut" />
+            <GalleryGrid items={gallery.now} variant="now" />
+            <GalleryGrid items={gallery.hist} variant="hist" />
+            <GalleryGrid items={gallery.fut} variant="fut" />
           </div>
         </div>
       </div>

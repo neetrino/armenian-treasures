@@ -12,29 +12,32 @@ import { NationalGalleryNewsletter } from '@/components/national-gallery-armenia
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { SvgDefs } from '@/components/national-gallery-armenia/site-icons';
+import { getNationalGalleryPageContent } from '@/lib/queries/page-content';
 
-export function NationalGalleryPage() {
+export async function NationalGalleryPage() {
+  const content = await getNationalGalleryPageContent();
+
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <NationalGalleryHero />
-      <NationalGalleryStatsBar />
-      <NationalGalleryAbout />
+      <NationalGalleryHero imgBase={content.imgBase} />
+      <NationalGalleryStatsBar stats={content.stats} />
+      <NationalGalleryAbout facts={content.facts} />
       <KhndzoreskDivider />
-      <NationalGalleryCollection />
+      <NationalGalleryCollection collections={content.collections} />
       <KhndzoreskDivider />
-      <NationalGalleryArtists />
+      <NationalGalleryArtists artists={content.artists} />
       <KhndzoreskDivider />
       <NationalGalleryVirtualTour />
       <KhndzoreskDivider />
-      <NationalGalleryExhibitions />
+      <NationalGalleryExhibitions exhibitions={content.exhibitions} />
       <KhndzoreskDivider />
-      <NationalGalleryGallery />
+      <NationalGalleryGallery gallery={content.gallery} />
       <KhndzoreskDivider />
-      <NationalGalleryVisit />
+      <NationalGalleryVisit tickets={content.tickets} />
       <KhndzoreskDivider />
-      <NationalGalleryRelated />
+      <NationalGalleryRelated related={content.related} />
       <NationalGalleryNewsletter />
     </div>
   );

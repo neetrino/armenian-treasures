@@ -48,7 +48,7 @@ export function UpcomingProjectCard({ project }: UpcomingProjectCardProps) {
         </p>
 
         <p className="mt-5 inline-flex items-center gap-2 font-cinzel text-[9px] font-extrabold uppercase tracking-[0.18em] text-heritage-teal sm:text-[10px]">
-          <span className="h-1 w-1 rounded-full bg-heritage-teal shadow-[0_0_8px_rgba(39,198,200,0.65)]" aria-hidden />
+          <span aria-hidden>▸</span>
           {project.timeline}
         </p>
       </div>

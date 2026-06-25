@@ -1,7 +1,11 @@
 import Link from 'next/link';
-import { NGA_RELATED, NGA_TICKETS } from '@/lib/constants/national-gallery-armenia';
+import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 
-export function NationalGalleryVisit() {
+type NationalGalleryVisitProps = {
+  tickets: NationalGalleryPageContent['tickets'];
+};
+
+export function NationalGalleryVisit({ tickets }: NationalGalleryVisitProps) {
   return (
     <section id="visit">
       <p className="sec-label">Plan Your Visit</p>
@@ -11,7 +15,7 @@ export function NationalGalleryVisit() {
         Russian, English, and French.
       </p>
       <div className="ticket-grid">
-        {NGA_TICKETS.map((ticket) => (
+        {tickets.map((ticket) => (
           <div key={ticket.label} className="ticket-card reveal">
             <div className="ticket-label">{ticket.label}</div>
             <div className={`ticket-title${'isHours' in ticket && ticket.isHours ? ' ticket-title-sm' : ''}`}>
@@ -132,14 +136,18 @@ export function NationalGalleryVisit() {
   );
 }
 
-export function NationalGalleryRelated() {
+type NationalGalleryRelatedProps = {
+  related: NationalGalleryPageContent['related'];
+};
+
+export function NationalGalleryRelated({ related }: NationalGalleryRelatedProps) {
   return (
     <section style={{ paddingTop: 48, paddingBottom: 64 }}>
       <p className="sec-label">Explore Further</p>
       <h2 className="sec-title">More Museum Heritage Sites</h2>
       <p className="sec-desc">Discover other digitally preserved Armenian cultural institutions and heritage sites.</p>
       <div className="related-grid">
-        {NGA_RELATED.map((site) => (
+        {related.map((site) => (
           <Link key={site.num} href={site.href} className="rel-card reveal">
             <div className="rel-num">{site.num}</div>
             <div>
