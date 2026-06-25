@@ -1,6 +1,14 @@
 import Link from 'next/link';
-import type { HomeAboutCardIconKey } from '@/lib/constants/home-about-section';
-import { CULTURAL_PORTAL_ABOUT } from '@/lib/constants/cultural-portal-page';
+import type { HomeAboutCard, HomeAboutCardIconKey } from '@/lib/constants/home-about-section';
+
+interface CulturalPortalAboutProps {
+  section: {
+    eyebrow: string;
+    title: string;
+    description: string;
+  };
+  cards: HomeAboutCard[];
+}
 
 function AboutIcon({ type }: { type: HomeAboutCardIconKey }) {
   const props = {
@@ -52,16 +60,14 @@ function AboutIcon({ type }: { type: HomeAboutCardIconKey }) {
   }
 }
 
-export function CulturalPortalAbout() {
-  const about = CULTURAL_PORTAL_ABOUT;
-
+export function CulturalPortalAbout({ section, cards }: CulturalPortalAboutProps) {
   return (
     <section id="about">
-      <p className="sec-label">{about.eyebrow}</p>
-      <h2 className="sec-title">{about.title}</h2>
-      <p className="sec-desc">{about.description}</p>
+      <p className="sec-label">{section.eyebrow}</p>
+      <h2 className="sec-title">{section.title}</h2>
+      <p className="sec-desc">{section.description}</p>
       <div className="about-grid">
-        {about.cards.map((card) => (
+        {cards.map((card) => (
           <Link key={card.title} href={card.href} className="about-card reveal">
             <AboutIcon type={card.icon} />
             <div className="about-title">{card.title}</div>

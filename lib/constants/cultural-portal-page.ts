@@ -158,7 +158,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'High-resolution digitisation of over 2,000 Armenian manuscripts from the Matenadaran collection, freely searchable globally.',
     date: 'Q3 2026',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
   {
     status: 'dev',
@@ -168,7 +168,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'A six-part cinematic series exploring the most significant sites and stories, co-produced with international broadcasters.',
     date: 'Q4 2026',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
   {
     status: 'plan',
@@ -178,7 +178,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'Point your phone at a ruin and watch it restored to its original grandeur in real time through augmented reality.',
     date: '2027',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
   {
     status: 'soon',
@@ -188,7 +188,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'Curriculum-aligned materials for Armenian schools and diaspora communities, bringing history alive through interactive storytelling.',
     date: 'Q2 2026',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
   {
     status: 'dev',
@@ -198,7 +198,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'Connecting the 11-million-strong global Armenian diaspora with cultural events, heritage research, and community projects.',
     date: 'Q1 2027',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
   {
     status: 'plan',
@@ -208,7 +208,7 @@ export const CULTURAL_PORTAL_PROJECTS: CulturalPortalProject[] = [
     description:
       'Partnering with leading universities for new excavations of understudied Urartian and Hellenistic sites across the highlands.',
     date: '2027–2028',
-    href: '/#upcoming-projects',
+    href: '/#projects',
   },
 ];
 

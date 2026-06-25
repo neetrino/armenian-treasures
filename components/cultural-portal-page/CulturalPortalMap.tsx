@@ -1,5 +1,23 @@
 import Link from 'next/link';
-import { CULTURAL_PORTAL_MAP } from '@/lib/constants/cultural-portal-page';
+import type { HeritageMapLegendItem } from '@/lib/constants/heritage-map-section';
+
+interface CulturalPortalMapPin {
+  top: string;
+  left: string;
+  tone: 'teal' | 'gold';
+  delay: string;
+}
+
+interface CulturalPortalMapProps {
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaHref: string;
+  placeholderTitle: string;
+  placeholderSubtitle: string;
+  pins: CulturalPortalMapPin[];
+  legend: HeritageMapLegendItem[];
+}
 
 function MapPinIcon() {
   return (
@@ -18,19 +36,26 @@ function MapPinIcon() {
   );
 }
 
-export function CulturalPortalMap() {
-  const map = CULTURAL_PORTAL_MAP;
-
+export function CulturalPortalMap({
+  eyebrow,
+  title,
+  description,
+  ctaHref,
+  placeholderTitle,
+  placeholderSubtitle,
+  pins,
+  legend,
+}: CulturalPortalMapProps) {
   return (
     <section id="map" className="map-section">
       <div className="map-section-inner">
-        <p className="sec-label">{map.eyebrow}</p>
-        <h2 className="sec-title">{map.title}</h2>
-        <p className="sec-desc">{map.description}</p>
-        <Link href={map.ctaHref} className="map-wrap reveal">
+        <p className="sec-label">{eyebrow}</p>
+        <h2 className="sec-title">{title}</h2>
+        <p className="sec-desc">{description}</p>
+        <Link href={ctaHref} className="map-wrap reveal">
           <div className="map-area">
             <div className="map-pins" aria-hidden>
-              {map.pins.map((pin) => (
+              {pins.map((pin) => (
                 <div
                   key={`${pin.top}-${pin.left}`}
                   className={`pin ${pin.tone}`}
@@ -40,12 +65,12 @@ export function CulturalPortalMap() {
             </div>
             <div className="map-label">
               <MapPinIcon />
-              <p>{map.placeholderTitle}</p>
-              <span>{map.placeholderSubtitle}</span>
+              <p>{placeholderTitle}</p>
+              <span>{placeholderSubtitle}</span>
             </div>
           </div>
           <div className="map-legend">
-            {map.legend.map((item) => (
+            {legend.map((item) => (
               <div key={item.label} className="leg">
                 <div className="leg-dot" style={{ background: item.color }} />
                 {item.label}

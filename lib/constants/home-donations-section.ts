@@ -1,37 +1,38 @@
 export type DonationsPatronIconKey = 'gold' | 'silver' | 'bronze';
 
 export interface DonationsPatronTier {
+  id: DonationsPatronIconKey;
   label: string;
   icon: DonationsPatronIconKey;
   description: string;
 }
 
 export const HOME_DONATIONS_SECTION = {
-  eyebrow: 'DONATIONS',
+  eyebrow: 'DONATORS',
   title: 'THOSE WHO MAKE IT POSSIBLE',
   description:
-    'Every flight, scan and published entry is made possible by patrons who believe Armenian heritage belongs to the world — and to the future.',
+    'Armenian Treasures is funded by individuals and organisations who believe culture is humanity\u2019s most precious inheritance.',
   ctaLabel: 'SUPPORT OUR MISSION',
-  ctaUrl: '/partnership',
+  ctaUrl: '/donate',
 } as const;
 
 export const HOME_DONATIONS_PATRONS: DonationsPatronTier[] = [
   {
-    label: 'GOLD PATRONS',
+    id: 'gold',
+    label: '✦ GOLD PATRONS',
     icon: 'gold',
-    description:
-      'Founding members and major benefactors — names listed on the Heritage Site portal and in our annual reports.',
+    description: 'Founding members — names listed at launch of the portal',
   },
   {
-    label: 'SILVER PATRONS',
+    id: 'silver',
+    label: '◈ SILVER PATRONS',
     icon: 'silver',
-    description:
-      'Sustaining partners who underwrite field seasons, digitisation campaigns and open-access publishing.',
+    description: 'Supporting members — acknowledged in all publications',
   },
   {
-    label: 'BRONZE PATRONS',
+    id: 'bronze',
+    label: '◇ BRONZE PATRONS',
     icon: 'bronze',
-    description:
-      'Community supporters whose monthly gifts keep the archive online, searchable and free for everyone.',
+    description: 'Community supporters — listed in the annual report',
   },
 ];

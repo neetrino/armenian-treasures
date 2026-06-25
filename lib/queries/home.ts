@@ -10,7 +10,7 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   heroHighlight: 'TREASURES',
   heroDescription:
     "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
-  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.png'),
+  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.webp'),
   heroMobileImage: null,
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
@@ -46,12 +46,23 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
     'Every donation funds drone flights, 3D scans and the open archive that will outlast all of us.',
 };
 
+function resolveHomeContentAssets(content: PublicHomeContentDTO): PublicHomeContentDTO {
+  return {
+    ...content,
+    heroImage: content.heroImage ? resolvePublicAssetUrl(content.heroImage) : null,
+    heroMobileImage: content.heroMobileImage
+      ? resolvePublicAssetUrl(content.heroMobileImage)
+      : null,
+  };
+}
+
 async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
   try {
     const row = await prisma.homeContent.findFirst();
-    return row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
+    const content = row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
+    return resolveHomeContentAssets(content);
   } catch {
-    return HOME_CONTENT_FALLBACK;
+    return resolveHomeContentAssets(HOME_CONTENT_FALLBACK);
   }
 }
 

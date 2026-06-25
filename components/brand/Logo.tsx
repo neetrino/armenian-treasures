@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
 
-const HEADER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.png');
+const HEADER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.webp');
 
 interface LogoProps {
   className?: string;
@@ -22,8 +22,10 @@ function LogoMark({ isDark, compact }: { isDark: boolean; compact?: boolean }) {
         width={700}
         height={923}
         className={cn(
-          'h-auto w-auto shrink-0 object-contain',
-          compact ? 'max-h-10 sm:max-h-11 lg:max-h-12' : 'max-h-16 sm:max-h-[4.5rem]',
+          'h-auto w-auto shrink-0 object-contain transition-[filter] duration-300',
+          compact
+            ? 'max-h-[52px] drop-shadow-[0_0_6px_rgba(42,191,191,0.25)] group-hover:drop-shadow-[0_0_14px_rgba(42,191,191,0.55)]'
+            : 'max-h-16 sm:max-h-[4.5rem]',
         )}
         priority
       />

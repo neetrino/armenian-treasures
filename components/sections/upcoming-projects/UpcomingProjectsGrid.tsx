@@ -1,12 +1,15 @@
 import { UPCOMING_PROJECTS } from '@/lib/constants/upcoming-projects';
+import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { UpcomingProjectCard } from '@/components/sections/upcoming-projects/UpcomingProjectCard';
 
 export function UpcomingProjectsGrid() {
   return (
-    <div className="upcoming-projects-grid">
+    <Stagger className="upcoming-projects-grid">
       {UPCOMING_PROJECTS.map((project) => (
-        <UpcomingProjectCard key={project.number} project={project} />
+        <StaggerItem key={project.number} className="h-full">
+          <UpcomingProjectCard project={project} />
+        </StaggerItem>
       ))}
-    </div>
+    </Stagger>
   );
 }

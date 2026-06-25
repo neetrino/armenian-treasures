@@ -88,6 +88,57 @@ export const getMapItems = unstable_cache(fetchMapItems, ['culture-map-items'], 
   revalidate: 60,
 });
 
+async function fetchFeaturedCultureItems(limit = 4): Promise<PublicCultureItemDetailDTO[]> {
+  try {
+    const rows = await prisma.cultureItem.findMany({
+      where: { status: 'PUBLISHED' },
+      include: {
+        menuItem: {
+          include: { parent: true },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      take: limit,
+    });
+    return rows.map(toPublicCultureItemDetail);
+  } catch {
+    return [];
+  }
+}
+
+export const getFeaturedCultureItems = unstable_cache(
+  fetchFeaturedCultureItems,
+  ['culture-items-featured'],
+  { tags: ['culture-items'], revalidate: 60 },
+);
+
+async function fetchVirtualTourItems(limit = 4): Promise<PublicCultureItemDetailDTO[]> {
+  try {
+    const rows = await prisma.cultureItem.findMany({
+      where: {
+        status: 'PUBLISHED',
+        tourUrl: { not: null },
+      },
+      include: {
+        menuItem: {
+          include: { parent: true },
+        },
+      },
+      orderBy: [{ order: 'asc' }, { title: 'asc' }],
+      take: limit,
+    });
+    return rows.map(toPublicCultureItemDetail);
+  } catch {
+    return [];
+  }
+}
+
+export const getVirtualTourItems = unstable_cache(
+  fetchVirtualTourItems,
+  ['culture-items-virtual-tours'],
+  { tags: ['culture-items'], revalidate: 60 },
+);
+
 export async function getPublishedCultureItemSlugs(): Promise<
   { slug: string; updatedAt: Date }[]
 > {

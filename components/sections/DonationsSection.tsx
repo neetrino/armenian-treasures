@@ -7,7 +7,7 @@ import { HeritageCrossOrnament } from '@/components/sections/shared/HeritageCros
 export function DonationsSection() {
   return (
     <section
-      id="donators"
+      id="donors"
       className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(3rem,5vw,4.5rem)] pt-[clamp(4.5rem,6vw,6.5rem)] sm:px-6"
       aria-labelledby="donations-heading"
     >

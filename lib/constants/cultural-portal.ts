@@ -74,7 +74,7 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   withIconSource({
     icon: 'mythology',
     title: 'Mythology',
-    description: 'Gods, rituals & cosmological epics',
+    description: 'Gods, titans & cosmological epics',
     href: '/culture/legends',
   }),
   withIconSource({

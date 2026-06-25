@@ -5,18 +5,25 @@ import { PRIMARY_LINKS } from './primary-links';
 import { AboutDropdown } from './AboutDropdown';
 import { CultureMegaMenu } from './CultureMegaMenu';
 import { ProjectsDropdown } from './ProjectsDropdown';
+import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
+import type { NavDropdownLink } from './primary-links';
 
-export function DesktopNav() {
+interface DesktopNavProps {
+  cultureMegaMenu: MegaMenuColumn[];
+  projectsMenu: NavDropdownLink[];
+}
+
+export function DesktopNav({ cultureMegaMenu, projectsMenu }: DesktopNavProps) {
   return (
     <nav
       aria-label="Primary"
-      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-[clamp(1rem,1.45vw,1.75rem)] lg:ml-5 xl:ml-6 lg:flex"
+      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-stretch justify-start lg:ml-5 xl:ml-6 lg:flex"
     >
       <NavLink href={PRIMARY_LINKS[0]!.href} homeSectionId={PRIMARY_LINKS[0]!.homeSectionId}>
         {PRIMARY_LINKS[0]!.label}
       </NavLink>
-      <CultureMegaMenu />
-      <ProjectsDropdown />
+      <CultureMegaMenu columns={cultureMegaMenu} />
+      <ProjectsDropdown items={projectsMenu} />
       {PRIMARY_LINKS.slice(1).map((link) => (
         <NavLink key={link.href} href={link.href} homeSectionId={link.homeSectionId}>
           {link.label}

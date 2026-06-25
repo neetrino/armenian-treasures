@@ -1,6 +1,6 @@
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-export const HERO_HOME_IMAGE = resolvePublicAssetUrl('/images/hero/home-hero.png');
+export const HERO_HOME_IMAGE = resolvePublicAssetUrl('/images/hero/home-hero.webp');
 
 /** @deprecated Use HERO_HOME_IMAGE for home hero; kept for inner-page heroes. */
 export const HERO_WEBP_DEFAULT = resolvePublicAssetUrl('/images/hero/home-hero.webp');

@@ -5,7 +5,7 @@ import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { PublicSiteSettingsDTO } from '@/lib/dto';
 import { cn } from '@/lib/utils';
 
-const FOOTER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.png');
+const FOOTER_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.webp');
 
 interface FooterBrandProps {
   settings: PublicSiteSettingsDTO;

@@ -40,7 +40,7 @@ export function TechnologySectionDecorations() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_45%_at_50%_0%,rgba(255,250,242,0.16)_0%,transparent_55%)]" />
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/section-heritage-bg.png')}
+        src={resolvePublicAssetUrl('/images/technology/section-heritage-bg.webp')}
         alt=""
         width={480}
         height={480}
@@ -52,7 +52,7 @@ export function TechnologySectionDecorations() {
       <ManuscriptLines className="absolute right-[10%] top-[26%] h-16 w-28 text-ink-muted/20 sm:h-20 sm:w-32" />
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/ornament-left.png')}
+        src={resolvePublicAssetUrl('/images/technology/ornament-left.webp')}
         alt=""
         width={320}
         height={420}
@@ -60,7 +60,7 @@ export function TechnologySectionDecorations() {
       />
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/ornament-right.png')}
+        src={resolvePublicAssetUrl('/images/technology/ornament-right.webp')}
         alt=""
         width={300}
         height={380}
@@ -68,7 +68,7 @@ export function TechnologySectionDecorations() {
       />
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/mountain-silhouette.png')}
+        src={resolvePublicAssetUrl('/images/technology/mountain-silhouette.webp')}
         alt=""
         width={286}
         height={120}

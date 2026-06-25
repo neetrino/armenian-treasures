@@ -1,7 +1,7 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
 import { DONATION_PAGE, DONATION_TRUST_ITEMS } from '@/lib/constants/donation-page';
+import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
 
 function StarIcon() {
   return (
@@ -30,15 +30,6 @@ function TrustIcon() {
 
 export function DonationClosingSections() {
   const { quote, newsletter } = DONATION_PAGE;
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const email = new FormData(event.currentTarget).get('email');
-    if (typeof email === 'string' && email.trim()) {
-      setSubmitted(true);
-    }
-  }
 
   return (
     <>
@@ -61,23 +52,11 @@ export function DonationClosingSections() {
           <StarIcon />
           <h2>{newsletter.title}</h2>
           <p>{newsletter.description}</p>
-          {submitted ? (
-            <p className="nl-success">{newsletter.successMessage}</p>
-          ) : (
-            <form className="nl-form" onSubmit={handleSubmit}>
-              <input
-                className="nl-input"
-                type="email"
-                name="email"
-                placeholder={newsletter.placeholder}
-                required
-                aria-label="Email address for newsletter"
-              />
-              <button type="submit" className="nl-btn">
-                {newsletter.buttonLabel}
-              </button>
-            </form>
-          )}
+          <NewsletterSubscribeForm
+            placeholder={newsletter.placeholder}
+            submitLabel={newsletter.buttonLabel}
+            successMessage={newsletter.successMessage}
+          />
         </div>
       </div>
     </>

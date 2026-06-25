@@ -1,9 +1,19 @@
 import Link from 'next/link';
-import {
-  CULTURAL_PORTAL_PROJECTS,
-  CULTURAL_PORTAL_PROJECTS_SECTION,
-  type CulturalPortalProjectIcon,
-} from '@/lib/constants/cultural-portal-page';
+import type { CulturalPortalProjectIcon } from '@/lib/constants/cultural-portal-page';
+
+interface CulturalPortalProject {
+  title: string;
+  description: string;
+  href: string;
+  status: string;
+  statusLabel: string;
+  date: string;
+  icon: CulturalPortalProjectIcon;
+}
+
+interface CulturalPortalProjectsProps {
+  projects: CulturalPortalProject[];
+}
 
 function ProjectIcon({ type }: { type: CulturalPortalProjectIcon }) {
   const props = {
@@ -73,23 +83,30 @@ function ProjectIcon({ type }: { type: CulturalPortalProjectIcon }) {
   }
 }
 
-export function CulturalPortalProjects() {
+export function CulturalPortalProjects({ projects }: CulturalPortalProjectsProps) {
   return (
     <section id="projects">
-      <p className="sec-label">{CULTURAL_PORTAL_PROJECTS_SECTION.eyebrow}</p>
-      <h2 className="sec-title">{CULTURAL_PORTAL_PROJECTS_SECTION.title}</h2>
-      <p className="sec-desc">{CULTURAL_PORTAL_PROJECTS_SECTION.description}</p>
-      <div className="proj-grid">
-        {CULTURAL_PORTAL_PROJECTS.map((project) => (
-          <Link key={project.title} href={project.href} className="proj-card reveal">
-            <div className={`proj-status status-${project.status}`}>{project.statusLabel}</div>
-            <ProjectIcon type={project.icon} />
-            <div className="proj-title">{project.title}</div>
-            <p className="proj-desc">{project.description}</p>
-            <div className="proj-date">▸ {project.date}</div>
-          </Link>
-        ))}
-      </div>
+      <p className="sec-label">Upcoming Projects</p>
+      <h2 className="sec-title">What We Are Building</h2>
+      <p className="sec-desc">
+        Landmark initiatives to digitise, broadcast, educate, and connect Armenian heritage with the
+        global community.
+      </p>
+      {projects.length === 0 ? (
+        <p className="sec-desc">Projects will appear here once published in the admin panel.</p>
+      ) : (
+        <div className="proj-grid">
+          {projects.map((project) => (
+            <Link key={project.title} href={project.href} className="proj-card reveal">
+              <div className={`proj-status status-${project.status}`}>{project.statusLabel}</div>
+              <ProjectIcon type={project.icon} />
+              <div className="proj-title">{project.title}</div>
+              <p className="proj-desc">{project.description}</p>
+              <div className="proj-date">▸ {project.date}</div>
+            </Link>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

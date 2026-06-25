@@ -6,7 +6,7 @@ import { UpcomingProjectsOrnament } from '@/components/sections/upcoming-project
 export function UpcomingProjectsSection() {
   return (
     <section
-      id="upcoming-projects"
+      id="projects"
       className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(6.875rem,9vw,8.75rem)] pt-[clamp(4.5rem,6vw,6.5rem)] sm:px-6"
       aria-labelledby="upcoming-projects-heading"
     >

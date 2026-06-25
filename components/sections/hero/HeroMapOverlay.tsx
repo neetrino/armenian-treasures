@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-const HERITAGE_MAP_IMAGE = resolvePublicAssetUrl('/images/hero/heritage-map.png');
+const HERITAGE_MAP_IMAGE = resolvePublicAssetUrl('/images/hero/heritage-map.webp');
 
 export function HeroMapOverlay() {
   return (

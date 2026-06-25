@@ -1,11 +1,11 @@
 export const HOME_SECTION_IDS = {
   virtualMuseum: 'virtual-museum',
-  culturalPortal: 'cultural-portal',
-  heritageMap: 'heritage-map',
-  upcomingProjects: 'upcoming-projects',
-  partnership: 'partnership',
-  donators: 'donators',
-  aboutUs: 'about-us',
+  culturalPortal: 'cultural',
+  heritageMap: 'map',
+  upcomingProjects: 'projects',
+  partnership: 'partners',
+  donators: 'donors',
+  aboutUs: 'about',
 } as const;
 
 export type HomeSectionId = (typeof HOME_SECTION_IDS)[keyof typeof HOME_SECTION_IDS];

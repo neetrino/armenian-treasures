@@ -1,19 +1,16 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { useActionState } from 'react';
 import { PARTNERSHIP_SECTORS } from '@/lib/constants/partnership-page';
+import {
+  submitPartnershipInquiry,
+  type PartnershipInquiryActionState,
+} from '@/app/(public)/partnership/actions';
+
+const INITIAL_STATE: PartnershipInquiryActionState = { status: 'idle' };
 
 export function PartnershipInquiryForm() {
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const email = new FormData(form).get('official-email');
-    if (typeof email === 'string' && email.trim()) {
-      setSubmitted(true);
-    }
-  }
+  const [state, formAction, pending] = useActionState(submitPartnershipInquiry, INITIAL_STATE);
 
   return (
     <section id="partner-form" className="reveal">
@@ -34,13 +31,11 @@ export function PartnershipInquiryForm() {
               organisations of all scales, sectors, and geographies.
             </p>
           </div>
-          {submitted ? (
-            <div className="form-success">
-              ✦ &nbsp; Your credentials have been received. Our Partnerships team will contact you within 5 business
-              days.
-            </div>
+          {state.status === 'success' ? (
+            <div className="form-success">{state.message}</div>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form action={formAction} noValidate>
+              <input type="hidden" name="website" value="" tabIndex={-1} autoComplete="off" />
               <div className="form-grid">
                 <div className="form-group">
                   <label className="form-label" htmlFor="inst-name">
@@ -112,9 +107,14 @@ export function PartnershipInquiryForm() {
                   />
                 </div>
               </div>
+              {state.status === 'error' && state.message ? (
+                <p className="form-note" role="alert">
+                  {state.message}
+                </p>
+              ) : null}
               <div className="form-actions">
-                <button type="submit" className="btn-gold">
-                  Submit Credentials
+                <button type="submit" className="btn-gold" disabled={pending}>
+                  {pending ? 'Submitting…' : 'Submit Credentials'}
                 </button>
                 <p className="form-note">
                   Your submission is handled under strict institutional confidentiality. We do not share enquiry data

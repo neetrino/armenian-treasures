@@ -5,16 +5,17 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
-import { CULTURE_MEGA_MENU } from '@/lib/navigation/culture-mega-menu';
+import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import {
   ABOUT_MENU,
   PRIMARY_LINKS,
-  PROJECTS_MENU,
+  navDropdownLinkKey,
+  type NavDropdownLink,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
 import { MobileSectionLink } from './MobileSectionLink';
 import { useHomeSectionNav } from './useHomeSectionNav';
-import { HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
+import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import {
   isAboutNavActive,
   isCultureNavActive,
@@ -28,6 +29,8 @@ import type { MenuNode } from '@/lib/culture-menu';
 
 interface MobileMenuProps {
   tree: MenuNode[];
+  cultureMegaMenu: MegaMenuColumn[];
+  projectsMenu: NavDropdownLink[];
 }
 
 const MOBILE_SECTION =
@@ -42,7 +45,7 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree }: MobileMenuProps) {
+export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: MobileMenuProps) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
@@ -76,19 +79,19 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
 
   const cultureNav = useHomeSectionNav({
     homeSectionId: HOME_SECTION_IDS.culturalPortal,
-    fallbackHref: '/culture',
+    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.culturalPortal),
     onScroll: close,
   });
 
   const projectsNav = useHomeSectionNav({
     homeSectionId: HOME_SECTION_IDS.upcomingProjects,
-    fallbackHref: '/projects',
+    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
     onScroll: close,
   });
 
   const aboutNav = useHomeSectionNav({
     homeSectionId: HOME_SECTION_IDS.aboutUs,
-    fallbackHref: '/about/mission',
+    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.aboutUs),
     onScroll: close,
   });
 
@@ -165,7 +168,7 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
                   }}
                   active={isCultureNavActive(pathname)}
                 >
-                  {CULTURE_MEGA_MENU.map((column) => (
+                  {cultureMegaMenu.map((column) => (
                     <div key={column.heading} className="border-b border-[rgba(214,184,90,0.1)] py-2 last:border-b-0">
                       <button
                         type="button"
@@ -216,8 +219,8 @@ export function MobileMenu({ tree: _tree }: MobileMenuProps) {
                   active={isProjectsNavActive(pathname)}
                 >
                   <ul>
-                    {PROJECTS_MENU.map((item) => (
-                      <li key={item.href}>
+                    {projectsMenu.map((item) => (
+                      <li key={navDropdownLinkKey(item)}>
                         <Link href={item.href} onClick={close} className={mobileLinkClass(pathname, item.href)}>
                           {item.label}
                         </Link>

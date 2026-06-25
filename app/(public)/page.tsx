@@ -3,13 +3,17 @@ import type { Metadata } from 'next';
 import { HeroHome } from '@/components/sections/HeroHome';
 import { HomeHeritageSections } from '@/components/sections/HomeHeritageSections';
 import { HOME_HERO_COPY, HOME_HERO_STATS } from '@/lib/constants/home-hero';
+import { getHomeContent } from '@/lib/queries/home';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: 'Armenian Treasures',
-  description: HOME_HERO_COPY.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await getHomeContent();
+  return {
+    title: 'Armenian Treasures',
+    description: home.heroDescription,
+  };
+}
 
 function HomePage() {
   return (

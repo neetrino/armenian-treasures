@@ -1,6 +1,6 @@
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-const HERO_VISUAL_SRC = resolvePublicAssetUrl('/images/mission/foundation-hero-visual.png');
+const HERO_VISUAL_SRC = resolvePublicAssetUrl('/images/mission/foundation-hero-visual.webp');
 
 const BACKGROUND_STYLE = {
   backgroundImage: `url(${HERO_VISUAL_SRC})`,

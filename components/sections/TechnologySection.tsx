@@ -48,7 +48,7 @@ function TechnologySectionHeader() {
       </h2>
 
       <Image
-        src={resolvePublicAssetUrl('/images/technology/divider-decoration.png')}
+        src={resolvePublicAssetUrl('/images/technology/divider-decoration.webp')}
         alt=""
         width={471}
         height={120}

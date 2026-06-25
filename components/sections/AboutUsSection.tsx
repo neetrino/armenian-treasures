@@ -5,7 +5,7 @@ import { AboutUsGrid } from '@/components/sections/about-us/AboutUsGrid';
 export function AboutUsSection() {
   return (
     <section
-      id="about-us"
+      id="about"
       className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(4.5rem,6vw,6.5rem)] pt-[clamp(1.5rem,2vw,2rem)] sm:px-6"
       aria-labelledby="about-us-heading"
     >

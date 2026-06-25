@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { getMapItems } from '@/lib/queries/culture-items';
+import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
 import {
   HERITAGE_MAP_LEGEND,
   HERITAGE_MAP_NODES,
@@ -25,19 +27,27 @@ function HeritageMapNodeIcon() {
   );
 }
 
-export function HeritageMapPreview() {
+export async function HeritageMapPreview() {
+  const items = await getMapItems();
+  const nodes = mapItemsToHeritageMapNodes(items);
+  const mapNodes = nodes.length > 0 ? nodes : HERITAGE_MAP_NODES;
+  const subtitle =
+    items.length > 0
+      ? `${items.length} mapped location${items.length === 1 ? '' : 's'} — open the full interactive map`
+      : HERITAGE_MAP_SECTION.placeholderSubtitle;
+
   return (
     <Link
       href={HERITAGE_MAP_SECTION.ctaUrl}
       className="heritage-map-panel group block outline-none focus-visible:ring-1 focus-visible:ring-heritage-teal focus-visible:ring-offset-4 focus-visible:ring-offset-heritage-black"
-      aria-label={`${HERITAGE_MAP_SECTION.placeholderTitle}. ${HERITAGE_MAP_SECTION.placeholderSubtitle}`}
+      aria-label={`${HERITAGE_MAP_SECTION.placeholderTitle}. ${subtitle}`}
     >
       <span className="heritage-map-panel__overlay" aria-hidden />
 
       <div className="heritage-map-panel__stage">
         <div className="heritage-map-focus">
           <div className="heritage-map-cluster">
-            {HERITAGE_MAP_NODES.map((node, index) => (
+            {mapNodes.map((node, index) => (
               <span
                 key={`${node.tone}-${index}`}
                 className={`heritage-map-node heritage-map-node--${node.tone}${node.featured ? ' heritage-map-node--featured' : ''}`}
@@ -60,7 +70,7 @@ export function HeritageMapPreview() {
             </h3>
 
             <p className="mx-auto mt-2 max-w-[20rem] font-display text-[clamp(0.8125rem,0.95vw,0.9375rem)] italic leading-[1.45] text-[rgba(232,216,155,0.48)]">
-              {HERITAGE_MAP_SECTION.placeholderSubtitle}
+              {subtitle}
             </p>
           </div>
         </div>
