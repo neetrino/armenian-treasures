@@ -17,8 +17,8 @@
     "admin:create": "tsx scripts/create-admin.ts",
     "admin:change-password": "tsx scripts/change-admin-password.ts",
     "r2:migrate-public": "tsx scripts/migrate-public-to-r2.ts",
-    "images:webp": "tsx scripts/convert-public-to-webp.ts",
     "images:webp": "tsx scripts/convert-images-to-webp.ts",
+    "images:webp:keep-sources": "tsx scripts/convert-public-to-webp.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "postinstall": "prisma generate"

@@ -1,5 +1,8 @@
 import { RefObject } from 'react';
-import type { DonationImpactRange } from '@/lib/constants/donation-page';
+import {
+  DONATION_CHECKOUT_UNAVAILABLE,
+  type DonationImpactRange,
+} from '@/lib/constants/donation-page';
 import { PATRON_MAX, PATRON_MIN, formatAmd, getImpactText, logFill } from '@/components/donation-page/donation-utils';
 
 const TICK_LABELS = ['500', '1K', '1.5K', '5K', '10K', '25K', '50K'] as const;
@@ -12,9 +15,9 @@ type DonationPatronSliderProps = {
   impactRanges: DonationImpactRange[];
   patronSliderTicks: readonly number[];
   patronQuickChips: readonly number[];
+  checkoutEnabled: boolean;
   onSliderChange: (value: number) => void;
   onCustomBlur: (value: string) => void;
-  onConfirm: () => void;
 };
 
 export function DonationPatronSlider({
@@ -25,11 +28,12 @@ export function DonationPatronSlider({
   impactRanges,
   patronSliderTicks,
   patronQuickChips,
+  checkoutEnabled,
   onSliderChange,
   onCustomBlur,
-  onConfirm,
 }: DonationPatronSliderProps) {
   const sliderFill = logFill(sliderVal);
+  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
   return (
     <div ref={cardRef} className="patron-card reveal" aria-label="Custom monthly contribution">
@@ -122,12 +126,26 @@ export function DonationPatronSlider({
       </div>
 
       <div className="patron-cta-row">
-        <button type="button" className="patron-cta" onClick={onConfirm}>
-          Confirm ֏{formatAmd(sliderVal)} / month
+        <button
+          type="button"
+          className={`patron-cta${checkoutEnabled ? '' : ' checkout-disabled'}`}
+          disabled={!checkoutEnabled}
+          aria-disabled={!checkoutEnabled}
+        >
+          {checkoutEnabled
+            ? `Confirm ֏${formatAmd(sliderVal)} / month`
+            : unavailable.patronCtaLabel}
         </button>
         <div className="patron-cta-note">
-          Secured by Stripe · Encrypted · Pause or cancel anytime
-          <br />A receipt is sent immediately — no follow-up solicitation
+          {checkoutEnabled ? (
+            <>
+              Secured checkout · Encrypted · Pause or cancel anytime
+              <br />
+              A receipt is sent immediately — no follow-up solicitation
+            </>
+          ) : (
+            unavailable.patronNote
+          )}
         </div>
       </div>
     </div>

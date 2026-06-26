@@ -14,7 +14,11 @@ const STATIC_PATHS = [
   '/map',
   '/partnership',
   '/donators',
+  '/donate',
   '/contacts',
+  '/khndzoresk',
+  '/khachaturian-museum',
+  '/national-gallery-armenia',
 ];
 
 export async function sitemap(): Promise<MetadataRoute.Sitemap> {

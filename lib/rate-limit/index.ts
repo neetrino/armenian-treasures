@@ -1,10 +1,21 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { assertProductionRateLimitReady } from './assert-production-ready';
 import { extractClientIp } from './client-ip';
+import { isDistributedRateLimitConfigured } from './distributed-config';
 import { InMemoryRateLimiter } from './in-memory';
 
 export { extractClientIp };
 export { InMemoryRateLimiter };
+export {
+  getProductionRateLimitMisconfiguration,
+  isDistributedRateLimitConfigured,
+  isProductionRateLimitRuntime,
+} from './distributed-config';
+export {
+  assertProductionRateLimitReady,
+  ProductionRateLimitMisconfiguredError,
+} from './assert-production-ready';
 
 export interface RateLimitResult {
   allowed: boolean;
@@ -53,11 +64,7 @@ function requiredEnv(key: string): string {
 }
 
 function isRateLimitEnabled(): boolean {
-  return (
-    process.env.RATE_LIMIT_ENABLED === 'true' &&
-    Boolean(process.env.RATE_LIMIT_REDIS_URL) &&
-    Boolean(process.env.RATE_LIMIT_REDIS_TOKEN)
-  );
+  return isDistributedRateLimitConfigured();
 }
 
 const globalForLimit = globalThis as unknown as {
@@ -72,6 +79,8 @@ function getLimiterMap(): Map<string, RateLimiter> {
 }
 
 function getLimiter(name: string, options: RateLimitOptions): RateLimiter {
+  assertProductionRateLimitReady();
+
   const map = getLimiterMap();
   const existing = map.get(name);
   if (existing) return existing;

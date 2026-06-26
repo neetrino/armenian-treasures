@@ -1,12 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { DonationImpactRange, DonationTier, DonationTierId } from '@/lib/constants/donation-page';
+import { useEffect, useRef, useState } from 'react';
+import {
+  DONATION_CHECKOUT_ENABLED,
+  DONATION_CHECKOUT_UNAVAILABLE,
+  type DonationImpactRange,
+  type DonationTier,
+} from '@/lib/constants/donation-page';
 import type { DonationPageContent } from '@/lib/queries/page-content';
-import { NarrativeOrnamentIcon, ToastCheckIcon } from '@/components/donation-page/donation-icons';
+import { NarrativeOrnamentIcon } from '@/components/donation-page/donation-icons';
 import { DonationPatronSlider } from '@/components/donation-page/DonationPatronSlider';
 import { DonationTierCards } from '@/components/donation-page/DonationTierCards';
-import { PATRON_DEFAULT, clampPatronAmount, formatAmd } from '@/components/donation-page/donation-utils';
+import { PATRON_DEFAULT, clampPatronAmount } from '@/components/donation-page/donation-utils';
 
 type BillingMode = 'monthly' | 'annual';
 
@@ -27,23 +32,14 @@ export function DonationEngine({
 }: DonationEngineProps) {
   const patronCardRef = useRef<HTMLDivElement>(null);
   const customInputRef = useRef<HTMLInputElement>(null);
-  const toastTimerRef = useRef<number | null>(null);
 
   const [billing, setBilling] = useState<BillingMode>('monthly');
-  const [selectedId, setSelectedId] = useState<DonationTierId | null>(null);
+  const [selectedId, setSelectedId] = useState<DonationTier['id'] | null>(null);
   const [sliderVal, setSliderVal] = useState(PATRON_DEFAULT);
-  const [toastMsg, setToastMsg] = useState('');
-  const [toastVisible, setToastVisible] = useState(false);
   const [inputNudge, setInputNudge] = useState(false);
 
-  const isAnnual = billing === 'annual';
-
-  const showToast = useCallback((message: string) => {
-    setToastMsg(message);
-    setToastVisible(true);
-    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = window.setTimeout(() => setToastVisible(false), 3400);
-  }, []);
+  const checkoutEnabled = DONATION_CHECKOUT_ENABLED;
+  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
   useEffect(() => {
     const page = document.querySelector('.khndzoresk-page');
@@ -51,28 +47,10 @@ export function DonationEngine({
     return () => page?.classList.remove('donation-annual-mode');
   }, [billing]);
 
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
-    };
-  }, []);
-
   function scrollToPatron() {
     setSelectedId('custom');
     patronCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     window.setTimeout(() => customInputRef.current?.focus(), 600);
-  }
-
-  function confirmTier(tierId: DonationTierId, name: string, monthlyAmd: number) {
-    setSelectedId(tierId);
-    const period = isAnnual ? '/ year' : '/ month';
-    const amount = isAnnual ? `${formatAmd(monthlyAmd * 10)} AMD` : `${formatAmd(monthlyAmd)} AMD`;
-    showToast(`${name} · ֏${amount} ${period} — redirecting to checkout`);
-  }
-
-  function confirmPatron() {
-    setSelectedId('custom');
-    showToast(`֏${formatAmd(sliderVal)} / month — redirecting to checkout`);
   }
 
   function handleCustomBlur(value: string) {
@@ -104,6 +82,13 @@ export function DonationEngine({
           <p className="sec-desc">{engine.description}</p>
         </div>
 
+        {!checkoutEnabled ? (
+          <div className="donation-checkout-notice reveal" role="status">
+            <p className="donation-checkout-notice__title">{unavailable.noticeTitle}</p>
+            <p className="donation-checkout-notice__body">{unavailable.noticeBody}</p>
+          </div>
+        ) : null}
+
         <div style={{ marginTop: 38 }} className="reveal">
           <div className="freq-toggle" role="group" aria-label="Billing frequency">
             <button
@@ -130,9 +115,9 @@ export function DonationEngine({
           tiers={tiers}
           billing={billing}
           selectedId={selectedId}
+          checkoutEnabled={checkoutEnabled}
           onSelect={setSelectedId}
           onScrollToPatron={scrollToPatron}
-          onConfirmTier={confirmTier}
         />
 
         <DonationPatronSlider
@@ -143,16 +128,11 @@ export function DonationEngine({
           impactRanges={impactRanges}
           patronSliderTicks={patronSliderTicks}
           patronQuickChips={patronQuickChips}
+          checkoutEnabled={checkoutEnabled}
           onSliderChange={(value) => setSliderVal(clampPatronAmount(value))}
           onCustomBlur={handleCustomBlur}
-          onConfirm={confirmPatron}
         />
       </section>
-
-      <div className={`toast${toastVisible ? ' show' : ''}`} role="alert" aria-live="assertive">
-        <ToastCheckIcon />
-        <span>{toastMsg}</span>
-      </div>
     </>
   );
 }
