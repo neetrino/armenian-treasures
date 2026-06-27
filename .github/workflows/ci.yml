@@ -17,6 +17,8 @@ jobs:
 
     env:
       # Placeholder Postgres URLs — build uses query fallbacks when DB is unreachable.
+      # prisma migrate deploy is NOT run here; see deploy-migrate.yml and docs/DEPLOYMENT.md.
+      # tests/smoke.test.ts verifies public route ↔ page file mapping without a live database.
       # No live database or production secrets required for this workflow.
       DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/ci?sslmode=disable
       DIRECT_URL: postgresql://ci:ci@127.0.0.1:5432/ci?sslmode=disable
@@ -24,6 +26,7 @@ jobs:
       NEXTAUTH_SECRET: ci-test-auth-secret-for-github-actions-only
       AUTH_URL: http://localhost:3000
       NEXTAUTH_URL: http://localhost:3000
+      SITE_URL: http://localhost:3000
       STORAGE_DRIVER: local
       RATE_LIMIT_ENABLED: false
 

@@ -1,8 +1,12 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/db';
+import {
+  FAST_SUBMIT_ERROR_MESSAGE,
+  getFormRenderedAt,
+  isFormSubmittedTooFast,
+} from '@/lib/forms/bot-guard';
 import { contactSchema } from '@/lib/validation';
 import { extractClientIp, getPublicRateLimiter } from '@/lib/rate-limit';
 import { sanitizeUserText } from '@/lib/sanitize';
@@ -26,9 +30,8 @@ export async function submitContactMessage(
     };
   }
 
-  const renderedAt = Number(formData.get('renderedAt') ?? 0);
-  if (renderedAt > 0 && Date.now() - renderedAt < 2000) {
-    return { status: 'success', message: 'Thank you. We have received your message.' };
+  if (isFormSubmittedTooFast(getFormRenderedAt(formData))) {
+    return { status: 'error', message: FAST_SUBMIT_ERROR_MESSAGE };
   }
 
   const parsed = contactSchema.safeParse({
@@ -64,8 +67,6 @@ export async function submitContactMessage(
       status: 'NEW',
     },
   });
-
-  revalidateTag('admin-contact', 'max');
 
   return { status: 'success', message: 'Thank you. We have received your message.' };
 }

@@ -1,9 +1,8 @@
 import '@/components/sections/about-us/about-us-section.css';
 import { AboutUsGrid } from '@/components/sections/about-us/AboutUsGrid';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function AboutUsSection() {
-  const home = await getHomeContent();
+export async function AboutUsSection({ home }: HomeSectionContentProps) {
   const { aboutUs } = getHomeSections(home);
 
   return (

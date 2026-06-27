@@ -1,8 +1,8 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { revalidateAboutContentCache } from '@/lib/cache/revalidation';
 import { aboutContentSchema } from '@/lib/validation';
 import type { AboutPillar } from '@/lib/types/about-content';
 
@@ -61,10 +61,6 @@ export async function saveAboutContentAction(
     create: { id: SINGLETON_ID, ...parsed.data },
     update: parsed.data,
   });
-  revalidateTag('about-content', 'max');
-  revalidatePath('/about/mission');
-  revalidatePath('/about/team');
-  revalidatePath('/about/career');
-  revalidatePath('/admin/about-content');
+  revalidateAboutContentCache();
   return { status: 'success', message: 'About content saved.' };
 }

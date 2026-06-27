@@ -1,4 +1,5 @@
 import type { StorageDriver, UploadInput, UploadResult } from './index';
+import { isPrivateStorageKey, normalizeStorageKey } from './key-policies';
 
 /**
  * Cloudflare R2 driver (S3-compatible).
@@ -145,7 +146,11 @@ export class R2Driver implements StorageDriver {
   }
 
   publicUrl(key: string): string {
-    return `${this.config.publicBaseUrl}/${normalizeObjectKey(key)}`;
+    const normalized = normalizeStorageKey(key);
+    if (isPrivateStorageKey(normalized)) {
+      throw new Error('Private storage keys must not be exposed as public URLs.');
+    }
+    return `${this.config.publicBaseUrl}/${normalized}`;
   }
 }
 

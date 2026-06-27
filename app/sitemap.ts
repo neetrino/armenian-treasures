@@ -1,7 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { getPublishedCultureItemSlugs } from '@/lib/queries/culture-items';
-import { prisma } from '@/lib/db';
+import { getMenuTree } from '@/lib/queries/menu';
+import { collectMenuSitemapPaths } from '@/lib/sitemap/menu-paths';
+import { getSiteUrl } from '@/lib/site-url';
 
 const STATIC_PATHS = [
   '/',
@@ -21,30 +23,40 @@ const STATIC_PATHS = [
   '/national-gallery-armenia',
 ];
 
-export async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXTAUTH_URL ?? 'http://localhost:3000';
-  const now = new Date();
-  const entries: MetadataRoute.Sitemap = STATIC_PATHS.map((path) => ({
+function entryForPath(
+  base: string,
+  path: string,
+  now: Date,
+  priority: number,
+): MetadataRoute.Sitemap[number] {
+  return {
     url: `${base}${path}`,
     lastModified: now,
     changeFrequency: path === '/' ? 'weekly' : 'monthly',
-    priority: path === '/' ? 1 : 0.7,
-  }));
+    priority,
+  };
+}
+
+export async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = getSiteUrl();
+  const now = new Date();
+  const seen = new Set<string>();
+  const entries: MetadataRoute.Sitemap = [];
+
+  const pushPath = (path: string, priority: number): void => {
+    if (seen.has(path)) return;
+    seen.add(path);
+    entries.push(entryForPath(base, path, now, priority));
+  };
+
+  for (const path of STATIC_PATHS) {
+    pushPath(path, path === '/' ? 1 : 0.7);
+  }
 
   try {
-    const menuRows = await prisma.cultureMenuItem.findMany({
-      where: { isActive: true },
-      orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
-      include: { parent: true },
-    });
-    for (const row of menuRows) {
-      const path = row.parent ? `/culture/${row.parent.slug}/${row.slug}` : `/culture/${row.slug}`;
-      entries.push({
-        url: `${base}${path}`,
-        lastModified: row.updatedAt ?? now,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-      });
+    const tree = await getMenuTree();
+    for (const path of collectMenuSitemapPaths(tree)) {
+      pushPath(path, 0.6);
     }
   } catch {
     // ignore DB failures (e.g. during local builds without DB)
@@ -53,12 +65,7 @@ export async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const itemRows = await getPublishedCultureItemSlugs();
     for (const row of itemRows) {
-      entries.push({
-        url: `${base}${resolveCultureItemHref(row.slug)}`,
-        lastModified: row.updatedAt ?? now,
-        changeFrequency: 'monthly',
-        priority: 0.55,
-      });
+      pushPath(resolveCultureItemHref(row.slug), 0.55);
     }
   } catch {
     // ignore DB failures (e.g. during local builds without DB)

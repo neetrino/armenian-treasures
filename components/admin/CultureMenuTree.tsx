@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition, type HTMLAttributes } from 'react';
 import {
   DndContext,
@@ -219,6 +220,7 @@ function MenuRowSurface({
   onAddChild,
 }: SurfaceProps) {
   const [rowPending, startTransition] = useTransition();
+  const router = useRouter();
   const children = node.children ?? [];
   const showChevron = hasChildren || children.length > 0;
 
@@ -226,7 +228,13 @@ function MenuRowSurface({
     if (typeof window === 'undefined') return;
     if (!window.confirm(`Delete "${node.title}" and all its children?`)) return;
     startTransition(() => {
-      void deleteMenuItemAction(node.id);
+      void deleteMenuItemAction(node.id).then((result) => {
+        if (!result.ok) {
+          window.alert(result.message);
+          return;
+        }
+        router.refresh();
+      });
     });
   }
 

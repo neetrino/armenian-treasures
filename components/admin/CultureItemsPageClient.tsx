@@ -96,7 +96,10 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
 
   const handleDelete = useCallback(
     async (id: string) => {
-      await deleteCultureItemAction(id);
+      const result = await deleteCultureItemAction(id);
+      if (!result.ok) {
+        return result;
+      }
       router.refresh();
     },
     [router],

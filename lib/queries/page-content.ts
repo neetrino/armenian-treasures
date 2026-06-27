@@ -1,5 +1,6 @@
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
+import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { resolveLandingImg } from '@/lib/page-content-images';
 import {
   buildDefaultCulturalPortalPageContent,
@@ -28,6 +29,7 @@ async function fetchPageContentRaw(slug: PageContentSlug): Promise<unknown | nul
     const row = await prisma.pageContent.findUnique({ where: { slug } });
     return row?.content ?? null;
   } catch {
+    logQueryFallback({ query: `page-content:${slug}`, reason: 'db-error' });
     return null;
   }
 }

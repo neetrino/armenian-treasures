@@ -104,11 +104,13 @@ public/                       # Static assets
 | Command | Description |
 | --- | --- |
 | `pnpm dev` | Run Next.js in development mode |
-| `pnpm build` | Production build (runs `prisma generate` first) |
+| `pnpm build` | Production build (runs `prisma generate` first; no DB migration) |
+| `pnpm build:production` | Production build **with** `prisma migrate deploy` — use as Vercel build command |
 | `pnpm start` | Run the production server |
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | TypeScript noEmit |
-| `pnpm prisma:migrate` | Run migrations against your Neon branch |
+| `pnpm prisma:migrate` | Run migrations against your Neon branch (dev) |
+| `pnpm prisma:deploy` | Apply pending migrations (production / staging) |
 | `pnpm prisma:studio` | Open Prisma Studio |
 | `pnpm test` | Run Vitest security/unit tests |
 | `pnpm admin:create` | Create a DB-backed admin user (interactive CLI) |
@@ -119,13 +121,19 @@ public/                       # Static assets
 
 ## Deployment notes
 
+Full production runbook: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (env vars, Neon/Upstash/R2 checks, smoke checklist).
+
+Summary:
+
 - Use Vercel's Neon integration to create a Neon branch per preview deployment automatically.
+- Set Vercel **Build Command** to `pnpm build:production` (runs `migrate deploy` + build), or run [`deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) before deploy.
 - Set `STORAGE_DRIVER=r2` and provide R2 credentials in production environment variables.
-- Set `AUTH_SECRET` and `AUTH_URL` (matching your deployed URL).
+- Set `SITE_URL`, `AUTH_URL`, and `NEXTAUTH_URL` to the same deployed HTTPS origin.
 - Create admin users with `pnpm admin:create` (do not use env admin passwords).
-- Enable Upstash rate limiting in production (`RATE_LIMIT_ENABLED=true`, plus `RATE_LIMIT_REDIS_URL` and `RATE_LIMIT_REDIS_TOKEN`). The app **fail-fast** at startup if these are missing in production runtime — see `SECURITY_NOTES.md`.
+- Enable Upstash rate limiting in production (`RATE_LIMIT_ENABLED=true`, plus `RATE_LIMIT_REDIS_URL` and `RATE_LIMIT_REDIS_TOKEN`). The app **fail-fast** at startup if these are missing in production runtime — see [`SECURITY_NOTES.md`](SECURITY_NOTES.md).
 - Do not set `RATE_LIMIT_ALLOW_IN_MEMORY=true` on multi-instance production (staging single-node only).
-- Run `pnpm prisma migrate deploy` in CI before the deploy step (or in the deploy pipeline after CI passes).
+
+**Fresh production without `prisma migrate deploy` will fail at runtime** (missing tables) even when the Next.js build succeeds. CI does not run migrations — only placeholder builds.
 
 ## Continuous integration
 
@@ -138,7 +146,7 @@ GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) r
 5. `pnpm test`
 6. `pnpm build`
 
-CI uses **placeholder env vars** only (no production secrets). Tests mock Prisma; the build succeeds without a live database via query fallbacks. Deploy pipelines must still provide real `DATABASE_URL`, auth secrets, R2, and Upstash — see [`SECURITY_NOTES.md`](SECURITY_NOTES.md).
+CI uses **placeholder env vars** only (no production secrets). Tests mock Prisma; the build succeeds without a live database via query fallbacks. **`prisma migrate deploy` is not run in CI** — use [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) and [`.github/workflows/deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) for production migrations.
 
 To reproduce locally:
 
@@ -149,6 +157,7 @@ $env:AUTH_SECRET='ci-test-auth-secret-for-github-actions-only'
 $env:NEXTAUTH_SECRET='ci-test-auth-secret-for-github-actions-only'
 $env:AUTH_URL='http://localhost:3000'
 $env:NEXTAUTH_URL='http://localhost:3000'
+$env:SITE_URL='http://localhost:3000'
 $env:STORAGE_DRIVER='local'
 $env:RATE_LIMIT_ENABLED='false'
 pnpm typecheck; pnpm lint; pnpm test; pnpm build

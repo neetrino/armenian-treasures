@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
+import { getSiteUrl } from '@/lib/site-url';
 import './globals.css';
 
 const cormorant = Cormorant_Garamond({
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
   },
   description:
     "The living archive of Armenian heritage. We digitize Armenia's monasteries, fortresses, museums and folk arts for the diaspora and scholars worldwide.",
-  metadataBase: new URL(process.env.NEXTAUTH_URL ?? 'http://localhost:3000'),
+  metadataBase: new URL(getSiteUrl()),
   icons: {
     icon: '/favicon.svg',
     apple: '/apple-icon.png',
@@ -48,6 +49,12 @@ export const metadata: Metadata = {
     description: 'The living archive of Armenian heritage.',
     type: 'website',
     locale: 'en_US',
+    siteName: 'Armenian Treasures',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Armenian Treasures — Cultural Heritage Foundation',
+    description: 'The living archive of Armenian heritage.',
   },
 };
 

@@ -1,10 +1,9 @@
 import '@/components/sections/upcoming-projects/upcoming-projects-section.css';
 import { UpcomingProjectsGrid } from '@/components/sections/upcoming-projects/UpcomingProjectsGrid';
 import { UpcomingProjectsOrnament } from '@/components/sections/upcoming-projects/UpcomingProjectsOrnament';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function UpcomingProjectsSection() {
-  const home = await getHomeContent();
+export async function UpcomingProjectsSection({ home }: HomeSectionContentProps) {
   const { upcomingProjects } = getHomeSections(home);
 
   return (

@@ -1,5 +1,6 @@
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
+import { isPrivateStorageKey, normalizeStorageKey } from './key-policies';
 import type { StorageDriver, UploadInput, UploadResult } from './index';
 
 function getUploadRoot(): string {
@@ -39,7 +40,11 @@ export class LocalDriver implements StorageDriver {
   }
 
   publicUrl(key: string): string {
-    return `/uploads/${sanitizeKey(key)}`;
+    const normalized = normalizeStorageKey(key);
+    if (isPrivateStorageKey(normalized)) {
+      throw new Error('Private storage keys must not be exposed as public URLs.');
+    }
+    return `/uploads/${normalized}`;
   }
 }
 

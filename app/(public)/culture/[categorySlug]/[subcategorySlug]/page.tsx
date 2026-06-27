@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CultureSubcategoryPageView } from '@/components/culture-catalog/CultureSubcategoryPageView';
-import { isFormRoute, type MenuNode } from '@/lib/culture-menu';
+import { findSubcategoryPageNodes } from '@/lib/culture-routes';
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 import { getMenuTree } from '@/lib/queries/menu';
+import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
@@ -11,36 +12,24 @@ interface PageProps {
   params: Promise<{ categorySlug: string; subcategorySlug: string }>;
 }
 
-function findChild(tree: MenuNode[], categorySlug: string, subSlug: string): {
-  parent: MenuNode;
-  child: MenuNode;
-} | null {
-  const parent = tree.find((node) => node.slug === categorySlug && node.isActive);
-  if (!parent) return null;
-  const child = (parent.children ?? []).find(
-    (node) => node.slug === subSlug && node.isActive && !isFormRoute(node.routeType),
-  );
-  if (!child) return null;
-  return { parent, child };
-}
-
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const tree = await getMenuTree();
-  const found = findChild(tree, params.categorySlug, params.subcategorySlug);
-  if (!found) return { title: 'Subcategory not found' };
-  return {
-    title: `${found.child.title} · ${found.parent.title}`,
+  const found = findSubcategoryPageNodes(tree, params.categorySlug, params.subcategorySlug);
+  if (!found) return buildNotFoundMetadata('Subcategory');
+  return buildPublicPageMetadata({
+    title: found.child.title,
     description:
       found.child.description ??
       `Curated ${found.parent.title.toLowerCase()} / ${found.child.title.toLowerCase()} entries.`,
-  };
+    pathname: `/culture/${found.parent.slug}/${found.child.slug}`,
+  });
 }
 
 async function CultureSubcategoryPage(props: PageProps) {
   const params = await props.params;
   const tree = await getMenuTree();
-  const found = findChild(tree, params.categorySlug, params.subcategorySlug);
+  const found = findSubcategoryPageNodes(tree, params.categorySlug, params.subcategorySlug);
   if (!found) notFound();
   const { parent, child } = found;
   const items = await getItemsByMenuItem(child.id);

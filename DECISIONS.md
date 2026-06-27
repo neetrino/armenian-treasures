@@ -94,6 +94,11 @@ This document records the architectural and editorial choices made during the in
 - **Build resilience**: Public queries in `lib/queries/*` wrap `prisma.*` calls in `try`/`catch` and return safe fallbacks so pages can build when Neon is unreachable from the build host.
 - **Rationale**: Bundled Neon serverless drivers can mis-resolve the WebSocket URL. External packages plus query-level fallbacks keep `pnpm build` hermetic without live DB access.
 
+## Production database migrations
+
+- **Choice**: `pnpm build` runs `prisma generate` only (safe for PR CI with placeholder DB URLs). Production uses `pnpm build:production` (includes `prisma migrate deploy`) as the Vercel build command, or [`.github/workflows/deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) against production Neon secrets.
+- **Rationale**: Fresh production without applied migrations fails at runtime even when the Next.js build succeeds. PR CI must not require a real database. Full runbook: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
 ## Page file exports
 
 - **Choice**: Every `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`, and `not-found.tsx` declares its primary function without `export` and re-exports it via `export default` at the bottom. `metadata`, `dynamic`, `revalidate`, and `generateMetadata` are exported by name since Next.js allows them.

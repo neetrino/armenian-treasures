@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CultureCategoryPageView } from '@/components/culture-catalog/CultureCategoryPageView';
+import { findCategoryPageNode } from '@/lib/culture-routes';
 import { isFormRoute, type MenuNode } from '@/lib/culture-menu';
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 import { getMenuTree } from '@/lib/queries/menu';
+import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
@@ -14,12 +16,13 @@ interface PageProps {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const tree = await getMenuTree();
-  const node = tree.find((n) => n.slug === params.categorySlug);
-  if (!node) return { title: 'Category not found' };
-  return {
+  const node = findCategoryPageNode(tree, params.categorySlug);
+  if (!node) return buildNotFoundMetadata('Category');
+  return buildPublicPageMetadata({
     title: node.title,
     description: node.description ?? `Browse Armenian ${node.title.toLowerCase()} entries.`,
-  };
+    pathname: `/culture/${node.slug}`,
+  });
 }
 
 async function countChildItems(children: MenuNode[]): Promise<number> {
@@ -30,8 +33,8 @@ async function countChildItems(children: MenuNode[]): Promise<number> {
 async function CultureCategoryPage(props: PageProps) {
   const params = await props.params;
   const tree = await getMenuTree();
-  const node = tree.find((n) => n.slug === params.categorySlug && n.isActive);
-  if (!node || isFormRoute(node.routeType)) notFound();
+  const node = findCategoryPageNode(tree, params.categorySlug);
+  if (!node) notFound();
 
   const subcategories = (node.children ?? []).filter(
     (child) => child.isActive && !isFormRoute(child.routeType),
@@ -39,8 +42,10 @@ async function CultureCategoryPage(props: PageProps) {
   const formChild = (node.children ?? []).find(
     (child) => child.isActive && child.routeType === 'SUBCATEGORY_FORM',
   );
-  const items = subcategories.length === 0 ? await getItemsByMenuItem(node.id) : [];
-  const totalChildItems = subcategories.length > 0 ? await countChildItems(subcategories) : 0;
+  const items = await getItemsByMenuItem(node.id);
+  const childItemCount =
+    subcategories.length > 0 ? await countChildItems(subcategories) : 0;
+  const totalChildItems = subcategories.length > 0 ? childItemCount + items.length : items.length;
 
   return (
     <CultureCategoryPageView

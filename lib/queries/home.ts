@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { HOME_HERO_STATS } from '@/lib/constants/home-hero';
 import { prisma } from '@/lib/db';
+import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 import {
   buildDefaultHomeSections,
@@ -92,6 +93,10 @@ function resolveHomeContentAssets(content: PublicHomeContentDTO): PublicHomeCont
   };
 }
 
+export type HomeSectionContentProps = {
+  home: PublicHomeContentDTO;
+};
+
 export function getHomeSections(content: PublicHomeContentDTO): HomeSections {
   return normalizeHomeSections(content.sections);
 }
@@ -102,6 +107,7 @@ async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
     const content = row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
     return resolveHomeContentAssets(content);
   } catch {
+    logQueryFallback({ query: 'home-content', reason: 'db-error' });
     return resolveHomeContentAssets(HOME_CONTENT_FALLBACK);
   }
 }

@@ -51,12 +51,17 @@ Events in `AdminAuditLog`:
 ## Upload security
 
 - Anonymous `POST /api/uploads` is rejected (`401`).
-- Public uploads require a short-lived signed `uploadToken` from `GET /api/uploads` (rate limited).
+- Public uploads require a short-lived signed **one-time** `uploadToken` from `GET /api/uploads` (rate limited: 5 mints / 15 min / IP).
+- Each token includes a nonce consumed on first successful `POST` (Redis when configured, in-memory in dev).
+- Token TTL: **10 minutes**; max **1 upload per token**.
+- Upload POST rate limit: **5 uploads / 10 min** per admin session or token session + IP.
 - Admin uploads require an active admin session.
-- Files stored under private/quarantine prefix; metadata in `UploadMetadata`.
+- Files stored under prefix-based paths; metadata in `UploadMetadata`.
 - Magic-byte validation; extension allowlist; declared MIME not trusted.
-- Documents remain `PENDING_SCAN` with **no public URL**.
+- Documents remain `PENDING_SCAN` under `quarantine/incoming/` with **no public URL**.
 - Images auto-approved after signature validation only (malware scan still TODO).
+- Admin image uploads create `UploadMetadata` rows (`ownerType: admin`).
+- R2 quarantine isolation requires bucket/CDN policy — see [`docs/R2_STORAGE.md`](docs/R2_STORAGE.md).
 
 ## Rate limiting
 
@@ -88,14 +93,16 @@ Events in `AdminAuditLog`:
 
 ## Commands
 
+Production deploy order and smoke checklist: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
 ```bash
 pnpm install
 pnpm prisma generate
-pnpm prisma migrate dev      # local
-pnpm prisma migrate deploy   # production
-pnpm admin:create
+pnpm prisma migrate deploy   # production — required before first deploy and after schema changes
+pnpm build:production        # migrate deploy + build (Vercel build command)
+pnpm admin:create            # first admin user (interactive CLI)
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build
+pnpm build                   # CI / local verify without live DB
 ```
