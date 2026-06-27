@@ -6,7 +6,8 @@ import {
   type AdminImageUploadResult,
 } from '@/lib/admin/upload-public-image';
 
-export async function uploadAdminImageAction(formData: FormData): Promise<AdminImageUploadResult> {  await requireAdmin();
+export async function uploadAdminImageAction(formData: FormData): Promise<AdminImageUploadResult> {
+  const admin = await requireAdmin();
 
   const file = formData.get('file');
   const folder = formData.get('folder')?.toString();
@@ -24,5 +25,8 @@ export async function uploadAdminImageAction(formData: FormData): Promise<AdminI
     return { ok: false, error: 'Invalid image variant.' };
   }
 
-  return uploadPublicImageFile(file, folder, variant);
+  return uploadPublicImageFile(file, folder, variant, {
+    ownerType: 'admin',
+    ownerId: admin.id,
+  });
 }

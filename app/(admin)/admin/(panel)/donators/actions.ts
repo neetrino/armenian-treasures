@@ -1,9 +1,11 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
+import { revalidateDonatorsCache } from '@/lib/cache/revalidation';
 import { donatorSchema } from '@/lib/validation';
 
 export interface DonatorFormState {
@@ -41,9 +43,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('donators', 'max');
-  revalidatePath('/donators');
-  revalidatePath('/admin/donators');
+  revalidateDonatorsCache();
 }
 
 export async function createDonatorAction(_p: DonatorFormState, formData: FormData): Promise<DonatorFormState> {
@@ -68,8 +68,10 @@ export async function updateDonatorAction(
   redirect('/admin/donators');
 }
 
-export async function deleteDonatorAction(id: string): Promise<void> {
+export async function deleteDonatorAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  await prisma.donator.delete({ where: { id } });
-  revalidate();
+  return runAdminDelete(async () => {
+    await prisma.donator.delete({ where: { id } });
+    revalidate();
+  });
 }

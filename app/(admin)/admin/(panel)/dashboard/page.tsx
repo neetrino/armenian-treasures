@@ -5,7 +5,9 @@ import { AdminTopbar } from '@/components/admin/AdminTopbar';
 import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { ContactInboxTypeBadge } from '@/components/admin/ContactInboxTypeBadge';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { getContactMessageKind } from '@/lib/inbox/contact-message-kind';
 import { getAdminStats } from '@/lib/queries/admin-stats';
 import { prisma } from '@/lib/db';
 
@@ -35,7 +37,7 @@ async function AdminDashboardPage() {
     prisma.contactMessage.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-      select: { id: true, name: true, email: true, status: true, createdAt: true },
+      select: { id: true, name: true, email: true, message: true, status: true, createdAt: true },
     }).catch(() => []),
   ]);
 
@@ -59,7 +61,7 @@ async function AdminDashboardPage() {
       tone: 'midnight' as const,
     },
     {
-      title: 'New contact messages',
+      title: 'New public inbox',
       value: stats.newContactMessages,
       icon: Mail,
       tone: 'green' as const,
@@ -147,7 +149,7 @@ async function AdminDashboardPage() {
         <section>
           <Card className="p-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-display text-xl text-ink">Latest contact messages</h3>
+              <h3 className="font-display text-xl text-ink">Latest public inbox</h3>
               <Link
                 href="/admin/contact-messages"
                 className="inline-flex items-center gap-1 text-xs text-pomegranate hover:underline"
@@ -157,17 +159,27 @@ async function AdminDashboardPage() {
             </div>
             <ul className="mt-4 divide-y divide-stone-100">
               {latestMessages.length === 0 ? (
-                <li className="py-6 text-sm text-ink-muted">No messages yet.</li>
+                <li className="py-6 text-sm text-ink-muted">No inbox entries yet.</li>
               ) : (
-                latestMessages.map((m) => (
-                  <li key={m.id} className="flex items-center justify-between gap-4 py-3 text-sm">
-                    <div className="min-w-0">
-                      <p className="truncate font-medium text-ink">{m.name}</p>
-                      <p className="truncate text-xs text-ink-muted">{m.email}</p>
-                    </div>
-                    <Badge tone={m.status === 'NEW' ? 'pomegranate' : 'stone'}>{m.status}</Badge>
-                  </li>
-                ))
+                latestMessages.map((m) => {
+                  const isNewsletter = getContactMessageKind(m) === 'newsletter';
+                  return (
+                    <li key={m.id} className="flex items-center justify-between gap-4 py-3 text-sm">
+                      <div className="min-w-0">
+                        <p className="truncate font-medium text-ink">
+                          {isNewsletter ? m.email : m.name}
+                        </p>
+                        <p className="truncate text-xs text-ink-muted">
+                          {isNewsletter ? 'Newsletter signup' : m.email}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 flex-col items-end gap-1">
+                        <ContactInboxTypeBadge name={m.name} message={m.message} />
+                        <Badge tone={m.status === 'NEW' ? 'pomegranate' : 'stone'}>{m.status}</Badge>
+                      </div>
+                    </li>
+                  );
+                })
               )}
             </ul>
           </Card>

@@ -263,8 +263,22 @@ export const DONATION_WALL: DonationWallTier[] = [
 
 export const DONATION_TRUST_ITEMS: DonationTrustItem[] = [
   { label: 'Non-profit · Registered' },
-  { label: 'Secured by Stripe' },
+  { label: 'Secure checkout coming soon' },
   { label: 'Cancel in one click' },
   { label: 'Tax-deductible receipt' },
   { label: 'Annual impact report' },
 ];
+
+/** Flip to true only after a payment provider is integrated and approved. */
+export const DONATION_CHECKOUT_ENABLED = false;
+
+export const DONATION_CHECKOUT_UNAVAILABLE = {
+  noticeTitle: 'Online checkout coming soon',
+  noticeBody:
+    'Explore tiers and amounts below to learn about patronage. No payment is collected on this site yet.',
+  tierCtaLabel: 'Coming soon',
+  tierCtaPost: 'Online checkout not yet available',
+  patronCtaLabel: 'Checkout coming soon',
+  patronNote:
+    'Online payment is not available yet. No card details are collected on this site.',
+} as const;

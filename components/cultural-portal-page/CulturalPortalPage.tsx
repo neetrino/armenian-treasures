@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/cultural-portal-page/cultural-portal-page.css';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
@@ -12,6 +13,7 @@ import { CulturalPortalNewsletter } from '@/components/cultural-portal-page/Cult
 import { CulturalPortalPartnership } from '@/components/cultural-portal-page/CulturalPortalPartnership';
 import { CulturalPortalProjects } from '@/components/cultural-portal-page/CulturalPortalProjects';
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
+import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
 import { buildCulturePortalCategories } from '@/lib/mappers/culture-portal-categories';
 import { mapCultureItemsToHighlights } from '@/lib/mappers/cultural-portal-highlights';
 import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
@@ -25,29 +27,16 @@ import { getPublicDonators } from '@/lib/queries/donators';
 import { getAboutContent } from '@/lib/queries/about';
 import { getCulturalPortalPageContent } from '@/lib/queries/page-content';
 
-export async function CulturalPortalPage() {
-  const [pageContent, home, menuTree, featuredItems, mapItems, projects, donators, about] = await Promise.all([
+async function CulturalPortalPrimarySections() {
+  const [pageContent, home, menuTree] = await Promise.all([
     getCulturalPortalPageContent(),
     getHomeContent(),
     getMenuTree(),
-    getFeaturedCultureItems(4),
-    getMapItems(),
-    getPublishedProjects(),
-    getPublicDonators(),
-    getAboutContent(),
   ]);
-
   const categories = buildCulturePortalCategories(menuTree);
-  const highlights = mapCultureItemsToHighlights(featuredItems);
-  const mapNodes = mapItemsToHeritageMapNodes(mapItems);
-  const donorGroups = groupDonatorsForHomeSection(donators);
-  const mapSection = pageContent.CULTURAL_PORTAL_MAP;
-  const donorsSection = pageContent.CULTURAL_PORTAL_DONORS;
-  const projectsSection = pageContent.CULTURAL_PORTAL_PROJECTS_SECTION;
 
   return (
-    <div className="khndzoresk-page">
-      <KhndzoreskParticles />
+    <>
       <CulturalPortalHero
         eyebrow={home.heroBadge}
         title={`${home.heroTitle} ${home.heroHighlight}`.trim()}
@@ -60,6 +49,35 @@ export async function CulturalPortalPage() {
         categories={categories}
       />
       <KhndzoreskDivider />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[48rem]" />}>
+        <CulturalPortalDeferredSections pageContent={pageContent} />
+      </Suspense>
+    </>
+  );
+}
+
+async function CulturalPortalDeferredSections({
+  pageContent,
+}: {
+  pageContent: Awaited<ReturnType<typeof getCulturalPortalPageContent>>;
+}) {
+  const [featuredItems, mapItems, projects, donators, about] = await Promise.all([
+    getFeaturedCultureItems(4),
+    getMapItems(),
+    getPublishedProjects(),
+    getPublicDonators(),
+    getAboutContent(),
+  ]);
+
+  const highlights = mapCultureItemsToHighlights(featuredItems);
+  const mapNodes = mapItemsToHeritageMapNodes(mapItems);
+  const donorGroups = groupDonatorsForHomeSection(donators);
+  const mapSection = pageContent.CULTURAL_PORTAL_MAP;
+  const donorsSection = pageContent.CULTURAL_PORTAL_DONORS;
+  const projectsSection = pageContent.CULTURAL_PORTAL_PROJECTS_SECTION;
+
+  return (
+    <>
       <CulturalPortalHighlights highlights={highlights} />
       <CulturalPortalMap
         eyebrow={mapSection.eyebrow}
@@ -112,6 +130,17 @@ export async function CulturalPortalPage() {
         title={pageContent.CULTURAL_PORTAL_NEWSLETTER.title}
         description={pageContent.CULTURAL_PORTAL_NEWSLETTER.description}
       />
+    </>
+  );
+}
+
+export function CulturalPortalPage() {
+  return (
+    <div className="khndzoresk-page">
+      <KhndzoreskParticles />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[32rem]" />}>
+        <CulturalPortalPrimarySections />
+      </Suspense>
     </div>
   );
 }

@@ -51,17 +51,26 @@ Events in `AdminAuditLog`:
 ## Upload security
 
 - Anonymous `POST /api/uploads` is rejected (`401`).
-- Public uploads require a short-lived signed `uploadToken` from `GET /api/uploads` (rate limited).
+- Public uploads require a short-lived signed **one-time** `uploadToken` from `GET /api/uploads` (rate limited: 5 mints / 15 min / IP).
+- Each token includes a nonce consumed on first successful `POST` (Redis when configured, in-memory in dev).
+- Token TTL: **10 minutes**; max **1 upload per token**.
+- Upload POST rate limit: **5 uploads / 10 min** per admin session or token session + IP.
 - Admin uploads require an active admin session.
-- Files stored under private/quarantine prefix; metadata in `UploadMetadata`.
+- Files stored under prefix-based paths; metadata in `UploadMetadata`.
 - Magic-byte validation; extension allowlist; declared MIME not trusted.
-- Documents remain `PENDING_SCAN` with **no public URL**.
+- Documents remain `PENDING_SCAN` under `quarantine/incoming/` with **no public URL**.
 - Images auto-approved after signature validation only (malware scan still TODO).
+- Admin image uploads create `UploadMetadata` rows (`ownerType: admin`).
+- R2 quarantine isolation requires bucket/CDN policy — see [`docs/R2_STORAGE.md`](docs/R2_STORAGE.md).
 
 ## Rate limiting
 
-- Production: Upstash Redis when `RATE_LIMIT_ENABLED=true` and Redis env vars are set.
-- Development: in-memory fallback (not suitable for multi-instance production).
+- Production **requires** distributed rate limiting via Upstash Redis (`RATE_LIMIT_ENABLED=true` plus `RATE_LIMIT_REDIS_URL` and `RATE_LIMIT_REDIS_TOKEN`).
+- Development uses in-memory limiters when Redis is not configured (a one-time console warning is logged).
+- If production starts without valid Redis configuration, the server **fail-fast** on startup (`instrumentation.ts`) or on the first rate-limited request — in-memory fallback is blocked.
+- Partial config (`RATE_LIMIT_ENABLED=true` but missing URL/token) is treated as misconfiguration and also fail-fast in production.
+- `RATE_LIMIT_ALLOW_IN_MEMORY=true` opts out of the production check for single-node staging only; do not use on multi-instance production.
+- Login rate limit: email + IP (Redis/Upstash when enabled, in-memory fallback in dev).
 - `TRUSTED_PROXY_HEADERS=false` by default — spoofed `x-forwarded-for` is ignored unless explicitly enabled behind a trusted proxy.
 
 ### Env vars
@@ -69,6 +78,7 @@ Events in `AdminAuditLog`:
 - `RATE_LIMIT_REDIS_URL`
 - `RATE_LIMIT_REDIS_TOKEN`
 - `RATE_LIMIT_ENABLED`
+- `RATE_LIMIT_ALLOW_IN_MEMORY` (staging single-node only — see Rate limiting above)
 - `TRUSTED_PROXY_HEADERS`
 - `UPLOAD_MAX_FILE_SIZE`
 - `UPLOAD_ALLOWED_MIME_TYPES`
@@ -77,18 +87,22 @@ Events in `AdminAuditLog`:
 
 - Integrate antivirus/malware scanning provider for document uploads (`PENDING_SCAN` → `APPROVED` workflow).
 - Wire upload tokens into public submission forms when file uploads are enabled in UI.
+- Wire transactional email (Resend/SES or approved provider) for public forms — provider not chosen yet.
+- Integrate payment provider for `/donate` when approved (`DONATION_CHECKOUT_ENABLED` remains `false` until then).
 - MFA intentionally **not** implemented in this pass.
 
 ## Commands
 
+Production deploy order and smoke checklist: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
 ```bash
 pnpm install
 pnpm prisma generate
-pnpm prisma migrate dev      # local
-pnpm prisma migrate deploy   # production
-pnpm admin:create
+pnpm prisma migrate deploy   # production — required before first deploy and after schema changes
+pnpm build:production        # migrate deploy + build (Vercel build command)
+pnpm admin:create            # first admin user (interactive CLI)
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build
+pnpm build                   # CI / local verify without live DB
 ```

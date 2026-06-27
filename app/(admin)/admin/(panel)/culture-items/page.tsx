@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import { CultureItemsPageClient } from '@/components/admin/CultureItemsPageClient';
+import { AdminPagination } from '@/components/admin/AdminPagination';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import { buildAdminPageCount, parseAdminListQuery } from '@/lib/admin/list-query';
 import { prisma } from '@/lib/db';
+import type { Prisma } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,13 +14,34 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-async function AdminCultureItemsPage() {
+interface PageProps {
+  searchParams: Promise<{ page?: string; q?: string }>;
+}
+
+async function AdminCultureItemsPage(props: PageProps) {
+  const searchParams = await props.searchParams;
   const user = await requireAdmin();
-  const [items, menuItems] = await Promise.all([
+  const listQuery = parseAdminListQuery(searchParams);
+  const where: Prisma.CultureItemWhereInput = listQuery.query
+    ? {
+        OR: [
+          { title: { contains: listQuery.query, mode: 'insensitive' } },
+          { slug: { contains: listQuery.query, mode: 'insensitive' } },
+          { region: { contains: listQuery.query, mode: 'insensitive' } },
+          { periodLabel: { contains: listQuery.query, mode: 'insensitive' } },
+        ],
+      }
+    : {};
+
+  const [items, total, menuItems] = await Promise.all([
     prisma.cultureItem.findMany({
+      where,
       orderBy: [{ menuItemId: 'asc' }, { order: 'asc' }],
       include: { menuItem: { include: { parent: true } } },
+      skip: listQuery.skip,
+      take: listQuery.pageSize,
     }),
+    prisma.cultureItem.count({ where }),
     prisma.cultureMenuItem.findMany({
       orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
       include: { parent: true },
@@ -49,7 +73,23 @@ async function AdminCultureItemsPage() {
     title: m.parent ? `${m.parent.title} / ${m.title}` : m.title,
   }));
 
-  return <CultureItemsPageClient user={user} rows={rows} menuOptions={menuOptions} />;
+  const pageCount = buildAdminPageCount(total, listQuery.pageSize);
+
+  return (
+    <>
+      <CultureItemsPageClient user={user} rows={rows} menuOptions={menuOptions} />
+      <div className="px-6 pb-6">
+        <AdminPagination
+          page={listQuery.page}
+          pageCount={pageCount}
+          total={total}
+          pageSize={listQuery.pageSize}
+          basePath="/admin/culture-items"
+          query={listQuery.query || undefined}
+        />
+      </div>
+    </>
+  );
 }
 
 export default AdminCultureItemsPage;

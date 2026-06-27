@@ -1,12 +1,12 @@
-import { getPublishedProjects } from '@/lib/queries/projects';
+import { getPublishedProjects, HOME_UPCOMING_PROJECTS_LIMIT } from '@/lib/queries/projects';
 import { mapProjectsToUpcomingProjects } from '@/lib/mappers/upcoming-projects';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { UpcomingProjectCard } from '@/components/sections/upcoming-projects/UpcomingProjectCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 export async function UpcomingProjectsGrid() {
-  const projects = await getPublishedProjects();
-  const upcoming = mapProjectsToUpcomingProjects(projects.slice(0, 3));
+  const projects = await getPublishedProjects(HOME_UPCOMING_PROJECTS_LIMIT);
+  const upcoming = mapProjectsToUpcomingProjects(projects);
 
   if (upcoming.length === 0) {
     return (

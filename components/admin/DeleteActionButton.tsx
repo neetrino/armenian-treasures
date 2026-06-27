@@ -2,10 +2,11 @@
 
 import { useTransition } from 'react';
 import { Trash2 } from 'lucide-react';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { cn } from '@/lib/utils';
 
 interface DeleteActionButtonProps {
-  action: (id: string) => Promise<void>;
+  action: (id: string) => Promise<AdminDeleteResult | void>;
   id: string;
   label?: string;
   confirmText?: string;
@@ -27,7 +28,11 @@ export function DeleteActionButton({
       onClick={() => {
         if (typeof window === 'undefined' || !window.confirm(confirmText)) return;
         startTransition(() => {
-          void action(id);
+          void action(id).then((result) => {
+            if (result && !result.ok) {
+              window.alert(result.message);
+            }
+          });
         });
       }}
       className={cn(

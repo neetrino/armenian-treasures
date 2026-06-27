@@ -7,9 +7,12 @@ import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable
 import { SubmissionStatusSelect } from '@/components/admin/SubmissionStatusSelect';
 import { Badge } from '@/components/ui/Badge';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
+import { AdminPagination } from '@/components/admin/AdminPagination';
 import { deleteSubmissionAction } from '@/app/(admin)/admin/(panel)/submissions/actions';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { buildAdminPageCount, parseAdminListQuery } from '@/lib/admin/list-query';
 import { prisma } from '@/lib/db';
+import type { Prisma } from '@prisma/client';
 import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -44,18 +47,37 @@ const TABS: { value: 'ALL' | SubmissionType; label: string }[] = [
 ];
 
 interface PageProps {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; page?: string; q?: string }>;
 }
 
 async function AdminSubmissionsPage(props: PageProps) {
   const searchParams = await props.searchParams;
   const user = await requireAdmin();
+  const listQuery = parseAdminListQuery(searchParams);
   const filter = TABS.find((tab) => tab.value === searchParams.type) ?? TABS[0]!;
-  const where = filter.value === 'ALL' ? {} : { type: filter.value };
-  const rows = (await prisma.submission.findMany({
-    where,
-    orderBy: { createdAt: 'desc' },
-  })) as Row[];
+  const where: Prisma.SubmissionWhereInput = {
+    ...(filter.value === 'ALL' ? {} : { type: filter.value }),
+    ...(listQuery.query
+      ? {
+          OR: [
+            { title: { contains: listQuery.query, mode: 'insensitive' } },
+            { submitterName: { contains: listQuery.query, mode: 'insensitive' } },
+            { submitterEmail: { contains: listQuery.query, mode: 'insensitive' } },
+          ],
+        }
+      : {}),
+  };
+
+  const [rows, total] = await Promise.all([
+    prisma.submission.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: listQuery.skip,
+      take: listQuery.pageSize,
+    }) as Promise<Row[]>,
+    prisma.submission.count({ where }),
+  ]);
+  const pageCount = buildAdminPageCount(total, listQuery.pageSize);
 
   const columns: AdminTableColumn<Row>[] = [
     {
@@ -152,7 +174,7 @@ async function AdminSubmissionsPage(props: PageProps) {
                 {tab.label}
                 {active ? (
                   <Badge tone="stone" className="ml-2 bg-white/20 text-parchment-50">
-                    {rows.length}
+                    {total}
                   </Badge>
                 ) : null}
               </Link>
@@ -160,6 +182,15 @@ async function AdminSubmissionsPage(props: PageProps) {
           })}
         </nav>
         <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} empty="No submissions yet." />
+        <AdminPagination
+          page={listQuery.page}
+          pageCount={pageCount}
+          total={total}
+          pageSize={listQuery.pageSize}
+          basePath="/admin/submissions"
+          query={listQuery.query || undefined}
+          extraParams={filter.value === 'ALL' ? undefined : { type: filter.value }}
+        />
       </div>
     </>
   );

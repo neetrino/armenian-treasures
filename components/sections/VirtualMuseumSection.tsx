@@ -2,7 +2,7 @@ import { HeritageCtaButton } from '@/components/ui/HeritageCtaButton';
 import { VirtualMuseumFeatureGrid } from '@/components/sections/virtual-museum/VirtualMuseumFeatureGrid';
 import { VIRTUAL_MUSEUM_CONTAINER_CLASS } from '@/components/sections/virtual-museum/heritage-feature-icon-styles';
 import { ImmersiveTechBadgeIcon } from '@/components/sections/virtual-museum/VirtualMuseumIcons';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
 function VirtualMuseumHeader({
   badge,
@@ -42,8 +42,10 @@ function VirtualMuseumHeader({
   );
 }
 
-export async function VirtualMuseumSection({ embedded = false }: { embedded?: boolean }) {
-  const home = await getHomeContent();
+export async function VirtualMuseumSection({
+  embedded = false,
+  home,
+}: HomeSectionContentProps & { embedded?: boolean }) {
   const { virtualMuseum } = getHomeSections(home);
 
   return (
@@ -84,7 +86,7 @@ export async function VirtualMuseumSection({ embedded = false }: { embedded?: bo
           title={virtualMuseum.title}
           description={virtualMuseum.description}
         />
-        <VirtualMuseumFeatureGrid />
+        <VirtualMuseumFeatureGrid home={home} />
 
         <div className="relative z-10 mt-14 flex justify-center sm:mt-[3.75rem]">
           <HeritageCtaButton

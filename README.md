@@ -2,15 +2,15 @@
 
 > The living archive of Armenian heritage.
 
-A premium digital archive of Armenian monuments, museums, manuscripts, people and folk arts — built as a Next.js 14 monorepo with Prisma on Neon Postgres, an admin CMS, and review-only public submission flows.
+A premium digital archive of Armenian monuments, museums, manuscripts, people and folk arts — built with Next.js 16 (App Router, RSC), Prisma on Neon Postgres, an admin CMS, and review-only public submission flows.
 
 ## Tech stack
 
-- **Frontend**: Next.js 14 (App Router, RSC), TypeScript strict, Tailwind CSS, Framer Motion, lucide-react, React Hook Form + Zod.
+- **Frontend**: Next.js 16 (App Router, RSC), React 19, TypeScript strict, Tailwind CSS, Framer Motion, lucide-react, React Hook Form + Zod.
 - **Backend**: Next.js Route Handlers + Server Actions, Prisma ORM with the Neon serverless driver adapter.
 - **Database**: Neon Postgres (pooled URL for app runtime, direct URL for migrations).
-- **Auth**: NextAuth v5 (Auth.js) Credentials Provider with JWT sessions.
-- **Storage**: Local disk in dev (`public/uploads/`), Cloudflare R2 in production.
+- **Auth**: NextAuth v5 (Auth.js) Credentials Provider with JWT sessions; admin users in the `AdminUser` table (created via CLI).
+- **Storage**: Local disk in dev (`public/uploads/`), Cloudflare R2 in production (`STORAGE_DRIVER=r2`).
 
 ## Development setup
 
@@ -59,6 +59,20 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) for the public site and [http://localhost:3000/admin/login](http://localhost:3000/admin/login) for the admin panel.
 
+### 6. Production build (local verification)
+
+Stop the dev server before building — on Windows, a running `pnpm dev` process locks Prisma's query engine DLL and `prisma generate` fails with `EPERM`:
+
+```powershell
+# Stop dev server (Ctrl+C in its terminal), then:
+pnpm typecheck
+pnpm lint
+pnpm test
+pnpm build
+```
+
+If port 3000 is still in use: `netstat -ano | findstr ":3000"` then stop the listed PID. CI and Vercel builds are unaffected (no concurrent dev server).
+
 ## Project structure
 
 ```
@@ -77,6 +91,8 @@ lib/
   culture-menu.ts             # resolveMenuHref()
   rate-limit/                 # Upstash + in-memory rate limiting
   utils.ts                    # cn() + small helpers
+proxy.ts                      # Next.js 16 route protection for /admin (see SECURITY_NOTES.md)
+instrumentation.ts            # Production startup checks (rate limiting readiness)
 prisma/
   schema.prisma               # Database schema
   seed.ts                     # Idempotent seed script
@@ -88,24 +104,64 @@ public/                       # Static assets
 | Command | Description |
 | --- | --- |
 | `pnpm dev` | Run Next.js in development mode |
-| `pnpm build` | Production build (runs `prisma generate` first) |
+| `pnpm build` | Production build (runs `prisma generate` first; no DB migration) |
+| `pnpm build:production` | Production build **with** `prisma migrate deploy` — use as Vercel build command |
 | `pnpm start` | Run the production server |
 | `pnpm lint` | ESLint |
 | `pnpm typecheck` | TypeScript noEmit |
-| `pnpm prisma:migrate` | Run migrations against your Neon branch |
+| `pnpm prisma:migrate` | Run migrations against your Neon branch (dev) |
+| `pnpm prisma:deploy` | Apply pending migrations (production / staging) |
 | `pnpm prisma:studio` | Open Prisma Studio |
 | `pnpm test` | Run Vitest security/unit tests |
 | `pnpm admin:create` | Create a DB-backed admin user (interactive CLI) |
 | `pnpm admin:change-password` | Change an admin password (interactive CLI) |
+| `pnpm r2:migrate-public` | Copy `/public` assets to R2 (production migration helper) |
+| `pnpm images:webp` | Convert PNG/JPG under `public/` to WebP and remove originals |
+| `pnpm images:webp:keep-sources` | Convert PNG/JPG to WebP alongside originals (non-destructive) |
 
 ## Deployment notes
 
+Full production runbook: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (env vars, Neon/Upstash/R2 checks, smoke checklist).
+
+Summary:
+
 - Use Vercel's Neon integration to create a Neon branch per preview deployment automatically.
+- Set Vercel **Build Command** to `pnpm build:production` (runs `migrate deploy` + build), or run [`deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) before deploy.
 - Set `STORAGE_DRIVER=r2` and provide R2 credentials in production environment variables.
-- Set `AUTH_SECRET` and `AUTH_URL` (matching your deployed URL).
+- Set `SITE_URL`, `AUTH_URL`, and `NEXTAUTH_URL` to the same deployed HTTPS origin.
 - Create admin users with `pnpm admin:create` (do not use env admin passwords).
-- Enable Upstash rate limiting in production (`RATE_LIMIT_ENABLED=true`).
-- Run `pnpm prisma migrate deploy` in CI before the deploy step.
+- Enable Upstash rate limiting in production (`RATE_LIMIT_ENABLED=true`, plus `RATE_LIMIT_REDIS_URL` and `RATE_LIMIT_REDIS_TOKEN`). The app **fail-fast** at startup if these are missing in production runtime — see [`SECURITY_NOTES.md`](SECURITY_NOTES.md).
+- Do not set `RATE_LIMIT_ALLOW_IN_MEMORY=true` on multi-instance production (staging single-node only).
+
+**Fresh production without `prisma migrate deploy` will fail at runtime** (missing tables) even when the Next.js build succeeds. CI does not run migrations — only placeholder builds.
+
+## Continuous integration
+
+GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and pull requests to `main` / `master`:
+
+1. `pnpm install --frozen-lockfile`
+2. `pnpm prisma generate`
+3. `pnpm typecheck`
+4. `pnpm lint`
+5. `pnpm test`
+6. `pnpm build`
+
+CI uses **placeholder env vars** only (no production secrets). Tests mock Prisma; the build succeeds without a live database via query fallbacks. **`prisma migrate deploy` is not run in CI** — use [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) and [`.github/workflows/deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) for production migrations.
+
+To reproduce locally:
+
+```powershell
+$env:DATABASE_URL='postgresql://ci:ci@127.0.0.1:5432/ci?sslmode=disable'
+$env:DIRECT_URL='postgresql://ci:ci@127.0.0.1:5432/ci?sslmode=disable'
+$env:AUTH_SECRET='ci-test-auth-secret-for-github-actions-only'
+$env:NEXTAUTH_SECRET='ci-test-auth-secret-for-github-actions-only'
+$env:AUTH_URL='http://localhost:3000'
+$env:NEXTAUTH_URL='http://localhost:3000'
+$env:SITE_URL='http://localhost:3000'
+$env:STORAGE_DRIVER='local'
+$env:RATE_LIMIT_ENABLED='false'
+pnpm typecheck; pnpm lint; pnpm test; pnpm build
+```
 
 ## Editorial policy
 

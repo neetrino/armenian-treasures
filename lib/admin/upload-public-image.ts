@@ -1,6 +1,12 @@
 import { randomBytes } from 'node:crypto';
+import { prisma } from '@/lib/db';
 import { getStorage } from '@/lib/storage';
 import { validateFileBuffer } from '@/lib/uploads/file-signature';
+
+export interface AdminImageUploadOwner {
+  ownerType: string;
+  ownerId: string;
+}
 
 export interface AdminImageUploadResult {
   ok: boolean;
@@ -12,6 +18,7 @@ export async function uploadPublicImageFile(
   file: File,
   folder: 'hero' | 'culture',
   variant?: string,
+  owner?: AdminImageUploadOwner,
 ): Promise<AdminImageUploadResult> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const validation = validateFileBuffer(buffer, file.name, file.type);
@@ -34,5 +41,21 @@ export async function uploadPublicImageFile(
   });
 
   const url = uploadResult.url ?? storage.publicUrl(key);
+
+  if (owner) {
+    await prisma.uploadMetadata.create({
+      data: {
+        ownerType: owner.ownerType,
+        ownerId: owner.ownerId,
+        originalFilename: file.name,
+        detectedMime: validation.detectedMime,
+        fileSize: buffer.length,
+        storageKey: key,
+        status: 'APPROVED',
+        publicUrl: url,
+      },
+    });
+  }
+
   return { ok: true, url };
 }

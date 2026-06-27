@@ -1,28 +1,22 @@
 import type { Metadata } from 'next';
 import { CultureFormPageView } from '@/components/culture-catalog/CultureFormPageView';
 import { ProjectSubmissionForm } from '@/components/forms/ProjectSubmissionForm';
-import { isFormRoute } from '@/lib/culture-menu';
 import { getMenuTree } from '@/lib/queries/menu';
+import { buildSubmitCategoryOptions } from '@/lib/submit-category';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPublicPageMetadata({
   title: 'Add your project',
   description:
     'Submit a culture project, material or proposal to Armenian Treasures. Every submission is reviewed by hand.',
-};
+  pathname: '/culture/submit',
+});
 
 async function SubmitProjectPage() {
   const tree = await getMenuTree();
-  const categories: { slug: string; title: string }[] = [];
-  for (const node of tree) {
-    if (!node.isActive || isFormRoute(node.routeType)) continue;
-    categories.push({ slug: node.slug, title: node.title });
-    for (const child of node.children ?? []) {
-      if (!child.isActive || isFormRoute(child.routeType)) continue;
-      categories.push({ slug: child.slug, title: `${node.title} / ${child.title}` });
-    }
-  }
+  const categories = buildSubmitCategoryOptions(tree);
 
   return (
     <CultureFormPageView

@@ -2,10 +2,9 @@ import '@/components/sections/donations/donations-section.css';
 import { HeritageCtaButton } from '@/components/ui/HeritageCtaButton';
 import { DonationsPatronList } from '@/components/sections/donations/DonationsPatronList';
 import { HeritageCrossOrnament } from '@/components/sections/shared/HeritageCrossOrnament';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function DonationsSection() {
-  const home = await getHomeContent();
+export async function DonationsSection({ home }: HomeSectionContentProps) {
   const { donations } = getHomeSections(home);
 
   return (

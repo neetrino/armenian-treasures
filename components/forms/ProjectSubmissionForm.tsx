@@ -12,7 +12,7 @@ import {
 } from '@/app/(public)/culture/submit/project-submission-shared';
 
 interface ProjectSubmissionFormProps {
-  categories: { slug: string; title: string }[];
+  categories: { id: string; title: string }[];
 }
 
 export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps) {
@@ -24,9 +24,9 @@ export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps
   const options: SelectOption[] = [
     { value: '', label: 'Select a category…', disabled: true },
     ...categories
-      .filter((category) => category.slug.length > 0)
+      .filter((category) => category.id.length > 0)
       .map((category) => ({
-        value: String(category.slug),
+        value: category.id,
         label: category.title,
       })),
     { value: GENERAL_CATEGORY_VALUE, label: 'General submission' },

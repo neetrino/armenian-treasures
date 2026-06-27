@@ -1,7 +1,6 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { extractClientIp, getPublicRateLimiter } from '@/lib/rate-limit';
@@ -82,8 +81,6 @@ export async function submitPartnershipInquiry(
       status: 'NEW',
     },
   });
-
-  revalidateTag('admin-contact', 'max');
 
   return {
     status: 'success',

@@ -57,12 +57,24 @@ export function CultureCategoryPageView({
       <CultureCatalogAbout content={content.about} />
       <KhndzoreskDivider />
       {hasChildren ? (
-        <CultureCatalogSubcategoryGrid
-          parent={category}
-          nodes={subcategories}
-          formChild={formChild}
-          content={content.items}
-        />
+        <>
+          <CultureCatalogSubcategoryGrid
+            parent={category}
+            nodes={subcategories}
+            formChild={formChild}
+            content={content.items}
+          />
+          {items.length > 0 ? (
+            <>
+              <KhndzoreskDivider />
+              <CultureCatalogItemGrid
+                items={items}
+                content={content.items}
+                sectionId="catalog-entries"
+              />
+            </>
+          ) : null}
+        </>
       ) : (
         <CultureCatalogItemGrid items={items} content={content.items} />
       )}

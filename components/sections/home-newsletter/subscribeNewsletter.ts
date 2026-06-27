@@ -1,9 +1,12 @@
 'use server';
 
 import { headers } from 'next/headers';
-import { revalidateTag } from 'next/cache';
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
+import {
+  NEWSLETTER_CONTACT_MESSAGE_PREFIX,
+  NEWSLETTER_CONTACT_NAME,
+} from '@/lib/inbox/contact-message-kind';
 import { extractClientIp, getPublicRateLimiter } from '@/lib/rate-limit';
 import { sanitizeUserText } from '@/lib/sanitize';
 
@@ -55,14 +58,12 @@ export async function subscribeNewsletter(
 
   await prisma.contactMessage.create({
     data: {
-      name: 'Newsletter',
+      name: NEWSLETTER_CONTACT_NAME,
       email: parsed.data.email.toLowerCase(),
-      message: sanitizeUserText('Newsletter subscription request from homepage.'),
+      message: sanitizeUserText(`${NEWSLETTER_CONTACT_MESSAGE_PREFIX} from homepage.`),
       status: 'NEW',
     },
   });
-
-  revalidateTag('admin-contact', 'max');
 
   return { status: 'success', message: 'Thank you. You are subscribed.' };
 }

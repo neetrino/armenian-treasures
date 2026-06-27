@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CultureItemDetailView } from '@/components/culture-catalog/CultureItemDetailView';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { getCultureItemDetailBySlug } from '@/lib/queries/culture-items';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
+import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
@@ -19,17 +21,14 @@ function itemMetaDescription(item: PublicCultureItemDetailDTO): string {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const item = await getCultureItemDetailBySlug(params.slug);
-  if (!item) return { title: 'Culture item not found' };
+  if (!item) return buildNotFoundMetadata('Culture item');
   const description = itemMetaDescription(item);
-  return {
+  return buildPublicPageMetadata({
     title: item.title,
     description,
-    openGraph: {
-      title: item.title,
-      description,
-      ...(item.image ? { images: [{ url: item.image }] } : {}),
-    },
-  };
+    pathname: resolveCultureItemHref(item.slug),
+    openGraphImage: item.image ?? undefined,
+  });
 }
 
 async function CultureItemDetailPage(props: PageProps) {

@@ -1,9 +1,11 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
+import { revalidateCareersCache } from '@/lib/cache/revalidation';
 import { careerSchema } from '@/lib/validation';
 
 export interface CareerFormState {
@@ -43,9 +45,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('careers', 'max');
-  revalidatePath('/about/career');
-  revalidatePath('/admin/careers');
+  revalidateCareersCache();
 }
 
 export async function createCareerAction(_p: CareerFormState, formData: FormData): Promise<CareerFormState> {
@@ -70,8 +70,10 @@ export async function updateCareerAction(
   redirect('/admin/careers');
 }
 
-export async function deleteCareerAction(id: string): Promise<void> {
+export async function deleteCareerAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  await prisma.career.delete({ where: { id } });
-  revalidate();
+  return runAdminDelete(async () => {
+    await prisma.career.delete({ where: { id } });
+    revalidate();
+  });
 }

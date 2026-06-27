@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import type { UploadStatus } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import { isPrivateStorageKey } from '@/lib/storage/key-policies';
 import { getStorage } from '@/lib/storage';
 
 export function safeFilename(name: string): string {
@@ -51,7 +52,8 @@ export async function storeValidatedUpload(
     visibility,
   });
 
-  const publicUrl = status === 'APPROVED' ? uploadResult.url : null;
+  const publicUrl =
+    status === 'APPROVED' && !isPrivateStorageKey(storageKey) ? uploadResult.url : null;
 
   const record = await prisma.uploadMetadata.create({
     data: {

@@ -1,10 +1,11 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import type { Prisma } from '@prisma/client';
 import type { HomeContent } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { revalidateHomeContentCache } from '@/lib/cache/revalidation';
+import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
 import { HOME_CONTENT_FALLBACK } from '@/lib/queries/home';
 import { homeContentSchema } from '@/lib/validation';
 import {
@@ -150,9 +151,9 @@ export async function saveHomeContentAction(
     update: data,
   });
 
-  revalidateTag('home-content', 'max');
-  revalidatePath('/');
-  revalidatePath('/culture');
-  revalidatePath('/admin/home-content');
+  await deleteReplacedManagedImage(existing?.heroImage, data.heroImage);
+  await deleteReplacedManagedImage(existing?.heroMobileImage, data.heroMobileImage);
+
+  revalidateHomeContentCache();
   return { status: 'success', message: 'Homepage content saved.' };
 }

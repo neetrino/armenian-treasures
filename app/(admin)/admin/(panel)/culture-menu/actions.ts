@@ -1,14 +1,20 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import slugify from 'slugify';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
+import { checkMenuItemDeletable } from '@/lib/admin/menu-delete-guard';
+import {
+  validateMenuParentRules,
+  validateMenuRouteRules,
+} from '@/lib/admin/validate-menu-route';
+import { revalidateCultureMenuCache } from '@/lib/cache/revalidation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { cultureMenuItemSchema, cultureMenuReorderSchema } from '@/lib/validation';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import { Prisma, type MenuRouteType } from '@prisma/client';
-
 function toSlug(value: string): string {
   return slugify(value, { lower: true, strict: true });
 }
@@ -32,12 +38,27 @@ const VALID_ROUTE_TYPES: MenuRouteType[] = [
   'CUSTOM_URL',
 ];
 
-function parseRouteType(value: string): MenuRouteType {
-  return VALID_ROUTE_TYPES.includes(value as MenuRouteType)
-    ? (value as MenuRouteType)
-    : 'CATEGORY';
-}
+async function validateMenuRouteContext(
+  data: ReturnType<typeof toData>,
+): Promise<Record<string, string>> {
+  const errors = validateMenuRouteRules({
+    routeType: data.routeType,
+    parentId: data.parentId,
+    customUrl: data.customUrl,
+  });
+  if (!data.parentId) return errors;
 
+  const parent = await prisma.cultureMenuItem.findUnique({
+    where: { id: data.parentId },
+    select: { id: true, parentId: true, routeType: true },
+  });
+  if (!parent) {
+    errors.parentId = 'Parent menu item not found.';
+    return errors;
+  }
+
+  return { ...errors, ...validateMenuParentRules(data.routeType, parent) };
+}
 async function ensureSlugUnique(parentId: string | null, slug: string, ignoreId?: string): Promise<boolean> {
   const existing = await prisma.cultureMenuItem.findFirst({
     where: { parentId, slug },
@@ -49,6 +70,13 @@ function parseForm(formData: FormData): { ok: true; data: ReturnType<typeof toDa
   const titleRaw = formData.get('title')?.toString() ?? '';
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const finalSlug = slugRaw.trim().length > 0 ? toSlug(slugRaw) : toSlug(titleRaw);
+  const routeTypeRaw = formData.get('routeType')?.toString() ?? 'CATEGORY';
+  if (!VALID_ROUTE_TYPES.includes(routeTypeRaw as MenuRouteType)) {
+    return {
+      ok: false,
+      errors: { routeType: 'Choose a valid route type.' },
+    };
+  }
   const parsed = cultureMenuItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
@@ -57,10 +85,9 @@ function parseForm(formData: FormData): { ok: true; data: ReturnType<typeof toDa
     order: Number(formData.get('order') ?? 0),
     isActive: formData.get('isActive') === 'on',
     image: formData.get('image')?.toString() ?? '',
-    routeType: parseRouteType(formData.get('routeType')?.toString() ?? 'CATEGORY'),
+    routeType: routeTypeRaw,
     customUrl: emptyToNull(formData.get('customUrl')?.toString() ?? ''),
-  });
-  if (!parsed.success) {
+  });  if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
       const path = issue.path.join('.') || 'form';
@@ -97,12 +124,8 @@ function toData(
   };
 }
 
-function revalidate(): void {
-  revalidateTag('culture-menu', 'max');
-  revalidateTag('culture-items', 'max');
-  revalidatePath('/');
-  revalidatePath('/culture');
-  revalidatePath('/admin/culture-menu');
+function revalidate(): Promise<void> {
+  return revalidateCultureMenuCache();
 }
 
 export async function createMenuItemAction(
@@ -115,6 +138,14 @@ export async function createMenuItemAction(
     return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   }
   const data = parsed.data;
+  const routeErrors = await validateMenuRouteContext(data);
+  if (Object.keys(routeErrors).length > 0) {
+    return {
+      status: 'error',
+      fieldErrors: routeErrors,
+      message: 'Please correct the form.',
+    };
+  }
   const unique = await ensureSlugUnique(data.parentId, data.slug);
   if (!unique) {
     return {
@@ -124,7 +155,7 @@ export async function createMenuItemAction(
     };
   }
   await prisma.cultureMenuItem.create({ data });
-  revalidate();
+  await revalidate();
   return { status: 'success' };
 }
 
@@ -154,21 +185,31 @@ export async function updateMenuItemAction(
       message: 'Slug must be unique within siblings.',
     };
   }
-  await prisma.cultureMenuItem.update({ where: { id }, data });
-  revalidate();
+  const routeErrors = await validateMenuRouteContext(data);
+  if (Object.keys(routeErrors).length > 0) {
+    return {
+      status: 'error',
+      fieldErrors: routeErrors,
+      message: 'Please correct the form.',
+    };
+  }
+  await prisma.cultureMenuItem.update({ where: { id }, data });  await revalidate();
   redirect('/admin/culture-menu');
 }
 
-export async function deleteMenuItemAction(id: string): Promise<void> {
+export async function deleteMenuItemAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  await prisma.cultureMenuItem.delete({ where: { id } });
-  revalidate();
+  const guard = await checkMenuItemDeletable(id);
+  if (!guard.ok) return guard;
+  return runAdminDelete(async () => {
+    await prisma.cultureMenuItem.delete({ where: { id } });
+    await revalidate();
+  });
 }
-
 export async function toggleMenuItemAction(id: string, isActive: boolean): Promise<void> {
   await requireAdmin();
   await prisma.cultureMenuItem.update({ where: { id }, data: { isActive } });
-  revalidate();
+  await revalidate();
 }
 
 export async function moveMenuItemAction(id: string, direction: 'up' | 'down'): Promise<void> {
@@ -190,7 +231,7 @@ export async function moveMenuItemAction(id: string, direction: 'up' | 'down'): 
     prisma.cultureMenuItem.update({ where: { id: a.id }, data: { order: b.order } }),
     prisma.cultureMenuItem.update({ where: { id: b.id }, data: { order: a.order } }),
   ]);
-  revalidate();
+  await revalidate();
 }
 
 export type ReorderMenuResult = { ok: true } | { ok: false; message: string };
@@ -220,7 +261,7 @@ export async function reorderMenuSiblingsAction(
         prisma.cultureMenuItem.update({ where: { id }, data: { order: index } }),
       ),
     );
-    revalidate();
+    await revalidate();
     return { ok: true };
   } catch {
     return { ok: false, message: 'Could not save order. Please try again.' };

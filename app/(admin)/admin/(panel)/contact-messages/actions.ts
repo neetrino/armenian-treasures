@@ -1,13 +1,14 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
 import { contactMessageUpdateSchema } from '@/lib/validation';
 import type { ContactStatus } from '@prisma/client';
 
 function revalidate(): void {
-  revalidateTag('admin-contact', 'max');
   revalidatePath('/admin/contact-messages');
 }
 
@@ -28,8 +29,10 @@ export async function updateContactNoteAction(id: string, adminNote: string): Pr
   revalidate();
 }
 
-export async function deleteContactMessageAction(id: string): Promise<void> {
+export async function deleteContactMessageAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  await prisma.contactMessage.delete({ where: { id } });
-  revalidate();
+  return runAdminDelete(async () => {
+    await prisma.contactMessage.delete({ where: { id } });
+    revalidate();
+  });
 }

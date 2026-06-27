@@ -1,5 +1,9 @@
 import { KeyboardEvent } from 'react';
-import type { DonationTier, DonationTierId } from '@/lib/constants/donation-page';
+import {
+  DONATION_CHECKOUT_UNAVAILABLE,
+  type DonationTier,
+  type DonationTierId,
+} from '@/lib/constants/donation-page';
 import { FeatureCheckIcon, FeatureLockedIcon } from '@/components/donation-page/donation-icons';
 import { TierIcon } from '@/components/donation-page/TierIcon';
 import { formatAmd } from '@/components/donation-page/donation-utils';
@@ -8,34 +12,30 @@ type DonationTierCardsProps = {
   tiers: DonationTier[];
   billing: 'monthly' | 'annual';
   selectedId: DonationTierId | null;
+  checkoutEnabled: boolean;
   onSelect: (tierId: DonationTierId) => void;
   onScrollToPatron: () => void;
-  onConfirmTier: (tierId: DonationTierId, name: string, monthlyAmd: number) => void;
 };
 
 export function DonationTierCards({
   tiers,
   billing,
   selectedId,
+  checkoutEnabled,
   onSelect,
   onScrollToPatron,
-  onConfirmTier,
 }: DonationTierCardsProps) {
   const isAnnual = billing === 'annual';
+  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
-  function handleKeyDown(
-    event: KeyboardEvent,
-    tierId: DonationTierId,
-    monthlyAmd?: number,
-    name?: string,
-  ) {
+  function handleKeyDown(event: KeyboardEvent, tierId: DonationTierId) {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
     if (tierId === 'custom') {
       onScrollToPatron();
       return;
     }
-    if (monthlyAmd && name) onConfirmTier(tierId, name, monthlyAmd);
+    onSelect(tierId);
   }
 
   return (
@@ -43,6 +43,8 @@ export function DonationTierCards({
       {tiers.map((tier) => {
         const checkColor = tier.primary ? '#2ABFBF' : '#C9A84C';
         const displayAmount = tier.customPrice ? null : isAnnual ? tier.annualAmd : tier.monthlyAmd;
+        const isPaidTier = tier.id !== 'custom';
+        const paymentDisabled = !checkoutEnabled && isPaidTier;
 
         return (
           <article
@@ -54,7 +56,7 @@ export function DonationTierCards({
             role="radio"
             aria-checked={selectedId === tier.id}
             onClick={() => (tier.id === 'custom' ? onScrollToPatron() : onSelect(tier.id))}
-            onKeyDown={(event) => handleKeyDown(event, tier.id, tier.monthlyAmd ?? undefined, tier.label)}
+            onKeyDown={(event) => handleKeyDown(event, tier.id)}
           >
             {tier.recommended ? (
               <>
@@ -105,19 +107,21 @@ export function DonationTierCards({
             </ul>
             <button
               type="button"
-              className={`tier-cta cta-${tier.ctaVariant}`}
+              className={`tier-cta cta-${tier.ctaVariant}${paymentDisabled ? ' checkout-disabled' : ''}`}
+              disabled={paymentDisabled}
+              aria-disabled={paymentDisabled}
               onClick={(event) => {
                 event.stopPropagation();
                 if (tier.id === 'custom') {
                   onScrollToPatron();
                   return;
                 }
-                if (tier.monthlyAmd) onConfirmTier(tier.id, tier.label, tier.monthlyAmd);
+                if (!paymentDisabled) onSelect(tier.id);
               }}
             >
-              {tier.ctaLabel}
+              {paymentDisabled ? unavailable.tierCtaLabel : tier.ctaLabel}
             </button>
-            <p className="cta-post">{tier.ctaPost}</p>
+            <p className="cta-post">{paymentDisabled ? unavailable.tierCtaPost : tier.ctaPost}</p>
           </article>
         );
       })}

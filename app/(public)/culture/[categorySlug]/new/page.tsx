@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CultureFormPageView } from '@/components/culture-catalog/CultureFormPageView';
 import { SubcategoryProposalForm } from '@/components/forms/SubcategoryProposalForm';
-import { isFormRoute } from '@/lib/culture-menu';
+import { findCategoryPageNode } from '@/lib/culture-routes';
 import { getMenuTree } from '@/lib/queries/menu';
+import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
@@ -14,19 +15,20 @@ interface PageProps {
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const tree = await getMenuTree();
-  const node = tree.find((n) => n.slug === params.categorySlug);
-  if (!node) return { title: 'Add a new sub-catalog' };
-  return {
+  const node = findCategoryPageNode(tree, params.categorySlug);
+  if (!node) return buildNotFoundMetadata('Sub-catalog form');
+  return buildPublicPageMetadata({
     title: `Add a new ${node.title} sub-catalog`,
     description: `Propose a new ${node.title.toLowerCase()} sub-catalog to expand the open archive.`,
-  };
+    pathname: `/culture/${node.slug}/new`,
+  });
 }
 
 async function NewSubcategoryFormPage(props: PageProps) {
   const params = await props.params;
   const tree = await getMenuTree();
-  const node = tree.find((n) => n.slug === params.categorySlug && n.isActive);
-  if (!node || isFormRoute(node.routeType)) notFound();
+  const node = findCategoryPageNode(tree, params.categorySlug);
+  if (!node) notFound();
 
   return (
     <CultureFormPageView

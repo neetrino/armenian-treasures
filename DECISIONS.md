@@ -4,8 +4,10 @@ This document records the architectural and editorial choices made during the in
 
 ## Auth
 
-- **Choice**: NextAuth v5 (Auth.js) Credentials Provider with `jwt` session strategy. Admin email/password are read from `ADMIN_EMAIL` / `ADMIN_PASSWORD` env vars at login time — not from the database.
-- **Rationale**: §14 of the masterprompt recommends NextAuth v5 for "cleaner DX" over a hand-rolled `jose` JWT. JWT session strategy avoids a session table in the database and works well with Neon's serverless model.
+- **Initial choice**: NextAuth v5 (Auth.js) Credentials Provider with `jwt` session strategy.
+- **Current model** (since admin security hardening): Admin users live in the `AdminUser` Prisma table. Passwords are bcrypt hashes only — **not** env vars. Create users with `pnpm admin:create`; change passwords with `pnpm admin:change-password`.
+- **Route protection**: `proxy.ts` (Next.js 16) redirects unauthenticated `/admin` requests; authoritative enforcement is server-side via `requireAdmin()` / `requireAdminPage()`.
+- **Rationale**: JWT sessions avoid a session table and work well with Neon's serverless model. DB-backed admins support lockout, audit logs, and per-user lifecycle without secrets in env.
 
 ## Storage driver default
 
@@ -39,8 +41,9 @@ This document records the architectural and editorial choices made during the in
 
 ## Rate limiting backend
 
-- **Choice**: In-memory token bucket (per-process Map keyed by IP) with a documented `RateLimiter` interface that can be swapped for an Upstash Redis adapter.
-- **Rationale**: §14 explicitly allows in-memory for now and asks for the swap surface to be ready.
+- **Choice**: `RateLimiter` interface with Upstash Redis when `RATE_LIMIT_ENABLED=true` (production requirement) and in-memory fallback in development.
+- **Production**: Server fail-fast if distributed Redis is not configured — see `instrumentation.ts` and `SECURITY_NOTES.md`.
+- **Rationale**: In-memory limiters are acceptable locally; multi-instance production requires shared state (Upstash).
 
 ## Submission approval semantics
 
@@ -49,23 +52,31 @@ This document records the architectural and editorial choices made during the in
 
 ## Email
 
-- **Choice**: No email provider integrated. A `// TODO: wire Resend or SES here` comment is placed at the spot where the notification call would live (submission create handler and contact create handler).
-- **Rationale**: §11.3 explicitly defers email integration.
+- **Choice**: No email provider integrated. `// TODO: wire Resend or SES here` comments remain in public form server actions (contact, culture submit, subcategory proposal). Partnership and newsletter flows also persist to the DB only.
+- **Rationale**: Provider and destination inbox not approved yet. See Phase 0.3 plan — do not send until approved.
 
 ## Culture Menu reordering
 
-- **Choice**: Up/Down arrow buttons within siblings instead of HTML5 drag-and-drop.
-- **Rationale**: §6 forbids drag-and-drop builders and WYSIWYG. The brief allowed "drag-reorder within siblings" for the menu, but the user rule against drag-and-drop is stricter; arrow-button reorder preserves the same operation (swap with sibling) without any drag UI and works on every device.
+- **Choice**: `@dnd-kit` sortable drag-and-drop in the admin Culture Menu tree (`CultureMenuTree.tsx`). Home content and About pillars editors use the same pattern.
+- **Rationale**: Admin-only CMS reordering; no public WYSIWYG page builder. Drag-and-drop is scoped to authenticated admin editors, not public forms.
 
 ## Cache revalidation
 
-- **Choice**: All admin mutations call `revalidatePath()` against the public paths they affect. Long-running listing pages and public route handlers use `export const revalidate = 60` so cache freshness is bounded even when no admin mutation runs.
-- **Rationale**: §10.7 mandates revalidation from admin and §3.5 mandates ISR with a 60-second floor. Using `revalidatePath()` instead of `revalidateTag()` avoids managing a tag namespace while still invalidating exactly the pages that change.
+- **Choice**: Two complementary layers:
+  1. **`unstable_cache`** in `lib/queries/*` with `revalidate: 60` and named **tags** (`home-content`, `culture-menu`, `projects`, etc.).
+  2. Admin mutations call **`revalidateTag(..., 'max')`** for tag-based invalidation and **`revalidatePath()`** where specific public routes must refresh immediately (culture item slugs, about pages, etc.).
+  3. Public pages and read-only API routes also use **`export const revalidate = 60`** as an ISR floor.
+- **Rationale**: Tags keep related queries coherent (e.g. all culture-item reads share `culture-items`). Path revalidation covers routes whose URLs are not fully captured by a single tag.
 
 ## Storage S3 client (R2 driver)
 
-- **Choice**: The R2 driver in `lib/storage/r2.ts` loads `@aws-sdk/client-s3` via a runtime dynamic import (`new Function('name', 'return import(name)')`) and types the client surface locally. The package is **not** in `dependencies` because the default development driver is `local`.
-- **Rationale**: Avoids a hard dependency on the AWS SDK during local dev and tests. Production deployments that flip `STORAGE_DRIVER=r2` must `pnpm add @aws-sdk/client-s3` before deploying; this is documented in `README.md`.
+- **Choice**: `@aws-sdk/client-s3` is listed in `dependencies` and loaded via a runtime dynamic import in `lib/storage/r2.ts` (`new Function('name', 'return import(name)')`) so the SDK is not evaluated when `STORAGE_DRIVER=local`.
+- **Rationale**: Production R2 uploads and `pnpm r2:migrate-public` need the SDK available in deploy environments; lazy import keeps local dev paths that never touch R2 from loading S3 code eagerly.
+
+## Donation checkout
+
+- **Choice**: `/donate` tier UI is informational only. `DONATION_CHECKOUT_ENABLED = false` in `lib/constants/donation-page.ts` disables payment CTAs and shows a “coming soon” notice. No payment provider is integrated.
+- **Rationale**: Prevent users from believing checkout occurred when no processor exists. Enable only after provider approval (Stripe, Idram, etc.).
 
 ## Submissions, contact messages — delete vs archive
 
@@ -79,8 +90,14 @@ This document records the architectural and editorial choices made during the in
 
 ## Neon WebSocket bundling
 
-- **Choice**: `next.config.mjs` declares `@neondatabase/serverless`, `@prisma/adapter-neon`, `@prisma/client`, `ws`, and `bcryptjs` as `serverComponentsExternalPackages` **and** registers a webpack `externals` function that aliases the same packages as CommonJS. Public queries (`menu`, `settings`, `home`, `team`, `careers`, `projects`, `donators`, `culture-items`) wrap `prisma.*` calls in `try`/`catch` and return safe defaults so the production build succeeds even if Neon is unreachable from the build host.
-- **Rationale**: Without the externals, webpack rewrites `@neondatabase/serverless` into bundled modules that mis-resolve the WebSocket URL to `wss://localhost/v2`. Adding both `serverComponentsExternalPackages` and a `webpack.externals` callback makes Node treat the packages as native modules in both RSC and route handlers. The query-level try/catch keeps the build hermetic per the masterprompt §6 risk (build must succeed without live DB access).
+- **Choice**: `next.config.mjs` declares `@neondatabase/serverless`, `@prisma/adapter-neon`, `@prisma/client`, `ws`, and `bcryptjs` as `serverExternalPackages` so Node resolves them natively instead of bundling broken WebSocket shims.
+- **Build resilience**: Public queries in `lib/queries/*` wrap `prisma.*` calls in `try`/`catch` and return safe fallbacks so pages can build when Neon is unreachable from the build host.
+- **Rationale**: Bundled Neon serverless drivers can mis-resolve the WebSocket URL. External packages plus query-level fallbacks keep `pnpm build` hermetic without live DB access.
+
+## Production database migrations
+
+- **Choice**: `pnpm build` runs `prisma generate` only (safe for PR CI with placeholder DB URLs). Production uses `pnpm build:production` (includes `prisma migrate deploy`) as the Vercel build command, or [`.github/workflows/deploy-migrate.yml`](.github/workflows/deploy-migrate.yml) against production Neon secrets.
+- **Rationale**: Fresh production without applied migrations fails at runtime even when the Next.js build succeeds. PR CI must not require a real database. Full runbook: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ## Page file exports
 

@@ -53,7 +53,7 @@ const GROUPS: NavGroup[] = [
     label: 'Inbox',
     links: [
       { href: '/admin/submissions', label: 'Submissions', icon: Inbox },
-      { href: '/admin/contact-messages', label: 'Contact messages', icon: Mail },
+      { href: '/admin/contact-messages', label: 'Public inbox', icon: Mail },
     ],
   },
   {
