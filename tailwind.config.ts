@@ -163,6 +163,26 @@ const config: Config = {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        'admin-liquid-flow': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
+        'admin-liquid-wave': {
+          '0%': { transform: 'translateX(-42%) translateY(0px) scale(1)' },
+          '50%': { transform: 'translateX(18%) translateY(-1px) scale(1.04)' },
+          '100%': { transform: 'translateX(58%) translateY(0px) scale(1)' },
+        },
+        'admin-water-drift': {
+          '0%': { transform: 'translateX(-48%) translateY(0) scale(1)' },
+          '50%': { transform: 'translateX(8%) translateY(-3%) scale(1.05)' },
+          '100%': { transform: 'translateX(56%) translateY(0) scale(1)' },
+        },
+        'admin-water-drift-soft': {
+          '0%': { transform: 'translateX(-42%) translateY(0) scale(1)' },
+          '50%': { transform: 'translateX(14%) translateY(3%) scale(1.03)' },
+          '100%': { transform: 'translateX(60%) translateY(0) scale(1)' },
+        },
       },
       animation: {
         'portal-marquee': 'portal-marquee 32s linear infinite',
@@ -175,6 +195,10 @@ const config: Config = {
         'admin-scale-in': 'admin-scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         'admin-bar-up': 'admin-bar-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards',
         'admin-shimmer': 'admin-shimmer 1.8s ease-in-out infinite',
+        'admin-liquid-flow': 'admin-liquid-flow 7.5s ease-in-out infinite',
+        'admin-liquid-wave': 'admin-liquid-wave 5.8s ease-in-out infinite',
+        'admin-water-drift': 'admin-water-drift 5.6s ease-in-out infinite',
+        'admin-water-drift-soft': 'admin-water-drift-soft 7.2s ease-in-out infinite',
       },
     },
   },
