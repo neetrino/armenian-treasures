@@ -2,7 +2,9 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { CultureMenuCreateModal } from '@/components/admin/CultureMenuCreateModal';
 import { CultureMenuTree } from '@/components/admin/CultureMenuTree';
 import { Button } from '@/components/ui/Button';
@@ -45,23 +47,34 @@ export function CultureMenuPageClient({ user, tree, parents }: CultureMenuPageCl
 
   return (
     <>
-      <AdminTopbar title="Culture menu" user={user} />
-      <div className="relative flex flex-1 flex-col gap-6 p-6">
-        <div className="flex justify-end">
+      <AdminPageShell
+        user={user}
+        topbarTitle="Culture menu"
+        title="Menu structure"
+        description="Build the culture portal navigation tree — categories, subcategories, and custom links."
+        size="wide"
+        actions={
           <Button type="button" variant="primary" onClick={() => openCreateModal(null)}>
-            <Plus size={14} aria-hidden /> Add Category
+            <Plus size={14} aria-hidden /> Add category
           </Button>
-        </div>
-        <CultureMenuTree tree={tree} onAddChild={(parentId) => openCreateModal(parentId)} />
-        {isCreateModalOpen ? (
-          <CultureMenuCreateModal
-            parents={parents}
-            defaultParentId={selectedParentId ?? undefined}
-            parentTitle={parentTitle}
-            onClose={closeCreateModal}
-          />
-        ) : null}
-      </div>
+        }
+      >
+        <AdminHelpCallout title="How the tree works">
+          Top-level items are main culture categories. Use the + on each row to add subcategories. Page
+          copy for catalog pages is edited under <strong>Culture → Culture page copy</strong>.
+        </AdminHelpCallout>
+        <AdminPanelCard padding="lg">
+          <CultureMenuTree tree={tree} onAddChild={(parentId) => openCreateModal(parentId)} />
+        </AdminPanelCard>
+      </AdminPageShell>
+      {isCreateModalOpen ? (
+        <CultureMenuCreateModal
+          parents={parents}
+          defaultParentId={selectedParentId ?? undefined}
+          parentTitle={parentTitle}
+          onClose={closeCreateModal}
+        />
+      ) : null}
     </>
   );
 }

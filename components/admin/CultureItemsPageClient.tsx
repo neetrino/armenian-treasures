@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useCallback, useMemo, useState, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus, ExternalLink } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { CultureItemForm } from '@/components/admin/CultureItemForm';
@@ -206,48 +206,51 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
 
   return (
     <>
-      <AdminTopbar title="Culture items" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Culture items"
-          description="Curate the entries shown inside the Culture Portal. Items are grouped by their menu path."
-          actions={
-            <Button type="button" variant="primary" onClick={openCreateModal}>
-              <Plus size={14} aria-hidden /> Add item
-            </Button>
-          }
-        />
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <div className="flex flex-1 flex-col gap-1.5">
-            <label htmlFor="culture-items-search" className="text-xs font-medium text-ink-muted">
-              Search
-            </label>
-            <Input
-              id="culture-items-search"
-              type="search"
-              placeholder="Title, slug, region, period, status, category…"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
+      <AdminPageShell
+        user={user}
+        topbarTitle="Culture items"
+        title="Culture items"
+        description="Curate the entries shown inside the Culture Portal. Items are grouped by their menu path."
+        size="wide"
+        actions={
+          <Button type="button" variant="primary" onClick={openCreateModal}>
+            <Plus size={14} aria-hidden /> Add item
+          </Button>
+        }
+      >
+        <AdminPanelCard padding="sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div className="flex flex-1 flex-col gap-1.5">
+              <label htmlFor="culture-items-search" className="text-xs font-medium text-ink-muted">
+                Search
+              </label>
+              <Input
+                id="culture-items-search"
+                type="search"
+                placeholder="Title, slug, region, period, status, category…"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </div>
+            <div className="flex w-full flex-col gap-1.5 sm:w-72">
+              <label htmlFor="culture-items-category" className="text-xs font-medium text-ink-muted">
+                Category
+              </label>
+              <Select
+                id="culture-items-category"
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+              >
+                <option value="">All categories</option>
+                {categories.map((path) => (
+                  <option key={path} value={path}>
+                    {path}
+                  </option>
+                ))}
+              </Select>
+            </div>
           </div>
-          <div className="flex w-full flex-col gap-1.5 sm:w-72">
-            <label htmlFor="culture-items-category" className="text-xs font-medium text-ink-muted">
-              Category
-            </label>
-            <Select
-              id="culture-items-category"
-              value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value)}
-            >
-              <option value="">All categories</option>
-              {categories.map((path) => (
-                <option key={path} value={path}>
-                  {path}
-                </option>
-              ))}
-            </Select>
-          </div>
-        </div>
+        </AdminPanelCard>
         <AdminTable
           columns={columns}
           rows={filteredRows}
@@ -255,7 +258,7 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
           empty={tableEmpty}
           onRowClick={openEditModal}
         />
-      </div>
+      </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal
           eyebrow="Culture items"

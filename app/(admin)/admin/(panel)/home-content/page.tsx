@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
 import { HomeContentForm } from '@/components/admin/HomeContentForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { HOME_CONTENT_FALLBACK } from '@/lib/queries/home';
@@ -25,8 +25,8 @@ async function AdminHomeContentPage() {
     heroSubtitle: content?.heroSubtitle ?? fallback.heroSubtitle,
     heroTagline: content?.heroTagline ?? fallback.heroTagline,
     heroDescription: content?.heroDescription ?? fallback.heroDescription,
-    heroImage: content?.heroImage ?? fallback.heroImage ?? '',
-    heroMobileImage: content?.heroMobileImage ?? '',
+    heroImage: content ? (content.heroImage ?? '') : (fallback.heroImage ?? ''),
+    heroMobileImage: content ? (content.heroMobileImage ?? '') : '',
     primaryCtaText: content?.primaryCtaText ?? fallback.primaryCtaText,
     primaryCtaUrl: content?.primaryCtaUrl ?? fallback.primaryCtaUrl,
     secondaryCtaText: content?.secondaryCtaText ?? fallback.secondaryCtaText,
@@ -41,18 +41,19 @@ async function AdminHomeContentPage() {
     sections: normalizeHomeSections(content?.sections ?? fallback.sections),
   };
   return (
-    <>
-      <AdminTopbar title="Home content" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Homepage content"
-          description="Edit the homepage hero, stats, section copy, technology cards, and CTA blocks."
+    <AdminPageShell
+      user={user}
+      topbarTitle="Homepage"
+      title="Homepage content"
+      description="Visual editor with tabs — hero, stats, technology cards, homepage blocks, and bottom CTA. No JSON editing."
+    >
+      <AdminPanelCard>
+        <HomeContentForm
+          key={content?.updatedAt?.toISOString() ?? 'new'}
+          initial={initial}
         />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <HomeContentForm initial={initial} />
-        </div>
-      </div>
-    </>
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

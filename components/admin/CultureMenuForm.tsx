@@ -1,7 +1,8 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
-import { CultureMenuCatalogFields } from '@/components/admin/CultureMenuCatalogFields';
+import { CulturePageContentLink } from '@/components/admin/CulturePageContentLink';
+import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
@@ -28,6 +29,7 @@ interface MenuFormProps {
     customUrl: string;
     catalogContent?: unknown;
   };
+  catalogPagePath?: string;
   parents: { id: string; title: string }[];
   defaultParentId?: string;
   onSuccess?: () => void;
@@ -50,6 +52,7 @@ export function CultureMenuForm({
   initial,
   parents,
   defaultParentId,
+  catalogPagePath,
   onSuccess,
   onCancel,
 }: MenuFormProps) {
@@ -121,6 +124,7 @@ export function CultureMenuForm({
           label="Card / fallback hero image"
           name="image"
           folder="culture"
+          layout="card"
           defaultValue={initial?.image ?? ''}
           hint="Used on category cards and as hero fallback when no custom hero banner is set."
           error={state.fieldErrors?.image}
@@ -148,11 +152,13 @@ export function CultureMenuForm({
         defaultValue={initial?.description ?? ''}
         error={state.fieldErrors?.description}
       />
-      {showCatalogFields ? (
-        <CultureMenuCatalogFields
-          catalogContent={initial?.catalogContent}
-          fieldErrors={state.fieldErrors}
-        />
+      {showCatalogFields && catalogPagePath ? (
+        <CulturePageContentLink menuPath={catalogPagePath} pageLabel={initial?.title} />
+      ) : showCatalogFields && mode === 'create' ? (
+        <AdminHelpCallout title="Page content">
+          After creating this menu item, open <strong>Culture → Culture page copy</strong> to edit hero
+          text, about sections, and map labels with a visual form.
+        </AdminHelpCallout>
       ) : null}
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">

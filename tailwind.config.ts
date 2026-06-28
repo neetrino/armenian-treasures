@@ -135,11 +135,46 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        'admin-fade-up': {
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'admin-fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'admin-slide-left': {
+          '0%': { opacity: '0', transform: 'translateX(-100%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'admin-slide-right': {
+          '0%': { opacity: '0', transform: 'translateX(100%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'admin-scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'admin-bar-up': {
+          '0%': { opacity: '0', transform: 'translateY(100%)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'admin-shimmer': {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
       },
       animation: {
         'portal-marquee': 'portal-marquee 32s linear infinite',
         'particle-float': 'particle-float 8s ease-in-out infinite',
         'hero-fade-in': 'hero-fade-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-fade-up': 'admin-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-fade-in': 'admin-fade-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-slide-left': 'admin-slide-left 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-slide-right': 'admin-slide-right 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-scale-in': 'admin-scale-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-bar-up': 'admin-bar-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards',
+        'admin-shimmer': 'admin-shimmer 1.8s ease-in-out infinite',
       },
     },
   },

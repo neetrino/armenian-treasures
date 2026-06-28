@@ -136,6 +136,7 @@ export async function revalidateCultureMenuCache(): Promise<void> {
   revalidatePublicLayoutChrome();
   revalidatePublicPages(['/', '/culture']);
   revalidatePath('/admin/culture-menu');
+  revalidatePath('/admin/culture-pages');
   await revalidateCultureCatalogPaths();
   revalidatePublicApiRoutes([PUBLIC_API_ROUTES.cultureMenu]);
 }

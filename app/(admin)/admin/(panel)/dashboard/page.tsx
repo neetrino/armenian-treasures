@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowRight, FolderArchive, HandCoins, Inbox, Mail } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminStagger } from '@/components/admin/AdminStagger';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ContactInboxTypeBadge } from '@/components/admin/ContactInboxTypeBadge';
@@ -69,14 +69,14 @@ async function AdminDashboardPage() {
   ];
 
   return (
-    <>
-      <AdminTopbar title="Dashboard" user={user} />
-      <div className="flex flex-1 flex-col gap-8 p-6">
-        <AdminPageHeader
-          title={`Welcome back, ${user.name.split(' ')[0] ?? 'curator'}.`}
-          description="A live snapshot of the foundation's content and inbox."
-        />
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <AdminPageShell
+      user={user}
+      topbarTitle="Dashboard"
+      title={`Welcome back, ${user.name.split(' ')[0] ?? 'curator'}.`}
+      description="A live snapshot of the foundation's content and inbox."
+      size="wide"
+    >
+        <AdminStagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {kpis.map((kpi) => {
             const Icon = kpi.icon;
             return (
@@ -93,9 +93,9 @@ async function AdminDashboardPage() {
               </Card>
             );
           })}
-        </section>
+        </AdminStagger>
 
-        <section className="grid gap-6 lg:grid-cols-3">
+        <AdminStagger as="section" className="grid gap-6 lg:grid-cols-3">
           <Card className="p-6 lg:col-span-2">
             <div className="flex items-center justify-between">
               <h3 className="font-display text-xl text-ink">Latest submissions</h3>
@@ -144,9 +144,9 @@ async function AdminDashboardPage() {
               ))}
             </ul>
           </Card>
-        </section>
+        </AdminStagger>
 
-        <section>
+        <AdminStagger as="section">
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-display text-xl text-ink">Latest public inbox</h3>
@@ -183,9 +183,8 @@ async function AdminDashboardPage() {
               )}
             </ul>
           </Card>
-        </section>
-      </div>
-    </>
+        </AdminStagger>
+    </AdminPageShell>
   );
 }
 

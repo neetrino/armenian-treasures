@@ -2,16 +2,23 @@
 
 import { useCallback, useId, useRef, useState } from 'react';
 import Image from 'next/image';
-import { ImageIcon, Loader2, Upload, X } from 'lucide-react';
+import { Loader2, Upload, X } from 'lucide-react';
 import { uploadAdminImageAction } from '@/app/(admin)/admin/(panel)/upload-image-actions';
 import { Label } from '@/components/ui/Label';
 import { cn } from '@/lib/utils';
+
+import {
+  getAdminImagePreviewStyle,
+  type AdminImagePreviewLayout,
+} from '@/lib/admin/image-preview-layout';
 
 interface AdminImageDropzoneFieldProps {
   label: string;
   name: string;
   folder: 'hero' | 'culture';
   variant?: 'desktop' | 'mobile';
+  /** `card` = catalog card (16:10). `banner` = wide hero (16:9). */
+  layout?: AdminImagePreviewLayout;
   defaultValue?: string;
   hint?: string;
   error?: string;
@@ -24,6 +31,7 @@ export function AdminImageDropzoneField({
   name,
   folder,
   variant,
+  layout = 'banner',
   defaultValue = '',
   hint,
   error,
@@ -77,6 +85,7 @@ export function AdminImageDropzoneField({
   );
 
   const previewSrc = url.trim() || null;
+  const previewStyle = getAdminImagePreviewStyle(layout);
 
   return (
     <div className="flex flex-col gap-2">
@@ -84,15 +93,20 @@ export function AdminImageDropzoneField({
       <input type="hidden" name={name} value={url} />
 
       {previewSrc ? (
-        <div className="relative overflow-hidden rounded-xl border border-stone-200 bg-stone-50">
-          <div className="relative aspect-[16/9] w-full">
+        <div
+          className={cn(
+            'relative overflow-hidden rounded-xl border border-stone-200 bg-stone-900',
+            previewStyle.containerClass,
+          )}
+        >
+          <div className={cn('relative w-full', previewStyle.aspectClass)}>
             <Image
               src={previewSrc}
               alt=""
               fill
               unoptimized
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, 480px"
+              sizes={previewStyle.sizes}
             />
           </div>
           <button
@@ -130,6 +144,8 @@ export function AdminImageDropzoneField({
           onClick={() => fileInputRef.current?.click()}
           className={cn(
             'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center transition',
+            previewStyle.dropzoneClass,
+            previewStyle.aspectClass,
             isDragging
               ? 'border-bronze-500 bg-bronze-50/40'
               : 'border-stone-300 bg-parchment-50 hover:border-bronze-500 hover:bg-parchment-100/60',
@@ -155,18 +171,6 @@ export function AdminImageDropzoneField({
         className="sr-only"
         onChange={(event) => handleFiles(event.target.files)}
       />
-
-      <div className="flex items-start gap-2 rounded-lg border border-stone-100 bg-white px-3 py-2">
-        <ImageIcon size={14} className="mt-0.5 shrink-0 text-ink-muted" aria-hidden />
-        <input
-          type="text"
-          value={url}
-          onChange={(event) => setUrl(event.target.value)}
-          placeholder="Paste an image URL or upload above"
-          aria-label={`${label} URL`}
-          className="w-full bg-transparent text-xs text-ink-soft outline-none placeholder:text-ink-muted"
-        />
-      </div>
 
       {error ? (
         <p className="text-xs text-pomegranate">{error}</p>

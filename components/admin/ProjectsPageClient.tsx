@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { ProjectForm } from '@/components/admin/ProjectForm';
@@ -152,24 +151,25 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
 
   return (
     <>
-      <AdminTopbar title="Projects" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Projects"
-          description="Funding campaigns shown on the public /projects page."
-          actions={
-            <Button type="button" variant="primary" onClick={openCreateModal}>
-              <Plus size={14} aria-hidden /> Add project
-            </Button>
-          }
-        />
+      <AdminPageShell
+        user={user}
+        topbarTitle="Projects"
+        title="Projects"
+        description="Funding campaigns shown on the public /projects page."
+        size="wide"
+        actions={
+          <Button type="button" variant="primary" onClick={openCreateModal}>
+            <Plus size={14} aria-hidden /> Add project
+          </Button>
+        }
+      >
         <AdminTable
           columns={columns}
           rows={rows}
           getRowId={(row) => row.id}
           onRowClick={openEditModal}
         />
-      </div>
+      </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal eyebrow="Projects" title="Create project" onClose={closeCreateModal} maxWidthClass="max-w-3xl">
           <ProjectForm mode="create" onSuccess={handleModalSuccess} onCancel={closeCreateModal} />

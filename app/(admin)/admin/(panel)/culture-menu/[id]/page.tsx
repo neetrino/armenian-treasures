@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CultureMenuForm } from '@/components/admin/CultureMenuForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
@@ -25,36 +26,53 @@ async function EditCultureMenuItemPage(props: PageProps) {
     prisma.cultureMenuItem.findMany({
       where: { parentId: null },
       orderBy: { order: 'asc' },
-      select: { id: true, title: true },
+      select: { id: true, title: true, slug: true },
     }),
   ]);
   if (!item) notFound();
+
+  const parentRow = item.parentId
+    ? await prisma.cultureMenuItem.findUnique({
+        where: { id: item.parentId },
+        select: { slug: true },
+      })
+    : null;
+  const catalogPagePath =
+    item.routeType === 'CATEGORY' || item.routeType === 'SUBCATEGORY'
+      ? parentRow
+        ? `${parentRow.slug}/${item.slug}`
+        : item.slug
+      : undefined;
+
   return (
-    <>
-      <AdminTopbar title="Edit menu item" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader title={item.title} description={`Editing menu item with slug “${item.slug}”.`} />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <CultureMenuForm
-            mode="edit"
-            itemId={item.id}
-            parents={parents}
-            initial={{
-              title: item.title,
-              slug: item.slug,
-              description: item.description ?? '',
-              parentId: item.parentId ?? '',
-              order: item.order,
-              isActive: item.isActive,
-              image: item.image ?? '',
-              routeType: item.routeType,
-              customUrl: item.customUrl ?? '',
-              catalogContent: item.catalogContent,
-            }}
-          />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Edit menu item"
+      title={item.title}
+      description={`Editing menu item with slug “${item.slug}”.`}
+      beforeHeader={<AdminBackLink href="/admin/culture-menu" label="Menu structure" />}
+    >
+      <AdminPanelCard>
+        <CultureMenuForm
+          mode="edit"
+          itemId={item.id}
+          catalogPagePath={catalogPagePath}
+          parents={parents}
+          initial={{
+            title: item.title,
+            slug: item.slug,
+            description: item.description ?? '',
+            parentId: item.parentId ?? '',
+            order: item.order,
+            isActive: item.isActive,
+            image: item.image ?? '',
+            routeType: item.routeType,
+            customUrl: item.customUrl ?? '',
+            catalogContent: item.catalogContent,
+          }}
+        />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

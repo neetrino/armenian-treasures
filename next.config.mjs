@@ -33,6 +33,13 @@ const nextConfig = {
   allowedDevOrigins: ['192.168.15.237'],
   reactStrictMode: true,
   poweredByHeader: false,
+  experimental: {
+    // Admin CMS: hero uploads and full page-content JSON can exceed the 1 MB default.
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+    proxyClientMaxBodySize: '10mb',
+  },
   images: {
     remotePatterns: buildR2RemotePatterns(),
   },
