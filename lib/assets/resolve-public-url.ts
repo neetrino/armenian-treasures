@@ -5,6 +5,13 @@ function normalizePublicPath(path: string): string {
   return path;
 }
 
+function normalizeLegacyCultureSvgPath(path: string): string {
+  if (/^\/images\/culture\/[^/]+\.svg$/i.test(path)) {
+    return '/images/culture/card-heritage.webp';
+  }
+  return path;
+}
+
 function getPublicR2BaseUrl(): string | null {
   const base =
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim() ||
@@ -32,18 +39,19 @@ export function resolvePublicAssetUrl(path: string): string {
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
 
   const normalized = normalizePublicPath(trimmed);
+  const normalizedLegacySafe = normalizeLegacyCultureSvgPath(normalized);
 
   if (!shouldUseR2PublicAssets()) {
-    return normalized;
+    return normalizedLegacySafe;
   }
 
-  const fromManifest = getR2ManifestUrl(normalized);
+  const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
   if (fromManifest) return fromManifest;
 
   const base = getPublicR2BaseUrl();
   if (base) {
-    return `${base}${normalized}`;
+    return `${base}${normalizedLegacySafe}`;
   }
 
-  return normalized;
+  return normalizedLegacySafe;
 }
