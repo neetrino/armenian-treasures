@@ -2,25 +2,16 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/db';
 import { writeAdminAuditLog } from './admin-audit';
 import {
-  BCRYPT_ROUNDS,
-  envCredentialsMatch,
-  getAdminEnvDiagnostics,
-  getConfiguredAdminEnvCredentials,
-  logAdminAuthDiagnostics,
-} from './admin-env-credentials';
+  checkLoginEnvVars,
+  logLoginError,
+  LOGIN_LOG_PREFIX,
+  type LoginDebugErrorCode,
+  type LoginDebugPayload,
+} from './login-debug';
 
 const GENERIC_ERROR = 'Invalid email or password' as const;
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
-
-const ADMIN_USER_SELECT = {
-  id: true,
-  email: true,
-  isActive: true,
-  lastLoginAt: true,
-  createdAt: true,
-  updatedAt: true,
-} as const;
 
 export interface ValidateAdminCredentialsContext {
   ipAddress?: string;
@@ -38,10 +29,21 @@ export type SafeAdminUser = {
 
 export type ValidateAdminCredentialsResult =
   | { success: true; adminUser: SafeAdminUser }
-  | { success: false; error: typeof GENERIC_ERROR };
+  | {
+      success: false;
+      error: typeof GENERIC_ERROR;
+      debug: LoginDebugPayload;
+    };
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
+}
+
+function fail(
+  debug: LoginDebugPayload,
+): Extract<ValidateAdminCredentialsResult, { success: false }> {
+  console.error(`${LOGIN_LOG_PREFIX} validation failed:`, debug.error, debug.details ?? '');
+  return { success: false, error: GENERIC_ERROR, debug };
 }
 
 async function recordFailedLogin(
@@ -49,105 +51,45 @@ async function recordFailedLogin(
   email: string,
   context: ValidateAdminCredentialsContext,
 ): Promise<void> {
-  await writeAdminAuditLog('login_failed', {
-    adminUserId,
-    email,
-    ipAddress: context.ipAddress ?? null,
-    userAgent: context.userAgent ?? null,
-  });
-
-  if (!adminUserId) return;
-
-  const user = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
-  if (!user) return;
-
-  const failedLoginCount = user.failedLoginCount + 1;
-  const shouldLock = failedLoginCount >= MAX_FAILED_ATTEMPTS;
-  const lockedUntil = shouldLock
-    ? new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000)
-    : user.lockedUntil;
-
-  await prisma.adminUser.update({
-    where: { id: adminUserId },
-    data: {
-      failedLoginCount,
-      lockedUntil: shouldLock ? lockedUntil : user.lockedUntil,
-    },
-  });
-
-  if (shouldLock) {
-    await writeAdminAuditLog('lockout', {
+  try {
+    await writeAdminAuditLog('login_failed', {
       adminUserId,
       email,
       ipAddress: context.ipAddress ?? null,
       userAgent: context.userAgent ?? null,
-      metadata: { failedLoginCount },
     });
-  }
-}
 
-async function completeSuccessfulLogin(
-  adminUserId: string,
-  email: string,
-  context: ValidateAdminCredentialsContext,
-): Promise<SafeAdminUser> {
-  const updated = await prisma.adminUser.update({
-    where: { id: adminUserId },
-    data: {
-      failedLoginCount: 0,
-      lockedUntil: null,
-      lastLoginAt: new Date(),
-      isActive: true,
-    },
-    select: ADMIN_USER_SELECT,
-  });
+    if (!adminUserId) return;
 
-  await writeAdminAuditLog('login_success', {
-    adminUserId: updated.id,
-    email: updated.email,
-    ipAddress: context.ipAddress ?? null,
-    userAgent: context.userAgent ?? null,
-  });
+    const user = await prisma.adminUser.findUnique({ where: { id: adminUserId } });
+    if (!user) return;
 
-  return updated;
-}
+    const failedLoginCount = user.failedLoginCount + 1;
+    const shouldLock = failedLoginCount >= MAX_FAILED_ATTEMPTS;
+    const lockedUntil = shouldLock
+      ? new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000)
+      : user.lockedUntil;
 
-async function ensureAdminUserFromEnv(
-  normalizedEmail: string,
-  password: string,
-  context: ValidateAdminCredentialsContext,
-): Promise<ValidateAdminCredentialsResult | null> {
-  const configured = getConfiguredAdminEnvCredentials();
-  if (!configured || !envCredentialsMatch(normalizedEmail, password)) {
-    return null;
-  }
+    await prisma.adminUser.update({
+      where: { id: adminUserId },
+      data: {
+        failedLoginCount,
+        lockedUntil: shouldLock ? lockedUntil : user.lockedUntil,
+      },
+    });
 
-  const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
-  const existing = await prisma.adminUser.findUnique({
-    where: { email: normalizedEmail },
-  });
-
-  const adminUser = existing
-    ? await prisma.adminUser.update({
-        where: { id: existing.id },
-        data: { passwordHash, isActive: true },
-        select: ADMIN_USER_SELECT,
-      })
-    : await prisma.adminUser.create({
-        data: { email: normalizedEmail, passwordHash },
-        select: ADMIN_USER_SELECT,
+    if (shouldLock) {
+      await writeAdminAuditLog('lockout', {
+        adminUserId,
+        email,
+        ipAddress: context.ipAddress ?? null,
+        userAgent: context.userAgent ?? null,
+        metadata: { failedLoginCount },
       });
-
-  logAdminAuthDiagnostics({
-    authPath: 'env',
-    adminUserFoundInDb: Boolean(existing),
-    envEmailMatches: true,
-  });
-
-  return {
-    success: true,
-    adminUser: await completeSuccessfulLogin(adminUser.id, adminUser.email, context),
-  };
+    }
+  } catch (error) {
+    logLoginError('recordFailedLogin threw', error);
+  }
 }
 
 export async function validateAdminCredentials(
@@ -156,65 +98,112 @@ export async function validateAdminCredentials(
   context: ValidateAdminCredentialsContext = {},
 ): Promise<ValidateAdminCredentialsResult> {
   const normalizedEmail = normalizeEmail(email);
-  const envDiagnostics = getAdminEnvDiagnostics();
-  const configuredEnv = getConfiguredAdminEnvCredentials();
+  console.log(`${LOGIN_LOG_PREFIX} validateAdminCredentials started for email=${normalizedEmail}`);
 
-  logAdminAuthDiagnostics({
-    ...envDiagnostics,
-    submittedEmailLength: email.trim().length,
-    submittedPasswordLength: password.length,
-    normalizedEmailMatchesEnv: configuredEnv
-      ? configuredEnv.email === normalizedEmail
-      : false,
-    hasDatabaseUrl: Boolean(process.env.DATABASE_URL?.trim()),
-  });
+  const envIssue = checkLoginEnvVars();
+  if (envIssue) return fail(envIssue);
 
-  const envResult = await ensureAdminUserFromEnv(normalizedEmail, password, context);
-  if (envResult) return envResult;
+  let adminUser: Awaited<ReturnType<typeof prisma.adminUser.findUnique>>;
+  try {
+    console.log(`${LOGIN_LOG_PREFIX} querying database for admin user`);
+    adminUser = await prisma.adminUser.findUnique({
+      where: { email: normalizedEmail },
+    });
+    console.log(
+      `${LOGIN_LOG_PREFIX} user lookup complete: found=${Boolean(adminUser)} active=${adminUser?.isActive ?? 'n/a'}`,
+    );
+  } catch (error) {
+    logLoginError('database user lookup threw', error);
+    return fail({
+      error: 'DB_CONNECTION_FAILED',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
 
-  const adminUser = await prisma.adminUser.findUnique({
-    where: { email: normalizedEmail },
-  });
-
-  logAdminAuthDiagnostics({
-    authPath: 'database',
-    adminUserFound: Boolean(adminUser),
-    adminUserActive: adminUser?.isActive ?? false,
-    adminUserLocked: Boolean(
-      adminUser?.lockedUntil && adminUser.lockedUntil > new Date(),
-    ),
-    dbEmailLength: adminUser?.email.length ?? 0,
-  });
-
-  const reject = async (): Promise<ValidateAdminCredentialsResult> => {
+  const reject = async (
+    debugCode: LoginDebugErrorCode,
+  ): Promise<ValidateAdminCredentialsResult> => {
     await recordFailedLogin(adminUser?.id ?? null, normalizedEmail, context);
-    return { success: false, error: GENERIC_ERROR };
+    return fail({ error: debugCode });
   };
 
-  if (!adminUser || !adminUser.isActive) {
-    if (!adminUser) {
+  if (!adminUser) {
+    try {
+      console.log(`${LOGIN_LOG_PREFIX} user not found, running dummy bcrypt.compare`);
       await bcrypt.compare(password, '$2a$12$invalidhashinvalidhashinvalidha');
+      console.log(`${LOGIN_LOG_PREFIX} dummy bcrypt.compare completed`);
+    } catch (error) {
+      logLoginError('dummy bcrypt.compare threw', error);
+      return fail({
+        error: 'BCRYPT_COMPARE_THREW',
+        details: error instanceof Error ? error.message : String(error),
+      });
     }
-    return reject();
+    return reject('USER_NOT_FOUND');
+  }
+
+  if (!adminUser.isActive) {
+    return reject('USER_INACTIVE');
   }
 
   if (adminUser.lockedUntil && adminUser.lockedUntil > new Date()) {
+    console.log(`${LOGIN_LOG_PREFIX} user is locked until ${adminUser.lockedUntil.toISOString()}`);
     await recordFailedLogin(adminUser.id, normalizedEmail, context);
-    return { success: false, error: GENERIC_ERROR };
+    return fail({ error: 'USER_LOCKED' });
   }
 
-  const passwordMatches = await bcrypt.compare(password, adminUser.passwordHash);
-  logAdminAuthDiagnostics({
-    authPath: 'database',
-    passwordMatched: passwordMatches,
-  });
+  let passwordMatches: boolean;
+  try {
+    console.log(`${LOGIN_LOG_PREFIX} running bcrypt.compare for user id=${adminUser.id}`);
+    passwordMatches = await bcrypt.compare(password, adminUser.passwordHash);
+    console.log(
+      `${LOGIN_LOG_PREFIX} bcrypt.compare completed without throw, matches=${passwordMatches}`,
+    );
+  } catch (error) {
+    logLoginError('bcrypt.compare threw', error);
+    return fail({
+      error: 'BCRYPT_COMPARE_THREW',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   if (!passwordMatches) {
-    return reject();
+    return reject('PASSWORD_MISMATCH');
   }
 
-  return {
-    success: true,
-    adminUser: await completeSuccessfulLogin(adminUser.id, adminUser.email, context),
-  };
+  try {
+    console.log(`${LOGIN_LOG_PREFIX} password matched, updating lastLoginAt`);
+    const updated = await prisma.adminUser.update({
+      where: { id: adminUser.id },
+      data: {
+        failedLoginCount: 0,
+        lockedUntil: null,
+        lastLoginAt: new Date(),
+      },
+      select: {
+        id: true,
+        email: true,
+        isActive: true,
+        lastLoginAt: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    await writeAdminAuditLog('login_success', {
+      adminUserId: updated.id,
+      email: updated.email,
+      ipAddress: context.ipAddress ?? null,
+      userAgent: context.userAgent ?? null,
+    });
+
+    console.log(`${LOGIN_LOG_PREFIX} login success for user id=${updated.id}`);
+    return { success: true, adminUser: updated };
+  } catch (error) {
+    logLoginError('post-login database update threw', error);
+    return fail({
+      error: 'DB_CONNECTION_FAILED',
+      details: error instanceof Error ? error.message : String(error),
+    });
+  }
 }
