@@ -9,11 +9,16 @@ import type { PublicCultureItemDTO } from '@/lib/dto';
 interface CultureCatalogItemGridProps {
   items: PublicCultureItemDTO[];
   content: CultureCatalogContent['items'];
+  sectionId?: string;
 }
 
-export function CultureCatalogItemGrid({ items, content }: CultureCatalogItemGridProps) {
+export function CultureCatalogItemGrid({
+  items,
+  content,
+  sectionId = 'entries',
+}: CultureCatalogItemGridProps) {
   return (
-    <section id="entries">
+    <section id={sectionId}>
       <p className="sec-label">{content.label}</p>
       <h2 className="sec-title">{content.title}</h2>
       <p className="sec-desc">{content.description}</p>
@@ -34,7 +39,7 @@ export function CultureCatalogItemGrid({ items, content }: CultureCatalogItemGri
                 <div className="catalog-item-card__media">
                   <Image
                     src={imageSrc}
-                    alt=""
+                    alt={item.title}
                     width={640}
                     height={400}
                     className="catalog-item-card__img"

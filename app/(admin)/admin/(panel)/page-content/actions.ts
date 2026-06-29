@@ -1,15 +1,15 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
-import type { Prisma } from '@prisma/client';
-import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { revalidatePageContentSlug } from '@/lib/cache/revalidation';
+import { prisma } from '@/lib/db';
 import {
   getDefaultPageContent,
   PAGE_CONTENT_TITLES,
   type PageContentSlug,
 } from '@/lib/types/page-content';
-
+import { validatePageContentJson } from '@/lib/validation/page-content';
+import type { Prisma } from '@prisma/client';
 export interface PageContentFormState {
   status: 'idle' | 'success' | 'error';
   message?: string;
@@ -34,35 +34,25 @@ export async function savePageContentAction(
     return { status: 'error', message: 'Content must be a JSON object.' };
   }
 
+  const validated = validatePageContentJson(slug, parsed);
+  if (!validated.ok) {
+    return { status: 'error', message: validated.message };
+  }
+
   await prisma.pageContent.upsert({
     where: { slug },
     create: {
       slug,
       title: PAGE_CONTENT_TITLES[slug],
-      content: parsed as Prisma.InputJsonValue,
+      content: validated.data as Prisma.InputJsonValue,
     },
     update: {
       title: PAGE_CONTENT_TITLES[slug],
-      content: parsed as Prisma.InputJsonValue,
+      content: validated.data as Prisma.InputJsonValue,
     },
   });
 
-  revalidateTag(`page-content-${slug}`, 'max');
-  revalidateTag('page-content', 'max');
-
-  const paths: Record<PageContentSlug, string[]> = {
-    'donation-page': ['/donate'],
-    'partnership-page': ['/partnership'],
-    'cultural-portal-page': ['/culture'],
-    khndzoresk: ['/khndzoresk'],
-    'khachaturian-museum': ['/khachaturian-museum'],
-    'national-gallery-armenia': ['/national-gallery-armenia'],
-  };
-
-  for (const path of paths[slug]) {
-    revalidatePath(path);
-  }
-  revalidatePath(`/admin/page-content/${slug}`);
+  revalidatePageContentSlug(slug);
 
   return { status: 'success', message: 'Page content saved.' };
 }
@@ -75,6 +65,5 @@ export async function resetPageContentAction(slug: PageContentSlug): Promise<voi
     create: { slug, title: PAGE_CONTENT_TITLES[slug], content },
     update: { title: PAGE_CONTENT_TITLES[slug], content },
   });
-  revalidateTag(`page-content-${slug}`, 'max');
-  revalidateTag('page-content', 'max');
+  revalidatePageContentSlug(slug);
 }

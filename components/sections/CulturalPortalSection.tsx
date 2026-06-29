@@ -1,10 +1,9 @@
 import '@/components/sections/cultural-portal/cultural-portal-section.css';
 import { CulturalCategoryGrid } from '@/components/sections/cultural-portal/CulturalCategoryGrid';
 import { CulturalPortalOrnament } from '@/components/sections/cultural-portal/CulturalPortalOrnament';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function CulturalPortalSection() {
-  const home = await getHomeContent();
+export async function CulturalPortalSection({ home }: HomeSectionContentProps) {
   const { culturalPortal } = getHomeSections(home);
 
   return (

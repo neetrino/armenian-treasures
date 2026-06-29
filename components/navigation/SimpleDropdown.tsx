@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import type { HomeSectionId } from '@/lib/navigation/home-sections';
 import { parseHomeSectionHash } from '@/lib/navigation/home-sections';
@@ -57,6 +57,7 @@ export function SimpleDropdown({
   fallbackHref,
 }: SimpleDropdownProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const active = isActive(pathname);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -71,6 +72,11 @@ export function SimpleDropdown({
   });
 
   const handleTriggerClick = (): void => {
+    if (fallbackHref) {
+      close();
+      router.push(fallbackHref);
+      return;
+    }
     if (handleSectionTriggerClick()) return;
     toggle();
   };

@@ -132,9 +132,14 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
                 <div className="catalog-detail-card__body">
                   <h2>Gallery</h2>
                   <div className="catalog-gallery-grid">
-                    {gallery.map((src) => (
+                    {gallery.map((src, index) => (
                       <div key={src} className="catalog-gallery-item">
-                        <Image src={resolvePublicAssetUrl(src)} alt="" width={600} height={450} />
+                        <Image
+                          src={resolvePublicAssetUrl(src)}
+                          alt={`${item.title} — gallery image ${index + 1}`}
+                          width={600}
+                          height={450}
+                        />
                       </div>
                     ))}
                   </div>
@@ -167,7 +172,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
               />
             ) : null}
             {item.showOnMap && hasCoords ? (
-              <Link href="/map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
+              <Link href="/#map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
                 View on heritage map
               </Link>
             ) : null}

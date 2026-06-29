@@ -1,9 +1,8 @@
 import '@/components/sections/featured-treasures/featured-treasures-section.css';
 import { FeaturedTreasuresGrid } from '@/components/sections/featured-treasures/FeaturedTreasuresGrid';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function FeaturedTreasuresSection() {
-  const home = await getHomeContent();
+export async function FeaturedTreasuresSection({ home }: HomeSectionContentProps) {
   const { featuredTreasures } = getHomeSections(home);
 
   return (

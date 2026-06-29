@@ -4,7 +4,7 @@ import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-se
 export interface PrimaryLink {
   href: string;
   label: string;
-  homeSectionId: HomeSectionId;
+  homeSectionId?: HomeSectionId;
 }
 
 export interface NavDropdownLink {
@@ -20,9 +20,8 @@ export function navDropdownLinkKey(item: NavDropdownLink): string {
 
 export const PRIMARY_LINKS: PrimaryLink[] = [
   {
-    href: buildHomeSectionHref(HOME_SECTION_IDS.virtualMuseum),
+    href: '/',
     label: 'Virtual Museum',
-    homeSectionId: HOME_SECTION_IDS.virtualMuseum,
   },
   {
     href: buildHomeSectionHref(HOME_SECTION_IDS.heritageMap),
@@ -30,36 +29,34 @@ export const PRIMARY_LINKS: PrimaryLink[] = [
     homeSectionId: HOME_SECTION_IDS.heritageMap,
   },
   {
-    href: buildHomeSectionHref(HOME_SECTION_IDS.partnership),
+    href: '/partnership',
     label: 'Partnership',
-    homeSectionId: HOME_SECTION_IDS.partnership,
   },
   {
-    href: buildHomeSectionHref(HOME_SECTION_IDS.donators),
-    label: 'Donators',
-    homeSectionId: HOME_SECTION_IDS.donators,
+    href: '/donate',
+    label: 'Donate',
   },
 ];
 
 export const PROJECTS_MENU: NavDropdownLink[] = [
   {
     id: 'digital-archive',
-    href: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
+    href: '/projects',
     label: 'Digital Archive',
   },
   {
     id: 'documentary-series',
-    href: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
+    href: '/projects',
     label: 'Documentary Series',
   },
   {
     id: 'education-programme',
-    href: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
+    href: '/projects',
     label: 'Education Programme',
   },
   {
     id: 'global-diaspora-network',
-    href: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
+    href: '/projects',
     label: 'Global Diaspora Network',
   },
 ];

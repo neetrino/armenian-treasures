@@ -1,7 +1,13 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import slugify from 'slugify';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
+import { revalidateCultureItemCache } from '@/lib/cache/revalidation';
+import {
+  cleanupReplacedGalleryImages,
+  deleteReplacedManagedImage,
+} from '@/lib/uploads/cleanup-replaced-image';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { cultureItemSchema } from '@/lib/validation';
@@ -131,16 +137,8 @@ function toData(input: ReturnType<typeof cultureItemSchema.parse>) {
   };
 }
 
-function revalidateCultureItem(slugs: string[]): void {
-  revalidateTag('culture-items', 'max');
-  revalidatePath('/culture');
-  revalidatePath('/map');
-  revalidatePath('/admin/culture-items');
-  for (const slug of slugs) {
-    if (slug.trim().length > 0) {
-      revalidatePath(`/culture/item/${slug}`);
-    }
-  }
+async function revalidateCultureItem(slugs: string[], menuItemIds: string[] = []): Promise<void> {
+  await revalidateCultureItemCache(slugs, menuItemIds);
 }
 
 export async function createCultureItemAction(
@@ -161,7 +159,7 @@ export async function createCultureItemAction(
     };
   }
   await prisma.cultureItem.create({ data: parsed.data });
-  revalidateCultureItem([parsed.data.slug]);
+  await revalidateCultureItem([parsed.data.slug], [parsed.data.menuItemId]);
   return { status: 'success' };
 }
 
@@ -177,7 +175,7 @@ export async function updateCultureItemAction(
   }
   const current = await prisma.cultureItem.findUnique({
     where: { id },
-    select: { slug: true },
+    select: { slug: true, menuItemId: true, image: true, galleryImages: true },
   });
   const existing = await prisma.cultureItem.findUnique({ where: { slug: parsed.data.slug } });
   if (existing && existing.id !== id) {
@@ -188,28 +186,37 @@ export async function updateCultureItemAction(
     };
   }
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
+
+  await deleteReplacedManagedImage(current?.image, parsed.data.image);
+  await cleanupReplacedGalleryImages(current?.galleryImages ?? [], parsed.data.galleryImages);
+
   const slugs = new Set<string>([parsed.data.slug]);
   if (current?.slug) slugs.add(current.slug);
-  revalidateCultureItem([...slugs]);
+  const menuItemIds = [parsed.data.menuItemId];
+  if (current?.menuItemId) menuItemIds.push(current.menuItemId);
+  await revalidateCultureItem([...slugs], menuItemIds);
   return { status: 'success' };
 }
 
-export async function deleteCultureItemAction(id: string): Promise<void> {
+export async function deleteCultureItemAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  const item = await prisma.cultureItem.findUnique({
-    where: { id },
-    select: { slug: true },
+  return runAdminDelete(async () => {
+    const item = await prisma.cultureItem.findUnique({
+      where: { id },
+      select: { slug: true, menuItemId: true },
+    });
+    if (!item) return;
+    await prisma.cultureItem.delete({ where: { id } });
+    await revalidateCultureItem(item.slug ? [item.slug] : [], item.menuItemId ? [item.menuItemId] : []);
   });
-  await prisma.cultureItem.delete({ where: { id } });
-  revalidateCultureItem(item?.slug ? [item.slug] : []);
 }
 
 export async function toggleCultureItemMapAction(id: string, showOnMap: boolean): Promise<void> {
   await requireAdmin();
   const item = await prisma.cultureItem.findUnique({
     where: { id },
-    select: { slug: true },
+    select: { slug: true, menuItemId: true },
   });
   await prisma.cultureItem.update({ where: { id }, data: { showOnMap } });
-  revalidateCultureItem(item?.slug ? [item.slug] : []);
+  await revalidateCultureItem(item?.slug ? [item.slug] : [], item?.menuItemId ? [item.menuItemId] : []);
 }

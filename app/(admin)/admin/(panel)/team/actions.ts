@@ -1,9 +1,11 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
+import { revalidateTeamCache } from '@/lib/cache/revalidation';
 import { teamMemberSchema } from '@/lib/validation';
 
 export interface TeamFormState {
@@ -41,9 +43,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('team', 'max');
-  revalidatePath('/about/team');
-  revalidatePath('/admin/team');
+  revalidateTeamCache();
 }
 
 export async function createTeamMemberAction(_p: TeamFormState, formData: FormData): Promise<TeamFormState> {
@@ -68,8 +68,10 @@ export async function updateTeamMemberAction(
   redirect('/admin/team');
 }
 
-export async function deleteTeamMemberAction(id: string): Promise<void> {
+export async function deleteTeamMemberAction(id: string): Promise<AdminDeleteResult> {
   await requireAdmin();
-  await prisma.teamMember.delete({ where: { id } });
-  revalidate();
+  return runAdminDelete(async () => {
+    await prisma.teamMember.delete({ where: { id } });
+    revalidate();
+  });
 }

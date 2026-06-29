@@ -214,6 +214,15 @@ export function getDefaultPageContent(slug: PageContentSlug): Record<string, unk
   }
 }
 
+export const PAGE_CONTENT_DESCRIPTIONS: Record<PageContentSlug, string> = {
+  'donation-page': 'Donation tiers, impact stories, and payment call-to-action copy.',
+  'partnership-page': 'Partner benefits, categories, and contact prompts.',
+  'cultural-portal-page': 'Portal intro, feature cards, and navigation labels.',
+  khndzoresk: 'Khndzoresk landing — hero, gallery, tours, and restoration sections.',
+  'khachaturian-museum': 'Museum landing — exhibitions, audio guides, and highlights.',
+  'national-gallery-armenia': 'Gallery landing — collections, facts, and related links.',
+};
+
 export const PAGE_CONTENT_TITLES: Record<PageContentSlug, string> = {
   'donation-page': 'Donation page',
   'partnership-page': 'Partnership page',

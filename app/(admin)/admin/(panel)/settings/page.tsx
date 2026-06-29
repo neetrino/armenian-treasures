@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
 import { SiteSettingsForm } from '@/components/admin/SiteSettingsForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
@@ -24,18 +24,16 @@ async function AdminSettingsPage() {
       settings?.copyrightText ?? '© 2026 Armenian Treasures Foundation. All rights reserved.',
   };
   return (
-    <>
-      <AdminTopbar title="Site settings" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Foundation identity"
-          description="Strings shown in the header, footer and metadata of the public site."
-        />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <SiteSettingsForm initial={initial} />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Site settings"
+      title="Foundation identity"
+      description="Strings shown in the header, footer and metadata of the public site."
+    >
+      <AdminPanelCard>
+        <SiteSettingsForm initial={initial} />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

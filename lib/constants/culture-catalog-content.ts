@@ -3,6 +3,7 @@ import {
   mergeCultureCatalogLayers,
   parseMenuCatalogContent,
 } from '@/lib/types/culture-catalog-content';
+import { EXTENDED_CULTURE_CATALOG_OVERRIDES } from '@/lib/constants/culture-catalog-overrides-extended';
 
 export interface CultureCatalogFact {
   label: string;
@@ -203,6 +204,7 @@ const OVERRIDES: Record<string, Partial<CultureCatalogContent>> = {
     accent: 'Ներկայացրեք նախագիծ',
     slogan: 'Every submission reviewed by hand',
   },
+  ...EXTENDED_CULTURE_CATALOG_OVERRIDES,
 };
 
 function mergeContent(

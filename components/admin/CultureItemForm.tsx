@@ -7,12 +7,19 @@ import { GalleryImagesField } from '@/components/forms/fields/GalleryImagesField
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { AdminFormSection } from '@/components/admin/AdminFormSection';
+import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { Button } from '@/components/ui/Button';
 import {
   createCultureItemAction,
   updateCultureItemAction,
   type CultureItemFormState,
 } from '@/app/(admin)/admin/(panel)/culture-items/actions';
+import {
+  CULTURE_ITEM_TYPE_OPTIONS,
+  CULTURE_MAP_TYPE_OPTIONS,
+  CULTURE_STATUS_OPTIONS,
+} from '@/lib/admin/enum-labels';
 
 interface MenuOption {
   id: string;
@@ -52,14 +59,6 @@ interface CultureItemFormProps {
   onCancel?: () => void;
 }
 
-const ITEM_TYPES = [
-  'MONUMENT', 'MUSEUM', 'PERSON', 'LEGEND', 'HISTORY_EVENT', 'HERITAGE_OBJECT',
-  'PUBLICATION', 'MUSIC', 'FOOD', 'DANCE', 'THEATRE', 'OTHER',
-];
-
-const MAP_TYPES = ['MONASTERY', 'FORTRESS', 'MUSEUM', 'CHURCH', 'ARCHAEOLOGICAL', 'OTHER'];
-const STATUSES = ['DRAFT', 'PUBLISHED', 'ARCHIVED'];
-
 const INITIAL: CultureItemFormState = { status: 'idle' };
 
 export function CultureItemForm({
@@ -89,7 +88,13 @@ export function CultureItemForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <section className="grid gap-5 sm:grid-cols-2">
+      <AdminHelpCallout title="Culture entry">
+        Fill in the basics first, then add images and map coordinates. Use <strong>Publication status</strong>{' '}
+        to control whether visitors can see this entry.
+      </AdminHelpCallout>
+
+      <AdminFormSection title="Basics" description="Title, category, location, and main image.">
+      <div className="grid gap-5 sm:grid-cols-2">
         <TextField
           label="Title"
           name="title"
@@ -118,7 +123,7 @@ export function CultureItemForm({
         <SelectField
           label="Item type"
           name="itemType"
-          options={ITEM_TYPES.map((t) => ({ value: t, label: t }))}
+          options={CULTURE_ITEM_TYPE_OPTIONS}
           defaultValue={initial?.itemType ?? 'OTHER'}
           error={state.fieldErrors?.itemType}
         />
@@ -166,18 +171,21 @@ export function CultureItemForm({
           label="Main image"
           name="image"
           folder="culture"
+          layout="card"
           defaultValue={initial?.image ?? ''}
           error={state.fieldErrors?.image}
         />
         <SelectField
-          label="Status"
+          label="Publication status"
           name="status"
-          options={STATUSES.map((s) => ({ value: s, label: s }))}
+          options={CULTURE_STATUS_OPTIONS}
           defaultValue={initial?.status ?? 'PUBLISHED'}
           error={state.fieldErrors?.status}
         />
-      </section>
+      </div>
+      </AdminFormSection>
 
+      <AdminFormSection title="Descriptions" description="Short summary for cards and full text for the detail page.">
       <TextareaField
         label="Short description"
         name="shortDescription"
@@ -192,18 +200,17 @@ export function CultureItemForm({
         defaultValue={initial?.description ?? ''}
         error={state.fieldErrors?.description}
       />
+      </AdminFormSection>
 
+      <AdminFormSection title="Photo gallery" description="Additional images shown on the detail page.">
       <GalleryImagesField
         defaultValue={initial?.galleryImages ?? []}
         error={state.fieldErrors?.galleryImages}
       />
+      </AdminFormSection>
 
-      <section className="rounded-2xl border border-stone-100 bg-parchment-50 p-5">
-        <h3 className="font-display text-xl text-ink">Map &amp; media</h3>
-        <p className="mt-1 text-xs text-ink-muted">
-          Set coordinates and toggle visibility on the public map.
-        </p>
-        <div className="mt-4 grid gap-5 sm:grid-cols-2">
+      <AdminFormSection title="Map & media" description="Coordinates for the public map and optional 3D tour or video links.">
+        <div className="grid gap-5 sm:grid-cols-2">
           <TextField
             label="Latitude"
             name="latitude"
@@ -221,12 +228,9 @@ export function CultureItemForm({
             error={state.fieldErrors?.longitude}
           />
           <SelectField
-            label="Map type"
+            label="Map pin style"
             name="mapType"
-            options={[
-              { value: '', label: '— None —' },
-              ...MAP_TYPES.map((t) => ({ value: t, label: t })),
-            ]}
+            options={[{ value: '', label: '— None —' }, ...CULTURE_MAP_TYPE_OPTIONS]}
             defaultValue={initial?.mapType ?? ''}
             error={state.fieldErrors?.mapType}
           />
@@ -255,7 +259,7 @@ export function CultureItemForm({
             error={state.fieldErrors?.videoUrl}
           />
         </div>
-      </section>
+      </AdminFormSection>
 
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">

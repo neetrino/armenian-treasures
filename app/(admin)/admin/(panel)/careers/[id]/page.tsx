@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CareerForm } from '@/components/admin/CareerForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
@@ -17,28 +18,30 @@ async function EditCareerPage(props: PageProps) {
   const career = await prisma.career.findUnique({ where: { id: params.id } });
   if (!career) notFound();
   return (
-    <>
-      <AdminTopbar title="Edit role" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader title={career.title} description={`${career.location} · ${career.employmentType}`} />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <CareerForm
-            mode="edit"
-            itemId={career.id}
-            initial={{
-              title: career.title,
-              location: career.location,
-              employmentType: career.employmentType,
-              description: career.description ?? '',
-              applyUrl: career.applyUrl ?? '',
-              applyEmail: career.applyEmail ?? '',
-              order: career.order,
-              isActive: career.isActive,
-            }}
-          />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Edit role"
+      title={career.title}
+      description={`${career.location} · ${career.employmentType}`}
+      beforeHeader={<AdminBackLink href="/admin/careers" label="All careers" />}
+    >
+      <AdminPanelCard>
+        <CareerForm
+          mode="edit"
+          itemId={career.id}
+          initial={{
+            title: career.title,
+            location: career.location,
+            employmentType: career.employmentType,
+            description: career.description ?? '',
+            applyUrl: career.applyUrl ?? '',
+            applyEmail: career.applyEmail ?? '',
+            order: career.order,
+            isActive: career.isActive,
+          }}
+        />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

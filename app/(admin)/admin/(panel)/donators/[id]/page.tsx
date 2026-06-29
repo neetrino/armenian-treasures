@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { DonatorForm } from '@/components/admin/DonatorForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
@@ -17,26 +18,28 @@ async function EditDonatorPage(props: PageProps) {
   const donator = await prisma.donator.findUnique({ where: { id: params.id } });
   if (!donator) notFound();
   return (
-    <>
-      <AdminTopbar title="Edit donator" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader title={donator.name} description={donator.type} />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <DonatorForm
-            mode="edit"
-            itemId={donator.id}
-            initial={{
-              name: donator.name,
-              type: donator.type,
-              year: donator.year,
-              description: donator.description ?? '',
-              order: donator.order,
-              isPublic: donator.isPublic,
-            }}
-          />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Edit donator"
+      title={donator.name}
+      description={donator.type}
+      beforeHeader={<AdminBackLink href="/admin/donators" label="All donators" />}
+    >
+      <AdminPanelCard>
+        <DonatorForm
+          mode="edit"
+          itemId={donator.id}
+          initial={{
+            name: donator.name,
+            type: donator.type,
+            year: donator.year,
+            description: donator.description ?? '',
+            order: donator.order,
+            isPublic: donator.isPublic,
+          }}
+        />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

@@ -4,9 +4,10 @@ import { useCallback, useState, type MouseEvent } from 'react';
 import { Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AdminDeleteConfirmModal } from '@/components/admin/AdminDeleteConfirmModal';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
 
 interface DeleteIconButtonProps {
-  action: (id: string) => Promise<void>;
+  action: (id: string) => Promise<AdminDeleteResult | void>;
   id: string;
   confirmTitle?: string;
   confirmMessage: string;
@@ -31,9 +32,7 @@ export function DeleteIconButton({
 
   const closeModal = useCallback(() => setIsOpen(false), []);
 
-  const handleConfirm = useCallback(async () => {
-    await action(id);
-  }, [action, id]);
+  const handleConfirm = useCallback(async () => action(id), [action, id]);
 
   return (
     <>

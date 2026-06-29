@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 import { Mail, MapPin, Phone } from 'lucide-react';
-import { Container } from '@/components/layout/Container';
-import { HeroPage } from '@/components/sections/HeroPage';
+import Link from 'next/link';
+import '@/components/khndzoresk/khndzoresk.css';
+import '@/components/cultural-portal-page/cultural-portal-page.css';
+import './contact-page.css';
 import { ContactForm } from '@/components/forms/ContactForm';
-import { Eyebrow } from '@/components/ui/Eyebrow';
+import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
+import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { getSiteSettings } from '@/lib/queries/settings';
 
 export const revalidate = 60;
@@ -16,43 +19,80 @@ export const metadata: Metadata = {
 async function ContactsPage() {
   const settings = await getSiteSettings();
   return (
-    <>
-      <HeroPage
-        eyebrow="Contact"
-        title="Write to the foundation."
-        description="Use the form for partnerships, press, research enquiries or to volunteer. A human reads every message."
-      />
-      <Container className="grid gap-10 py-16 lg:grid-cols-[1fr_2fr] lg:py-24">
-        <aside className="rounded-2xl border border-dashed border-stone-200 bg-parchment-50 p-6 text-sm text-ink-soft lg:p-8">
-          <Eyebrow>Direct lines</Eyebrow>
-          <h2 className="mt-3 font-display text-2xl text-ink">{settings.foundationName}</h2>
-          <p className="mt-2 text-xs uppercase tracking-eyebrow text-bronze-700">
-            {settings.foundationSubtitle}
+    <div className="khndzoresk-page">
+      <KhndzoreskParticles />
+
+      <div className="hero cultural-portal-hero">
+        <div className="hero-bg" />
+        <div className="hero-grain" />
+        <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>
+          <path d="M48 0 Q40 0 40 8 L40 40 Q40 48 32 48" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
+        </svg>
+        <div className="hero-content">
+          <p className="hero-eyebrow reveal">CONTACT</p>
+          <h1 className="reveal">
+            WRITE TO THE
+            <span>FOUNDATION</span>
+          </h1>
+          <p className="hero-sub reveal">
+            Reach us for partnerships, press requests, research collaboration, or volunteer opportunities.
           </p>
-          <ul className="mt-6 flex flex-col gap-3 text-ink-soft">
-            <li className="flex items-start gap-2">
-              <MapPin size={16} className="mt-0.5" aria-hidden />
-              {settings.address}
-            </li>
-            <li className="flex items-start gap-2">
-              <Mail size={16} className="mt-0.5" aria-hidden />
-              <a className="hover:text-pomegranate" href={`mailto:${settings.contactEmail}`}>
-                {settings.contactEmail}
-              </a>
-            </li>
-            <li className="flex items-start gap-2">
-              <Phone size={16} className="mt-0.5" aria-hidden />
-              <a className="hover:text-pomegranate" href={`tel:${settings.phone.replace(/\s+/g, '')}`}>
-                {settings.phone}
-              </a>
-            </li>
-          </ul>
-        </aside>
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card lg:p-10">
-          <ContactForm />
+          <div className="hero-btns reveal">
+            <a href="#contact-form" className="btn-gold">
+              Open Contact Form
+            </a>
+            <Link href="/about/mission" className="btn-teal">
+              About The Mission
+            </Link>
+          </div>
         </div>
-      </Container>
-    </>
+        <div className="hero-scroll">
+          <div className="scroll-line" />
+          <span>SCROLL</span>
+        </div>
+      </div>
+
+      <KhndzoreskDivider />
+
+      <section id="contact-form" className="contact-wrap">
+        <div className="grid gap-8 lg:grid-cols-[1fr_1.7fr]">
+          <aside className="contact-direct-card p-6 text-sm text-[rgba(232,216,155,0.72)] lg:p-8">
+            <p className="contact-direct-eyebrow">
+              Direct lines
+            </p>
+            <h2 className="contact-direct-title">
+              {settings.foundationName}
+            </h2>
+            <p className="contact-direct-subtitle">
+              {settings.foundationSubtitle}
+            </p>
+            <ul className="contact-direct-list">
+              <li className="contact-direct-item">
+                <MapPin size={16} className="contact-direct-icon" aria-hidden />
+                {settings.address}
+              </li>
+              <li className="contact-direct-item">
+                <Mail size={16} className="contact-direct-icon" aria-hidden />
+                <a className="transition-colors hover:text-heritage-gold" href={`mailto:${settings.contactEmail}`}>
+                  {settings.contactEmail}
+                </a>
+              </li>
+              <li className="contact-direct-item">
+                <Phone size={16} className="contact-direct-icon" aria-hidden />
+                <a className="transition-colors hover:text-heritage-gold" href={`tel:${settings.phone.replace(/\s+/g, '')}`}>
+                  {settings.phone}
+                </a>
+              </li>
+            </ul>
+          </aside>
+
+          <div className="contact-form-shell p-6 lg:p-10">
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
 

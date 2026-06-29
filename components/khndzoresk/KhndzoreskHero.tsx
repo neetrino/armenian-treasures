@@ -21,8 +21,6 @@ function KhndzoreskBreadcrumb() {
       <span style={{ opacity: 0.4 }}>·</span>
       <Link href="/culture">Cultural Portal</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Archaeological Sites</Link>
-      <span style={{ opacity: 0.4 }}>·</span>
       <span>Khndzoresk</span>
     </div>
   );

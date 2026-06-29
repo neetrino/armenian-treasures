@@ -8,17 +8,33 @@ interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   hint?: string;
   rightAccessory?: ReactNode;
+  labelClassName?: string;
+  inputClassName?: string;
+  errorClassName?: string;
+  hintClassName?: string;
 }
 
-export function TextField({ label, required, error, hint, id, rightAccessory, ...props }: TextFieldProps) {
+export function TextField({
+  label,
+  required,
+  error,
+  hint,
+  id,
+  rightAccessory,
+  labelClassName,
+  inputClassName,
+  errorClassName,
+  hintClassName,
+  ...props
+}: TextFieldProps) {
   const inputId = id ?? props.name;
   return (
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor={inputId} required={required}>
+      <Label htmlFor={inputId} required={required} className={labelClassName}>
         {label}
       </Label>
       <div className="relative">
-        <Input id={inputId} aria-invalid={Boolean(error)} {...props} />
+        <Input id={inputId} aria-invalid={Boolean(error)} className={inputClassName} {...props} />
         {rightAccessory ? (
           <span className="absolute inset-y-0 right-3 inline-flex items-center text-ink-muted">
             {rightAccessory}
@@ -26,9 +42,9 @@ export function TextField({ label, required, error, hint, id, rightAccessory, ..
         ) : null}
       </div>
       {error ? (
-        <p className="text-xs text-pomegranate">{error}</p>
+        <p className={errorClassName ?? 'text-xs text-pomegranate'}>{error}</p>
       ) : hint ? (
-        <p className="text-xs text-ink-muted">{hint}</p>
+        <p className={hintClassName ?? 'text-xs text-ink-muted'}>{hint}</p>
       ) : null}
     </div>
   );

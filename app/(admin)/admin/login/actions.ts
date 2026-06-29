@@ -1,6 +1,7 @@
 'use server';
 
 import { AuthError } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { signIn } from '@/lib/auth';
 import { isRateLimitAuthError } from '@/lib/auth/config';
 import {
@@ -58,7 +59,8 @@ export async function loginAction(
     await signIn('credentials', {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirectTo: '/admin/dashboard',
+      redirect: false,
+      redirectTo: '/admin',
     });
     console.log(`${LOGIN_LOG_PREFIX} loginAction: signIn succeeded`);
   } catch (error) {
@@ -80,5 +82,6 @@ export async function loginAction(
     }
     throw error;
   }
-  return { status: 'idle' };
+
+  redirect('/admin');
 }

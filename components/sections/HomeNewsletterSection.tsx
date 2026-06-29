@@ -1,9 +1,8 @@
 import '@/components/sections/home-newsletter/home-newsletter-section.css';
 import { HomeNewsletterForm } from '@/components/sections/home-newsletter/HomeNewsletterForm';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function HomeNewsletterSection() {
-  const home = await getHomeContent();
+export async function HomeNewsletterSection({ home }: HomeSectionContentProps) {
   const { newsletter } = getHomeSections(home);
 
   return (

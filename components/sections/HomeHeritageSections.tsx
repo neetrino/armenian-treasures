@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+import { getHomeContent } from '@/lib/queries/home';
 import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection';
 import { CulturalPortalSection } from '@/components/sections/CulturalPortalSection';
 import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasuresSection';
@@ -7,8 +9,11 @@ import { PartnershipSection } from '@/components/sections/PartnershipSection';
 import { DonationsSection } from '@/components/sections/DonationsSection';
 import { AboutUsSection } from '@/components/sections/AboutUsSection';
 import { HomeNewsletterSection } from '@/components/sections/HomeNewsletterSection';
+import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
 
-export function HomeHeritageSections() {
+export async function HomeHeritageSections() {
+  const home = await getHomeContent();
+
   return (
     <div className="relative isolate overflow-hidden bg-heritage-black">
       <div
@@ -28,15 +33,25 @@ export function HomeHeritageSections() {
         aria-hidden
       />
 
-      <VirtualMuseumSection embedded />
-      <CulturalPortalSection />
-      <FeaturedTreasuresSection />
-      <HeritageMapSection />
-      <UpcomingProjectsSection />
-      <PartnershipSection />
-      <DonationsSection />
-      <AboutUsSection />
-      <HomeNewsletterSection />
+      <VirtualMuseumSection embedded home={home} />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
+        <CulturalPortalSection home={home} />
+      </Suspense>
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[20rem]" />}>
+        <FeaturedTreasuresSection home={home} />
+      </Suspense>
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
+        <HeritageMapSection home={home} />
+      </Suspense>
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
+        <UpcomingProjectsSection home={home} />
+      </Suspense>
+      <PartnershipSection home={home} />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[14rem]" />}>
+        <DonationsSection home={home} />
+      </Suspense>
+      <AboutUsSection home={home} />
+      <HomeNewsletterSection home={home} />
     </div>
   );
 }

@@ -1,10 +1,9 @@
 import '@/components/sections/partnership/partnership-section.css';
 import { PartnershipApplyCta } from '@/components/sections/partnership/PartnershipApplyCta';
 import { PartnershipCategoryGrid } from '@/components/sections/partnership/PartnershipCategoryGrid';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function PartnershipSection() {
-  const home = await getHomeContent();
+export async function PartnershipSection({ home }: HomeSectionContentProps) {
   const { partnership } = getHomeSections(home);
 
   return (

@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { DonatorForm } from '@/components/admin/DonatorForm';
@@ -78,19 +77,19 @@ export function DonatorsPageClient({ user, rows }: DonatorsPageClientProps) {
 
   return (
     <>
-      <AdminTopbar title="Donators" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Donators"
-          description="Donors and partners shown on /donators."
-          actions={
-            <Button type="button" variant="primary" onClick={openCreateModal}>
-              <Plus size={14} aria-hidden /> Add donator
-            </Button>
-          }
-        />
+      <AdminPageShell
+        user={user}
+        topbarTitle="Donators"
+        title="Donators"
+        description="Donors and partners shown on /donate."
+        actions={
+          <Button type="button" variant="primary" onClick={openCreateModal}>
+            <Plus size={14} aria-hidden /> Add donator
+          </Button>
+        }
+      >
         <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} />
-      </div>
+      </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal eyebrow="Donators" title="Create donator" onClose={closeCreateModal}>
           <DonatorForm mode="create" onSuccess={handleSuccess} onCancel={closeCreateModal} />

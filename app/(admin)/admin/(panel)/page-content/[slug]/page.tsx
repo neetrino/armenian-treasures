@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
-import { PageContentJsonForm } from '@/components/admin/PageContentJsonForm';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminBackLink } from '@/components/admin/AdminBackLink';
+import { PageContentForm } from '@/components/admin/page-content/PageContentForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
 import {
@@ -38,21 +39,21 @@ async function AdminPageContentEditPage(props: PageProps) {
   const user = await requireAdmin();
   const row = await prisma.pageContent.findUnique({ where: { slug: params.slug } });
   const content = row?.content ?? getDefaultPageContent(params.slug);
-  const initialJson = JSON.stringify(content, null, 2);
+  const initial = content as Record<string, unknown>;
+  const formKey = row?.updatedAt.toISOString() ?? 'default';
 
   return (
-    <>
-      <AdminTopbar title={PAGE_CONTENT_TITLES[params.slug]} user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title={PAGE_CONTENT_TITLES[params.slug]}
-          description={`JSON content for ${params.slug}. Changes appear on the public page after save.`}
-        />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <PageContentJsonForm slug={params.slug} initialJson={initialJson} />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle={PAGE_CONTENT_TITLES[params.slug]}
+      title={PAGE_CONTENT_TITLES[params.slug]}
+      description="Edit text, images, and sections visually. Changes appear on the public page after save."
+      beforeHeader={<AdminBackLink href="/admin/page-content" label="All marketing pages" />}
+    >
+      <AdminPanelCard>
+        <PageContentForm key={formKey} slug={params.slug} initial={initial} />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

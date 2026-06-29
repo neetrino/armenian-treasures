@@ -1,9 +1,8 @@
 import '@/components/sections/heritage-map/heritage-map-section.css';
 import { HeritageMapPreview } from '@/components/sections/heritage-map/HeritageMapPreview';
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
-export async function HeritageMapSection() {
-  const home = await getHomeContent();
+export async function HeritageMapSection({ home }: HomeSectionContentProps) {
   const { heritageMap } = getHomeSections(home);
 
   return (

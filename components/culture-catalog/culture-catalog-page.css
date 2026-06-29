@@ -413,3 +413,22 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+@media (max-width: 768px) {
+  .khndzoresk-page .catalog-form-panel,
+  .khndzoresk-page .catalog-form-aside {
+    padding: 24px 18px;
+  }
+
+  .khndzoresk-page .catalog-detail-card__body {
+    padding: 22px 18px;
+  }
+
+  .khndzoresk-page .catalog-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .khndzoresk-page .catalog-submit-cta {
+    padding: 28px 18px;
+  }
+}

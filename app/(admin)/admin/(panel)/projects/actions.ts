@@ -1,9 +1,9 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { revalidateProjectsCache } from '@/lib/cache/revalidation';
 import { projectSchema } from '@/lib/validation';
 import type { ProjectStatus } from '@prisma/client';
 
@@ -63,9 +63,7 @@ function parseForm(formData: FormData) {
 }
 
 function revalidate(): void {
-  revalidateTag('projects', 'max');
-  revalidatePath('/projects');
-  revalidatePath('/admin/projects');
+  revalidateProjectsCache();
 }
 
 export async function createProjectAction(_p: ProjectFormState, formData: FormData): Promise<ProjectFormState> {

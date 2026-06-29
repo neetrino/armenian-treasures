@@ -2,11 +2,14 @@ import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { toPublicProject, type PublicProjectDTO } from '@/lib/dto';
 
-async function fetchPublishedProjects(): Promise<PublicProjectDTO[]> {
+export const HOME_UPCOMING_PROJECTS_LIMIT = 3;
+
+async function fetchPublishedProjects(limit?: number): Promise<PublicProjectDTO[]> {
   try {
     const rows = await prisma.project.findMany({
       where: { isPublished: true },
       orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      ...(limit !== undefined ? { take: limit } : {}),
     });
     return rows.map(toPublicProject);
   } catch {

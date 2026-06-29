@@ -5,7 +5,7 @@ export const HERITAGE_MAP_SECTION = {
     'Navigate over 850 heritage sites, monasteries, fortresses, and cultural landmarks across historic and modern Armenia.',
   placeholderTitle: 'HERITAGE MAP',
   placeholderSubtitle: 'Full map integration launching with the portal — 850+ locations',
-  ctaUrl: '/map',
+  ctaUrl: '/#map',
 } as const;
 
 export interface HeritageMapLegendItem {

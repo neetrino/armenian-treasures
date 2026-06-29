@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
 import { AboutContentForm } from '@/components/admin/AboutContentForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
@@ -37,18 +37,16 @@ async function AdminAboutContentPage() {
     careerIntro: content?.careerIntro ?? fallback.careerIntro,
   };
   return (
-    <>
-      <AdminTopbar title="About content" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="About Us page content"
-          description="The shared hero, mission page copy, and team/career page intros on the public About section."
-        />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <AboutContentForm initial={initial} />
-        </div>
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="About content"
+      title="About Us page content"
+      description="The shared hero, mission page copy, and team/career page intros on the public About section."
+    >
+      <AdminPanelCard>
+        <AboutContentForm initial={initial} />
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

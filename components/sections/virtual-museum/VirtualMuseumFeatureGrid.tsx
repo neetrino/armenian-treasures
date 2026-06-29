@@ -1,12 +1,10 @@
-import { getHomeContent, getHomeSections } from '@/lib/queries/home';
+import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { VirtualMuseumCard } from '@/components/sections/virtual-museum/VirtualMuseumCard';
 import { VIRTUAL_MUSEUM_GRID_CLASS } from '@/components/sections/virtual-museum/virtual-museum-grid-styles';
 
-export async function VirtualMuseumFeatureGrid() {
-  const home = await getHomeContent();
-  const sections = getHomeSections(home);
-  const features = sections.virtualMuseum.features;
+export function VirtualMuseumFeatureGrid({ home }: HomeSectionContentProps) {
+  const features = getHomeSections(home).virtualMuseum.features;
 
   return (
     <Stagger className="relative z-10 w-full overflow-visible bg-transparent">

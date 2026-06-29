@@ -88,95 +88,88 @@ export function isMenuCatalogContentEmpty(value: MenuCatalogContentOverride | nu
   return JSON.stringify(value) === '{}';
 }
 
+function optionalTrim(value: string): string | undefined {
+  const trimmed = value.trim();
+  return trimmed || undefined;
+}
+
 export function catalogContentFromFormFields(formData: FormData): MenuCatalogContentOverride | null {
-  const read = (name: string): string => formData.get(name)?.toString().trim() ?? '';
+  const read = (name: string): string => formData.get(name)?.toString() ?? '';
 
-  const heroImage = read('catalogHeroImage');
-  const eyebrow = read('catalogEyebrow');
-  const accent = read('catalogAccent');
-  const slogan = read('catalogSlogan');
-
-  const aboutLabel = read('catalogAboutLabel');
-  const aboutTitle = read('catalogAboutTitle');
-  const aboutDescription = read('catalogAboutDescription');
   const paragraphsRaw = read('catalogAboutParagraphs');
   const paragraphs = paragraphsRaw
-    ? paragraphsRaw.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
-    : [];
-
-  const extraHeading = read('catalogExtraHeading');
-  const extraParagraph = read('catalogExtraParagraph');
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
 
   const facts: CultureCatalogFact[] = [];
   for (let i = 1; i <= 4; i += 1) {
-    const label = read(`catalogFact${i}Label`);
-    const value = read(`catalogFact${i}Value`);
+    const label = read(`catalogFact${i}Label`).trim();
+    const value = read(`catalogFact${i}Value`).trim();
     if (label && value) facts.push({ label, value });
   }
 
-  const itemsLabel = read('catalogItemsLabel');
-  const itemsTitle = read('catalogItemsTitle');
-  const itemsDescription = read('catalogItemsDescription');
-  const submitPrompt = read('catalogSubmitPrompt');
-  const emptyMessage = read('catalogEmptyMessage');
-
-  const mapEyebrow = read('catalogMapEyebrow');
-  const mapTitle = read('catalogMapTitle');
-  const mapDescription = read('catalogMapDescription');
-  const mapPlaceholder = read('catalogMapPlaceholder');
-
-  const statEntries = read('catalogStatEntries');
-  const statRegions = read('catalogStatRegions');
-  const statThird = read('catalogStatThird');
-  const statFourth = read('catalogStatFourth');
-
   const draft: MenuCatalogContentOverride = {
-    ...(eyebrow ? { eyebrow } : {}),
-    ...(accent ? { accent } : {}),
-    ...(slogan ? { slogan } : {}),
-    ...(heroImage ? { heroImage } : {}),
+    eyebrow: optionalTrim(read('catalogEyebrow')),
+    accent: optionalTrim(read('catalogAccent')),
+    slogan: optionalTrim(read('catalogSlogan')),
+    heroImage: optionalTrim(read('catalogHeroImage')),
     about: {
-      ...(aboutLabel ? { label: aboutLabel } : {}),
-      ...(aboutTitle ? { title: aboutTitle } : {}),
-      ...(aboutDescription ? { description: aboutDescription } : {}),
-      ...(paragraphs.length > 0 ? { paragraphs } : {}),
-      ...(extraHeading ? { extraHeading } : {}),
-      ...(extraParagraph ? { extraParagraph } : {}),
-      ...(facts.length > 0 ? { facts } : {}),
+      label: optionalTrim(read('catalogAboutLabel')),
+      title: optionalTrim(read('catalogAboutTitle')),
+      description: optionalTrim(read('catalogAboutDescription')),
+      paragraphs: paragraphs.length > 0 ? paragraphs : undefined,
+      extraHeading: optionalTrim(read('catalogExtraHeading')),
+      extraParagraph: optionalTrim(read('catalogExtraParagraph')),
+      facts: facts.length > 0 ? facts : undefined,
     },
     items: {
-      ...(itemsLabel ? { label: itemsLabel } : {}),
-      ...(itemsTitle ? { title: itemsTitle } : {}),
-      ...(itemsDescription ? { description: itemsDescription } : {}),
-      ...(submitPrompt ? { submitPrompt } : {}),
-      ...(emptyMessage ? { emptyMessage } : {}),
+      label: optionalTrim(read('catalogItemsLabel')),
+      title: optionalTrim(read('catalogItemsTitle')),
+      description: optionalTrim(read('catalogItemsDescription')),
+      submitPrompt: optionalTrim(read('catalogSubmitPrompt')),
+      emptyMessage: optionalTrim(read('catalogEmptyMessage')),
     },
     map: {
-      ...(mapEyebrow ? { eyebrow: mapEyebrow } : {}),
-      ...(mapTitle ? { title: mapTitle } : {}),
-      ...(mapDescription ? { description: mapDescription } : {}),
-      ...(mapPlaceholder ? { placeholderTitle: mapPlaceholder } : {}),
+      eyebrow: optionalTrim(read('catalogMapEyebrow')),
+      title: optionalTrim(read('catalogMapTitle')),
+      description: optionalTrim(read('catalogMapDescription')),
+      placeholderTitle: optionalTrim(read('catalogMapPlaceholder')),
     },
     statLabels: {
-      ...(statEntries ? { entries: statEntries } : {}),
-      ...(statRegions ? { regions: statRegions } : {}),
-      ...(statThird ? { third: statThird } : {}),
-      ...(statFourth ? { fourth: statFourth } : {}),
+      entries: optionalTrim(read('catalogStatEntries')),
+      regions: optionalTrim(read('catalogStatRegions')),
+      third: optionalTrim(read('catalogStatThird')),
+      fourth: optionalTrim(read('catalogStatFourth')),
     },
   };
 
-  const cleaned: MenuCatalogContentOverride = {
-    ...draft,
-    about: draft.about && Object.keys(draft.about).length > 0 ? draft.about : undefined,
-    items: draft.items && Object.keys(draft.items).length > 0 ? draft.items : undefined,
-    map: draft.map && Object.keys(draft.map).length > 0 ? draft.map : undefined,
-    statLabels:
-      draft.statLabels && Object.keys(draft.statLabels).length > 0 ? draft.statLabels : undefined,
-  };
-
-  const parsed = menuCatalogContentSchema.safeParse(cleaned);
+  const parsed = menuCatalogContentSchema.safeParse(draft);
   if (!parsed.success || isMenuCatalogContentEmpty(parsed.data)) return null;
   return parsed.data;
+}
+
+export function cultureCatalogContentToOverride(
+  content: CultureCatalogContent,
+): MenuCatalogContentOverride {
+  return {
+    eyebrow: content.eyebrow,
+    accent: content.accent,
+    slogan: content.slogan,
+    heroImage: content.heroImage,
+    about: {
+      label: content.about.label,
+      title: content.about.title,
+      description: content.about.description,
+      paragraphs: [...content.about.paragraphs],
+      extraHeading: content.about.extraHeading,
+      extraParagraph: content.about.extraParagraph,
+      facts: content.about.facts.map((fact) => ({ ...fact })),
+    },
+    items: { ...content.items },
+    map: { ...content.map },
+    statLabels: { ...content.statLabels },
+  };
 }
 
 export function menuCatalogContentToFormDefaults(

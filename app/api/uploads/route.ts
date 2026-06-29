@@ -3,13 +3,16 @@ import { getAdminOrNull } from '@/lib/auth/require-admin';
 import {
   createUploadSessionId,
   createUploadToken,
+  UPLOAD_TOKEN_TTL_SECONDS,
   validateFileBuffer,
   verifyUploadToken,
 } from '@/lib/uploads';
+import { consumeUploadTokenNonce } from '@/lib/uploads/upload-token-nonce';
 import { storeValidatedUpload } from '@/lib/uploads/store-upload';
 import {
   extractClientIp,
   getUploadRateLimiter,
+  getUploadTokenMintRateLimiter,
   tooManyRequestsResponse,
 } from '@/lib/rate-limit';
 
@@ -19,6 +22,7 @@ interface UploadAuthContext {
   ownerType: string;
   ownerId: string;
   rateKey: string;
+  tokenPayload?: { nonce: string; exp: number };
 }
 
 async function resolveUploadAuth(request: Request): Promise<UploadAuthContext | null> {
@@ -50,6 +54,7 @@ async function resolveUploadAuth(request: Request): Promise<UploadAuthContext | 
     ownerType: 'session',
     ownerId: payload.sessionId,
     rateKey: `upload:session:${payload.sessionId}:${ip}`,
+    tokenPayload: { nonce: payload.nonce, exp: payload.exp },
   };
 }
 
@@ -57,6 +62,19 @@ export async function POST(request: Request): Promise<Response> {
   const authContext = await resolveUploadAuth(request);
   if (!authContext) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (authContext.tokenPayload) {
+    const consumed = await consumeUploadTokenNonce(
+      authContext.tokenPayload.nonce,
+      authContext.tokenPayload.exp,
+    );
+    if (!consumed) {
+      return NextResponse.json(
+        { ok: false, error: 'Upload token already used or expired.' },
+        { status: 401 },
+      );
+    }
   }
 
   const limiter = getUploadRateLimiter();
@@ -104,8 +122,8 @@ export async function POST(request: Request): Promise<Response> {
 
 export async function GET(request: Request): Promise<Response> {
   const ip = extractClientIp(request.headers);
-  const limiter = getUploadRateLimiter();
-  const check = await limiter.check(`upload-token:${ip}`);
+  const limiter = getUploadTokenMintRateLimiter();
+  const check = await limiter.check(`upload-token-mint:${ip}`);
   if (!check.allowed) {
     return tooManyRequestsResponse();
   }
@@ -115,6 +133,7 @@ export async function GET(request: Request): Promise<Response> {
   return NextResponse.json({
     ok: true,
     uploadToken: token,
-    expiresInSeconds: 15 * 60,
+    expiresInSeconds: UPLOAD_TOKEN_TTL_SECONDS,
+    maxUploadsPerToken: 1,
   });
 }

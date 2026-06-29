@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { CareerForm } from '@/components/admin/CareerForm';
@@ -77,19 +76,19 @@ export function CareersPageClient({ user, rows }: CareersPageClientProps) {
 
   return (
     <>
-      <AdminTopbar title="Careers" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Open positions"
-          description="Roles shown on /about/career."
-          actions={
-            <Button type="button" variant="primary" onClick={openCreateModal}>
-              <Plus size={14} aria-hidden /> Add role
-            </Button>
-          }
-        />
+      <AdminPageShell
+        user={user}
+        topbarTitle="Careers"
+        title="Open positions"
+        description="Roles shown on /about/career."
+        actions={
+          <Button type="button" variant="primary" onClick={openCreateModal}>
+            <Plus size={14} aria-hidden /> Add role
+          </Button>
+        }
+      >
         <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} />
-      </div>
+      </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal eyebrow="Careers" title="Create role" onClose={closeCreateModal}>
           <CareerForm mode="create" onSuccess={handleSuccess} onCancel={closeCreateModal} />

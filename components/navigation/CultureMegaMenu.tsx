@@ -1,14 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import { resolveMenuLucideIcon } from '@/lib/navigation/menu-icons';
-import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
-import { useHomeSectionNav } from '@/components/navigation/useHomeSectionNav';
 import {
   isCultureNavActive,
   MEGA_MENU_HEADING,
@@ -22,20 +20,15 @@ import { cn } from '@/lib/utils';
 
 export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
   const pathname = usePathname();
+  const router = useRouter();
   const active = isCultureNavActive(pathname);
   const panelRef = useRef<HTMLDivElement>(null);
-  const { open, toggle, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
+  const { open, close, containerRef, onMouseEnter, onMouseLeave } = useNavDropdown({
     panelRef,
   });
-  const { handleSectionTriggerClick } = useHomeSectionNav({
-    homeSectionId: HOME_SECTION_IDS.culturalPortal,
-    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.culturalPortal),
-    onScroll: close,
-  });
-
   const handleTriggerClick = (): void => {
-    if (handleSectionTriggerClick()) return;
-    toggle();
+    close();
+    router.push('/culture');
   };
 
   const panelId = 'culture-mega-menu-panel';
