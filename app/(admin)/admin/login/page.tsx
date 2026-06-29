@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { Logo } from '@/components/brand/Logo';
 import { AdminAuthForm } from '@/components/forms/AdminAuthForm';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Admin login',
   robots: { index: false, follow: false },
