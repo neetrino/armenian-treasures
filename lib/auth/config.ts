@@ -6,6 +6,7 @@ import {
   extractClientIp,
   getAdminLoginRateLimiter,
 } from '@/lib/rate-limit';
+import { getAdminEnvDiagnostics, logAdminAuthDiagnostics } from './admin-env-credentials';
 import { validateAdminCredentials } from './validate-admin-credentials';
 
 export type AdminRole = 'ADMIN';
@@ -45,6 +46,18 @@ export const authConfig: NextAuthConfig = {
         const ipAddress = extractClientIp(headerStore);
         const userAgent = headerStore.get('user-agent') ?? undefined;
         const normalizedEmail = parsed.data.email.trim().toLowerCase();
+        const configuredEnvEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+
+        logAdminAuthDiagnostics({
+          stage: 'authorize',
+          ...getAdminEnvDiagnostics(),
+          submittedEmailLength: parsed.data.email.trim().length,
+          submittedPasswordLength: parsed.data.password.length,
+          normalizedEmailMatchesEnv: configuredEnvEmail
+            ? configuredEnvEmail === normalizedEmail
+            : false,
+          hasDatabaseUrl: Boolean(process.env.DATABASE_URL?.trim()),
+        });
 
         const limiter = getAdminLoginRateLimiter();
         const rateKey = `login:${normalizedEmail}:${ipAddress}`;
@@ -57,11 +70,20 @@ export const authConfig: NextAuthConfig = {
           ipAddress,
           userAgent,
         });
-        if (!result.success) return null;
+        if (!result.success) {
+          logAdminAuthDiagnostics({ stage: 'authorize', outcome: 'rejected' });
+          return null;
+        }
+
+        logAdminAuthDiagnostics({
+          stage: 'authorize',
+          outcome: 'accepted',
+          adminUserIdLength: result.adminUser.id.length,
+        });
 
         return {
           id: result.adminUser.id,
-          name: result.adminUser.email,
+          name: 'Foundation Admin',
           email: result.adminUser.email,
           role: 'ADMIN' as const,
         };
