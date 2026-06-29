@@ -5,6 +5,7 @@ const { prismaMock } = vi.hoisted(() => ({
   prismaMock: {
     adminUser: {
       findUnique: vi.fn(),
+      create: vi.fn(),
       update: vi.fn(),
     },
     adminAuditLog: {
@@ -129,12 +130,41 @@ describe('validateAdminCredentials', () => {
     );
   });
 
-  it('does not use env admin password', async () => {
+  it('accepts env admin credentials when no database user exists', async () => {
+    process.env.ADMIN_EMAIL = 'env@example.com';
+    process.env.ADMIN_PASSWORD = 'env-password-12345';
+    prismaMock.adminUser.findUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(null);
+    prismaMock.adminUser.create.mockResolvedValue({
+      id: 'admin-env-1',
+      email: 'env@example.com',
+      isActive: true,
+      lastLoginAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    prismaMock.adminUser.update.mockResolvedValue({
+      id: 'admin-env-1',
+      email: 'env@example.com',
+      isActive: true,
+      lastLoginAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const result = await validateAdminCredentials('env@example.com', 'env-password-12345');
+    expect(result.success).toBe(true);
+    delete process.env.ADMIN_EMAIL;
+    delete process.env.ADMIN_PASSWORD;
+  });
+
+  it('rejects when env credentials do not match submitted values', async () => {
     process.env.ADMIN_EMAIL = 'env@example.com';
     process.env.ADMIN_PASSWORD = 'env-password-12345';
     prismaMock.adminUser.findUnique.mockResolvedValue(null);
 
-    const result = await validateAdminCredentials('env@example.com', 'env-password-12345');
+    const result = await validateAdminCredentials('env@example.com', 'wrong-password-12');
     expect(result.success).toBe(false);
     delete process.env.ADMIN_EMAIL;
     delete process.env.ADMIN_PASSWORD;
