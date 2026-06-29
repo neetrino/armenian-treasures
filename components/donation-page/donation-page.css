@@ -1119,6 +1119,25 @@
   }
 }
 
+@media (max-width: 768px) {
+  .khndzoresk-page .ledger {
+    grid-template-columns: 1fr;
+  }
+
+  .khndzoresk-page .donation-nl-outer .newsletter {
+    margin: 0 16px;
+    padding: 30px 18px;
+  }
+
+  .khndzoresk-page .toast {
+    width: calc(100% - 24px);
+    white-space: normal;
+    text-align: center;
+    justify-content: center;
+    padding: 12px 14px;
+  }
+}
+
 @media (max-width: 680px) {
   .khndzoresk-page .narrative-block {
     padding: 36px 24px;

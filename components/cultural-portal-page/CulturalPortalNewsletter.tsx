@@ -25,7 +25,7 @@ function StarIcon() {
 export function CulturalPortalNewsletter({ title, description }: CulturalPortalNewsletterProps) {
   return (
     <div className="nl-outer">
-      <div className="newsletter reveal">
+      <div className="newsletter cultural-portal-newsletter reveal">
         <StarIcon />
         <h2>{title}</h2>
         <p>{description}</p>

@@ -152,3 +152,44 @@
   .khndzoresk-page .partners-inner{padding:0 20px}
   .khndzoresk-page .cta-form-outer{padding:40px 24px}
 }
+
+@media (max-width: 768px) {
+  .khndzoresk-page .hero {
+    padding: 120px 20px 80px;
+  }
+
+  .khndzoresk-page .partnership-hero .hero-sub {
+    font-size: 16px;
+    line-height: 1.55;
+    margin-bottom: 28px;
+  }
+
+  .khndzoresk-page .hero-btns {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .khndzoresk-page .hero-btns .btn-gold,
+  .khndzoresk-page .hero-btns .btn-teal,
+  .khndzoresk-page .hero-btns .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+
+  .khndzoresk-page .p-card,
+  .khndzoresk-page .p-card.wide {
+    padding: 32px 18px;
+    gap: 24px;
+  }
+
+  .khndzoresk-page .medallion,
+  .khndzoresk-page .p-card.wide .medallion {
+    width: 160px;
+    height: 160px;
+  }
+
+  .khndzoresk-page .cta-form-outer {
+    padding: 28px 16px;
+  }
+}

@@ -33,3 +33,26 @@
   .khndzoresk-page .exh-grid{grid-template-columns:1fr}
   .khndzoresk-page .ticket-grid{grid-template-columns:1fr 1fr}
 }
+
+@media (max-width: 768px) {
+  .khndzoresk-page .ticket-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .khndzoresk-page .ticket-card {
+    padding: 22px 18px;
+  }
+
+  .khndzoresk-page .hero h1 {
+    font-size: clamp(30px, 10vw, 46px);
+  }
+
+  .khndzoresk-page .hero-sub {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+
+  .khndzoresk-page .map-embed {
+    height: 320px;
+  }
+}

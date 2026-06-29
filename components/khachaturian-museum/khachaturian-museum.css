@@ -58,3 +58,23 @@
   .khndzoresk-page .audio-grid{grid-template-columns:1fr}
   .khndzoresk-page .social-row{flex-direction:column}
 }
+
+@media (max-width: 768px) {
+  .khndzoresk-page .tour-wrap .tour-embed {
+    height: 340px;
+  }
+
+  .khndzoresk-page .audio-section {
+    padding: 26px 18px;
+  }
+
+  .khndzoresk-page .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .khndzoresk-page .map-link {
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
+  }
+}
