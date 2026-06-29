@@ -15,6 +15,7 @@ import { StatusPill } from '@/components/ui/StatusPill';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { deleteCultureItemAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
@@ -43,6 +44,30 @@ interface CultureItemsPageClientProps {
   user: AdminContext;
   rows: Row[];
   menuOptions: MenuOption[];
+}
+
+const FALLBACK_CULTURE_ENTRY_IMAGE = resolvePublicAssetUrl('/images/culture/card-heritage.webp');
+
+interface CultureItemThumbProps {
+  src?: string | null;
+  alt: string;
+}
+
+function CultureItemThumb({ src, alt }: CultureItemThumbProps) {
+  const initialSrc = src?.trim() ? resolvePublicAssetUrl(src.trim()) : FALLBACK_CULTURE_ENTRY_IMAGE;
+  const [imageSrc, setImageSrc] = useState(initialSrc);
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      width={40}
+      height={40}
+      className="h-full w-full object-cover"
+      unoptimized
+      onError={() => setImageSrc(FALLBACK_CULTURE_ENTRY_IMAGE)}
+    />
+  );
 }
 
 function rowSearchText(row: Row): string {
@@ -120,15 +145,7 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
       width: '64px',
       cell: (row) => (
         <div className="h-10 w-10 overflow-hidden rounded-md bg-stone-100">
-          {row.image ? (
-            <Image
-              src={row.image}
-              alt=""
-              width={40}
-              height={40}
-              className="h-full w-full object-cover"
-            />
-          ) : null}
+          <CultureItemThumb src={row.image} alt={row.title} />
         </div>
       ),
     },

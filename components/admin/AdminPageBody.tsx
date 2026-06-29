@@ -17,7 +17,7 @@ export function AdminPageBody({ children, className, size = 'default' }: AdminPa
   return (
     <div
       className={cn(
-        'relative mx-auto flex w-full flex-1 flex-col gap-6 px-4 py-5 sm:gap-7 sm:px-6 sm:py-6 lg:px-8 lg:py-7',
+        'relative mx-auto flex w-full flex-1 flex-col gap-6 overflow-x-hidden px-4 py-5 sm:gap-7 sm:px-6 sm:py-6 lg:px-8 lg:py-7',
         SIZE[size],
         className,
       )}
