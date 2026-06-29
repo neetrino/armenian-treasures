@@ -13,19 +13,13 @@ function normalizeLegacyCultureSvgPath(path: string): string {
 }
 
 function getPublicR2BaseUrl(): string | null {
-  const base =
-    process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim() ||
-    process.env.R2_PUBLIC_URL?.trim() ||
-    null;
+  const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim() || null;
   return base ? base.replace(/\/$/, '') : null;
 }
 
 function shouldUseR2PublicAssets(): boolean {
   if (getPublicR2BaseUrl()) return true;
-  return (
-    process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS === 'true' ||
-    process.env.USE_R2_PUBLIC_ASSETS === 'true'
-  );
+  return process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS === 'true';
 }
 
 /**
@@ -45,13 +39,13 @@ export function resolvePublicAssetUrl(path: string): string {
     return normalizedLegacySafe;
   }
 
-  const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
-  if (fromManifest) return fromManifest;
-
   const base = getPublicR2BaseUrl();
   if (base) {
     return `${base}${normalizedLegacySafe}`;
   }
+
+  const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
+  if (fromManifest) return fromManifest;
 
   return normalizedLegacySafe;
 }

@@ -535,3 +535,25 @@
   }
 
 }
+
+@media (max-width: 768px) {
+  .khndzoresk-page .map-area {
+    height: 360px;
+  }
+
+  .khndzoresk-page .map-legend {
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .khndzoresk-page .partner-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .khndzoresk-page .donor-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 16px;
+  }
+}
