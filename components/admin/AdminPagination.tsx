@@ -44,7 +44,7 @@ export function AdminPagination({
   const to = Math.min(page * pageSize, total);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-stone-100 bg-white px-4 py-3 text-sm shadow-card">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-stone-200/70 bg-white/95 px-4 py-3 text-sm shadow-card backdrop-blur-sm motion-safe:animate-admin-fade-up">
       <p className="text-ink-muted">
         Showing {from}–{to} of {total}
       </p>
@@ -53,8 +53,10 @@ export function AdminPagination({
           href={buildHref(basePath, page - 1, query, extraParams)}
           aria-disabled={page <= 1}
           className={cn(
-            'rounded-md border border-stone-200 px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-pomegranate hover:text-pomegranate',
-            page <= 1 && 'pointer-events-none opacity-40',
+            'rounded-full border px-3.5 py-1.5 text-xs font-medium transition duration-200',
+            page <= 1
+              ? 'pointer-events-none border-stone-200/60 opacity-40'
+              : 'border-stone-200/80 hover:border-bronze-300 hover:text-bronze-800',
           )}
         >
           Previous
@@ -66,8 +68,10 @@ export function AdminPagination({
           href={buildHref(basePath, page + 1, query, extraParams)}
           aria-disabled={page >= pageCount}
           className={cn(
-            'rounded-md border border-stone-200 px-3 py-1.5 text-xs font-medium text-ink-soft transition hover:border-pomegranate hover:text-pomegranate',
-            page >= pageCount && 'pointer-events-none opacity-40',
+            'rounded-full border px-3.5 py-1.5 text-xs font-medium transition duration-200',
+            page >= pageCount
+              ? 'pointer-events-none border-stone-200/60 opacity-40'
+              : 'border-stone-200/80 hover:border-bronze-300 hover:text-bronze-800',
           )}
         >
           Next

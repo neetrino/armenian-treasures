@@ -1,22 +1,52 @@
-import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
+import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import {
+  cultureCatalogContentToOverride,
   menuCatalogContentToFormDefaults,
   parseMenuCatalogContent,
 } from '@/lib/types/culture-catalog-content';
 
 interface CultureMenuCatalogFieldsProps {
   catalogContent?: unknown;
+  resolvedContent?: CultureCatalogContent | null;
   fieldErrors?: Record<string, string>;
+}
+
+function resolveFormDefaults(
+  catalogContent: unknown,
+  resolvedContent: CultureCatalogContent | null | undefined,
+): Record<string, string> {
+  const parsed = parseMenuCatalogContent(catalogContent);
+  if (resolvedContent) {
+    return menuCatalogContentToFormDefaults(cultureCatalogContentToOverride(resolvedContent));
+  }
+  return menuCatalogContentToFormDefaults(parsed);
 }
 
 export function CultureMenuCatalogFields({
   catalogContent,
+  resolvedContent,
   fieldErrors,
 }: CultureMenuCatalogFieldsProps) {
-  const parsed = parseMenuCatalogContent(catalogContent);
-  const defaults = menuCatalogContentToFormDefaults(parsed);
+  const defaults = useMemo(
+    () => resolveFormDefaults(catalogContent, resolvedContent),
+    [catalogContent, resolvedContent],
+  );
+  const defaultsKey = useMemo(() => JSON.stringify(defaults), [defaults]);
+  const [values, setValues] = useState(defaults);
+
+  useEffect(() => {
+    setValues(defaults);
+  }, [defaultsKey, defaults]);
+
+  const setField = (name: string, value: string): void => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <section className="flex flex-col gap-5 rounded-2xl border border-stone-100 bg-parchment-50 p-5">
@@ -28,32 +58,38 @@ export function CultureMenuCatalogFields({
         </p>
       </div>
 
-      <AdminImageDropzoneField
+      <input type="hidden" name="catalogHeroImage" value={values.catalogHeroImage ?? ''} readOnly />
+      <PageContentImageField
         label="Hero banner image"
-        name="catalogHeroImage"
-        folder="culture"
-        defaultValue={defaults.catalogHeroImage}
-        hint="Overrides the default heritage background for this catalog page."
-        error={fieldErrors?.catalogHeroImage}
+        layout="banner"
+        value={values.catalogHeroImage ?? ''}
+        onChange={(url) => setField('catalogHeroImage', url)}
+        hint="Wide banner at the top of the catalog page (16:9)."
       />
+      {fieldErrors?.catalogHeroImage ? (
+        <p className="-mt-3 text-xs text-pomegranate">{fieldErrors.catalogHeroImage}</p>
+      ) : null}
 
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
           label="Hero eyebrow"
           name="catalogEyebrow"
-          defaultValue={defaults.catalogEyebrow}
+          value={values.catalogEyebrow ?? ''}
+          onChange={(event) => setField('catalogEyebrow', event.target.value)}
           error={fieldErrors?.catalogEyebrow}
         />
         <TextField
           label="Hero accent (subtitle line)"
           name="catalogAccent"
-          defaultValue={defaults.catalogAccent}
+          value={values.catalogAccent ?? ''}
+          onChange={(event) => setField('catalogAccent', event.target.value)}
           error={fieldErrors?.catalogAccent}
         />
         <TextField
           label="Hero slogan"
           name="catalogSlogan"
-          defaultValue={defaults.catalogSlogan}
+          value={values.catalogSlogan ?? ''}
+          onChange={(event) => setField('catalogSlogan', event.target.value)}
           error={fieldErrors?.catalogSlogan}
         />
       </div>
@@ -62,19 +98,22 @@ export function CultureMenuCatalogFields({
         <TextField
           label="About label"
           name="catalogAboutLabel"
-          defaultValue={defaults.catalogAboutLabel}
+          value={values.catalogAboutLabel ?? ''}
+          onChange={(event) => setField('catalogAboutLabel', event.target.value)}
         />
         <TextField
           label="About title"
           name="catalogAboutTitle"
-          defaultValue={defaults.catalogAboutTitle}
+          value={values.catalogAboutTitle ?? ''}
+          onChange={(event) => setField('catalogAboutTitle', event.target.value)}
         />
         <div className="sm:col-span-2">
           <TextareaField
             label="About description"
             name="catalogAboutDescription"
             rows={3}
-            defaultValue={defaults.catalogAboutDescription}
+            value={values.catalogAboutDescription ?? ''}
+            onChange={(event) => setField('catalogAboutDescription', event.target.value)}
           />
         </div>
         <div className="sm:col-span-2">
@@ -82,20 +121,23 @@ export function CultureMenuCatalogFields({
             label="About paragraphs"
             name="catalogAboutParagraphs"
             rows={5}
-            defaultValue={defaults.catalogAboutParagraphs}
+            value={values.catalogAboutParagraphs ?? ''}
+            onChange={(event) => setField('catalogAboutParagraphs', event.target.value)}
             hint="Separate paragraphs with a blank line."
           />
         </div>
         <TextField
           label="Extra heading"
           name="catalogExtraHeading"
-          defaultValue={defaults.catalogExtraHeading}
+          value={values.catalogExtraHeading ?? ''}
+          onChange={(event) => setField('catalogExtraHeading', event.target.value)}
         />
         <TextareaField
           label="Extra paragraph"
           name="catalogExtraParagraph"
           rows={3}
-          defaultValue={defaults.catalogExtraParagraph}
+          value={values.catalogExtraParagraph ?? ''}
+          onChange={(event) => setField('catalogExtraParagraph', event.target.value)}
         />
       </div>
 
@@ -108,13 +150,15 @@ export function CultureMenuCatalogFields({
             <TextField
               label="Label"
               name={`catalogFact${index}Label`}
-              defaultValue={defaults[`catalogFact${index}Label` as keyof typeof defaults]}
+              value={values[`catalogFact${index}Label`] ?? ''}
+              onChange={(event) => setField(`catalogFact${index}Label`, event.target.value)}
             />
             <TextareaField
               label="Value"
               name={`catalogFact${index}Value`}
               rows={2}
-              defaultValue={defaults[`catalogFact${index}Value` as keyof typeof defaults]}
+              value={values[`catalogFact${index}Value`] ?? ''}
+              onChange={(event) => setField(`catalogFact${index}Value`, event.target.value)}
             />
           </div>
         ))}
@@ -124,30 +168,35 @@ export function CultureMenuCatalogFields({
         <TextField
           label="Entries section label"
           name="catalogItemsLabel"
-          defaultValue={defaults.catalogItemsLabel}
+          value={values.catalogItemsLabel ?? ''}
+          onChange={(event) => setField('catalogItemsLabel', event.target.value)}
         />
         <TextField
           label="Entries section title"
           name="catalogItemsTitle"
-          defaultValue={defaults.catalogItemsTitle}
+          value={values.catalogItemsTitle ?? ''}
+          onChange={(event) => setField('catalogItemsTitle', event.target.value)}
         />
         <div className="sm:col-span-2">
           <TextareaField
             label="Entries section description"
             name="catalogItemsDescription"
             rows={3}
-            defaultValue={defaults.catalogItemsDescription}
+            value={values.catalogItemsDescription ?? ''}
+            onChange={(event) => setField('catalogItemsDescription', event.target.value)}
           />
         </div>
         <TextField
           label="Submit prompt"
           name="catalogSubmitPrompt"
-          defaultValue={defaults.catalogSubmitPrompt}
+          value={values.catalogSubmitPrompt ?? ''}
+          onChange={(event) => setField('catalogSubmitPrompt', event.target.value)}
         />
         <TextField
           label="Empty state message"
           name="catalogEmptyMessage"
-          defaultValue={defaults.catalogEmptyMessage}
+          value={values.catalogEmptyMessage ?? ''}
+          onChange={(event) => setField('catalogEmptyMessage', event.target.value)}
         />
       </div>
 
@@ -155,25 +204,29 @@ export function CultureMenuCatalogFields({
         <TextField
           label="Map eyebrow"
           name="catalogMapEyebrow"
-          defaultValue={defaults.catalogMapEyebrow}
+          value={values.catalogMapEyebrow ?? ''}
+          onChange={(event) => setField('catalogMapEyebrow', event.target.value)}
         />
         <TextField
           label="Map title"
           name="catalogMapTitle"
-          defaultValue={defaults.catalogMapTitle}
+          value={values.catalogMapTitle ?? ''}
+          onChange={(event) => setField('catalogMapTitle', event.target.value)}
         />
         <div className="sm:col-span-2">
           <TextareaField
             label="Map description"
             name="catalogMapDescription"
             rows={3}
-            defaultValue={defaults.catalogMapDescription}
+            value={values.catalogMapDescription ?? ''}
+            onChange={(event) => setField('catalogMapDescription', event.target.value)}
           />
         </div>
         <TextField
           label="Map placeholder title"
           name="catalogMapPlaceholder"
-          defaultValue={defaults.catalogMapPlaceholder}
+          value={values.catalogMapPlaceholder ?? ''}
+          onChange={(event) => setField('catalogMapPlaceholder', event.target.value)}
         />
       </div>
 
@@ -181,22 +234,26 @@ export function CultureMenuCatalogFields({
         <TextField
           label="Stat: entries label"
           name="catalogStatEntries"
-          defaultValue={defaults.catalogStatEntries}
+          value={values.catalogStatEntries ?? ''}
+          onChange={(event) => setField('catalogStatEntries', event.target.value)}
         />
         <TextField
           label="Stat: regions label"
           name="catalogStatRegions"
-          defaultValue={defaults.catalogStatRegions}
+          value={values.catalogStatRegions ?? ''}
+          onChange={(event) => setField('catalogStatRegions', event.target.value)}
         />
         <TextField
           label="Stat: third label"
           name="catalogStatThird"
-          defaultValue={defaults.catalogStatThird}
+          value={values.catalogStatThird ?? ''}
+          onChange={(event) => setField('catalogStatThird', event.target.value)}
         />
         <TextField
           label="Stat: fourth label"
           name="catalogStatFourth"
-          defaultValue={defaults.catalogStatFourth}
+          value={values.catalogStatFourth ?? ''}
+          onChange={(event) => setField('catalogStatFourth', event.target.value)}
         />
       </div>
     </section>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
@@ -57,7 +58,14 @@ export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: P
         />
         <TextField label="Position" name="position" required defaultValue={initial?.position ?? ''} error={state.fieldErrors?.position} />
         <TextField label="Order" name="order" type="number" min={0} defaultValue={initial?.order ?? 0} />
-        <TextField label="Image URL (optional)" name="image" defaultValue={initial?.image ?? ''} />
+        <AdminImageDropzoneField
+          label="Profile photo"
+          name="image"
+          folder="culture"
+          layout="card"
+          defaultValue={initial?.image ?? ''}
+          hint="Upload a square portrait. Leave empty to show initials only."
+        />
         <label className="flex items-center gap-2 pt-6 text-sm text-ink-soft">
           <input
             type="checkbox"

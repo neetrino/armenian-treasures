@@ -1,0 +1,329 @@
+.khndzoresk-page .about-portal-hero h1 {
+  font-size: clamp(42px, 5vw, 82px);
+}
+
+.khndzoresk-page .about-portal-hero .hero-sub {
+  font-size: clamp(16px, 1.35vw, 20px);
+  max-width: 760px;
+}
+
+.khndzoresk-page .about-mission-card {
+  position: relative;
+  min-height: 19rem;
+  overflow: hidden;
+  border: 1px solid rgba(214, 184, 90, 0.22);
+  background:
+    radial-gradient(110% 80% at 90% 0%, rgba(214, 184, 90, 0.07) 0%, transparent 62%),
+    rgba(12, 12, 10, 0.74);
+  padding: 1.8rem;
+  transition:
+    border-color 260ms ease,
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
+}
+
+.khndzoresk-page .about-mission-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 184, 90, 0.7), rgba(214, 184, 90, 0.06));
+  opacity: 0.55;
+  transition: opacity 260ms ease;
+}
+
+.khndzoresk-page .about-mission-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(214, 184, 90, 0.42);
+  box-shadow:
+    inset 0 0 34px rgba(214, 184, 90, 0.05),
+    0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.khndzoresk-page .about-mission-card:hover::before {
+  opacity: 0.9;
+}
+
+.khndzoresk-page .about-mission-icon {
+  margin-bottom: 1.35rem;
+  display: inline-flex;
+  height: 2.85rem;
+  width: 2.85rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(214, 184, 90, 0.34);
+  background: rgba(214, 184, 90, 0.08);
+  color: var(--gold);
+}
+
+.khndzoresk-page .about-mission-title {
+  font-family: var(--font-cinzel), serif;
+  font-size: clamp(1.1rem, 1.24vw, 1.4rem);
+  font-weight: 800;
+  line-height: 1.18;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.khndzoresk-page .about-mission-body {
+  margin-top: 0.75rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(232, 216, 155, 0.72);
+}
+
+.khndzoresk-page .about-mission-pair-card {
+  border: 1px solid rgba(214, 184, 90, 0.24);
+  background:
+    linear-gradient(180deg, rgba(214, 184, 90, 0.03), transparent 45%),
+    rgba(12, 12, 10, 0.7);
+  padding: 2rem;
+}
+
+.khndzoresk-page .about-mission-pair-title {
+  font-family: var(--font-cinzel), serif;
+  font-size: clamp(1.18rem, 1.38vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.khndzoresk-page .about-mission-pair-body {
+  margin-top: 0.75rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 1rem;
+  line-height: 1.76;
+  color: rgba(232, 216, 155, 0.73);
+}
+
+.khndzoresk-page .about-team-card {
+  position: relative;
+  min-height: 17.75rem;
+  border: 1px solid rgba(214, 184, 90, 0.22);
+  background:
+    radial-gradient(120% 88% at 96% 0%, rgba(214, 184, 90, 0.06) 0%, transparent 60%),
+    rgba(12, 12, 10, 0.74);
+  padding: 1.6rem;
+  transition:
+    border-color 260ms ease,
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
+}
+
+.khndzoresk-page .about-team-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 184, 90, 0.68), rgba(214, 184, 90, 0.06));
+  opacity: 0.5;
+  transition: opacity 260ms ease;
+}
+
+.khndzoresk-page .about-team-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(214, 184, 90, 0.42);
+  box-shadow:
+    inset 0 0 32px rgba(214, 184, 90, 0.05),
+    0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.khndzoresk-page .about-team-card:hover::before {
+  opacity: 0.9;
+}
+
+.khndzoresk-page .about-team-avatar {
+  display: inline-flex;
+  height: 3.25rem;
+  width: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(39, 198, 200, 0.36);
+  background: radial-gradient(circle at 30% 25%, rgba(39, 198, 200, 0.22), rgba(39, 198, 200, 0.1));
+  font-family: var(--font-cinzel), serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--teal);
+  box-shadow: inset 0 0 18px rgba(39, 198, 200, 0.14);
+}
+
+.khndzoresk-page .about-team-name {
+  font-family: var(--font-cinzel), serif;
+  font-size: clamp(1.08rem, 1.2vw, 1.32rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.khndzoresk-page .about-team-role {
+  margin-top: 0.28rem;
+  font-family: var(--font-cinzel), serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0.21em;
+  text-transform: uppercase;
+  color: rgba(39, 198, 200, 0.9);
+}
+
+.khndzoresk-page .about-team-bio {
+  margin-top: 1rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 1rem;
+  line-height: 1.72;
+  color: rgba(232, 216, 155, 0.72);
+}
+
+.khndzoresk-page .about-career-card {
+  position: relative;
+  min-height: 18.25rem;
+  border: 1px solid rgba(214, 184, 90, 0.22);
+  background:
+    radial-gradient(125% 86% at 96% 0%, rgba(214, 184, 90, 0.06) 0%, transparent 62%),
+    rgba(12, 12, 10, 0.74);
+  padding: 1.65rem;
+  transition:
+    border-color 260ms ease,
+    transform 260ms ease,
+    box-shadow 260ms ease,
+    background 260ms ease;
+}
+
+.khndzoresk-page .about-career-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(214, 184, 90, 0.68), rgba(214, 184, 90, 0.06));
+  opacity: 0.52;
+  transition: opacity 260ms ease;
+}
+
+.khndzoresk-page .about-career-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(214, 184, 90, 0.42);
+  box-shadow:
+    inset 0 0 34px rgba(214, 184, 90, 0.05),
+    0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.khndzoresk-page .about-career-card:hover::before {
+  opacity: 0.9;
+}
+
+.khndzoresk-page .about-career-title {
+  font-family: var(--font-cinzel), serif;
+  font-size: clamp(1.15rem, 1.4vw, 1.68rem);
+  font-weight: 800;
+  line-height: 1.14;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.khndzoresk-page .about-career-meta {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: rgba(232, 216, 155, 0.72);
+}
+
+.khndzoresk-page .about-career-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.khndzoresk-page .about-career-meta-icon {
+  color: var(--teal);
+}
+
+.khndzoresk-page .about-career-badge {
+  display: inline-flex;
+  height: 1.4rem;
+  align-items: center;
+  border: 1px solid rgba(39, 198, 200, 0.38);
+  background: rgba(39, 198, 200, 0.1);
+  padding: 0 0.85rem;
+  font-family: var(--font-cinzel), serif;
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.21em;
+  text-transform: uppercase;
+  color: rgba(39, 198, 200, 0.95);
+}
+
+.khndzoresk-page .about-career-desc {
+  margin-top: 0.9rem;
+  font-family: var(--font-cormorant), serif;
+  font-size: 1.03rem;
+  line-height: 1.74;
+  color: rgba(232, 216, 155, 0.73);
+}
+
+.khndzoresk-page .about-career-apply {
+  margin-top: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-cinzel), serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color 220ms ease;
+}
+
+.khndzoresk-page .about-career-apply:hover {
+  color: #e6c766;
+}
+
+@media (max-width: 900px) {
+  .khndzoresk-page .about-portal-hero h1 {
+    font-size: clamp(36px, 12vw, 56px);
+  }
+
+  .khndzoresk-page .about-mission-card {
+    min-height: 16rem;
+    padding: 1.35rem;
+  }
+
+  .khndzoresk-page .about-mission-pair-card {
+    padding: 1.35rem;
+  }
+
+  .khndzoresk-page .about-team-card {
+    min-height: 15.5rem;
+    padding: 1.25rem;
+  }
+
+  .khndzoresk-page .about-team-avatar {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .khndzoresk-page .about-career-card {
+    min-height: 15.75rem;
+    padding: 1.25rem;
+  }
+
+  .khndzoresk-page .about-career-title {
+    font-size: clamp(1.08rem, 6vw, 1.42rem);
+  }
+}

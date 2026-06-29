@@ -7,20 +7,35 @@ interface TextareaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement>
   required?: boolean;
   error?: string;
   hint?: string;
+  labelClassName?: string;
+  textareaClassName?: string;
+  errorClassName?: string;
+  hintClassName?: string;
 }
 
-export function TextareaField({ label, required, error, hint, id, ...props }: TextareaFieldProps) {
+export function TextareaField({
+  label,
+  required,
+  error,
+  hint,
+  id,
+  labelClassName,
+  textareaClassName,
+  errorClassName,
+  hintClassName,
+  ...props
+}: TextareaFieldProps) {
   const inputId = id ?? props.name;
   return (
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor={inputId} required={required}>
+      <Label htmlFor={inputId} required={required} className={labelClassName}>
         {label}
       </Label>
-      <Textarea id={inputId} aria-invalid={Boolean(error)} {...props} />
+      <Textarea id={inputId} aria-invalid={Boolean(error)} className={textareaClassName} {...props} />
       {error ? (
-        <p className="text-xs text-pomegranate">{error}</p>
+        <p className={errorClassName ?? 'text-xs text-pomegranate'}>{error}</p>
       ) : hint ? (
-        <p className="text-xs text-ink-muted">{hint}</p>
+        <p className={hintClassName ?? 'text-xs text-ink-muted'}>{hint}</p>
       ) : null}
     </div>
   );

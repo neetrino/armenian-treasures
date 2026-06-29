@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { ContactInboxTypeBadge } from '@/components/admin/ContactInboxTypeBadge';
 import { ContactStatusSelect } from '@/components/admin/ContactStatusSelect';
@@ -118,24 +117,23 @@ async function AdminContactMessagesPage(props: PageProps) {
     },
   ];
   return (
-    <>
-      <AdminTopbar title="Public inbox" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Public inbox"
-          description="Contact form messages and newsletter signup requests. Newsletter rows are stored here until a dedicated email list is connected — they are not sent to an ESP automatically."
-        />
-        <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} empty="No inbox entries yet." />
-        <AdminPagination
-          page={listQuery.page}
-          pageCount={pageCount}
-          total={total}
-          pageSize={listQuery.pageSize}
-          basePath="/admin/contact-messages"
-          query={listQuery.query || undefined}
-        />
-      </div>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Public inbox"
+      title="Public inbox"
+      description="Contact form messages and newsletter signup requests. Newsletter rows are stored here until a dedicated email list is connected — they are not sent to an ESP automatically."
+      size="wide"
+    >
+      <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} empty="No inbox entries yet." />
+      <AdminPagination
+        page={listQuery.page}
+        pageCount={pageCount}
+        total={total}
+        pageSize={listQuery.pageSize}
+        basePath="/admin/contact-messages"
+        query={listQuery.query || undefined}
+      />
+    </AdminPageShell>
   );
 }
 

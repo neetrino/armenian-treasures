@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminModal } from '@/components/admin/AdminModal';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { TeamMemberForm } from '@/components/admin/TeamMemberForm';
@@ -83,19 +82,19 @@ export function TeamPageClient({ user, rows }: TeamPageClientProps) {
 
   return (
     <>
-      <AdminTopbar title="Team" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title="Team members"
-          description="People shown on the public /about/team page."
-          actions={
-            <Button type="button" variant="primary" onClick={openCreateModal}>
-              <Plus size={14} aria-hidden /> Add member
-            </Button>
-          }
-        />
+      <AdminPageShell
+        user={user}
+        topbarTitle="Team"
+        title="Team members"
+        description="People shown on the public /about/team page."
+        actions={
+          <Button type="button" variant="primary" onClick={openCreateModal}>
+            <Plus size={14} aria-hidden /> Add member
+          </Button>
+        }
+      >
         <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} />
-      </div>
+      </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal eyebrow="Team" title="Create team member" onClose={closeCreateModal}>
           <TeamMemberForm mode="create" onSuccess={handleSuccess} onCancel={closeCreateModal} />

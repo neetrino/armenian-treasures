@@ -28,10 +28,18 @@ export function resolveHeroImageUrl(source?: string | null): string {
 export function resolveHomeHeroImageUrls(
   desktopSource?: string | null,
   mobileSource?: string | null,
-): { desktop: string; mobile: string } {
-  const desktop = resolveHeroImageUrl(desktopSource);
-  const mobile = resolveHeroImageUrl(
-    mobileSource?.trim() ? mobileSource : desktopSource ?? null,
-  );
+): { desktop: string | null; mobile: string | null } {
+  const desktopTrimmed = desktopSource?.trim();
+  const mobileTrimmed = mobileSource?.trim();
+
+  if (!desktopTrimmed && !mobileTrimmed) {
+    return { desktop: null, mobile: null };
+  }
+
+  const desktop = desktopTrimmed ? resolveHeroImageUrl(desktopTrimmed) : null;
+  const mobile = mobileTrimmed
+    ? resolveHeroImageUrl(mobileTrimmed)
+    : desktop;
+
   return { desktop, mobile };
 }

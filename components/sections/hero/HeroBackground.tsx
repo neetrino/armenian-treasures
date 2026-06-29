@@ -32,14 +32,16 @@ export function HeroBackground({ desktopImage, mobileImage }: HeroBackgroundProp
       aria-hidden
       className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-heritage-black"
     >
-      <picture>
-        <source media="(max-width: 767px)" srcSet={mobile} />
-        <img
-          src={desktop}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-35"
-        />
-      </picture>
+      {desktop || mobile ? (
+        <picture>
+          <source media="(max-width: 767px)" srcSet={mobile ?? desktop ?? undefined} />
+          <img
+            src={desktop ?? mobile ?? undefined}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover opacity-35"
+          />
+        </picture>
+      ) : null}
       <div className="absolute inset-0 bg-heritage-radial" />
       <div className="absolute inset-0 bg-heritage-gold-glow" />
       <div className="absolute inset-0 bg-heritage-teal-glow" />

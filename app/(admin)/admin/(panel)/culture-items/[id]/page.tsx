@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { AdminTopbar } from '@/components/admin/AdminTopbar';
-import { AdminPageHeader } from '@/components/admin/AdminPageHeader';
+import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
+import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CultureItemForm } from '@/components/admin/CultureItemForm';
 import { ButtonLink } from '@/components/ui/Button';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -30,30 +31,29 @@ async function EditCultureItemPage(props: PageProps) {
     title: m.parent ? `${m.parent.title} / ${m.title}` : m.title,
   }));
   return (
-    <>
-      <AdminTopbar title="Edit culture item" user={user} />
-      <div className="flex flex-1 flex-col gap-6 p-6">
-        <AdminPageHeader
-          title={item.title}
-          description={`Editing item with slug “${item.slug}”.`}
-          actions={
-            item.status === 'PUBLISHED' ? (
-              <ButtonLink href={resolveCultureItemHref(item.slug)} variant="secondary" external>
-                View public page
-              </ButtonLink>
-            ) : null
-          }
+    <AdminPageShell
+      user={user}
+      topbarTitle="Edit culture item"
+      title={item.title}
+      description={`Editing item with slug “${item.slug}”.`}
+      beforeHeader={<AdminBackLink href="/admin/culture-items" label="All culture items" />}
+      actions={
+        item.status === 'PUBLISHED' ? (
+          <ButtonLink href={resolveCultureItemHref(item.slug)} variant="secondary" external>
+            View public page
+          </ButtonLink>
+        ) : null
+      }
+    >
+      <AdminPanelCard>
+        <CultureItemForm
+          mode="edit"
+          itemId={item.id}
+          menuOptions={options}
+          initial={toCultureItemFormInitial(item)}
         />
-        <div className="rounded-2xl border border-stone-100 bg-white p-6 shadow-card">
-          <CultureItemForm
-            mode="edit"
-            itemId={item.id}
-            menuOptions={options}
-            initial={toCultureItemFormInitial(item)}
-          />
-        </div>
-      </div>
-    </>
+      </AdminPanelCard>
+    </AdminPageShell>
   );
 }
 

@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
 import type { CulturalPortalCategory } from '@/lib/constants/cultural-portal';
 
 interface CulturalPortalCategoriesProps {
@@ -19,9 +19,13 @@ export function CulturalPortalCategories({ section, categories }: CulturalPortal
       <p className="sec-desc">{section.description}</p>
       <div className="cat-grid">
         {categories.map((category) => (
-          <Link key={category.icon} href={category.href} className="cat-card reveal">
+          <Link key={category.icon} href={category.href} className="cat-card reveal group">
             <div className="cat-icon">
-              <Image src={category.iconSrc} alt="" width={72} height={72} aria-hidden />
+              <CulturalCategoryIcon
+                type={category.icon}
+                withBadge={false}
+                iconClassName="h-[72px] w-[72px] max-sm:h-16 max-sm:w-16"
+              />
             </div>
             <div className="cat-card-title">{category.title}</div>
             <div className="cat-card-sub">{category.description}</div>
