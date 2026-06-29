@@ -25,9 +25,16 @@ class UpstashRateLimiter implements RateLimiter {
   private readonly limiter: Ratelimit;
 
   constructor(capacity: number, windowMs: number, prefix: string) {
+    const config = getRateLimitRedisConfig();
+    if (!config) {
+      throw new RateLimitMisconfiguredError(
+        'RATE_LIMIT_ENABLED=true but Redis credentials are missing',
+      );
+    }
+
     const redis = new Redis({
-      url: requiredEnv('RATE_LIMIT_REDIS_URL'),
-      token: requiredEnv('RATE_LIMIT_REDIS_TOKEN'),
+      url: config.url,
+      token: config.token,
     });
     this.limiter = new Ratelimit({
       redis,
@@ -37,27 +44,40 @@ class UpstashRateLimiter implements RateLimiter {
   }
 
   async check(key: string): Promise<RateLimitResult> {
-    const result = await this.limiter.limit(key);
-    return {
-      allowed: result.success,
-      remaining: result.remaining,
-      resetAt: result.reset,
-    };
+    try {
+      const result = await this.limiter.limit(key);
+      return {
+        allowed: result.success,
+        remaining: result.remaining,
+        resetAt: result.reset,
+      };
+    } catch (error) {
+      console.error('[rate-limit] Upstash check failed; allowing request', error);
+      return {
+        allowed: true,
+        remaining: 0,
+        resetAt: Date.now(),
+      };
+    }
   }
 }
 
-function requiredEnv(key: string): string {
-  const value = process.env[key];
-  if (!value) throw new Error(`Missing required env var: ${key}`);
-  return value;
+export class RateLimitMisconfiguredError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'RateLimitMisconfiguredError';
+  }
+}
+
+function getRateLimitRedisConfig(): { url: string; token: string } | null {
+  const url = process.env.RATE_LIMIT_REDIS_URL ?? process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.RATE_LIMIT_REDIS_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null;
+  return { url, token };
 }
 
 function isRateLimitEnabled(): boolean {
-  return (
-    process.env.RATE_LIMIT_ENABLED === 'true' &&
-    Boolean(process.env.RATE_LIMIT_REDIS_URL) &&
-    Boolean(process.env.RATE_LIMIT_REDIS_TOKEN)
-  );
+  return process.env.RATE_LIMIT_ENABLED === 'true' && getRateLimitRedisConfig() !== null;
 }
 
 const globalForLimit = globalThis as unknown as {
@@ -76,9 +96,22 @@ function getLimiter(name: string, options: RateLimitOptions): RateLimiter {
   const existing = map.get(name);
   if (existing) return existing;
 
-  const limiter = isRateLimitEnabled()
-    ? new UpstashRateLimiter(options.capacity, options.windowMs, `ratelimit:${name}`)
-    : new InMemoryRateLimiter(options);
+  let limiter: RateLimiter;
+  if (isRateLimitEnabled()) {
+    try {
+      limiter = new UpstashRateLimiter(options.capacity, options.windowMs, `ratelimit:${name}`);
+    } catch (error) {
+      console.error('[rate-limit] Misconfigured; using in-memory fallback', error);
+      limiter = new InMemoryRateLimiter(options);
+    }
+  } else {
+    if (process.env.RATE_LIMIT_ENABLED === 'true') {
+      console.warn(
+        '[rate-limit] RATE_LIMIT_ENABLED=true but Redis env vars are missing; using in-memory limiter',
+      );
+    }
+    limiter = new InMemoryRateLimiter(options);
+  }
 
   map.set(name, limiter);
   return limiter;

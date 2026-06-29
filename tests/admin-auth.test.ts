@@ -22,6 +22,8 @@ import { validateAdminCredentials } from '@/lib/auth/validate-admin-credentials'
 describe('validateAdminCredentials', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+    process.env.AUTH_SECRET = 'test-auth-secret';
     prismaMock.adminAuditLog.create.mockResolvedValue({});
   });
 
@@ -68,7 +70,11 @@ describe('validateAdminCredentials', () => {
     });
 
     const result = await validateAdminCredentials('admin@example.com', 'wrong-password-12');
-    expect(result).toEqual({ success: false, error: 'Invalid email or password' });
+    expect(result).toEqual({
+      success: false,
+      error: 'Invalid email or password',
+      debug: { error: 'PASSWORD_MISMATCH' },
+    });
   });
 
   it('increments failedLoginCount and locks after 5 failures', async () => {

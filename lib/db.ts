@@ -31,7 +31,22 @@ function createPrismaClient(): PrismaClient {
   }
   const pool = new Pool({ connectionString: normaliseNeonUrl(connectionString) });
   const adapter = new PrismaNeon(pool);
-  return new PrismaClient({ adapter });
+  const client = new PrismaClient({
+    adapter,
+    log: [
+      { emit: 'event', level: 'error' },
+      { emit: 'event', level: 'warn' },
+    ],
+  });
+
+  client.$on('error', (event) => {
+    console.error('[prisma:error]', event.message);
+  });
+  client.$on('warn', (event) => {
+    console.warn('[prisma:warn]', event.message);
+  });
+
+  return client;
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();

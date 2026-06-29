@@ -32,6 +32,11 @@ export function AdminAuthForm() {
           {state.message}
         </p>
       ) : null}
+      {state.debug ? (
+        <pre className="overflow-x-auto rounded-md bg-neutral-900 px-3 py-2 text-xs text-neutral-100">
+          {JSON.stringify(state.debug, null, 2)}
+        </pre>
+      ) : null}
       <Button type="submit" disabled={isPending} withArrow>
         {isPending ? 'Signing in…' : 'Sign in'}
       </Button>

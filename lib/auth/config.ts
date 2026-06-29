@@ -6,6 +6,12 @@ import {
   extractClientIp,
   getAdminLoginRateLimiter,
 } from '@/lib/rate-limit';
+import {
+  checkLoginEnvVars,
+  logLoginError,
+  LOGIN_LOG_PREFIX,
+} from './login-debug';
+import { LoginCredentialsSignin } from './login-credentials-signin';
 import { validateAdminCredentials } from './validate-admin-credentials';
 
 export type AdminRole = 'ADMIN';
@@ -38,33 +44,62 @@ export const authConfig: NextAuthConfig = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(raw) {
-        const parsed = adminLoginSchema.safeParse(raw);
-        if (!parsed.success) return null;
+        console.log(`${LOGIN_LOG_PREFIX} authorize: credentials sign-in started`);
 
-        const headerStore = await headers();
-        const ipAddress = extractClientIp(headerStore);
-        const userAgent = headerStore.get('user-agent') ?? undefined;
-        const normalizedEmail = parsed.data.email.trim().toLowerCase();
-
-        const limiter = getAdminLoginRateLimiter();
-        const rateKey = `login:${normalizedEmail}:${ipAddress}`;
-        const rateCheck = await limiter.check(rateKey);
-        if (!rateCheck.allowed) {
-          throw new Error('RATE_LIMITED');
+        const envIssue = checkLoginEnvVars();
+        if (envIssue) {
+          throw new LoginCredentialsSignin(envIssue);
         }
 
-        const result = await validateAdminCredentials(parsed.data.email, parsed.data.password, {
-          ipAddress,
-          userAgent,
-        });
-        if (!result.success) return null;
+        try {
+          const parsed = adminLoginSchema.safeParse(raw);
+          if (!parsed.success) {
+            console.error(`${LOGIN_LOG_PREFIX} authorize: schema validation failed`);
+            throw new LoginCredentialsSignin({
+              error: 'VALIDATION_FAILED',
+              details: parsed.error.message,
+            });
+          }
 
-        return {
-          id: result.adminUser.id,
-          name: result.adminUser.email,
-          email: result.adminUser.email,
-          role: 'ADMIN' as const,
-        };
+          const headerStore = await headers();
+          const ipAddress = extractClientIp(headerStore);
+          const userAgent = headerStore.get('user-agent') ?? undefined;
+          const normalizedEmail = parsed.data.email.trim().toLowerCase();
+          console.log(`${LOGIN_LOG_PREFIX} authorize: rate limit check for email=${normalizedEmail}`);
+
+          const limiter = getAdminLoginRateLimiter();
+          const rateKey = `login:${normalizedEmail}:${ipAddress}`;
+          const rateCheck = await limiter.check(rateKey);
+          if (!rateCheck.allowed) {
+            console.error(`${LOGIN_LOG_PREFIX} authorize: rate limited`);
+            throw new Error('RATE_LIMITED');
+          }
+
+          const result = await validateAdminCredentials(parsed.data.email, parsed.data.password, {
+            ipAddress,
+            userAgent,
+          });
+          if (!result.success) {
+            throw new LoginCredentialsSignin(result.debug);
+          }
+
+          console.log(`${LOGIN_LOG_PREFIX} authorize: success userId=${result.adminUser.id}`);
+          return {
+            id: result.adminUser.id,
+            name: result.adminUser.email,
+            email: result.adminUser.email,
+            role: 'ADMIN' as const,
+          };
+        } catch (error) {
+          if (error instanceof LoginCredentialsSignin || (error instanceof Error && error.message === 'RATE_LIMITED')) {
+            throw error;
+          }
+          logLoginError('authorize: unexpected error', error);
+          throw new LoginCredentialsSignin({
+            error: 'UNKNOWN_ERROR',
+            details: error instanceof Error ? error.message : String(error),
+          });
+        }
       },
     }),
   ],
