@@ -55,21 +55,35 @@ const LUCIDE_ICONS = {
 interface CulturalCategoryIconProps {
   type: CulturalPortalIconKey;
   className?: string;
+  withBadge?: boolean;
+  iconClassName?: string;
 }
 
-export function CulturalCategoryIcon({ type, className }: CulturalCategoryIconProps) {
+export function CulturalCategoryIcon({
+  type,
+  className,
+  withBadge = true,
+  iconClassName,
+}: CulturalCategoryIconProps) {
   const Icon = LUCIDE_ICONS[type];
   const { iconSrc, sourceHref } = CULTURAL_PORTAL_ICON_SOURCES[type];
+  const icon = (
+    <Icon
+      className={cn(CULTURAL_PORTAL_ICON_SVG_CLASS, iconClassName)}
+      strokeWidth={1.6}
+      aria-hidden
+      data-icon-src={iconSrc}
+      data-icon-source={sourceHref}
+    />
+  );
+
+  if (!withBadge) {
+    return icon;
+  }
 
   return (
     <div className={cn(CULTURAL_PORTAL_ICON_BADGE_CLASS, className)} aria-hidden>
-      <Icon
-        className={CULTURAL_PORTAL_ICON_SVG_CLASS}
-        strokeWidth={1.6}
-        aria-hidden
-        data-icon-src={iconSrc}
-        data-icon-source={sourceHref}
-      />
+      {icon}
     </div>
   );
 }

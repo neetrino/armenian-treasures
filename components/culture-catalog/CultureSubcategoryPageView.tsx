@@ -59,7 +59,7 @@ export function CultureSubcategoryPageView({
         eyebrow={content.map.eyebrow}
         title={content.map.title}
         description={content.map.description}
-        ctaHref="/map"
+        ctaHref="/#map"
         placeholderTitle={content.map.placeholderTitle}
         placeholderSubtitle={
           mapCount > 0

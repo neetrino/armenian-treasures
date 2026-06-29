@@ -81,7 +81,7 @@ export function DonatorsPageClient({ user, rows }: DonatorsPageClientProps) {
         user={user}
         topbarTitle="Donators"
         title="Donators"
-        description="Donors and partners shown on /donators."
+        description="Donors and partners shown on /donate."
         actions={
           <Button type="button" variant="primary" onClick={openCreateModal}>
             <Plus size={14} aria-hidden /> Add donator

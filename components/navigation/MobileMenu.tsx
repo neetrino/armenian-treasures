@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
@@ -14,8 +14,6 @@ import {
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
 import { MobileSectionLink } from './MobileSectionLink';
-import { useHomeSectionNav } from './useHomeSectionNav';
-import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
 import {
   isAboutNavActive,
   isCultureNavActive,
@@ -47,6 +45,7 @@ function mobileLinkClass(pathname: string, href: string): string {
 
 export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: MobileMenuProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [cultureOpen, setCultureOpen] = useState(false);
@@ -76,24 +75,6 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
     setAboutOpen(false);
     setOpenColumn(null);
   };
-
-  const cultureNav = useHomeSectionNav({
-    homeSectionId: HOME_SECTION_IDS.culturalPortal,
-    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.culturalPortal),
-    onScroll: close,
-  });
-
-  const projectsNav = useHomeSectionNav({
-    homeSectionId: HOME_SECTION_IDS.upcomingProjects,
-    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.upcomingProjects),
-    onScroll: close,
-  });
-
-  const aboutNav = useHomeSectionNav({
-    homeSectionId: HOME_SECTION_IDS.aboutUs,
-    fallbackHref: buildHomeSectionHref(HOME_SECTION_IDS.aboutUs),
-    onScroll: close,
-  });
 
   return (
     <div className="lg:hidden">
@@ -164,7 +145,8 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
                   open={cultureOpen}
                   onToggle={() => setCultureOpen((v) => !v)}
                   onLabelClick={() => {
-                    cultureNav.handleSectionTriggerClick();
+                    close();
+                    router.push('/culture');
                   }}
                   active={isCultureNavActive(pathname)}
                 >
@@ -214,7 +196,8 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
                   open={projectsOpen}
                   onToggle={() => setProjectsOpen((v) => !v)}
                   onLabelClick={() => {
-                    projectsNav.handleSectionTriggerClick();
+                    close();
+                    router.push('/projects');
                   }}
                   active={isProjectsNavActive(pathname)}
                 >
@@ -250,7 +233,8 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
                   open={aboutOpen}
                   onToggle={() => setAboutOpen((v) => !v)}
                   onLabelClick={() => {
-                    aboutNav.handleSectionTriggerClick();
+                    close();
+                    router.push('/about/mission');
                   }}
                   active={isAboutNavActive(pathname)}
                 >

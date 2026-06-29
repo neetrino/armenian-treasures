@@ -103,7 +103,7 @@ export const CULTURAL_PORTAL_MAP = {
     'Navigate over 850 heritage sites, monasteries, fortresses, and cultural landmarks across historic and modern Armenia.',
   placeholderTitle: 'Interactive Map',
   placeholderSubtitle: 'Full map integration launching with the portal — 850+ locations',
-  ctaHref: '/map',
+  ctaHref: '/#map',
   pins: [
     { tone: 'teal' as const, top: '42%', left: '48%', delay: '0s' },
     { tone: 'teal' as const, top: '37%', left: '52%', delay: '0.5s' },

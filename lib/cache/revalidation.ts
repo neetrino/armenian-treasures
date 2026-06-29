@@ -10,9 +10,7 @@ export const PUBLIC_LAYOUT_PATHS = [
   '/culture',
   '/culture/submit',
   '/projects',
-  '/donators',
   '/donate',
-  '/map',
   '/partnership',
   '/contacts',
   '/about/mission',
@@ -125,7 +123,7 @@ export function revalidateProjectsCache(): void {
 
 export function revalidateDonatorsCache(): void {
   revalidateTag('donators', 'max');
-  revalidatePublicPages(['/donators', '/donate', '/', '/culture']);
+  revalidatePublicPages(['/donate', '/', '/culture']);
   revalidatePath('/admin/donators');
   revalidatePublicApiRoutes([PUBLIC_API_ROUTES.donators]);
 }
@@ -146,7 +144,7 @@ export async function revalidateCultureItemCache(
   menuItemIds: string[] = [],
 ): Promise<void> {
   revalidateTag('culture-items', 'max');
-  revalidatePublicPages(['/culture', '/map', '/']);
+  revalidatePublicPages(['/culture', '/']);
   revalidatePath('/admin/culture-items');
   for (const slug of slugs) {
     const trimmed = slug.trim();

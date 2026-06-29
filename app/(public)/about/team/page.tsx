@@ -1,7 +1,4 @@
 import type { Metadata } from 'next';
-import { Eyebrow } from '@/components/ui/Eyebrow';
-import { TeamCard } from '@/components/cards/TeamCard';
-import { EmptyState } from '@/components/ui/EmptyState';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
 import { getActiveTeam } from '@/lib/queries/team';
@@ -16,24 +13,55 @@ export const metadata: Metadata = {
 async function AboutTeamPage() {
   const [members, content] = await Promise.all([getActiveTeam(), getAboutContent()]);
   return (
-    <div className="flex flex-col gap-10">
-      <header className="max-w-3xl">
-        <Eyebrow>{content.teamEyebrow}</Eyebrow>
-        <h2 className="mt-3 font-display text-3xl leading-tight text-ink sm:text-4xl lg:text-5xl">
+    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
+      <header className="max-w-4xl">
+        <p className="mb-3 font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
+          {content.teamEyebrow}
+        </p>
+        <h2 className="font-cinzel text-[clamp(2.2rem,4vw,4rem)] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-heritage-gold">
           {content.teamTitle}
         </h2>
-        <p className="mt-5 text-base text-ink-soft sm:text-lg">{content.teamIntro}</p>
+        <p className="mt-4 font-display text-[clamp(1rem,1.25vw,1.15rem)] italic leading-[1.6] text-[rgba(232,216,155,0.72)]">
+          {content.teamIntro}
+        </p>
       </header>
+
       {members.length === 0 ? (
-        <EmptyState
-          title="Team members coming soon"
-          description="Once the database is seeded, the team page will populate here automatically."
-        />
+        <div className="border border-dashed border-[rgba(214,184,90,0.34)] bg-[rgba(12,12,10,0.65)] px-6 py-14 text-center">
+          <h3 className="font-cinzel text-xl font-extrabold uppercase tracking-[0.03em] text-heritage-gold">
+            Team members coming soon
+          </h3>
+          <p className="mt-3 font-display text-sm text-[rgba(232,216,155,0.66)]">
+            Once the database is seeded, the team page will populate here automatically.
+          </p>
+        </div>
       ) : (
-        <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <Stagger className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
           {members.map((member) => (
             <StaggerItem key={member.id} className="h-full">
-              <TeamCard member={member} />
+              <article className="about-team-card group h-full">
+                <div className="flex items-center gap-4">
+                  <span
+                    aria-hidden
+                    className="about-team-avatar"
+                  >
+                    {member.initials}
+                  </span>
+                  <div>
+                    <h3 className="about-team-name">
+                      {member.name}
+                    </h3>
+                    <p className="about-team-role">
+                      {member.position}
+                    </p>
+                  </div>
+                </div>
+                {member.bio ? (
+                  <p className="about-team-bio">
+                    {member.bio}
+                  </p>
+                ) : null}
+              </article>
             </StaggerItem>
           ))}
         </Stagger>
