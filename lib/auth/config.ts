@@ -69,6 +69,12 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (!url) return baseUrl;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async jwt({ token, user }) {
       if (user) {
         const typed = user as { id?: string; role?: AdminRole };
@@ -88,7 +94,9 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
     authorized({ auth, request }) {
-      const pathname = request.nextUrl.pathname;
+      const pathname = request.nextUrl?.pathname;
+      if (!pathname) return true;
+
       const isAdminArea =
         pathname.startsWith('/admin') && pathname !== '/admin/login';
       const isAdminApi = pathname.startsWith('/api/admin');

@@ -3,6 +3,7 @@
 import { CredentialsSignin } from 'next-auth';
 import { signIn } from '@/lib/auth';
 import { isRateLimitAuthError } from '@/lib/auth/config';
+import { ProductionRateLimitMisconfiguredError } from '@/lib/rate-limit/assert-production-ready';
 import { adminLoginSchema } from '@/lib/validation';
 
 const ADMIN_LOGIN_REDIRECT = '/admin/dashboard';
@@ -35,7 +36,6 @@ export async function loginAction(
       email: parsed.data.email,
       password: parsed.data.password,
       redirect: false,
-      redirectTo: ADMIN_LOGIN_REDIRECT,
     });
   } catch (error) {
     if (isRateLimitAuthError(error)) {
@@ -44,6 +44,19 @@ export async function loginAction(
     if (error instanceof CredentialsSignin) {
       return { status: 'error', message: 'Invalid email or password.' };
     }
+    if (error instanceof ProductionRateLimitMisconfiguredError) {
+      console.error('[admin-login] rate limit misconfigured', { message: error.message });
+      return {
+        status: 'error',
+        message:
+          'Login is temporarily unavailable because server rate limiting is not configured. Please contact the site administrator.',
+      };
+    }
+    console.error('[admin-login] unexpected error', {
+      name: error instanceof Error ? error.name : typeof error,
+      message: error instanceof Error ? error.message : String(error),
+      digest: (error as { digest?: string })?.digest,
+    });
     throw error;
   }
 
