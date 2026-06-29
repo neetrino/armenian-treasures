@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -65,7 +66,7 @@ export function AdminSheet({
 
   const isCenter = placement === 'center';
 
-  return (
+  const sheetNode = (
     <AnimatePresence>
       {open ? (
         <div className="fixed inset-0 z-[60] flex" role="presentation">
@@ -167,4 +168,6 @@ export function AdminSheet({
       ) : null}
     </AnimatePresence>
   );
+
+  return createPortal(sheetNode, document.body);
 }
