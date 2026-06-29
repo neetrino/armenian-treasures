@@ -495,4 +495,43 @@
   .khndzoresk-page .about-grid {
     grid-template-columns: 1fr;
   }
+
+  .khndzoresk-page .cultural-portal-newsletter {
+    padding: 36px 20px;
+  }
+
+  .khndzoresk-page .cultural-portal-newsletter .nl-form {
+    max-width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .khndzoresk-page .cultural-portal-newsletter .nl-input {
+    width: 100%;
+    min-width: 0;
+    border-right: 1px solid var(--border);
+  }
+
+  .khndzoresk-page .cultural-portal-newsletter .nl-btn {
+    width: 100%;
+    padding: 14px 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .khndzoresk-page .cultural-portal-newsletter {
+    padding: 36px 18px;
+  }
+
+  .khndzoresk-page .cultural-portal-newsletter h2 {
+    font-size: 36px;
+    line-height: 1.15;
+  }
+
+  .khndzoresk-page .cultural-portal-newsletter p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
 }
