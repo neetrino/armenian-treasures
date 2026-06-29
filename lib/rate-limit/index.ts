@@ -121,12 +121,20 @@ export function getPublicRateLimiter(): RateLimiter {
   return getLimiter('public', { capacity: 20, windowMs: 10 * 60 * 1000 });
 }
 
+export function getPublicApiRateLimiter(): RateLimiter {
+  return getLimiter('public-api', { capacity: 120, windowMs: 60 * 1000 });
+}
+
 export function getAdminLoginRateLimiter(): RateLimiter {
   return getLimiter('admin-login', { capacity: 5, windowMs: 15 * 60 * 1000 });
 }
 
 export function getUploadRateLimiter(): RateLimiter {
   return getLimiter('upload', { capacity: 10, windowMs: 10 * 60 * 1000 });
+}
+
+export function getUploadTokenMintRateLimiter(): RateLimiter {
+  return getLimiter('upload-token-mint', { capacity: 5, windowMs: 15 * 60 * 1000 });
 }
 
 export function getAdminApiRateLimiter(): RateLimiter {
