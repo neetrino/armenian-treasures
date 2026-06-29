@@ -1,4 +1,5 @@
 import { randomBytes } from 'node:crypto';
+import sharp from 'sharp';
 import { prisma } from '@/lib/db';
 import { getStorage } from '@/lib/storage';
 import { validateFileBuffer } from '@/lib/uploads/file-signature';
@@ -14,6 +15,15 @@ export interface AdminImageUploadResult {
   error?: string;
 }
 
+const ADMIN_WEBP_QUALITY = 82;
+
+async function convertImageBufferToWebp(buffer: Buffer): Promise<Buffer> {
+  return sharp(buffer)
+    .rotate()
+    .webp({ quality: ADMIN_WEBP_QUALITY })
+    .toBuffer();
+}
+
 export async function uploadPublicImageFile(
   file: File,
   folder: 'hero' | 'culture',
@@ -27,16 +37,22 @@ export async function uploadPublicImageFile(
     return { ok: false, error: validation.reason ?? 'Invalid image file.' };
   }
 
-  const ext = validation.extension ?? 'jpg';
   const random = randomBytes(6).toString('hex');
   const suffix = variant ? `-${variant}` : '';
-  const key = `images/${folder}/${folder}-${random}${suffix}.${ext}`;
+  const key = `images/${folder}/${folder}-${random}${suffix}.webp`;
+  let webpBuffer: Buffer;
+
+  try {
+    webpBuffer = await convertImageBufferToWebp(buffer);
+  } catch {
+    return { ok: false, error: 'Failed to convert image to WebP.' };
+  }
 
   const storage = getStorage();
   const uploadResult = await storage.upload({
     key,
-    body: buffer,
-    contentType: validation.detectedMime,
+    body: webpBuffer,
+    contentType: 'image/webp',
     visibility: 'public',
   });
 
@@ -48,8 +64,8 @@ export async function uploadPublicImageFile(
         ownerType: owner.ownerType,
         ownerId: owner.ownerId,
         originalFilename: file.name,
-        detectedMime: validation.detectedMime,
-        fileSize: buffer.length,
+        detectedMime: 'image/webp',
+        fileSize: webpBuffer.length,
         storageKey: key,
         status: 'APPROVED',
         publicUrl: url,

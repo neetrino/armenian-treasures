@@ -34,4 +34,12 @@ describe('resolvePublicAssetUrl', () => {
       'https://assets.example.com/images/hero/home-hero.png',
     );
   });
+
+  it('maps to R2 when base URL exists even without explicit flags', () => {
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://assets.example.com';
+
+    expect(resolvePublicAssetUrl('/images/hero/home-hero.png')).toBe(
+      'https://assets.example.com/images/hero/home-hero.png',
+    );
+  });
 });
