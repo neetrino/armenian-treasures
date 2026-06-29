@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { loginAction, type LoginActionState } from '@/app/(admin)/admin/login/actions';
@@ -8,7 +9,14 @@ import { loginAction, type LoginActionState } from '@/app/(admin)/admin/login/ac
 const INITIAL: LoginActionState = { status: 'idle' };
 
 export function AdminAuthForm() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(loginAction, INITIAL);
+
+  useEffect(() => {
+    if (state.status !== 'success' || !state.redirectTo) return;
+    router.replace(state.redirectTo);
+    router.refresh();
+  }, [router, state.redirectTo, state.status]);
   return (
     <form action={formAction} className="flex flex-col gap-5">
       <TextField
