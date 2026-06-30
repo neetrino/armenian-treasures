@@ -12,7 +12,33 @@ type LazyS3 = {
   S3Client: new (config: unknown) => { send: (cmd: unknown) => Promise<unknown> };
   PutObjectCommand: new (input: unknown) => unknown;
   DeleteObjectCommand: new (input: unknown) => unknown;
+  HeadObjectCommand: new (input: unknown) => unknown;
 };
+
+type LazyPresigner = {
+  getSignedUrl: (
+    client: InstanceType<LazyS3['S3Client']>,
+    command: unknown,
+    options?: { expiresIn?: number },
+  ) => Promise<string>;
+};
+
+export interface R2PresignedPutInput {
+  key: string;
+  contentType: string;
+  contentLength: number;
+  expiresInSeconds?: number;
+}
+
+export interface R2PresignedPutResult {
+  uploadUrl: string;
+  key: string;
+}
+
+export interface R2ObjectHeadResult {
+  contentLength: number;
+  contentType: string | null;
+}
 
 export interface R2EnvConfig {
   accountId: string;
@@ -77,6 +103,16 @@ async function loadS3(): Promise<LazyS3> {
   return mod;
 }
 
+async function loadPresigner(): Promise<LazyPresigner> {
+  const moduleName = '@aws-sdk/s3-request-presigner';
+  const dynamicImport: (name: string) => Promise<unknown> = new Function(
+    'name',
+    'return import(name)',
+  ) as (name: string) => Promise<unknown>;
+  const mod = (await dynamicImport(moduleName)) as LazyPresigner;
+  return mod;
+}
+
 function createS3Client(
   sdk: LazyS3,
   config: R2EnvConfig,
@@ -89,6 +125,53 @@ function createS3Client(
       secretAccessKey: config.secretAccessKey,
     },
   });
+}
+
+export async function createR2PresignedPutUrl(
+  input: R2PresignedPutInput,
+): Promise<R2PresignedPutResult> {
+  const config = getR2EnvConfig();
+  const sdk = await loadS3();
+  const presigner = await loadPresigner();
+  const client = createS3Client(sdk, config);
+  const key = normalizeObjectKey(input.key);
+
+  const command = new sdk.PutObjectCommand({
+    Bucket: config.bucket,
+    Key: key,
+    ContentType: input.contentType,
+    ContentLength: input.contentLength,
+  });
+
+  const uploadUrl = await presigner.getSignedUrl(client, command, {
+    expiresIn: input.expiresInSeconds ?? 900,
+  });
+
+  return { uploadUrl, key };
+}
+
+export async function headR2Object(key: string): Promise<R2ObjectHeadResult | null> {
+  const config = getR2EnvConfig();
+  const sdk = await loadS3();
+  const client = createS3Client(sdk, config);
+  const normalizedKey = normalizeObjectKey(key);
+
+  try {
+    const response = (await client.send(
+      new sdk.HeadObjectCommand({
+        Bucket: config.bucket,
+        Key: normalizedKey,
+      }),
+    )) as { ContentLength?: number; ContentType?: string };
+
+    if (!response.ContentLength || response.ContentLength <= 0) return null;
+    return {
+      contentLength: response.ContentLength,
+      contentType: response.ContentType ?? null,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function uploadBufferToR2(

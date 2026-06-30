@@ -3,7 +3,8 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Loader2, Upload, X } from 'lucide-react';
-import { uploadAdminImageAction } from '@/app/(admin)/admin/(panel)/upload-image-actions';
+import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
+import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
 import { cn } from '@/lib/utils';
 
@@ -24,7 +25,7 @@ interface AdminImageDropzoneFieldProps {
   error?: string;
 }
 
-const ACCEPT = 'image/jpeg,image/png,image/webp';
+const ACCEPT = ADMIN_IMAGE_ACCEPT;
 
 export function AdminImageDropzoneField({
   label,
@@ -48,12 +49,7 @@ export function AdminImageDropzoneField({
       setIsUploading(true);
       setUploadError(null);
 
-      const formData = new FormData();
-      formData.set('file', file);
-      formData.set('folder', folder);
-      if (variant) formData.set('variant', variant);
-
-      const result = await uploadAdminImageAction(formData);
+      const result = await uploadAdminImage({ file, folder, variant });
       setIsUploading(false);
 
       if (!result.ok || !result.url) {
