@@ -1,4 +1,4 @@
-import { getR2ManifestUrl } from '@/lib/assets/r2-manifest';
+import { getR2ManifestPublicBaseUrl, getR2ManifestUrl } from '@/lib/assets/r2-manifest';
 
 function normalizePublicPath(path: string): string {
   if (!path.startsWith('/')) return `/${path}`;
@@ -22,6 +22,26 @@ function shouldUseR2PublicAssets(): boolean {
   return process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS === 'true';
 }
 
+function isAdminUploadPublicPath(path: string): boolean {
+  return path.startsWith('/uploads/');
+}
+
+/**
+ * Admin uploads under `public/uploads/` are gitignored and never deployed to Vercel.
+ * Always resolve them to durable storage (R2) via env base URL or the committed manifest.
+ */
+function resolveAdminUploadPath(path: string): string {
+  const base = getPublicR2BaseUrl() ?? getR2ManifestPublicBaseUrl();
+  if (base) {
+    return `${base}${path}`;
+  }
+
+  const fromManifest = getR2ManifestUrl(path);
+  if (fromManifest) return fromManifest;
+
+  return path;
+}
+
 /**
  * Resolves a site-root public asset path (e.g. `/images/hero/home-hero.png`)
  * to an R2 URL when migration is enabled, otherwise returns the local path.
@@ -34,6 +54,10 @@ export function resolvePublicAssetUrl(path: string): string {
 
   const normalized = normalizePublicPath(trimmed);
   const normalizedLegacySafe = normalizeLegacyCultureSvgPath(normalized);
+
+  if (isAdminUploadPublicPath(normalizedLegacySafe)) {
+    return resolveAdminUploadPath(normalizedLegacySafe);
+  }
 
   if (!shouldUseR2PublicAssets()) {
     return normalizedLegacySafe;
