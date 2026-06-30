@@ -35,7 +35,7 @@ function VirtualMuseumHeader({
         {title}
       </h2>
 
-      <p className="mt-[18px] max-w-[40rem] font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.55] text-[rgba(232,216,155,0.68)]">
+      <p className="mt-[18px] max-w-[40rem] font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.55] text-surface-muted">
         {description}
       </p>
     </header>
@@ -54,7 +54,7 @@ export async function VirtualMuseumSection({
       className={
         embedded
           ? 'relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 heritage-section-py sm:px-6'
-          : 'relative isolate scroll-mt-[calc(var(--site-header-height)+1rem)] overflow-hidden bg-heritage-black px-5 heritage-section-py sm:px-6'
+          : 'relative isolate scroll-mt-[calc(var(--site-header-height)+1rem)] overflow-hidden bg-surface px-5 heritage-section-py sm:px-6'
       }
       aria-labelledby="virtual-museum-heading"
     >

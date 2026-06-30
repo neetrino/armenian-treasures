@@ -2,8 +2,8 @@
   display: grid;
   width: 100%;
   max-width: 73.75rem;
-  border-top: 1px solid rgba(214, 184, 90, 0.18);
-  border-left: 1px solid rgba(214, 184, 90, 0.18);
+  border-top: 1px solid var(--surface-border);
+  border-left: 1px solid var(--surface-border);
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
@@ -13,9 +13,9 @@
   min-height: 10.625rem;
   overflow: hidden;
   padding: 1.375rem 1.125rem 1.625rem;
-  background: rgba(8, 10, 9, 0.92);
-  border-right: 1px solid rgba(214, 184, 90, 0.18);
-  border-bottom: 1px solid rgba(214, 184, 90, 0.18);
+  background: var(--surface-panel-bg);
+  border-right: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
   transition:
     background 240ms ease,
     border-color 240ms ease,
@@ -44,7 +44,7 @@
 }
 
 .cultural-portal-card__description {
-  color: rgba(232, 216, 155, 0.42);
+  color: var(--surface-text-subtle);
   transition: color 240ms ease;
 }
 
@@ -78,7 +78,7 @@
 @media (hover: hover) and (pointer: fine) {
   .cultural-portal-card:hover {
     z-index: 2;
-    background: rgba(8, 10, 9, 0.96);
+    background: var(--surface-panel-bg);
     border-color: rgba(214, 184, 90, 0.52);
     box-shadow:
       inset 0 0 0 1px rgba(214, 184, 90, 0.28),
@@ -95,7 +95,7 @@
   }
 
   .cultural-portal-card:hover .cultural-portal-card__description {
-    color: rgba(232, 216, 155, 0.52);
+    color: var(--surface-text-subtle);
   }
 
   .cultural-portal-card:hover .cultural-portal-card__arrow {

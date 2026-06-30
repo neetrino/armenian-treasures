@@ -16,6 +16,7 @@ export function buildCultureMegaMenu(tree: MenuNode[]): MegaMenuColumn[] {
     if (children.length > 0) {
       columns.push({
         heading: node.title,
+        headingHref: resolveMenuHref(node),
         items: children.map((child) => ({
           label: child.title,
           href: resolveMenuHref(child, node),
@@ -35,6 +36,7 @@ export function buildCultureMegaMenu(tree: MenuNode[]): MegaMenuColumn[] {
   if (leafTopLevel.length > 0) {
     columns.unshift({
       heading: 'Discover',
+      headingHref: '/culture',
       items: leafTopLevel,
     });
   }

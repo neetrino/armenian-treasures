@@ -43,7 +43,7 @@ function StatContent({ stat }: { stat: StatItem }) {
       <dt className="font-display text-[clamp(2.65rem,5.25vw,3.5rem)] font-semibold leading-[0.88] text-heritage-teal [text-shadow:0_0_28px_rgba(39,198,200,0.28)]">
         <Counter value={stat.value} />
       </dt>
-      <dd className="mt-2.5 max-w-[11rem] font-cinzel text-[9px] uppercase leading-snug tracking-[0.2em] text-[rgba(232,216,155,0.72)] sm:mt-3 sm:max-w-none sm:text-[10px] sm:tracking-[0.24em]">
+      <dd className="mt-2.5 max-w-[11rem] font-cinzel text-[9px] uppercase leading-snug tracking-[0.2em] text-surface-muted sm:mt-3 sm:max-w-none sm:text-[10px] sm:tracking-[0.24em]">
         {stat.label}
       </dd>
     </>

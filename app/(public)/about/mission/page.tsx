@@ -28,7 +28,7 @@ async function AboutMissionPage() {
         <h2 className="font-cinzel text-[clamp(2.2rem,4vw,4rem)] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-heritage-gold">
           {content.missionTitle}
         </h2>
-        <p className="mt-4 font-display text-[clamp(1rem,1.25vw,1.15rem)] italic leading-[1.6] text-[rgba(232,216,155,0.72)]">
+        <p className="mt-4 font-display text-[clamp(1rem,1.25vw,1.15rem)] italic leading-[1.6] text-surface-muted">
           {content.missionIntro}
         </p>
       </header>

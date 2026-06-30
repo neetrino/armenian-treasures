@@ -18,7 +18,7 @@ export async function HomeNewsletterSection({ home }: HomeSectionContentProps) {
         >
           {newsletter.title}
         </h2>
-        <p className="mx-auto mt-4 max-w-[32.5rem] font-display text-[clamp(0.9375rem,1vw,1.0625rem)] italic leading-[1.55] text-[rgba(232,216,155,0.68)]">
+        <p className="mx-auto mt-4 max-w-[32.5rem] font-display text-[clamp(0.9375rem,1vw,1.0625rem)] italic leading-[1.55] text-surface-muted">
           {newsletter.description}
         </p>
         <HomeNewsletterForm

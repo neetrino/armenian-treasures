@@ -73,7 +73,7 @@ export function VirtualMuseumCard({
             {title}
           </h3>
 
-          <p className="virtual-museum-card__description max-w-[29.375rem] font-display text-[clamp(0.875rem,0.95vw,1.0625rem)] italic leading-[1.48] text-[rgba(232,216,155,0.66)] transition-colors duration-[320ms] ease-out">
+          <p className="virtual-museum-card__description max-w-[29.375rem] font-display text-[clamp(0.875rem,0.95vw,1.0625rem)] italic leading-[1.48] text-surface-body transition-colors duration-[320ms] ease-out">
             {description}
           </p>
         </div>

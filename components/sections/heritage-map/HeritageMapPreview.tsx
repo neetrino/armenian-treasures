@@ -48,7 +48,7 @@ export async function HeritageMapPreview({
   return (
     <Link
       href={ctaUrl}
-      className="heritage-map-panel group block outline-none focus-visible:ring-1 focus-visible:ring-heritage-teal focus-visible:ring-offset-4 focus-visible:ring-offset-heritage-black"
+      className="heritage-map-panel group block outline-none focus-visible:ring-1 focus-visible:ring-heritage-teal focus-visible:ring-offset-4 focus-visible:ring-offset-[var(--ring-offset)]"
       aria-label={`${placeholderTitle}. ${subtitle}`}
     >
       <span className="heritage-map-panel__overlay" aria-hidden />
@@ -74,11 +74,11 @@ export async function HeritageMapPreview({
           </div>
 
           <div className="heritage-map-copy">
-            <h3 className="font-cinzel text-[clamp(1.125rem,1.6vw,1.5rem)] font-extrabold uppercase tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[#E6C766]">
+            <h3 className="font-cinzel text-[clamp(1.125rem,1.6vw,1.5rem)] font-extrabold uppercase tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[var(--accent-hover)]">
               {placeholderTitle}
             </h3>
 
-            <p className="mx-auto mt-2 max-w-[20rem] font-display text-[clamp(0.8125rem,0.95vw,0.9375rem)] italic leading-[1.45] text-[rgba(232,216,155,0.48)]">
+            <p className="mx-auto mt-2 max-w-[20rem] font-display text-[clamp(0.8125rem,0.95vw,0.9375rem)] italic leading-[1.45] text-surface-subtle">
               {subtitle}
             </p>
           </div>

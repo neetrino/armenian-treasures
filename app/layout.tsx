@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
+import { SiteThemeProvider } from '@/components/theme/SiteThemeProvider';
+import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
+import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
 import './globals.css';
-
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -60,20 +62,21 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#7E1C26',
-  colorScheme: 'light',
+  colorScheme: 'dark light',
 };
-
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
+      data-theme={DEFAULT_SITE_THEME}
+      suppressHydrationWarning
       className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable}`}
     >
-      <body className="scrollbar-none min-h-screen bg-parchment text-ink antialiased">
-        {children}
+      <body className="scrollbar-none min-h-screen antialiased">
+        <ThemeInitScript />
+        <SiteThemeProvider>{children}</SiteThemeProvider>
       </body>
     </html>
   );
 }
-
 export default RootLayout;

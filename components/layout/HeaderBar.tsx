@@ -41,15 +41,16 @@ export function HeaderBar({
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.65, ease: HEADER_EASE }}
       className={cn(
-        'fixed inset-x-0 top-0 z-[1000] isolate w-full overflow-visible border-b border-[rgba(201,168,76,0.14)] transition-[background-color,box-shadow] duration-300',
-        scrolled && 'shadow-[0_4px_40px_rgba(0,0,0,0.75)]',
+        'fixed inset-x-0 top-0 z-[1000] isolate w-full overflow-visible border-b transition-[background-color,box-shadow,border-color] duration-300',
+        'border-[var(--header-border)]',
+        scrolled && 'shadow-[var(--header-shadow)]',
       )}
     >
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className={cn(
             'absolute inset-0 -z-20 backdrop-blur-[22px] backdrop-saturate-[1.4] transition-[background-color] duration-300',
-            scrolled ? 'bg-[rgba(9,9,9,0.99)]' : 'bg-[rgba(9,9,9,0.9)]',
+            scrolled ? 'bg-[var(--header-bg-scrolled)]' : 'bg-[var(--header-bg)]',
           )}
         />
       </div>

@@ -21,11 +21,11 @@ export function FooterBrand({ settings, className }: FooterBrandProps) {
           alt=""
           width={700}
           height={923}
-          className="h-auto max-h-[4.5rem] w-auto object-contain sm:max-h-[5rem]"
+          className="h-auto max-h-[7.5rem] w-auto object-contain sm:max-h-[8.5rem] lg:max-h-[9.5rem]"
         />
       </Link>
 
-      <p className="mt-6 font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] italic leading-[1.55] text-[rgba(232,216,155,0.58)]">
+      <p className="mt-6 font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] italic leading-[1.55] text-surface-body">
         {settings.footerDescription || FOOTER_BRAND_DESCRIPTION}
       </p>
     </div>

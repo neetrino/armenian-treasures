@@ -11,10 +11,10 @@
   position: relative;
   min-height: 19rem;
   overflow: hidden;
-  border: 1px solid rgba(214, 184, 90, 0.22);
+  border: 1px solid var(--surface-border);
   background:
     radial-gradient(110% 80% at 90% 0%, rgba(214, 184, 90, 0.07) 0%, transparent 62%),
-    rgba(12, 12, 10, 0.74);
+    var(--surface-card-bg);
   padding: 1.8rem;
   transition:
     border-color 260ms ease,
@@ -72,14 +72,14 @@
   font-family: var(--font-cormorant), serif;
   font-size: 1rem;
   line-height: 1.7;
-  color: rgba(232, 216, 155, 0.72);
+  color: var(--surface-text-muted);
 }
 
 .khndzoresk-page .about-mission-pair-card {
-  border: 1px solid rgba(214, 184, 90, 0.24);
+  border: 1px solid var(--surface-border);
   background:
     linear-gradient(180deg, rgba(214, 184, 90, 0.03), transparent 45%),
-    rgba(12, 12, 10, 0.7);
+    var(--surface-card-bg);
   padding: 2rem;
 }
 
@@ -98,16 +98,16 @@
   font-family: var(--font-cormorant), serif;
   font-size: 1rem;
   line-height: 1.76;
-  color: rgba(232, 216, 155, 0.73);
+  color: var(--surface-text-muted);
 }
 
 .khndzoresk-page .about-team-card {
   position: relative;
   min-height: 17.75rem;
-  border: 1px solid rgba(214, 184, 90, 0.22);
+  border: 1px solid var(--surface-border);
   background:
     radial-gradient(120% 88% at 96% 0%, rgba(214, 184, 90, 0.06) 0%, transparent 60%),
-    rgba(12, 12, 10, 0.74);
+    var(--surface-card-bg);
   padding: 1.6rem;
   transition:
     border-color 260ms ease,
@@ -182,16 +182,16 @@
   font-family: var(--font-cormorant), serif;
   font-size: 1rem;
   line-height: 1.72;
-  color: rgba(232, 216, 155, 0.72);
+  color: var(--surface-text-muted);
 }
 
 .khndzoresk-page .about-career-card {
   position: relative;
   min-height: 18.25rem;
-  border: 1px solid rgba(214, 184, 90, 0.22);
+  border: 1px solid var(--surface-border);
   background:
     radial-gradient(125% 86% at 96% 0%, rgba(214, 184, 90, 0.06) 0%, transparent 62%),
-    rgba(12, 12, 10, 0.74);
+    var(--surface-card-bg);
   padding: 1.65rem;
   transition:
     border-color 260ms ease,
@@ -240,7 +240,7 @@
   font-family: var(--font-cormorant), serif;
   font-size: 0.98rem;
   line-height: 1.5;
-  color: rgba(232, 216, 155, 0.72);
+  color: var(--surface-text-muted);
 }
 
 .khndzoresk-page .about-career-meta-item {
@@ -273,7 +273,7 @@
   font-family: var(--font-cormorant), serif;
   font-size: 1.03rem;
   line-height: 1.74;
-  color: rgba(232, 216, 155, 0.73);
+  color: var(--surface-text-muted);
 }
 
 .khndzoresk-page .about-career-apply {

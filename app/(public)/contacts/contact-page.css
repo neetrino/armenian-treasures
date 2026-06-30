@@ -11,7 +11,7 @@
   border: 1px dashed rgba(214, 184, 90, 0.34);
   background:
     radial-gradient(120% 90% at 100% 0%, rgba(214, 184, 90, 0.06) 0%, transparent 58%),
-    rgba(12, 12, 10, 0.72);
+    var(--surface-card-bg);
   text-align: center;
   padding-top: 2.15rem;
 }
@@ -43,7 +43,7 @@
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(232, 216, 155, 0.62);
+  color: var(--surface-text-body);
 }
 
 .khndzoresk-page .contact-direct-list {
@@ -55,7 +55,7 @@
   font-family: var(--font-cormorant), serif;
   font-size: 1.02rem;
   line-height: 1.65;
-  color: rgba(232, 216, 155, 0.78);
+  color: var(--surface-text);
 }
 
 .khndzoresk-page .contact-direct-item {
@@ -71,10 +71,10 @@
 }
 
 .khndzoresk-page .contact-form-shell {
-  border: 1px solid rgba(214, 184, 90, 0.22);
+  border: 1px solid var(--surface-border);
   background:
     linear-gradient(180deg, rgba(214, 184, 90, 0.03), transparent 42%),
-    rgba(12, 12, 10, 0.75);
+    var(--surface-card-bg);
   box-shadow:
     inset 0 1px 0 rgba(214, 184, 90, 0.2),
     inset 0 0 30px rgba(214, 184, 90, 0.03);
@@ -102,7 +102,7 @@
   font-weight: 800;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(232, 216, 155, 0.74);
+  color: var(--surface-text-muted);
   margin-bottom: 0.34rem;
 }
 
@@ -111,12 +111,12 @@
 }
 
 .khndzoresk-page .contact-input {
-  border: 1px solid rgba(214, 184, 90, 0.26);
+  border: 1px solid var(--surface-border);
   border-radius: 0.6rem;
   background:
     linear-gradient(180deg, rgba(214, 184, 90, 0.02), transparent 58%),
-    rgba(7, 7, 6, 0.84);
-  color: rgba(232, 216, 155, 0.88);
+    var(--surface-input-bg);
+  color: var(--surface-input-text);
   font-family: var(--font-cormorant), serif;
   font-size: 1.03rem;
   line-height: 1.4;
@@ -126,7 +126,7 @@
 }
 
 .khndzoresk-page .contact-input::placeholder {
-  color: rgba(232, 216, 155, 0.34);
+  color: var(--surface-input-placeholder);
 }
 
 .khndzoresk-page .contact-input:focus {
@@ -168,10 +168,10 @@
 }
 
 .khndzoresk-page .contact-success {
-  border: 1px solid rgba(214, 184, 90, 0.25);
+  border: 1px solid var(--surface-border);
   background:
     radial-gradient(100% 80% at 100% 0%, rgba(39, 198, 200, 0.08) 0%, transparent 58%),
-    rgba(10, 10, 9, 0.82);
+    var(--surface-card-bg);
   padding: 2rem;
 }
 

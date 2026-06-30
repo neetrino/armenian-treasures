@@ -35,10 +35,10 @@ interface MobileMenuProps {
 }
 
 const MOBILE_SECTION =
-  'font-cinzel text-[13px] font-bold uppercase tracking-[0.13em] text-heritage-nav';
+  'font-cinzel text-[13px] font-bold uppercase tracking-[0.13em] text-[var(--nav-text)]';
 
 const MOBILE_LINK =
-  'block py-2.5 font-display text-lg text-[rgba(232,216,155,0.82)] transition hover:text-[#F2DA83]';
+  'block py-2.5 font-display text-lg text-surface transition hover:text-[var(--accent-hover)]';
 
 const MOBILE_LINK_ACTIVE = 'block py-2.5 font-display text-lg text-heritage-teal';
 
@@ -86,7 +86,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
         onClick={() => setOpen(true)}
         className={cn(
           'inline-flex h-10 w-10 items-center justify-center border transition',
-          'border-[rgba(214,184,90,0.28)] text-heritage-nav hover:border-[rgba(39,198,200,0.45)] hover:text-heritage-teal',
+          'border-[var(--surface-border)] text-[var(--nav-text)] hover:border-[rgba(39,198,200,0.45)] hover:text-[var(--nav-text-active)]',
         )}
         aria-label="Open menu"
         aria-expanded={open}
@@ -99,7 +99,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
         {open ? (
           <>
             <motion.div
-              className="fixed inset-0 z-[1001] bg-[rgba(3,5,4,0.85)] backdrop-blur-sm"
+              className="fixed inset-0 z-[1001] bg-[var(--mobile-menu-overlay)] backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -108,7 +108,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
               aria-hidden
             />
             <motion.div
-              className="fixed inset-x-0 top-site-header z-[1002] flex max-h-[calc(100svh-var(--site-header-height))] flex-col overflow-y-auto border-t border-[rgba(214,184,90,0.16)] bg-[rgba(3,5,4,0.98)] px-6 py-7 backdrop-blur-md"
+              className="fixed inset-x-0 top-site-header z-[1002] flex max-h-[calc(100svh-var(--site-header-height))] flex-col overflow-y-auto border-t border-surface bg-[var(--mobile-menu-bg)] px-6 py-7 backdrop-blur-md"
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
@@ -122,7 +122,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                 <button
                   type="button"
                   onClick={close}
-                  className="inline-flex h-10 w-10 items-center justify-center border border-[rgba(214,184,90,0.28)] text-heritage-nav hover:text-heritage-teal"
+                  className="inline-flex h-10 w-10 items-center justify-center border border-[var(--surface-border)] text-[var(--nav-text)] hover:text-[var(--nav-text-active)]"
                   aria-label="Close menu"
                 >
                   <X size={20} strokeWidth={1.5} aria-hidden />
@@ -142,26 +142,35 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                 >
                   {cultureMegaMenu.map((column) => (
                     <div key={column.heading} className="border-b border-[rgba(214,184,90,0.1)] py-2 last:border-b-0">
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between py-2 text-left font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal"
-                        onClick={() =>
-                          setOpenColumn((current) =>
-                            current === column.heading ? null : column.heading,
-                          )
-                        }
-                        aria-expanded={openColumn === column.heading}
-                      >
-                        {column.heading}
-                        <ChevronDown
-                          size={14}
-                          className={cn(
-                            'transition-transform',
-                            openColumn === column.heading && 'rotate-180',
-                          )}
-                          aria-hidden
-                        />
-                      </button>
+                      <div className="flex items-center justify-between gap-2 py-2">
+                        <Link
+                          href={column.headingHref}
+                          onClick={close}
+                          className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
+                        >
+                          {column.heading}
+                        </Link>
+                        <button
+                          type="button"
+                          className="flex shrink-0 items-center justify-center rounded-sm p-1 text-heritage-teal transition-colors hover:text-heritage-champagne focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[rgba(39,198,200,0.75)]"
+                          onClick={() =>
+                            setOpenColumn((current) =>
+                              current === column.heading ? null : column.heading,
+                            )
+                          }
+                          aria-expanded={openColumn === column.heading}
+                          aria-label={`${openColumn === column.heading ? 'Collapse' : 'Expand'} ${column.heading}`}
+                        >
+                          <ChevronDown
+                            size={14}
+                            className={cn(
+                              'transition-transform',
+                              openColumn === column.heading && 'rotate-180',
+                            )}
+                            aria-hidden
+                          />
+                        </button>
+                      </div>
                       {openColumn === column.heading ? (
                         <ul className="pb-2 pl-1">
                           {column.items.map((item) => (
@@ -250,7 +259,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                     <p className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal">
                       Account
                     </p>
-                    <p className="font-display text-sm text-[rgba(232,216,155,0.82)]">{member.name}</p>
+                    <p className="font-display text-sm text-surface">{member.name}</p>
                     <Link href="/profile" onClick={close} className={MOBILE_LINK}>
                       Profile
                     </Link>
@@ -308,7 +317,7 @@ function MobileAccordion({
         <button
           type="button"
           onClick={onToggle}
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-heritage-nav hover:text-heritage-teal"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-[var(--nav-text)] hover:text-[var(--nav-text-active)]"
           aria-expanded={open}
           aria-label={`${open ? 'Collapse' : 'Expand'} ${label}`}
         >
