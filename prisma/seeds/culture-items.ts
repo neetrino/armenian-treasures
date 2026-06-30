@@ -280,6 +280,34 @@ const ITEMS: SeedItem[] = [
     description:
       'A national collection of Armenian carpets, ceramics, woodcarving, embroidery and metalwork drawn from every historic region.',
   },
+  {
+    slug: 'aram-khachaturian-museum',
+    title: 'Aram Khachaturian Museum',
+    menuPath: 'museums',
+    region: 'Yerevan',
+    periodLabel: 'Est. 1978',
+    itemType: 'MUSEUM',
+    latitude: 40.1836,
+    longitude: 44.5147,
+    mapType: 'MUSEUM',
+    showOnMap: true,
+    description:
+      'Yerevan museum dedicated to the composer of Spartacus and Gayane — exhibitions, archival audio, and a dedicated digital landing with highlights and works.',
+  },
+  {
+    slug: 'national-gallery-of-armenia',
+    title: 'National Gallery of Armenia',
+    menuPath: 'museums',
+    region: 'Yerevan',
+    periodLabel: 'Est. 1921',
+    itemType: 'MUSEUM',
+    latitude: 40.1772,
+    longitude: 44.5146,
+    mapType: 'MUSEUM',
+    showOnMap: true,
+    description:
+      'The national fine arts museum on Republic Square — 40,000+ works including the world\'s second-largest Aivazovsky collection and a full digital landing.',
+  },
   // People
   {
     slug: 'mesrop-mashtots',
@@ -435,6 +463,22 @@ const ITEMS: SeedItem[] = [
     itemType: 'HISTORY_EVENT',
     description:
       'Armenia declares independence on 21 September 1991, restoring sovereign statehood after seventy years inside the Soviet Union.',
+  },
+  {
+    slug: 'khndzoresk-cave-settlement',
+    title: 'Khndzoresk Cave Settlement',
+    menuPath: 'history',
+    region: 'Syunik',
+    periodLabel: '17th–20th c.',
+    century: 17,
+    yearLabel: '17th–20th century',
+    latitude: 39.486861,
+    longitude: 46.422028,
+    mapType: 'ARCHAEOLOGICAL',
+    showOnMap: true,
+    itemType: 'MONUMENT',
+    description:
+      'One of Eastern Armenia\'s largest cave villages — gorge dwellings, St. Hripsime church, and a full digital preservation landing with 3D tours and visual restorations.',
   },
   // Heritage / Paintings
   {
