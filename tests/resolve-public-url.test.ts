@@ -56,4 +56,20 @@ describe('resolvePublicAssetUrl', () => {
       'https://assets.example.com/images/culture/card-heritage.webp',
     );
   });
+
+  it('resolves admin upload paths via manifest without R2 env flags', () => {
+    expect(
+      resolvePublicAssetUrl('/uploads/images/culture/culture-9f44566d18e7.png'),
+    ).toBe(
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/uploads/images/culture/culture-9f44566d18e7.png',
+    );
+  });
+
+  it('prefers configured R2 base URL for admin upload paths', () => {
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://cdn.example.com';
+
+    expect(resolvePublicAssetUrl('/uploads/images/culture/culture-abc123def456.jpg')).toBe(
+      'https://cdn.example.com/uploads/images/culture/culture-abc123def456.jpg',
+    );
+  });
 });

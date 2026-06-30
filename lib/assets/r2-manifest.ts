@@ -12,6 +12,11 @@ export function getR2PublicManifest(): R2PublicManifest {
   return typedManifest;
 }
 
+export function getR2ManifestPublicBaseUrl(): string | null {
+  const base = typedManifest.publicBaseUrl?.trim();
+  return base ? base.replace(/\/$/, '') : null;
+}
+
 export function getR2ManifestUrl(publicPath: string): string | null {
   const normalized = normalizePublicPath(publicPath);
   return typedManifest.files[normalized] ?? null;
