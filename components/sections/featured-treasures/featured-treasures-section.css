@@ -2,8 +2,8 @@
   display: grid;
   width: 100%;
   max-width: 73.75rem;
-  border-top: 1px solid rgba(214, 184, 90, 0.18);
-  border-left: 1px solid rgba(214, 184, 90, 0.18);
+  border-top: 1px solid var(--surface-border);
+  border-left: 1px solid var(--surface-border);
   grid-template-columns: minmax(0, 1fr);
 }
 
@@ -13,9 +13,9 @@
   min-height: 13.75rem;
   overflow: hidden;
   padding: 1.75rem 1.375rem 1.75rem;
-  background: rgba(8, 10, 9, 0.92);
-  border-right: 1px solid rgba(214, 184, 90, 0.18);
-  border-bottom: 1px solid rgba(214, 184, 90, 0.18);
+  background: var(--surface-panel-bg);
+  border-right: 1px solid var(--surface-border);
+  border-bottom: 1px solid var(--surface-border);
   transition:
     background 240ms ease,
     border-color 240ms ease,
@@ -48,7 +48,7 @@
 }
 
 .featured-treasure-card__description {
-  color: rgba(232, 216, 155, 0.58);
+  color: var(--surface-text-body);
   transition: color 240ms ease;
 }
 
@@ -100,7 +100,7 @@
 @media (hover: hover) and (pointer: fine) {
   .featured-treasure-card:hover {
     z-index: 2;
-    background: rgba(8, 10, 9, 0.96);
+    background: var(--surface-panel-bg);
     border-color: rgba(214, 184, 90, 0.52);
     box-shadow:
       inset 0 0 0 1px rgba(214, 184, 90, 0.28),
@@ -117,7 +117,7 @@
   }
 
   .featured-treasure-card:hover .featured-treasure-card__description {
-    color: rgba(232, 216, 155, 0.72);
+    color: var(--surface-text-muted);
   }
 
   .featured-treasure-card:hover .featured-treasure-card__number {

@@ -124,3 +124,109 @@
     height: 320px;
   }
 }
+
+[data-theme='light'] .khndzoresk-page {
+  --black: #faf6ee;
+  --deep: #f2eadb;
+  --card: #fdfbf6;
+  --card2: #f5efe3;
+  --gold: #a86a28;
+  --gold-lt: #7e4d18;
+  --gold-dk: #7e4d18;
+  --teal: #1a8f8f;
+  --teal-dk: #166e6e;
+  --text: #3a332c;
+  --muted: #8e806b;
+  --border: rgba(200, 132, 61, 0.22);
+  --border2: rgba(200, 132, 61, 0.12);
+  background: var(--black);
+  color: var(--text);
+}
+
+[data-theme='light'] .khndzoresk-page nav {
+  background: rgba(250, 246, 238, 0.94);
+  box-shadow: none;
+}
+
+[data-theme='light'] .khndzoresk-page nav.scrolled {
+  background: rgba(253, 251, 246, 0.98);
+  box-shadow: 0 4px 24px rgba(26, 23, 20, 0.08);
+}
+
+[data-theme='light'] .khndzoresk-page .dropdown,
+[data-theme='light'] .khndzoresk-page .lang-panel {
+  background: rgba(253, 251, 246, 0.98);
+}
+
+[data-theme='light'] .khndzoresk-page .lang-item {
+  background: rgba(200, 132, 61, 0.04);
+}
+
+[data-theme='light'] .khndzoresk-page .hero-img-overlay {
+  background-image: var(--hero-image-overlay), var(--hero-image-url, none) !important;
+}
+
+[data-theme='light'] .khndzoresk-page .hero-grain {
+  opacity: 0.012;
+}
+
+[data-theme='light'] .khndzoresk-page .sec-label,
+[data-theme='light'] .khndzoresk-page .mega-col-title,
+[data-theme='light'] .khndzoresk-page .lang-panel-title {
+  color: var(--teal);
+}
+
+[data-theme='light'] .khndzoresk-page .nav-links > li > a,
+[data-theme='light'] .khndzoresk-page .dropdown:not(.mega) a,
+[data-theme='light'] .khndzoresk-page .mega-col a {
+  color: var(--text);
+}
+
+[data-theme='light'] .khndzoresk-page .nav-links > li > a {
+  color: var(--gold-lt);
+}
+
+[data-theme='light'] .khndzoresk-page .cat-card:hover {
+  box-shadow: 0 10px 32px rgba(200, 132, 61, 0.12);
+}
+
+[data-theme='light'] .khndzoresk-page .p-card {
+  background: linear-gradient(135deg, rgba(255, 251, 246, 0.98), rgba(242, 234, 219, 0.96));
+}
+
+[data-theme='light'] .khndzoresk-page .medallion-face {
+  background: var(--surface-panel-bg);
+}
+
+[data-theme='light'] .khndzoresk-page .auth-card,
+[data-theme='light'] .khndzoresk-page .auth-profile-sidebar,
+[data-theme='light'] .auth-shell .auth-card {
+  background: var(--surface-card-bg);
+  border-color: var(--surface-border);
+}
+
+[data-theme='light'] .culture-catalog-tour-embed {
+  background: var(--surface-panel-bg) !important;
+}
+
+[data-theme='light'] .auth-card,
+[data-theme='light'] .auth-profile-sidebar__panel {
+  box-shadow:
+    inset 0 1px 0 rgba(200, 132, 61, 0.12),
+    inset 0 0 36px rgba(200, 132, 61, 0.03),
+    0 18px 48px rgba(26, 23, 20, 0.1);
+}
+
+[data-theme='light'] .auth-grid-bg__mesh {
+  opacity: 0.28;
+}
+
+[data-theme='light'] .contact-direct-card,
+[data-theme='light'] .contact-form-shell,
+[data-theme='light'] .contact-success,
+[data-theme='light'] .about-mission-card,
+[data-theme='light'] .about-team-card,
+[data-theme='light'] .about-career-card,
+[data-theme='light'] .about-mission-pair-card {
+  box-shadow: 0 12px 32px rgba(26, 23, 20, 0.06);
+}

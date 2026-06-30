@@ -19,7 +19,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
     : project.status.charAt(0) + project.status.slice(1).toLowerCase();
 
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden border border-[rgba(214,184,90,0.2)] bg-[rgba(11,11,10,0.76)] transition-[border-color,box-shadow,transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:border-[rgba(214,184,90,0.4)] hover:bg-[linear-gradient(135deg,rgba(214,184,90,0.07),rgba(11,11,10,0.84))] hover:shadow-[inset_0_0_40px_rgba(214,184,90,0.03),0_14px_34px_rgba(0,0,0,0.32)]">
+    <article className="group relative flex h-full flex-col overflow-hidden border border-surface bg-[var(--surface-card-bg)] transition-[border-color,box-shadow,transform,background] duration-300 ease-out hover:-translate-y-0.5 hover:border-[var(--surface-card-hover-border)] hover:bg-[var(--surface-card-bg-hover)] hover:shadow-[var(--surface-card-hover-shadow)]">
       <div className="relative overflow-hidden border-b border-[rgba(214,184,90,0.14)] bg-[rgba(5,5,5,0.5)]">
         <div className="aspect-[4/3] w-full opacity-90 transition duration-500 group-hover:opacity-100">
           <Image
@@ -54,13 +54,13 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         {project.description ? (
-          <p className="line-clamp-3 font-display text-sm leading-relaxed text-[rgba(232,216,155,0.66)]">
+          <p className="line-clamp-3 font-display text-sm leading-relaxed text-surface-body">
             {project.description}
           </p>
         ) : null}
 
         <div className="mt-auto flex flex-col gap-2">
-          <div className="flex items-center justify-between text-xs text-[rgba(232,216,155,0.6)]">
+          <div className="flex items-center justify-between text-xs text-surface-body">
             <span>
               <span className="font-semibold text-heritage-gold">{formatCurrency(project.raisedAmount)}</span>
               {' raised of '}

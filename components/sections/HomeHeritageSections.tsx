@@ -15,17 +15,17 @@ export async function HomeHeritageSections() {
   const home = await getHomeContent();
 
   return (
-    <div className="relative isolate overflow-hidden bg-heritage-black">
+    <div className="relative isolate overflow-hidden bg-surface">
       <div
-        className="pointer-events-none absolute inset-0 bg-heritage-radial opacity-90"
+        className="pointer-events-none absolute inset-0 bg-heritage-radial opacity-[var(--surface-radial-opacity)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-heritage-teal-glow opacity-70"
+        className="pointer-events-none absolute inset-0 bg-heritage-teal-glow opacity-[var(--surface-glow-opacity)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-hero-diamond-grid opacity-40"
+        className="pointer-events-none absolute inset-0 bg-hero-diamond-grid opacity-[var(--surface-grid-opacity)]"
         aria-hidden
       />
       <div

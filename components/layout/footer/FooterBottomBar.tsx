@@ -3,6 +3,7 @@ import {
   FOOTER_LEGAL_LINKS,
   FOOTER_SITE_DOMAIN,
 } from '@/components/layout/footer/footer-links';
+import { ThemeSwitcher } from '@/components/layout/footer/ThemeSwitcher';
 import type { PublicSiteSettingsDTO } from '@/lib/dto';
 
 interface FooterBottomBarProps {
@@ -14,25 +15,29 @@ export function FooterBottomBar({ settings }: FooterBottomBarProps) {
 
   return (
     <div className="site-footer__bottom">
-      <p className="font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-[rgba(232,216,155,0.48)]">
+      <p className="font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-surface-subtle">
         {settings.copyrightText || `© ${year} Armenian Treasures. All rights reserved.`}
       </p>
 
-      <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-[rgba(232,216,155,0.48)]">
-        {FOOTER_LEGAL_LINKS.map((link, index) => (
-          <span key={link.label} className="inline-flex items-center gap-2">
-            {index > 0 ? <span aria-hidden>·</span> : null}
-            <Link
-              href={link.href}
-              className="transition-colors duration-[240ms] hover:text-[rgba(232,216,155,0.72)]"
-            >
-              {link.label}
-            </Link>
-          </span>
-        ))}
-        <span aria-hidden>·</span>
-        <span>{FOOTER_SITE_DOMAIN}</span>
-      </p>
+      <div className="site-footer__bottom-meta">
+        <ThemeSwitcher />
+
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-surface-subtle">
+          {FOOTER_LEGAL_LINKS.map((link, index) => (
+            <span key={link.label} className="inline-flex items-center gap-2">
+              {index > 0 ? <span aria-hidden>·</span> : null}
+              <Link
+                href={link.href}
+                className="transition-colors duration-[240ms] hover:text-surface-body"
+              >
+                {link.label}
+              </Link>
+            </span>
+          ))}
+          <span aria-hidden>·</span>
+          <span>{FOOTER_SITE_DOMAIN}</span>
+        </p>
+      </div>
     </div>
   );
 }

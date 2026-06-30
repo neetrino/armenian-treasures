@@ -11,7 +11,7 @@ function PartnershipCategoryContent({ category }: PartnershipCategoryCardProps) 
   return (
     <>
       <PartnershipCategoryIcon type={category.icon} />
-      <h3 className="mt-5 max-w-[9rem] text-center font-cinzel text-[11px] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[#E6C766] sm:text-[12px]">
+      <h3 className="mt-5 max-w-[9rem] text-center font-cinzel text-[11px] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[var(--accent-hover)] sm:text-[12px]">
         {category.title}
       </h3>
     </>

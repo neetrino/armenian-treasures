@@ -39,11 +39,11 @@ export function UpcomingProjectCard({ project }: UpcomingProjectCardProps) {
 
         <UpcomingProjectIcon type={project.icon} className="mt-5" />
 
-        <h3 className="mt-5 font-cinzel text-[clamp(0.9375rem,1.1vw,1.125rem)] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[#E6C766]">
+        <h3 className="mt-5 font-cinzel text-[clamp(0.9375rem,1.1vw,1.125rem)] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[var(--accent-hover)]">
           {project.title}
         </h3>
 
-        <p className="mt-3 flex-1 font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.55] text-[rgba(232,216,155,0.58)] transition-colors duration-[240ms] group-hover:text-[rgba(232,216,155,0.72)]">
+        <p className="mt-3 flex-1 font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.55] text-surface-body transition-colors duration-[240ms] group-hover:text-surface-muted">
           {project.description}
         </p>
 

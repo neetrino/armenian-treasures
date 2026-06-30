@@ -22,17 +22,17 @@ async function AboutCareerPage() {
         <h2 className="font-cinzel text-[clamp(2.2rem,4vw,4rem)] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-heritage-gold">
           {content.careerTitle}
         </h2>
-        <p className="mt-4 font-display text-[clamp(1rem,1.25vw,1.15rem)] italic leading-[1.6] text-[rgba(232,216,155,0.72)]">
+        <p className="mt-4 font-display text-[clamp(1rem,1.25vw,1.15rem)] italic leading-[1.6] text-surface-muted">
           {content.careerIntro}
         </p>
       </header>
 
       {careers.length === 0 ? (
-        <div className="border border-dashed border-[rgba(214,184,90,0.34)] bg-[rgba(12,12,10,0.65)] px-6 py-14 text-center">
+        <div className="border border-dashed border-surface bg-[var(--surface-card-bg)] px-6 py-14 text-center">
           <h3 className="font-cinzel text-xl font-extrabold uppercase tracking-[0.03em] text-heritage-gold">
             No open positions
           </h3>
-          <p className="mt-3 font-display text-sm text-[rgba(232,216,155,0.66)]">
+          <p className="mt-3 font-display text-sm text-surface-body">
             Check back soon - we list every role here before announcing publicly.
           </p>
         </div>

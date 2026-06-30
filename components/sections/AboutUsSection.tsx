@@ -24,7 +24,7 @@ export async function AboutUsSection({ home }: HomeSectionContentProps) {
             {aboutUs.title}
           </h2>
 
-          <p className="max-w-[41.25rem] font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.55] text-[rgba(232,216,155,0.68)]">
+          <p className="max-w-[41.25rem] font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.55] text-surface-muted">
             {aboutUs.description}
           </p>
         </header>

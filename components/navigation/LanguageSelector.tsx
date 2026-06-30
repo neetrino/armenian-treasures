@@ -14,8 +14,8 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
       <div
         className={cn(
           'inline-flex h-9 items-center gap-[7px] px-3.5',
-          'bg-[rgba(201,168,76,0.08)] border border-[rgba(201,168,76,0.22)]',
-          'font-cinzel text-[9.5px] font-bold uppercase tracking-[0.12em] text-[#C9A84C]',
+          'bg-[rgba(201,168,76,0.08)] border border-[var(--surface-border)]',
+          'font-cinzel text-[9.5px] font-bold uppercase tracking-[0.12em] text-heritage-gold',
           'cursor-default opacity-90',
           '[clip-path:polygon(6px_0%,100%_0%,calc(100%-6px)_100%,0%_100%)]',
         )}
@@ -25,11 +25,11 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
       >
         <Globe size={11} strokeWidth={1.5} aria-hidden className="opacity-80" />
         <span>{CURRENT_SITE_LANGUAGE.code}</span>
-        <span className="font-cinzel text-[8px] font-semibold tracking-[0.18em] text-[#2ABFBF]">
+        <span className="font-cinzel text-[8px] font-semibold tracking-[0.18em] text-heritage-teal">
           Soon
         </span>
       </div>
-      <p className="mt-2 font-sans text-[11px] leading-snug text-[#D4C89A]/75 lg:sr-only">
+      <p className="mt-2 font-sans text-[11px] leading-snug text-surface-body lg:sr-only">
         All site content is currently in English. Multilingual support is coming soon.
       </p>
     </div>

@@ -15,7 +15,7 @@ export function DonationsPatronRow({ patron }: DonationsPatronRowProps) {
         </span>
       </div>
 
-      <p className="donations-patron-row__description font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.55] text-[rgba(232,216,155,0.58)]">
+      <p className="donations-patron-row__description font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.55] text-surface-body">
         {patron.description}
       </p>
     </div>

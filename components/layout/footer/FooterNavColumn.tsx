@@ -18,7 +18,7 @@ export function FooterNavColumn({ title, links }: FooterNavColumnProps) {
           <li key={`${link.href}-${link.label}`}>
             <Link
               href={link.href}
-              className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-[rgba(232,216,155,0.58)] transition-colors duration-[240ms] hover:text-[rgba(232,216,155,0.82)]"
+              className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-surface-body transition-colors duration-[240ms] hover:text-surface"
             >
               {link.label}
             </Link>

@@ -32,7 +32,7 @@ export function HeroBackground({ desktopImage, mobileImage }: HeroBackgroundProp
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-heritage-black"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden hero-bg-base"
     >
       {hasHeroImage && heroSrc ? (
         <>
@@ -44,18 +44,18 @@ export function HeroBackground({ desktopImage, mobileImage }: HeroBackgroundProp
               className="absolute inset-0 h-full w-full object-cover object-center"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-heritage-black/60 via-heritage-black/35 to-heritage-black/78" />
-          <div className="absolute inset-0 bg-heritage-gold-glow opacity-70" />
-          <div className="absolute inset-0 bg-heritage-teal-glow opacity-70" />
+          <div className="absolute inset-0 hero-bg-image-overlay" />
+          <div className="absolute inset-0 bg-heritage-gold-glow opacity-[var(--surface-glow-opacity)]" />
+          <div className="absolute inset-0 bg-heritage-teal-glow opacity-[var(--surface-glow-opacity)]" />
           <div className="absolute inset-0 bg-hero-diamond-grid opacity-15 max-md:opacity-10" />
         </>
       ) : (
         <>
-          <div className="absolute inset-0 bg-heritage-radial" />
-          <div className="absolute inset-0 bg-heritage-gold-glow" />
-          <div className="absolute inset-0 bg-heritage-teal-glow" />
-          <div className="absolute inset-0 bg-hero-diamond-grid opacity-30 max-md:opacity-20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-heritage-black/30 via-transparent to-heritage-black/50" />
+          <div className="absolute inset-0 bg-heritage-radial opacity-[var(--surface-radial-opacity)]" />
+          <div className="absolute inset-0 bg-heritage-gold-glow opacity-[var(--surface-glow-opacity)]" />
+          <div className="absolute inset-0 bg-heritage-teal-glow opacity-[var(--surface-glow-opacity)]" />
+          <div className="absolute inset-0 bg-hero-diamond-grid opacity-[var(--surface-grid-opacity)] max-md:opacity-[calc(var(--surface-grid-opacity)*0.66)]" />
+          <div className="absolute inset-0 hero-bg-fallback-overlay" />
         </>
       )}
 

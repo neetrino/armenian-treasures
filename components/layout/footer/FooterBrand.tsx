@@ -25,7 +25,7 @@ export function FooterBrand({ settings, className }: FooterBrandProps) {
         />
       </Link>
 
-      <p className="mt-6 font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] italic leading-[1.55] text-[rgba(232,216,155,0.58)]">
+      <p className="mt-6 font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] italic leading-[1.55] text-surface-body">
         {settings.footerDescription || FOOTER_BRAND_DESCRIPTION}
       </p>
     </div>

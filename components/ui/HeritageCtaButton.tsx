@@ -39,7 +39,7 @@ export function HeritageCtaButton({
         'whitespace-nowrap px-[34px] font-cinzel text-xs font-extrabold uppercase leading-none tracking-[0.14em]',
         'transition-[transform,box-shadow,filter] duration-200 ease-out motion-reduce:transition-none',
         'hover:-translate-y-0.5 hover:brightness-[1.08] active:translate-y-0 motion-reduce:hover:translate-y-0',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-heritage-black',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ring-offset)]',
         'sm:min-w-[315px] sm:max-w-[340px] sm:w-auto',
         VARIANT_STYLES[variant],
         className,

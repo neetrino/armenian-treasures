@@ -19,7 +19,7 @@ export function ContactForm() {
         <h2 className="mt-3 font-cinzel text-2xl font-extrabold uppercase tracking-[0.02em] text-heritage-gold">
           {state.message ?? 'Thank you. We have received your message.'}
         </h2>
-        <p className="mt-3 font-display text-[15px] leading-[1.65] text-[rgba(232,216,155,0.7)]">
+        <p className="mt-3 font-display text-[15px] leading-[1.65] text-surface-muted">
           A human will read your message within five working days.
         </p>
       </div>

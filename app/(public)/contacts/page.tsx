@@ -62,7 +62,7 @@ async function ContactsPage() {
 
       <section id="contact-form" className="contact-wrap">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.7fr]">
-          <aside className="contact-direct-card p-6 text-sm text-[rgba(232,216,155,0.72)] lg:p-8">
+          <aside className="contact-direct-card p-6 text-sm text-surface-muted lg:p-8">
             <p className="contact-direct-eyebrow">
               Direct lines
             </p>

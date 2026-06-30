@@ -2,11 +2,11 @@
   position: relative;
   min-height: clamp(22rem, 42vw, 28.75rem);
   overflow: hidden;
-  border: 1px solid rgba(214, 184, 90, 0.18);
+  border: 1px solid var(--surface-border);
   background:
     linear-gradient(rgba(214, 184, 90, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(214, 184, 90, 0.035) 1px, transparent 1px),
-    rgba(8, 10, 9, 0.72);
+    var(--surface-map-bg);
   background-size:
     48px 48px,
     48px 48px,
@@ -171,7 +171,7 @@
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: 0.8125rem;
   line-height: 1.2;
-  color: rgba(232, 216, 155, 0.52);
+  color: var(--surface-text-subtle);
   white-space: nowrap;
 }
 

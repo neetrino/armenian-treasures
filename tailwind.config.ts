@@ -11,19 +11,19 @@ const config: Config = {
     extend: {
       colors: {
         heritage: {
-          black: '#030504',
-          'green-black': '#07110F',
-          'dark-teal': '#061B1B',
-          gold: '#D6B85A',
-          'gold-muted': '#B9963E',
-          nav: '#E8D5A3',
-          champagne: '#E8D89B',
-          teal: '#27C6C8',
-          'text-muted': 'rgba(232, 216, 155, 0.68)',
-          'border-gold': 'rgba(214, 184, 90, 0.25)',
-          'grid-line': 'rgba(214, 184, 90, 0.045)',
-          'glow-teal': 'rgba(39, 198, 200, 0.18)',
-          'glow-gold': 'rgba(214, 184, 90, 0.18)',
+          black: 'var(--heritage-black)',
+          'green-black': 'var(--heritage-green-black)',
+          'dark-teal': 'var(--heritage-dark-teal)',
+          gold: 'var(--heritage-gold)',
+          'gold-muted': 'var(--heritage-gold-muted)',
+          nav: 'var(--heritage-nav)',
+          champagne: 'var(--heritage-champagne)',
+          teal: 'var(--heritage-teal)',
+          'text-muted': 'var(--heritage-text-muted)',
+          'border-gold': 'var(--heritage-border-gold)',
+          'grid-line': 'var(--heritage-grid-line)',
+          'glow-teal': 'var(--heritage-glow-teal)',
+          'glow-gold': 'var(--heritage-glow-gold)',
         },
         parchment: {
           DEFAULT: '#FAF6EE',
@@ -61,6 +61,17 @@ const config: Config = {
           DEFAULT: '#1E2A5E',
           900: '#141C42',
         },
+        surface: {
+          DEFAULT: 'var(--surface-bg)',
+          text: 'var(--surface-text)',
+          muted: 'var(--surface-text-muted)',
+          body: 'var(--surface-text-body)',
+          subtle: 'var(--surface-text-subtle)',
+          border: 'var(--surface-border)',
+        },
+        layout: {
+          DEFAULT: 'var(--layout-bg)',
+        },
       },
       fontFamily: {
         display: ['var(--font-cormorant)', 'Playfair Display', 'Georgia', 'serif'],
@@ -82,7 +93,7 @@ const config: Config = {
         'hero-diamond-grid':
           'repeating-linear-gradient(45deg, rgba(214, 184, 90, 0.035) 0, rgba(214, 184, 90, 0.035) 1px, transparent 1px, transparent 24px), repeating-linear-gradient(-45deg, rgba(214, 184, 90, 0.035) 0, rgba(214, 184, 90, 0.035) 1px, transparent 1px, transparent 24px)',
         'hero-gold-title':
-          'linear-gradient(180deg, #F2DA83 0%, #D6B85A 45%, #A9822F 100%)',
+          'var(--hero-title-gradient)',
         'brand-gradient':
           'linear-gradient(to right, #6B1820 0%, rgba(77,17,24,0.92) 50%, #141C42 100%)',
         'hero-overlay':
@@ -119,8 +130,12 @@ const config: Config = {
       minHeight: {
         'hero-viewport': 'calc(100svh - var(--site-header-height))',
       },
+      transitionDuration: {
+        250: '250ms',
+      },
       transitionTimingFunction: {
         cinematic: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        theme: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       keyframes: {
         'portal-marquee': {

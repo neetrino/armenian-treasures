@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-export const HERO_IMAGE_OVERLAY_GRADIENT =
-  'linear-gradient(to bottom,rgba(9,9,9,.88) 0%,rgba(9,9,9,.38) 40%,rgba(9,9,9,.82) 100%)';
+export const HERO_IMAGE_OVERLAY_GRADIENT = 'var(--hero-image-overlay)';
 
 interface HeroImageOverlayProps {
   imageUrl: string;

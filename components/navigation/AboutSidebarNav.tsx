@@ -20,7 +20,7 @@ export function AboutSidebarNav() {
                   'inline-flex w-full items-center border px-4 py-3 font-cinzel text-[11px] font-extrabold uppercase tracking-[0.16em] transition',
                   active
                     ? 'border-[rgba(39,198,200,0.34)] bg-[rgba(39,198,200,0.08)] text-heritage-teal'
-                    : 'border-[rgba(214,184,90,0.2)] bg-[rgba(9,9,9,0.45)] text-heritage-gold/85 hover:border-[rgba(214,184,90,0.38)] hover:text-heritage-gold',
+                    : 'border-surface bg-[var(--surface-card-bg)] text-heritage-gold/85 hover:border-[var(--surface-card-hover-border)] hover:text-heritage-gold',
                 )}
               >
                 {tab.label}
