@@ -125,6 +125,14 @@ export function getPublicApiRateLimiter(): RateLimiter {
   return getLimiter('public-api', { capacity: 120, windowMs: 60 * 1000 });
 }
 
+export function getMemberLoginRateLimiter(): RateLimiter {
+  return getLimiter('member-login', { capacity: 10, windowMs: 15 * 60 * 1000 });
+}
+
+export function getMemberRegisterRateLimiter(): RateLimiter {
+  return getLimiter('member-register', { capacity: 5, windowMs: 60 * 60 * 1000 });
+}
+
 export function getAdminLoginRateLimiter(): RateLimiter {
   return getLimiter('admin-login', { capacity: 5, windowMs: 15 * 60 * 1000 });
 }

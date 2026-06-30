@@ -1,10 +1,11 @@
 import type { NextAuthConfig } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { headers } from 'next/headers';
-import { adminLoginSchema } from '@/lib/validation';
+import { adminLoginSchema, memberLoginSchema } from '@/lib/validation';
 import {
   extractClientIp,
   getAdminLoginRateLimiter,
+  getMemberLoginRateLimiter,
 } from '@/lib/rate-limit';
 import {
   checkLoginEnvVars,
@@ -13,12 +14,13 @@ import {
 } from './login-debug';
 import { LoginCredentialsSignin } from './login-credentials-signin';
 import { validateAdminCredentials } from './validate-admin-credentials';
+import { validateMemberCredentials } from './validate-member-credentials';
 
-export type AdminRole = 'ADMIN';
+export type AuthRole = 'ADMIN' | 'MEMBER';
 
 declare module 'next-auth' {
   interface User {
-    role?: AdminRole;
+    role?: AuthRole;
   }
 
   interface Session {
@@ -26,7 +28,7 @@ declare module 'next-auth' {
       id: string;
       name: string;
       email: string;
-      role: AdminRole;
+      role?: AuthRole;
     };
   }
 }
@@ -39,12 +41,14 @@ export const authConfig: NextAuthConfig = {
   trustHost: true,
   providers: [
     Credentials({
+      id: 'admin',
+      name: 'Admin',
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(raw) {
-        console.log(`${LOGIN_LOG_PREFIX} authorize: credentials sign-in started`);
+        console.log(`${LOGIN_LOG_PREFIX} authorize: admin credentials sign-in started`);
 
         const envIssue = checkLoginEnvVars();
         if (envIssue) {
@@ -102,11 +106,48 @@ export const authConfig: NextAuthConfig = {
         }
       },
     }),
+    Credentials({
+      id: 'member',
+      name: 'Member',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(raw) {
+        const parsed = memberLoginSchema.safeParse(raw);
+        if (!parsed.success) {
+          return null;
+        }
+
+        const headerStore = await headers();
+        const ipAddress = extractClientIp(headerStore);
+        const normalizedEmail = parsed.data.email.trim().toLowerCase();
+        const rateCheck = await getMemberLoginRateLimiter().check(
+          `member-login:${normalizedEmail}:${ipAddress}`,
+        );
+        if (!rateCheck.allowed) {
+          throw new Error('RATE_LIMITED');
+        }
+
+        const result = await validateMemberCredentials(parsed.data.email, parsed.data.password);
+        if (!result.success) {
+          return null;
+        }
+
+        const { member } = result;
+        return {
+          id: member.id,
+          name: `${member.name} ${member.surname}`,
+          email: member.email,
+          role: 'MEMBER' as const,
+        };
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const typed = user as { id?: string; role?: AdminRole };
+        const typed = user as { id?: string; role?: AuthRole };
         if (typed.id) token.sub = typed.id;
         if (typed.role) (token as Record<string, unknown>).role = typed.role;
       }
@@ -116,7 +157,7 @@ export const authConfig: NextAuthConfig = {
       if (token && session.user) {
         if (token.sub) session.user.id = token.sub;
         const role = (token as Record<string, unknown>).role;
-        if (role === 'ADMIN') {
+        if (role === 'ADMIN' || role === 'MEMBER') {
           session.user.role = role;
         }
       }
@@ -127,7 +168,9 @@ export const authConfig: NextAuthConfig = {
       const isAdminArea =
         pathname.startsWith('/admin') && pathname !== '/admin/login';
       const isAdminApi = pathname.startsWith('/api/admin');
-      if (isAdminArea || isAdminApi) return Boolean(auth?.user);
+      if (isAdminArea || isAdminApi) {
+        return auth?.user?.role === 'ADMIN';
+      }
       return true;
     },
   },

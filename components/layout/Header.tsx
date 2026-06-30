@@ -4,11 +4,16 @@ import {
   resolveCultureMegaMenu,
   resolveProjectsNavItems,
 } from '@/lib/navigation/resolve-header-nav';
+import { getHeaderMemberSummary } from '@/lib/auth/member-session';
 import { HeaderBar } from './HeaderBar';
 import { HeaderThemeProvider } from './header-theme';
 
 export async function Header() {
-  const [menuTree, settings] = await Promise.all([getMenuTree(), getSiteSettings()]);
+  const [menuTree, settings, member] = await Promise.all([
+    getMenuTree(),
+    getSiteSettings(),
+    getHeaderMemberSummary(),
+  ]);
 
   const cultureMegaMenu = resolveCultureMegaMenu(menuTree);
   const projectsMenu = resolveProjectsNavItems();
@@ -21,6 +26,7 @@ export async function Header() {
         projectsMenu={projectsMenu}
         foundationName={settings.foundationName}
         foundationSubtitle={settings.foundationSubtitle}
+        member={member}
       />
       <div aria-hidden className="h-site-header shrink-0" />
     </HeaderThemeProvider>

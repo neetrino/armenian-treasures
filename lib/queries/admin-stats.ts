@@ -8,6 +8,7 @@ export interface AdminStats {
   newContactMessages: number;
   totalTeam: number;
   totalDonators: number;
+  totalMembers: number;
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
@@ -20,6 +21,7 @@ export async function getAdminStats(): Promise<AdminStats> {
       newContactMessages,
       totalTeam,
       totalDonators,
+      totalMembers,
     ] = await Promise.all([
       prisma.cultureItem.count({ where: { status: 'PUBLISHED' } }),
       prisma.submission.count({ where: { status: 'PENDING' } }),
@@ -32,6 +34,7 @@ export async function getAdminStats(): Promise<AdminStats> {
       prisma.contactMessage.count({ where: { status: 'NEW' } }),
       prisma.teamMember.count({ where: { isActive: true } }),
       prisma.donator.count({ where: { isPublic: true } }),
+      prisma.member.count(),
     ]);
     const pendingByType: Record<string, number> = {};
     for (const row of submissionsByType) pendingByType[row.type] = row._count._all;
@@ -43,6 +46,7 @@ export async function getAdminStats(): Promise<AdminStats> {
       newContactMessages,
       totalTeam,
       totalDonators,
+      totalMembers,
     };
   } catch {
     return {
@@ -53,6 +57,7 @@ export async function getAdminStats(): Promise<AdminStats> {
       newContactMessages: 0,
       totalTeam: 0,
       totalDonators: 0,
+      totalMembers: 0,
     };
   }
 }
