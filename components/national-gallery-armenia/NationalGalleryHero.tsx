@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { ngaImg } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 
 type NationalGalleryHeroProps = {
   imgBase: string;
+  heroImage?: string | null;
 };
 
 function LocationIcon() {
@@ -28,16 +30,13 @@ function NationalGalleryBreadcrumb() {
   );
 }
 
-export function NationalGalleryHero({ imgBase }: NationalGalleryHeroProps) {
+export function NationalGalleryHero({ imgBase: _imgBase, heroImage }: NationalGalleryHeroProps) {
+  const bannerImage = resolvePageHeroImageUrl(heroImage);
+
   return (
     <div className="hero">
       <NationalGalleryBreadcrumb />
-      <div
-        className="hero-img-overlay"
-        style={{
-          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.9) 0%,rgba(9,9,9,.38) 42%,rgba(9,9,9,.84) 100%),url('${ngaImg(imgBase, 'national-gallery-logo-thegem-blog-timeline-large.jpg')}')`,
-        }}
-      />
+      {bannerImage ? <HeroImageOverlay imageUrl={bannerImage} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <div className="hero-bloom" style={{ width: 700, height: 700, top: -120, left: '50%', transform: 'translateX(-50%)', ['--bd' as string]: '8s' }} />

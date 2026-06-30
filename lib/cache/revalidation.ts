@@ -25,6 +25,8 @@ export const PAGE_CONTENT_PUBLIC_PATHS: Record<PageContentSlug, readonly string[
   'donation-page': ['/donate'],
   'partnership-page': ['/partnership'],
   'cultural-portal-page': ['/culture'],
+  'contacts-page': ['/contacts'],
+  'projects-page': ['/projects'],
   khndzoresk: ['/khndzoresk'],
   'khachaturian-museum': ['/khachaturian-museum'],
   'national-gallery-armenia': ['/national-gallery-armenia'],

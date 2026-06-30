@@ -5,6 +5,7 @@ import { CulturalPortalPageContentForm } from '@/components/admin/page-content/f
 import { DonationPageContentForm } from '@/components/admin/page-content/forms/DonationPageContentForm';
 import { LandingPageContentForm } from '@/components/admin/page-content/forms/LandingPageContentForm';
 import { PartnershipPageContentForm } from '@/components/admin/page-content/forms/PartnershipPageContentForm';
+import { StaticPageHeroForm } from '@/components/admin/page-content/forms/StaticPageHeroForm';
 
 interface Props {
   slug: PageContentSlug;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const LANDING_SLUGS = ['khndzoresk', 'khachaturian-museum', 'national-gallery-armenia'] as const;
+const STATIC_HERO_SLUGS = ['contacts-page', 'projects-page'] as const;
 
 export function PageContentForm({ slug, initial }: Props) {
   if (slug === 'donation-page') {
@@ -30,6 +32,15 @@ export function PageContentForm({ slug, initial }: Props) {
     return (
       <LandingPageContentForm
         slug={slug as (typeof LANDING_SLUGS)[number]}
+        initial={initial}
+      />
+    );
+  }
+
+  if ((STATIC_HERO_SLUGS as readonly string[]).includes(slug)) {
+    return (
+      <StaticPageHeroForm
+        slug={slug as (typeof STATIC_HERO_SLUGS)[number]}
         initial={initial}
       />
     );

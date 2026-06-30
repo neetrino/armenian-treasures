@@ -30,7 +30,7 @@ export function HeroHome(props: HeroHomeProps) {
     <section
       id="page-hero"
       data-site-hero
-      className="relative isolate -mt-[var(--site-header-height)] flex min-h-[100svh] w-full flex-col overflow-x-hidden bg-heritage-black pt-[calc(var(--site-header-height)+clamp(4.5rem,9vh,6.5rem)+30px)] text-heritage-champagne"
+      className="relative isolate -mt-[var(--site-header-height)] flex min-h-[100svh] w-full flex-col overflow-x-hidden pt-[calc(var(--site-header-height)+clamp(4.5rem,9vh,6.5rem)+30px)] text-heritage-champagne"
       aria-labelledby="hero-heading"
     >
       <HeroBackground

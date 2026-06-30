@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
+import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import { MetadataFields, SectionTextFields } from '@/components/admin/page-content/editors/SectionTextFields';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
@@ -63,6 +64,11 @@ export function CulturalPortalPageContentForm({ initial }: Props) {
           subtitle: readString(hero.subtitle),
         }}
         onChange={(values) => update({ hero: { ...hero, ...values } })}
+      />
+
+      <HeroBannerImageField
+        value={readString(content.heroImage)}
+        onChange={(heroImage) => update({ heroImage })}
       />
 
       <PageContentSection title="Hero calls to action">

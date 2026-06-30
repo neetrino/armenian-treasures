@@ -7,7 +7,10 @@ import './contact-page.css';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { getSiteSettings } from '@/lib/queries/settings';
+import { getContactsPageContent } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 export const revalidate = 60;
 
@@ -17,12 +20,14 @@ export const metadata: Metadata = {
 };
 
 async function ContactsPage() {
-  const settings = await getSiteSettings();
+  const [settings, pageContent] = await Promise.all([getSiteSettings(), getContactsPageContent()]);
+  const heroImage = resolvePageHeroImageUrl(pageContent.heroImage);
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
 
       <div className="hero cultural-portal-hero">
+        {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
         <div className="hero-bg" />
         <div className="hero-grain" />
         <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>

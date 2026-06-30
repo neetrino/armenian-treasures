@@ -1,6 +1,6 @@
 export function CulturalPortalOrnament() {
   return (
-    <div className="mt-[90px] flex justify-center" aria-hidden>
+    <div className="mt-6 flex justify-center" aria-hidden>
       <svg
         viewBox="0 0 32 32"
         className="h-8 w-8 text-[rgba(214,184,90,0.35)]"

@@ -5,8 +5,11 @@ import '@/components/cultural-portal-page/cultural-portal-page.css';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { CulturalPortalProjects } from '@/components/cultural-portal-page/CulturalPortalProjects';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
 import { getPublishedProjects } from '@/lib/queries/projects';
+import { getProjectsPageContent } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 export const revalidate = 60;
 
@@ -16,14 +19,16 @@ export const metadata: Metadata = {
 };
 
 async function ProjectsPage() {
-  const projects = await getPublishedProjects();
+  const [projects, pageContent] = await Promise.all([getPublishedProjects(), getProjectsPageContent()]);
   const mappedProjects = mapProjectsToCulturalPortalProjects(projects);
+  const heroImage = resolvePageHeroImageUrl(pageContent.heroImage);
 
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
 
       <div className="hero cultural-portal-hero">
+        {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
         <div className="hero-bg" />
         <div className="hero-grain" />
         <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>

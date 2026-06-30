@@ -1,15 +1,24 @@
 import Link from 'next/link';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 
 interface CulturalPortalHeroProps {
   eyebrow: string;
   title: string;
   accent: string;
   subtitle: string;
+  heroImage?: string | null;
 }
 
-export function CulturalPortalHero({ eyebrow, title, accent, subtitle }: CulturalPortalHeroProps) {
+export function CulturalPortalHero({
+  eyebrow,
+  title,
+  accent,
+  subtitle,
+  heroImage,
+}: CulturalPortalHeroProps) {
   return (
     <div className="hero cultural-portal-hero">
+      {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>

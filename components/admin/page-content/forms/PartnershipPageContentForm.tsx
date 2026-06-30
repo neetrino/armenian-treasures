@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
+import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { NumLabelStatsEditor } from '@/components/admin/page-content/editors/ContentListEditors';
 import { TextField } from '@/components/forms/fields/TextField';
@@ -16,6 +17,7 @@ import {
   asMutableContent,
   patchContent,
   readArray,
+  readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
 
@@ -51,6 +53,11 @@ export function PartnershipPageContentForm({ initial }: Props) {
 
   return (
     <PageContentFormShell slug="partnership-page" content={content}>
+      <HeroBannerImageField
+        value={readString(content.heroImage)}
+        onChange={(heroImage) => update({ heroImage })}
+      />
+
       <PageContentSection title="Impact statistics">
         <NumLabelStatsEditor
           items={stats}

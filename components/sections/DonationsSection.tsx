@@ -10,7 +10,7 @@ export async function DonationsSection({ home }: HomeSectionContentProps) {
   return (
     <section
       id="donors"
-      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(3rem,5vw,4.5rem)] pt-[clamp(4.5rem,6vw,6.5rem)] sm:px-6"
+      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 heritage-section-py sm:px-6"
       aria-labelledby="donations-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">
@@ -37,7 +37,7 @@ export async function DonationsSection({ home }: HomeSectionContentProps) {
           <HeritageCtaButton href={donations.ctaUrl} label={donations.ctaLabel} />
         </div>
 
-        <HeritageCrossOrnament className="mt-[clamp(4.5rem,6vw,6.5rem)]" />
+        <HeritageCrossOrnament className="mt-6" />
       </div>
     </section>
   );

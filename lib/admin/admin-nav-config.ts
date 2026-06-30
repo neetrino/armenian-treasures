@@ -59,7 +59,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         href: '/admin/page-content',
         label: 'Marketing pages',
-        description: 'Donation & partnership copy',
+        description: 'Donation, partnership & page heroes',
         icon: Megaphone,
       },
     ],

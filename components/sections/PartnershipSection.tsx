@@ -9,7 +9,7 @@ export async function PartnershipSection({ home }: HomeSectionContentProps) {
   return (
     <section
       id="partners"
-      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(6.875rem,9vw,8.75rem)] pt-[clamp(4.5rem,6vw,6.5rem)] sm:px-6"
+      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 heritage-section-py sm:px-6"
       aria-labelledby="partnership-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">

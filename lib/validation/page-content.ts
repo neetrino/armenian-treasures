@@ -4,12 +4,15 @@ import {
   type PageContentSlug,
 } from '@/lib/types/page-content';
 
+const optionalHeroImage = z.string().trim().max(500).optional().or(z.literal(''));
+
 const metadataSchema = z.object({
   title: z.string().min(1, 'metadata.title is required'),
   description: z.string(),
 });
 
 const donationPageContentSchema = z.object({
+  heroImage: optionalHeroImage,
   metadata: metadataSchema,
   page: z.record(z.unknown()),
   stats: z.array(z.unknown()),
@@ -24,6 +27,7 @@ const donationPageContentSchema = z.object({
 });
 
 const partnershipPageContentSchema = z.object({
+  heroImage: optionalHeroImage,
   stats: z.array(z.unknown()),
   impact: z.array(z.unknown()),
   categories: z.array(z.unknown()),
@@ -33,6 +37,7 @@ const partnershipPageContentSchema = z.object({
 
 const culturalPortalPageContentSchema = z
   .object({
+    heroImage: optionalHeroImage,
     metadata: metadataSchema,
     hero: z.record(z.unknown()),
     CULTURAL_PORTAL_SECTION: z.record(z.unknown()),
@@ -47,6 +52,7 @@ const culturalPortalPageContentSchema = z
   .passthrough();
 
 const khndzoreskPageContentSchema = z.object({
+  heroImage: optionalHeroImage,
   imgBase: z.string().min(1, 'imgBase is required'),
   stats: z.array(z.unknown()),
   facts: z.array(z.unknown()),
@@ -59,6 +65,7 @@ const khndzoreskPageContentSchema = z.object({
 });
 
 const khachaturianPageContentSchema = z.object({
+  heroImage: optionalHeroImage,
   imgBase: z.string().min(1, 'imgBase is required'),
   stats: z.array(z.unknown()),
   facts: z.array(z.unknown()),
@@ -70,6 +77,7 @@ const khachaturianPageContentSchema = z.object({
 });
 
 const nationalGalleryPageContentSchema = z.object({
+  heroImage: optionalHeroImage,
   imgBase: z.string().min(1, 'imgBase is required'),
   stats: z.array(z.unknown()),
   facts: z.array(z.unknown()),
@@ -81,10 +89,16 @@ const nationalGalleryPageContentSchema = z.object({
   related: z.array(z.unknown()),
 });
 
+const staticPageHeroContentSchema = z.object({
+  heroImage: optionalHeroImage,
+});
+
 const PAGE_CONTENT_SCHEMAS: Record<PageContentSlug, z.ZodType<unknown>> = {
   'donation-page': donationPageContentSchema,
   'partnership-page': partnershipPageContentSchema,
   'cultural-portal-page': culturalPortalPageContentSchema,
+  'contacts-page': staticPageHeroContentSchema,
+  'projects-page': staticPageHeroContentSchema,
   khndzoresk: khndzoreskPageContentSchema,
   'khachaturian-museum': khachaturianPageContentSchema,
   'national-gallery-armenia': nationalGalleryPageContentSchema,

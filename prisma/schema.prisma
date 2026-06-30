@@ -345,6 +345,7 @@ model AboutContent {
   heroEyebrow      String
   heroTitle        String
   heroDescription  String   @db.Text
+  heroImage        String?
   missionEyebrow   String
   missionTitle     String
   missionIntro     String   @db.Text

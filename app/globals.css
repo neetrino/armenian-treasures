@@ -6,6 +6,9 @@
   :root {
     color-scheme: light;
     --site-header-height: 4.5rem;
+    --section-padding-y: 1rem;
+    --section-padding-y-lg: 1.25rem;
+    --section-divider-y: 0.75rem;
     --heritage-black: #030504;
     --heritage-green-black: #07110F;
     --heritage-dark-teal: #061B1B;
@@ -79,6 +82,18 @@
 
   .heritage-cta-clip {
     clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+  }
+
+  .heritage-section-py {
+    padding-top: var(--section-padding-y);
+    padding-bottom: var(--section-padding-y);
+  }
+
+  @media (min-width: 640px) {
+    .heritage-section-py {
+      padding-top: var(--section-padding-y-lg);
+      padding-bottom: var(--section-padding-y-lg);
+    }
   }
 
   [data-site-hero] h1 {

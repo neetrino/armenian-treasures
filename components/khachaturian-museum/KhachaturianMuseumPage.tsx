@@ -20,7 +20,7 @@ export async function KhachaturianMuseumPage() {
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <KhachaturianMuseumHero imgBase={content.imgBase} />
+      <KhachaturianMuseumHero imgBase={content.imgBase} heroImage={content.heroImage} />
       <KhachaturianMuseumStatsBar stats={content.stats} />
       <KhachaturianMuseumBiography facts={content.facts} />
       <KhndzoreskDivider />

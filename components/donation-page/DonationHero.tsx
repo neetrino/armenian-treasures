@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { DonationPageContent } from '@/lib/queries/page-content';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { HeroBadgeCheckIcon, HeroBadgeClockIcon, HeroBadgeStarIcon } from '@/components/donation-page/donation-icons';
 
 const BADGE_ICONS = {
@@ -24,11 +25,13 @@ export function DonationBreadcrumb({ breadcrumb }: DonationBreadcrumbProps) {
 
 type DonationHeroProps = {
   hero: DonationPageContent['page']['hero'];
+  heroImage?: string | null;
 };
 
-export function DonationHero({ hero }: DonationHeroProps) {
+export function DonationHero({ hero, heroImage }: DonationHeroProps) {
   return (
     <div className="hero donation-hero">
+      {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <div className="hero-content">

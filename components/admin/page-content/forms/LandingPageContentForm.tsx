@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
+import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import {
   AudioTracksEditor,
   CardGridEditor,
@@ -96,6 +97,12 @@ export function LandingPageContentForm({ slug, initial }: Props) {
 
   return (
     <PageContentFormShell slug={slug} content={content}>
+      <HeroBannerImageField
+        value={readString(content.heroImage)}
+        onChange={(heroImage) => update({ heroImage })}
+        hint="Overrides the default landing hero photo when set. Remove to show the standard page background."
+      />
+
       <PageContentSection title="Images" description="Base URL prefix used for legacy image paths on this landing page.">
         <TextField
           label="Image base URL"

@@ -11,6 +11,7 @@ import { DonationPatronWall } from '@/components/donation-page/DonationPatronWal
 import { DonationClosingSections } from '@/components/donation-page/DonationClosingSections';
 import { getPublicDonators } from '@/lib/queries/donators';
 import { getDonationPageContent } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 export async function DonationPage() {
   const [content, donators] = await Promise.all([
@@ -22,7 +23,10 @@ export async function DonationPage() {
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <DonationBreadcrumb breadcrumb={content.page.breadcrumb} />
-      <DonationHero hero={content.page.hero} />
+      <DonationHero
+        hero={content.page.hero}
+        heroImage={resolvePageHeroImageUrl(content.heroImage)}
+      />
       <DonationStatsBar stats={content.stats} />
       <DonationMission mission={content.page.mission} pillars={content.pillars} />
       <KhndzoreskDivider />
