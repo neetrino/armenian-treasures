@@ -19,12 +19,9 @@ export function DesktopNav({ cultureMegaMenu, projectsMenu }: DesktopNavProps) {
       aria-label="Primary"
       className="relative z-10 hidden h-full min-w-0 flex-nowrap items-stretch justify-start lg:ml-5 xl:ml-6 lg:flex"
     >
-      <NavLink href={PRIMARY_LINKS[0]!.href} homeSectionId={PRIMARY_LINKS[0]!.homeSectionId}>
-        {PRIMARY_LINKS[0]!.label}
-      </NavLink>
       <CultureMegaMenu columns={cultureMegaMenu} />
       <ProjectsDropdown items={projectsMenu} />
-      {PRIMARY_LINKS.slice(1).map((link) => (
+      {PRIMARY_LINKS.map((link) => (
         <NavLink key={link.href} href={link.href} homeSectionId={link.homeSectionId}>
           {link.label}
         </NavLink>

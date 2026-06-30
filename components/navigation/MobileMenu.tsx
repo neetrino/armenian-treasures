@@ -130,19 +130,6 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
               </div>
 
               <nav className="flex flex-col gap-1" aria-label="Mobile primary">
-                <MobileSectionLink
-                  href={PRIMARY_LINKS[0]!.href}
-                  homeSectionId={PRIMARY_LINKS[0]!.homeSectionId}
-                  onNavigate={close}
-                  className={cn(
-                    MOBILE_SECTION,
-                    'py-3',
-                    isNavActive(pathname, PRIMARY_LINKS[0]!.href) && 'text-heritage-teal',
-                  )}
-                >
-                  {PRIMARY_LINKS[0]!.label}
-                </MobileSectionLink>
-
                 <MobileAccordion
                   label="Cultural Portal"
                   open={cultureOpen}
@@ -215,7 +202,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                   </ul>
                 </MobileAccordion>
 
-                {PRIMARY_LINKS.slice(1).map((link) => (
+                {PRIMARY_LINKS.map((link) => (
                   <MobileSectionLink
                     key={link.href}
                     href={link.href}

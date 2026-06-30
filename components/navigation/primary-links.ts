@@ -20,10 +20,6 @@ export function navDropdownLinkKey(item: NavDropdownLink): string {
 
 export const PRIMARY_LINKS: PrimaryLink[] = [
   {
-    href: '/',
-    label: 'Virtual Museum',
-  },
-  {
     href: buildHomeSectionHref(HOME_SECTION_IDS.heritageMap),
     label: 'Heritage Map',
     homeSectionId: HOME_SECTION_IDS.heritageMap,
