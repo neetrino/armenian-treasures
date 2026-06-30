@@ -9,12 +9,17 @@ export interface MegaMenuItem {
 
 export interface MegaMenuColumn {
   heading: string;
+  headingHref: string;
+  /** DB menu path used to resolve live heading href from the admin menu tree. */
+  headingMenuPath?: string;
   items: MegaMenuItem[];
 }
 
 export const CULTURE_MEGA_MENU: MegaMenuColumn[] = [
   {
     heading: 'Architecture',
+    headingHref: '/culture/architecture',
+    headingMenuPath: 'architecture',
     items: [
       {
         label: 'Churches',
@@ -44,6 +49,8 @@ export const CULTURE_MEGA_MENU: MegaMenuColumn[] = [
   },
   {
     heading: 'Myth & People',
+    headingHref: '/culture/legends',
+    headingMenuPath: 'legends',
     items: [
       {
         label: 'Legends',
@@ -79,6 +86,8 @@ export const CULTURE_MEGA_MENU: MegaMenuColumn[] = [
   },
   {
     heading: 'Arts & Culture',
+    headingHref: '/culture/heritage',
+    headingMenuPath: 'heritage',
     items: [
       {
         label: 'Paintings',
@@ -114,6 +123,8 @@ export const CULTURE_MEGA_MENU: MegaMenuColumn[] = [
   },
   {
     heading: 'More Culture',
+    headingHref: '/culture/heritage',
+    headingMenuPath: 'heritage',
     items: [
       {
         label: 'Theatre',

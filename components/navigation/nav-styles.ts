@@ -47,6 +47,11 @@ export const SIMPLE_DROPDOWN_ITEM =
 export const MEGA_MENU_HEADING =
   'mb-2.5 border-b border-[rgba(201,168,76,0.08)] pb-2.5 font-cinzel text-[9px] font-bold uppercase tracking-[0.22em] text-[#2ABFBF]';
 
+export const MEGA_MENU_HEADING_LINK = cn(
+  MEGA_MENU_HEADING,
+  'inline-block no-underline transition-[color,text-shadow] duration-150 hover:text-[#C9A84C] hover:[text-shadow:0_0_10px_rgba(42,191,191,0.35)]',
+);
+
 export const MEGA_MENU_ITEM =
   'group flex items-center gap-[9px] py-[5px] font-display text-[14.5px] leading-[1.25] text-[#D4C89A] no-underline transition-[color,gap] duration-150 ease-out hover:gap-[13px] hover:text-[#C9A84C]';
 

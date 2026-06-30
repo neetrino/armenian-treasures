@@ -21,7 +21,7 @@ export function FooterBrand({ settings, className }: FooterBrandProps) {
           alt=""
           width={700}
           height={923}
-          className="h-auto max-h-[4.5rem] w-auto object-contain sm:max-h-[5rem]"
+          className="h-auto max-h-[7.5rem] w-auto object-contain sm:max-h-[8.5rem] lg:max-h-[9.5rem]"
         />
       </Link>
 

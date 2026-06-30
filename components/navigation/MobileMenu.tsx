@@ -142,26 +142,35 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                 >
                   {cultureMegaMenu.map((column) => (
                     <div key={column.heading} className="border-b border-[rgba(214,184,90,0.1)] py-2 last:border-b-0">
-                      <button
-                        type="button"
-                        className="flex w-full items-center justify-between py-2 text-left font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal"
-                        onClick={() =>
-                          setOpenColumn((current) =>
-                            current === column.heading ? null : column.heading,
-                          )
-                        }
-                        aria-expanded={openColumn === column.heading}
-                      >
-                        {column.heading}
-                        <ChevronDown
-                          size={14}
-                          className={cn(
-                            'transition-transform',
-                            openColumn === column.heading && 'rotate-180',
-                          )}
-                          aria-hidden
-                        />
-                      </button>
+                      <div className="flex items-center justify-between gap-2 py-2">
+                        <Link
+                          href={column.headingHref}
+                          onClick={close}
+                          className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
+                        >
+                          {column.heading}
+                        </Link>
+                        <button
+                          type="button"
+                          className="flex shrink-0 items-center justify-center rounded-sm p-1 text-heritage-teal transition-colors hover:text-heritage-champagne focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[rgba(39,198,200,0.75)]"
+                          onClick={() =>
+                            setOpenColumn((current) =>
+                              current === column.heading ? null : column.heading,
+                            )
+                          }
+                          aria-expanded={openColumn === column.heading}
+                          aria-label={`${openColumn === column.heading ? 'Collapse' : 'Expand'} ${column.heading}`}
+                        >
+                          <ChevronDown
+                            size={14}
+                            className={cn(
+                              'transition-transform',
+                              openColumn === column.heading && 'rotate-180',
+                            )}
+                            aria-hidden
+                          />
+                        </button>
+                      </div>
                       {openColumn === column.heading ? (
                         <ul className="pb-2 pl-1">
                           {column.items.map((item) => (

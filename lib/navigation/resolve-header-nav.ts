@@ -12,6 +12,9 @@ function applyMenuHrefMap(columns: MegaMenuColumn[], tree: MenuNode[]): MegaMenu
 
   return columns.map((column) => ({
     ...column,
+    headingHref: column.headingMenuPath
+      ? resolveMenuHrefFromMap(hrefMap, column.headingMenuPath, column.headingHref)
+      : column.headingHref,
     items: column.items.map((item) => ({
       ...item,
       href: item.menuPath

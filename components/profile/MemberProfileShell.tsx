@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { HandCoins, LogOut, UserPen } from 'lucide-react';
 import type { MemberContext } from '@/lib/auth/member-session';
@@ -102,13 +101,6 @@ export function MemberProfileShell({ member, donations }: MemberProfileShellProp
             <MemberDonationHistory donations={donations} />
           )}
         </section>
-
-        <p className="auth-card-back auth-profile-back">
-          ←{' '}
-          <Link href="/" className="auth-form-link">
-            Back to home
-          </Link>
-        </p>
       </div>
     </div>
   );

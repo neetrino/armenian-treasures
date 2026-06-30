@@ -9,7 +9,7 @@ import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
 import {
   isCultureNavActive,
-  MEGA_MENU_HEADING,
+  MEGA_MENU_HEADING_LINK,
   MEGA_MENU_ICON,
   MEGA_MENU_ITEM,
   MEGA_MENU_PANEL,
@@ -78,7 +78,14 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
                     columnIndex > 0 && 'lg:border-l lg:border-[rgba(201,168,76,0.08)]',
                   )}
                 >
-                  <p className={MEGA_MENU_HEADING}>{column.heading}</p>
+                  <Link
+                    href={column.headingHref}
+                    role="menuitem"
+                    onClick={close}
+                    className={MEGA_MENU_HEADING_LINK}
+                  >
+                    {column.heading}
+                  </Link>
                   <ul className="flex flex-col">
                     {column.items.map((item) => {
                       const Icon = resolveMenuLucideIcon(item.icon);

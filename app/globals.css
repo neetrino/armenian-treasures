@@ -5,7 +5,8 @@
 @layer base {
   :root {
     color-scheme: light;
-    --site-header-height: 4.5rem;
+    --site-header-logo-height: 5rem;
+    --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
     --section-divider-y: 0.75rem;
@@ -44,13 +45,15 @@
 
   @media (min-width: 768px) {
     :root {
-      --site-header-height: 4.5rem;
+      --site-header-logo-height: 5rem;
+      --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-height: 4.5rem;
+      --site-header-logo-height: 5.75rem;
+      --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
 

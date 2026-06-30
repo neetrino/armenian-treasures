@@ -1,11 +1,9 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
-import { CULTURAL_PORTAL_ICON_SOURCES } from '@/lib/constants/cultural-portal-icon-sources';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
 
 interface CultureCatalogSubcategoryGridProps {
   parent: MenuNode;
@@ -28,13 +26,16 @@ export function CultureCatalogSubcategoryGrid({
       <div className="cat-grid">
         {nodes.map((node) => {
           const iconKey = resolveMenuIconKey(node.slug, parent.slug);
-          const iconSrc = resolvePublicAssetUrl(CULTURAL_PORTAL_ICON_SOURCES[iconKey].iconSrc);
           const href = resolveMenuHref(node, parent);
 
           return (
-            <Link key={node.id} href={href} className="cat-card reveal">
+            <Link key={node.id} href={href} className="cat-card reveal group">
               <div className="cat-icon">
-                <Image src={iconSrc} alt="" width={72} height={72} aria-hidden />
+                <CulturalCategoryIcon
+                  type={iconKey}
+                  className="h-[72px] w-[72px] max-sm:h-16 max-sm:w-16"
+                  iconClassName="h-9 w-9 max-sm:h-8 max-sm:w-8"
+                />
               </div>
               <div className="cat-card-title">{node.title}</div>
               <div className="cat-card-sub">{node.description ?? `Browse ${node.title.toLowerCase()}.`}</div>
