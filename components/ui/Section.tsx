@@ -27,7 +27,7 @@ export function Section({
   return (
     <section
       id={id}
-      className={cn('py-20 lg:py-28', BG_CLASSES[bg], className)}
+      className={cn('heritage-section-py', BG_CLASSES[bg], className)}
     >
       {bare ? children : <Container>{children}</Container>}
     </section>

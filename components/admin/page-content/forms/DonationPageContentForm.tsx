@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
+import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import { LabelValueFactsEditor } from '@/components/admin/page-content/editors/ContentListEditors';
 import { MetadataFields, SectionTextFields } from '@/components/admin/page-content/editors/SectionTextFields';
 import { TextField } from '@/components/forms/fields/TextField';
@@ -89,6 +90,11 @@ export function DonationPageContentForm({ initial }: Props) {
             },
           })
         }
+      />
+
+      <HeroBannerImageField
+        value={readString(content.heroImage)}
+        onChange={(heroImage) => update({ heroImage })}
       />
 
       <PageContentSection title="Hero badges">

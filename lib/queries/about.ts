@@ -1,4 +1,5 @@
 import { unstable_cache } from 'next/cache';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { prisma } from '@/lib/db';
 import { toPublicAboutContent, type PublicAboutContentDTO } from '@/lib/dto';
 import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
@@ -29,6 +30,7 @@ export const FALLBACK_ABOUT_CONTENT: PublicAboutContentDTO = {
   heroTitle: "Stewards of Armenia's living memory.",
   heroDescription:
     'A non-profit dedicated to the permanent, open digital preservation of Armenian cultural heritage.',
+  heroImage: null,
   missionEyebrow: 'Mission',
   missionTitle: 'A permanent, open digital memory of Armenia.',
   missionIntro:
@@ -57,6 +59,7 @@ async function fetchAboutContent(): Promise<PublicAboutContentDTO> {
     const content = toPublicAboutContent(row);
     return {
       ...content,
+      heroImage: content.heroImage ? resolvePublicAssetUrl(content.heroImage) : null,
       pillars:
         normalizeAboutPillars(content.pillars).length > 0
           ? normalizeAboutPillars(content.pillars)

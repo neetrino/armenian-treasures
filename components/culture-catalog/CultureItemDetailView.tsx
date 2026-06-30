@@ -185,7 +185,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
         </div>
       </section>
       <KhndzoreskDivider />
-      <div className="catalog-submit-cta reveal" style={{ maxWidth: 1300, margin: '0 auto 80px', padding: '0 48px' }}>
+      <div className="catalog-submit-cta reveal" style={{ maxWidth: 1300, margin: '0 auto var(--section-padding-y-lg)', padding: '0 48px' }}>
         <p>Explore more entries in this catalog.</p>
         <Link href={backHref} className="btn-outline">
           Back to {menu?.title ?? 'Culture Portal'}

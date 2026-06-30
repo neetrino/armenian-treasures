@@ -3,7 +3,10 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Loader2, Upload, X } from 'lucide-react';
-import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
+import {
+  ADMIN_IMAGE_ACCEPT,
+  type AdminImageFolder,
+} from '@/lib/admin/image-upload-constants';
 import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
 import { cn } from '@/lib/utils';
@@ -19,6 +22,7 @@ interface PageContentImageFieldProps {
   hint?: string;
   /** `card` matches public catalog card media (16:10). `banner` is wide hero (16:9). */
   layout?: AdminImagePreviewLayout;
+  folder?: AdminImageFolder;
 }
 
 const ACCEPT = ADMIN_IMAGE_ACCEPT;
@@ -29,6 +33,7 @@ export function PageContentImageField({
   onChange,
   hint,
   layout = 'banner',
+  folder = 'culture',
 }: PageContentImageFieldProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -42,7 +47,7 @@ export function PageContentImageField({
       setIsUploading(true);
       setUploadError(null);
 
-      const result = await uploadAdminImage({ file, folder: 'culture' });
+      const result = await uploadAdminImage({ file, folder });
       setIsUploading(false);
 
       if (!result.ok || !result.url) {
@@ -52,7 +57,7 @@ export function PageContentImageField({
 
       onChange(result.url);
     },
-    [onChange],
+    [folder, onChange],
   );
 
   const handleFiles = useCallback(

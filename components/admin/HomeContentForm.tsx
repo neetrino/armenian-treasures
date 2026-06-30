@@ -200,6 +200,7 @@ export function HomeContentForm({ initial }: Props) {
               variant="desktop"
               defaultValue={initial.heroImage}
               error={state.fieldErrors?.heroImage}
+              hint="Optional. Leave empty to show the default dark heritage background without a photo."
             />
             <ImageDropzoneField
               label="Mobile hero image"

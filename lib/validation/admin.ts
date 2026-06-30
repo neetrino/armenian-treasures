@@ -201,7 +201,7 @@ export const homeTechCardSchema = z.object({
 const optionalHeroImagePath = z
   .string()
   .trim()
-  .max(160)
+  .max(500)
   .optional()
   .or(z.literal(''))
   .refine(
@@ -242,6 +242,7 @@ export const aboutContentSchema = z.object({
   heroEyebrow: z.string().trim().min(1).max(80),
   heroTitle: z.string().trim().min(1).max(200),
   heroDescription: z.string().trim().min(10).max(800),
+  heroImage: optionalHeroImagePath,
   missionEyebrow: z.string().trim().min(1).max(80),
   missionTitle: z.string().trim().min(1).max(200),
   missionIntro: z.string().trim().min(10).max(2000),

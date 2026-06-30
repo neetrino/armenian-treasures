@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
-import { CULTURE_CATALOG_DEFAULT_HERO_IMAGE } from '@/lib/constants/culture-catalog-content';
 import { CultureCatalogBreadcrumb, type CultureCatalogBreadcrumbSegment } from '@/components/culture-catalog/CultureCatalogBreadcrumb';
 import { CultureCatalogHeroBackground } from '@/components/culture-catalog/CultureCatalogHeroBackground';
 
@@ -52,17 +51,17 @@ export function CultureCatalogHero({
   slogan,
   description,
   breadcrumb,
-  heroImage = CULTURE_CATALOG_DEFAULT_HERO_IMAGE,
+  heroImage,
   ctas = [],
   showScroll = true,
 }: CultureCatalogHeroProps) {
-  const imageUrl = resolvePublicAssetUrl(heroImage);
-  const fallbackUrl = resolvePublicAssetUrl(CULTURE_CATALOG_DEFAULT_HERO_IMAGE);
+  const customHero = heroImage?.trim();
+  const imageUrl = customHero ? resolvePublicAssetUrl(customHero) : null;
 
   return (
     <div className="hero culture-catalog-hero">
       <CultureCatalogBreadcrumb segments={breadcrumb} />
-      <CultureCatalogHeroBackground imageUrl={imageUrl} fallbackUrl={fallbackUrl} />
+      {imageUrl ? <CultureCatalogHeroBackground imageUrl={imageUrl} fallbackUrl={imageUrl} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <div

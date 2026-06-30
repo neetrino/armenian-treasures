@@ -44,7 +44,7 @@ type KhndzoreskCreditsProps = {
 
 export function KhndzoreskCredits({ imgBase }: KhndzoreskCreditsProps) {
   return (
-    <section style={{ paddingBottom: 40 }}>
+    <section style={{ paddingBottom: 'var(--section-padding-y)' }}>
       <p className="sec-label">Digitization Credits</p>
       <h2 className="sec-title">Those Who Made This Possible</h2>
       <div className="credits-wrap reveal">
@@ -81,7 +81,7 @@ type KhndzoreskRelatedProps = {
 
 export function KhndzoreskRelated({ related }: KhndzoreskRelatedProps) {
   return (
-    <section style={{ paddingTop: 48, paddingBottom: 64 }}>
+    <section style={{ paddingTop: 'var(--section-padding-y-lg)', paddingBottom: 'var(--section-padding-y-lg)' }}>
       <p className="sec-label">Explore Further</p>
       <h2 className="sec-title">More Digitized Heritage Sites</h2>
       <div className="related-grid">

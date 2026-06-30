@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { khachaturianImg } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 
 type KhachaturianMuseumHeroProps = {
   imgBase: string;
+  heroImage?: string | null;
 };
 
 function LocationIcon() {
@@ -28,16 +30,13 @@ function KhachaturianBreadcrumb() {
   );
 }
 
-export function KhachaturianMuseumHero({ imgBase }: KhachaturianMuseumHeroProps) {
+export function KhachaturianMuseumHero({ imgBase: _imgBase, heroImage }: KhachaturianMuseumHeroProps) {
+  const bannerImage = resolvePageHeroImageUrl(heroImage);
+
   return (
     <div className="hero">
       <KhachaturianBreadcrumb />
-      <div
-        className="hero-img-overlay"
-        style={{
-          backgroundImage: `linear-gradient(to bottom,rgba(9,9,9,.88) 0%,rgba(9,9,9,.38) 40%,rgba(9,9,9,.82) 100%),url('${khachaturianImg(imgBase, 'khachaturyan1-thegem-blog-timeline-large.jpg')}')`,
-        }}
-      />
+      {bannerImage ? <HeroImageOverlay imageUrl={bannerImage} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <div className="hero-bloom" style={{ width: 700, height: 700, top: -100, left: '50%', transform: 'translateX(-50%)', ['--bd' as string]: '8s' }} />

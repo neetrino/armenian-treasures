@@ -37,6 +37,8 @@ export const PAGE_CONTENT_SLUGS = [
   'donation-page',
   'partnership-page',
   'cultural-portal-page',
+  'contacts-page',
+  'projects-page',
   'khndzoresk',
   'khachaturian-museum',
   'national-gallery-armenia',
@@ -48,11 +50,14 @@ export type PageContentSlug = (typeof PAGE_CONTENT_SLUGS)[number];
 export const MARKETING_PAGE_CONTENT_INDEX_SLUGS = [
   'donation-page',
   'partnership-page',
+  'contacts-page',
+  'projects-page',
 ] as const satisfies readonly PageContentSlug[];
 
 export const jsonRecordSchema = z.record(z.unknown());
 
 export type DonationPageContent = {
+  heroImage?: string;
   metadata: { title: string; description: string };
   page: typeof DONATION_PAGE;
   stats: typeof DONATION_STATS;
@@ -67,6 +72,7 @@ export type DonationPageContent = {
 };
 
 export type PartnershipPageContent = {
+  heroImage?: string;
   stats: typeof PARTNERSHIP_STATS;
   impact: typeof PARTNERSHIP_IMPACT;
   categories: typeof PARTNERSHIP_CATEGORIES;
@@ -75,6 +81,7 @@ export type PartnershipPageContent = {
 };
 
 export type CulturalPortalPageContent = typeof CULTURAL_PORTAL_PAGE & {
+  heroImage?: string;
   CULTURAL_PORTAL_SECTION: typeof CULTURAL_PORTAL_SECTION;
   CULTURAL_PORTAL_MAP: typeof CULTURAL_PORTAL_MAP;
   CULTURAL_PORTAL_PROJECTS_SECTION: typeof CULTURAL_PORTAL_PROJECTS_SECTION;
@@ -86,6 +93,7 @@ export type CulturalPortalPageContent = typeof CULTURAL_PORTAL_PAGE & {
 };
 
 export type KhndzoreskPageContent = {
+  heroImage?: string;
   imgBase: string;
   stats: typeof khndzoresk.KHNDZORESK_STATS;
   facts: typeof khndzoresk.KHNDZORESK_FACTS;
@@ -98,6 +106,7 @@ export type KhndzoreskPageContent = {
 };
 
 export type KhachaturianPageContent = {
+  heroImage?: string;
   imgBase: string;
   stats: typeof khachaturian.KHACHATURIAN_STATS;
   facts: typeof khachaturian.KHACHATURIAN_FACTS;
@@ -109,6 +118,7 @@ export type KhachaturianPageContent = {
 };
 
 export type NationalGalleryPageContent = {
+  heroImage?: string;
   imgBase: string;
   stats: typeof nga.NGA_STATS;
   facts: typeof nga.NGA_FACTS;
@@ -119,6 +129,14 @@ export type NationalGalleryPageContent = {
   tickets: typeof nga.NGA_TICKETS;
   related: typeof nga.NGA_RELATED;
 };
+
+export type StaticPageHeroContent = {
+  heroImage?: string;
+};
+
+export function buildDefaultStaticPageHeroContent(): StaticPageHeroContent {
+  return {};
+}
 
 export function buildDefaultDonationPageContent(): DonationPageContent {
   return {
@@ -209,6 +227,9 @@ export function getDefaultPageContent(slug: PageContentSlug): Record<string, unk
       return buildDefaultPartnershipPageContent() as unknown as Record<string, unknown>;
     case 'cultural-portal-page':
       return buildDefaultCulturalPortalPageContent() as unknown as Record<string, unknown>;
+    case 'contacts-page':
+    case 'projects-page':
+      return buildDefaultStaticPageHeroContent() as unknown as Record<string, unknown>;
     case 'khndzoresk':
       return buildDefaultKhndzoreskContent() as unknown as Record<string, unknown>;
     case 'khachaturian-museum':
@@ -224,6 +245,8 @@ export const PAGE_CONTENT_DESCRIPTIONS: Record<PageContentSlug, string> = {
   'donation-page': 'Donation tiers, impact stories, and payment call-to-action copy.',
   'partnership-page': 'Partner benefits, categories, and contact prompts.',
   'cultural-portal-page': 'Portal intro, feature cards, and navigation labels.',
+  'contacts-page': 'Contact page hero banner image.',
+  'projects-page': 'Projects listing page hero banner image.',
   khndzoresk: 'Khndzoresk landing — hero, gallery, tours, and restoration sections.',
   'khachaturian-museum': 'Museum landing — exhibitions, audio guides, and highlights.',
   'national-gallery-armenia': 'Gallery landing — collections, facts, and related links.',
@@ -233,6 +256,8 @@ export const PAGE_CONTENT_TITLES: Record<PageContentSlug, string> = {
   'donation-page': 'Donation page',
   'partnership-page': 'Partnership page',
   'cultural-portal-page': 'Cultural portal page',
+  'contacts-page': 'Contact page',
+  'projects-page': 'Projects page',
   khndzoresk: 'Khndzoresk landing',
   'khachaturian-museum': 'Khachaturian Museum landing',
   'national-gallery-armenia': 'National Gallery landing',
@@ -278,4 +303,11 @@ export function parseNationalGalleryPageContent(value: unknown): NationalGallery
     return value as NationalGalleryPageContent;
   }
   return buildDefaultNationalGalleryContent();
+}
+
+export function parseStaticPageHeroContent(value: unknown): StaticPageHeroContent {
+  if (typeof value === 'object' && value !== null) {
+    return value as StaticPageHeroContent;
+  }
+  return buildDefaultStaticPageHeroContent();
 }

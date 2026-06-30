@@ -5,6 +5,7 @@ import './about-page.css';
 import { AboutSidebarNav } from '@/components/navigation/AboutSidebarNav';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { getAboutContent } from '@/lib/queries/about';
 
 async function AboutLayout({ children }: { children: ReactNode }) {
@@ -14,6 +15,7 @@ async function AboutLayout({ children }: { children: ReactNode }) {
       <KhndzoreskParticles />
 
       <div className="hero cultural-portal-hero about-portal-hero">
+        {content.heroImage ? <HeroImageOverlay imageUrl={content.heroImage} /> : null}
         <div className="hero-bg" />
         <div className="hero-grain" />
         <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>
@@ -43,7 +45,7 @@ async function AboutLayout({ children }: { children: ReactNode }) {
 
       <section
         id="about-main"
-        className="relative z-[1] mx-auto w-full max-w-[1200px] px-5 pb-20 pt-16 sm:px-8 lg:px-10 lg:pb-24 lg:pt-20"
+        className="relative z-[1] mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-8 lg:px-10"
       >
         <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center">
           <AboutSidebarNav />

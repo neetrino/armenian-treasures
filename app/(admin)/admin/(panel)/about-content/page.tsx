@@ -21,6 +21,7 @@ async function AdminAboutContentPage() {
     heroEyebrow: content?.heroEyebrow ?? fallback.heroEyebrow,
     heroTitle: content?.heroTitle ?? fallback.heroTitle,
     heroDescription: content?.heroDescription ?? fallback.heroDescription,
+    heroImage: content?.heroImage ?? '',
     missionEyebrow: content?.missionEyebrow ?? fallback.missionEyebrow,
     missionTitle: content?.missionTitle ?? fallback.missionTitle,
     missionIntro: content?.missionIntro ?? fallback.missionIntro,

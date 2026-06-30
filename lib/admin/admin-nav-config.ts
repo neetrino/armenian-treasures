@@ -14,6 +14,7 @@ import {
   Settings,
   Users,
   HandCoins,
+  UserCircle,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -59,7 +60,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         href: '/admin/page-content',
         label: 'Marketing pages',
-        description: 'Donation & partnership copy',
+        description: 'Donation, partnership & page heroes',
         icon: Megaphone,
       },
     ],
@@ -107,6 +108,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
   {
     label: 'People',
     links: [
+      {
+        href: '/admin/users',
+        label: 'Users',
+        description: 'Registered member accounts',
+        icon: UserCircle,
+      },
       {
         href: '/admin/team',
         label: 'Team members',

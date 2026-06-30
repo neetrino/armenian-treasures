@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 import type { FormEvent } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { Button } from '@/components/ui/Button';
 import { AboutPillarsEditor } from '@/components/admin/AboutPillarsEditor';
 import {
@@ -22,6 +23,7 @@ interface Initial {
   heroEyebrow: string;
   heroTitle: string;
   heroDescription: string;
+  heroImage: string;
   missionEyebrow: string;
   missionTitle: string;
   missionIntro: string;
@@ -90,6 +92,16 @@ export function AboutContentForm({ initial }: Props) {
             required
             defaultValue={initial.heroDescription}
             error={state.fieldErrors?.heroDescription}
+          />
+        </div>
+        <div className="mt-5">
+          <AdminImageDropzoneField
+            label="Hero banner image"
+            name="heroImage"
+            folder="hero"
+            defaultValue={initial.heroImage}
+            error={state.fieldErrors?.heroImage}
+            hint="Optional wide banner at the top of About pages. Remove to use the default gradient background."
           />
         </div>
       </fieldset>

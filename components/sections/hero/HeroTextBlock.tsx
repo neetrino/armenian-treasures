@@ -17,7 +17,8 @@ export function HeroTextBlock({
   tagline,
   description,
 }: HeroTextBlockProps) {
-  const subtitleLines = (subtitle ?? '').split('\n').filter(Boolean);
+  const normalizedSubtitle = (subtitle ?? '').replace(/\\n/g, '\n');
+  const subtitleLines = normalizedSubtitle.split('\n').filter(Boolean);
 
   return (
     <div className="relative mx-auto w-full min-w-0 max-w-[61.25rem] text-center">
@@ -34,7 +35,7 @@ export function HeroTextBlock({
       </h1>
 
       <p
-        aria-label={(subtitle ?? '').replace('\n', ' ')}
+        aria-label={normalizedSubtitle.replace(/\n/g, ' ')}
         className="mx-auto mt-[26px] max-w-[820px] font-cinzel text-[clamp(1.4375rem,7vw,2.125rem)] font-normal uppercase leading-[1.12] tracking-[0.12em] text-heritage-champagne lg:text-[clamp(1.75rem,2.8vw,3rem)] lg:tracking-[0.32em]"
       >
         {subtitleLines.map((line, index) => (

@@ -142,7 +142,7 @@ type NationalGalleryRelatedProps = {
 
 export function NationalGalleryRelated({ related }: NationalGalleryRelatedProps) {
   return (
-    <section style={{ paddingTop: 48, paddingBottom: 64 }}>
+    <section style={{ paddingTop: 'var(--section-padding-y-lg)', paddingBottom: 'var(--section-padding-y-lg)' }}>
       <p className="sec-label">Explore Further</p>
       <h2 className="sec-title">More Museum Heritage Sites</h2>
       <p className="sec-desc">Discover other digitally preserved Armenian cultural institutions and heritage sites.</p>

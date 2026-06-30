@@ -35,7 +35,7 @@ const PAYLOAD = {
   heroTagline: 'BRINGING ARMENIAN HISTORY INTO THE DIGITAL FUTURE',
   heroDescription:
     "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
-  heroImage: '/images/hero/home-hero.webp',
+  heroImage: null,
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'SUPPORT THE MISSION',

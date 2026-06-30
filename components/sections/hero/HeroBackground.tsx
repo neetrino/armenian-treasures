@@ -26,27 +26,38 @@ interface HeroBackgroundProps {
 
 export function HeroBackground({ desktopImage, mobileImage }: HeroBackgroundProps) {
   const { desktop, mobile } = resolveHomeHeroImageUrls(desktopImage, mobileImage);
+  const heroSrc = desktop ?? mobile;
+  const hasHeroImage = Boolean(heroSrc);
 
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden bg-heritage-black"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-heritage-black"
     >
-      {desktop || mobile ? (
-        <picture>
-          <source media="(max-width: 767px)" srcSet={mobile ?? desktop ?? undefined} />
-          <img
-            src={desktop ?? mobile ?? undefined}
-            alt=""
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
-          />
-        </picture>
-      ) : null}
-      <div className="absolute inset-0 bg-heritage-radial" />
-      <div className="absolute inset-0 bg-heritage-gold-glow" />
-      <div className="absolute inset-0 bg-heritage-teal-glow" />
-      <div className="absolute inset-0 bg-hero-diamond-grid opacity-30 max-md:opacity-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-heritage-black/30 via-transparent to-heritage-black/50" />
+      {hasHeroImage && heroSrc ? (
+        <>
+          <picture>
+            <source media="(max-width: 767px)" srcSet={mobile ?? desktop ?? undefined} />
+            <img
+              src={heroSrc}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          </picture>
+          <div className="absolute inset-0 bg-gradient-to-b from-heritage-black/60 via-heritage-black/35 to-heritage-black/78" />
+          <div className="absolute inset-0 bg-heritage-gold-glow opacity-70" />
+          <div className="absolute inset-0 bg-heritage-teal-glow opacity-70" />
+          <div className="absolute inset-0 bg-hero-diamond-grid opacity-15 max-md:opacity-10" />
+        </>
+      ) : (
+        <>
+          <div className="absolute inset-0 bg-heritage-radial" />
+          <div className="absolute inset-0 bg-heritage-gold-glow" />
+          <div className="absolute inset-0 bg-heritage-teal-glow" />
+          <div className="absolute inset-0 bg-hero-diamond-grid opacity-30 max-md:opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-heritage-black/30 via-transparent to-heritage-black/50" />
+        </>
+      )}
 
       {PARTICLES.map((particle, index) => (
         <span

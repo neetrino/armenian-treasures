@@ -19,7 +19,7 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   heroTagline: 'BRINGING ARMENIAN HISTORY INTO THE DIGITAL FUTURE',
   heroDescription:
     "A living archive of Armenia's 3,000-year civilisation — its kingdoms, churches, legends, arts, and the people who shaped history.",
-  heroImage: resolvePublicAssetUrl('/images/hero/home-hero.webp'),
+  heroImage: null,
   heroMobileImage: null,
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',

@@ -9,12 +9,14 @@ import {
   buildDefaultKhndzoreskContent,
   buildDefaultNationalGalleryContent,
   buildDefaultPartnershipPageContent,
+  buildDefaultStaticPageHeroContent,
   parseCulturalPortalPageContent,
   parseDonationPageContent,
   parseKhachaturianPageContent,
   parseKhndzoreskPageContent,
   parseNationalGalleryPageContent,
   parsePartnershipPageContent,
+  parseStaticPageHeroContent,
   type CulturalPortalPageContent,
   type DonationPageContent,
   type KhachaturianPageContent,
@@ -22,6 +24,7 @@ import {
   type NationalGalleryPageContent,
   type PageContentSlug,
   type PartnershipPageContent,
+  type StaticPageHeroContent,
 } from '@/lib/types/page-content';
 
 async function fetchPageContentRaw(slug: PageContentSlug): Promise<unknown | null> {
@@ -86,6 +89,18 @@ export const getNationalGalleryPageContent = createPageContentGetter(
   parseNationalGalleryPageContent,
 );
 
+export const getContactsPageContent = createPageContentGetter(
+  'contacts-page',
+  buildDefaultStaticPageHeroContent,
+  parseStaticPageHeroContent,
+);
+
+export const getProjectsPageContent = createPageContentGetter(
+  'projects-page',
+  buildDefaultStaticPageHeroContent,
+  parseStaticPageHeroContent,
+);
+
 export type {
   CulturalPortalPageContent,
   DonationPageContent,
@@ -93,6 +108,7 @@ export type {
   KhndzoreskPageContent,
   NationalGalleryPageContent,
   PartnershipPageContent,
+  StaticPageHeroContent,
 };
 
 export function khndzoreskImg(imgBase: string, filename: string): string {

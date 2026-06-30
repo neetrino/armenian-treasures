@@ -9,13 +9,17 @@ import { PartnershipShowcase } from '@/components/partnership-page/PartnershipSh
 import { PartnershipStatsBar } from '@/components/partnership-page/PartnershipStatsBar';
 import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
+import { getPartnershipPageContent } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 export async function PartnershipPage() {
+  const content = await getPartnershipPageContent();
+
   return (
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <PartnershipBreadcrumb />
-      <PartnershipHero />
+      <PartnershipHero heroImage={resolvePageHeroImageUrl(content.heroImage)} />
       <PartnershipStatsBar />
       <PartnershipImpact />
       <KhndzoreskDivider />

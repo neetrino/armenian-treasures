@@ -56,7 +56,7 @@ export async function loginAction(
 
   try {
     console.log(`${LOGIN_LOG_PREFIX} loginAction: calling signIn`);
-    await signIn('credentials', {
+    await signIn('admin', {
       email: parsed.data.email,
       password: parsed.data.password,
       redirect: false,

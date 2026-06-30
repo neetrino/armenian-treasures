@@ -2,6 +2,8 @@ export {
   extractClientIp,
   getAdminApiRateLimiter,
   getAdminLoginRateLimiter,
+  getMemberLoginRateLimiter,
+  getMemberRegisterRateLimiter,
   getPublicRateLimiter,
   getPublicApiRateLimiter,
   getUploadRateLimiter,

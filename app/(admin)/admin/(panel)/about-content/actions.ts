@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { revalidateAboutContentCache } from '@/lib/cache/revalidation';
+import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
 import { aboutContentSchema } from '@/lib/validation';
 import type { AboutPillar } from '@/lib/types/about-content';
 
@@ -12,6 +13,11 @@ export interface AboutContentFormState {
   status: 'idle' | 'success' | 'error';
   message?: string;
   fieldErrors?: Record<string, string>;
+}
+
+function normalizeOptionalImage(value: string | undefined): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
 }
 
 function parseJsonArray<T>(value: string | null): T[] {
@@ -33,6 +39,7 @@ export async function saveAboutContentAction(
     heroEyebrow: formData.get('heroEyebrow')?.toString() ?? '',
     heroTitle: formData.get('heroTitle')?.toString() ?? '',
     heroDescription: formData.get('heroDescription')?.toString() ?? '',
+    heroImage: formData.get('heroImage')?.toString() ?? '',
     missionEyebrow: formData.get('missionEyebrow')?.toString() ?? '',
     missionTitle: formData.get('missionTitle')?.toString() ?? '',
     missionIntro: formData.get('missionIntro')?.toString() ?? '',
@@ -56,11 +63,17 @@ export async function saveAboutContentAction(
     }
     return { status: 'error', fieldErrors, message: 'Please correct the form.' };
   }
+  const existing = await prisma.aboutContent.findFirst({ where: { id: SINGLETON_ID } });
+  const data = {
+    ...parsed.data,
+    heroImage: normalizeOptionalImage(parsed.data.heroImage),
+  };
   await prisma.aboutContent.upsert({
     where: { id: SINGLETON_ID },
-    create: { id: SINGLETON_ID, ...parsed.data },
-    update: parsed.data,
+    create: { id: SINGLETON_ID, ...data },
+    update: data,
   });
+  await deleteReplacedManagedImage(existing?.heroImage, data.heroImage);
   revalidateAboutContentCache();
   return { status: 'success', message: 'About content saved.' };
 }

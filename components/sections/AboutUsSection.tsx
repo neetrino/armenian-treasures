@@ -8,7 +8,7 @@ export async function AboutUsSection({ home }: HomeSectionContentProps) {
   return (
     <section
       id="about"
-      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 pb-[clamp(4.5rem,6vw,6.5rem)] pt-[clamp(1.5rem,2vw,2rem)] sm:px-6"
+      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] px-5 heritage-section-py sm:px-6"
       aria-labelledby="about-us-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">

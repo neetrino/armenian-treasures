@@ -26,6 +26,7 @@ import { getPublishedProjects } from '@/lib/queries/projects';
 import { getPublicDonators } from '@/lib/queries/donators';
 import { getAboutContent } from '@/lib/queries/about';
 import { getCulturalPortalPageContent } from '@/lib/queries/page-content';
+import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 async function CulturalPortalPrimarySections() {
   const [pageContent, home, menuTree] = await Promise.all([
@@ -42,6 +43,7 @@ async function CulturalPortalPrimarySections() {
         title={`${home.heroTitle} ${home.heroHighlight}`.trim()}
         accent={(home.heroSubtitle || 'CULTURAL HERITAGE PORTAL').replace('\n', ' ')}
         subtitle={home.heroDescription}
+        heroImage={resolvePageHeroImageUrl(pageContent.heroImage)}
       />
       <CulturalPortalStatsBar stats={home.stats} />
       <CulturalPortalCategories

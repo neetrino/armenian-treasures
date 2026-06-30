@@ -83,7 +83,7 @@
 }
 
 .khndzoresk-page .sec {
-  padding: 80px 48px;
+  padding: var(--section-padding-y-lg) 48px;
   max-width: 1100px;
   margin: 0 auto;
   position: relative;
@@ -977,7 +977,7 @@
 }
 
 .khndzoresk-page .donation-nl-outer {
-  padding: 0 0 80px;
+  padding: 0 0 var(--section-padding-y-lg);
   position: relative;
   z-index: 1;
 }
@@ -986,7 +986,7 @@
   margin: 0 48px;
   background: linear-gradient(135deg, rgba(42, 191, 191, 0.05), rgba(201, 168, 76, 0.03));
   border: 1px solid var(--border);
-  padding: 56px 48px;
+  padding: var(--section-padding-y-lg) 48px;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -1086,7 +1086,7 @@
 
 @media (max-width: 900px) {
   .khndzoresk-page .sec {
-    padding: 56px 24px;
+    padding: var(--section-padding-y) 24px;
   }
 
   .khndzoresk-page .donation-tiers {

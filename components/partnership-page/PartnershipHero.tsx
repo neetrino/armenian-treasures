@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 
 export function PartnershipBreadcrumb() {
   return (
@@ -10,9 +11,10 @@ export function PartnershipBreadcrumb() {
   );
 }
 
-export function PartnershipHero() {
+export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
   return (
     <div className="hero partnership-hero">
+      {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <div className="hero-bloom" style={{ width: 780, height: 780, top: '-12%', left: '-22%', ['--bd' as string]: '9s' }} />

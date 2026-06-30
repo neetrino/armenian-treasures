@@ -21,12 +21,12 @@ async function AdminPageContentIndexPage() {
       user={user}
       topbarTitle="Marketing pages"
       title="Marketing pages"
-      description="Donation and partnership page copy — text fields, images, and structured sections."
+      description="Donation, partnership, contact, and projects page copy — text fields, images, and structured sections."
     >
       <AdminHelpCallout title="Looking for culture pages?">
         Culture portal copy, catalog labels, and heritage landings (Khndzoresk, museums) are under{' '}
-        <strong>Culture → Culture page copy</strong>. Homepage blocks are under{' '}
-        <strong>Site pages → Homepage</strong>.
+        <strong>Culture → Culture page copy</strong>. Homepage and About hero images are under{' '}
+        <strong>Site pages → Homepage</strong> and <strong>About page</strong>.
       </AdminHelpCallout>
 
       <AdminStagger as="ul" className="grid gap-4 sm:grid-cols-2">

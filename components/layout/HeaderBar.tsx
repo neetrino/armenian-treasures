@@ -5,8 +5,10 @@ import { Logo } from '@/components/brand/Logo';
 import { DesktopNav } from '@/components/navigation/DesktopNav';
 import { MobileMenu } from '@/components/navigation/MobileMenu';
 import { LanguageSelector } from '@/components/navigation/LanguageSelector';
+import { HeaderProfileButton } from '@/components/navigation/HeaderProfileButton';
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import { useHeaderScrolled } from '@/components/layout/use-header-scrolled';
+import type { HeaderMemberSummary } from '@/lib/auth/member-session';
 import type { MenuNode } from '@/lib/culture-menu';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import type { NavDropdownLink } from '@/components/navigation/primary-links';
@@ -18,6 +20,7 @@ interface HeaderBarProps {
   projectsMenu: NavDropdownLink[];
   foundationName: string;
   foundationSubtitle: string;
+  member: HeaderMemberSummary | null;
 }
 
 export function HeaderBar({
@@ -26,6 +29,7 @@ export function HeaderBar({
   projectsMenu,
   foundationName,
   foundationSubtitle: _foundationSubtitle,
+  member,
 }: HeaderBarProps) {
   const reduced = useReducedMotion();
   const scrolled = useHeaderScrolled();
@@ -71,10 +75,12 @@ export function HeaderBar({
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
         >
           <LanguageSelector className="hidden lg:inline-flex" />
+          <HeaderProfileButton member={member} />
           <MobileMenu
             tree={menuTree}
             cultureMegaMenu={cultureMegaMenu}
             projectsMenu={projectsMenu}
+            member={member}
           />
         </motion.div>
       </div>

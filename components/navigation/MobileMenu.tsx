@@ -13,6 +13,8 @@ import {
   type NavDropdownLink,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
+import { signOutMemberAction } from '@/app/(public)/profile/actions';
+import type { HeaderMemberSummary } from '@/lib/auth/member-session';
 import { MobileSectionLink } from './MobileSectionLink';
 import {
   isAboutNavActive,
@@ -29,6 +31,7 @@ interface MobileMenuProps {
   tree: MenuNode[];
   cultureMegaMenu: MegaMenuColumn[];
   projectsMenu: NavDropdownLink[];
+  member: HeaderMemberSummary | null;
 }
 
 const MOBILE_SECTION =
@@ -43,7 +46,7 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: MobileMenuProps) {
+export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member }: MobileMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -127,19 +130,6 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
               </div>
 
               <nav className="flex flex-col gap-1" aria-label="Mobile primary">
-                <MobileSectionLink
-                  href={PRIMARY_LINKS[0]!.href}
-                  homeSectionId={PRIMARY_LINKS[0]!.homeSectionId}
-                  onNavigate={close}
-                  className={cn(
-                    MOBILE_SECTION,
-                    'py-3',
-                    isNavActive(pathname, PRIMARY_LINKS[0]!.href) && 'text-heritage-teal',
-                  )}
-                >
-                  {PRIMARY_LINKS[0]!.label}
-                </MobileSectionLink>
-
                 <MobileAccordion
                   label="Cultural Portal"
                   open={cultureOpen}
@@ -212,7 +202,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
                   </ul>
                 </MobileAccordion>
 
-                {PRIMARY_LINKS.slice(1).map((link) => (
+                {PRIMARY_LINKS.map((link) => (
                   <MobileSectionLink
                     key={link.href}
                     href={link.href}
@@ -252,6 +242,29 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu }: Mobil
 
               <div className="mt-6 border-t border-[rgba(214,184,90,0.16)] pt-6 lg:hidden">
                 <LanguageSelector className="w-full" />
+              </div>
+
+              <div className="mt-6 border-t border-[rgba(214,184,90,0.16)] pt-6">
+                {member ? (
+                  <div className="flex flex-col gap-3">
+                    <p className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal">
+                      Account
+                    </p>
+                    <p className="font-display text-sm text-[rgba(232,216,155,0.82)]">{member.name}</p>
+                    <Link href="/profile" onClick={close} className={MOBILE_LINK}>
+                      Profile
+                    </Link>
+                    <form action={signOutMemberAction}>
+                      <button type="submit" className={cn(MOBILE_LINK, 'text-left')}>
+                        Sign out
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <Link href="/login" onClick={close} className={MOBILE_LINK}>
+                    Sign in
+                  </Link>
+                )}
               </div>
             </motion.div>
           </>

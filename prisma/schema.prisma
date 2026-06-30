@@ -83,6 +83,13 @@ enum ProjectStatus {
   ARCHIVED
 }
 
+enum MemberDonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -264,6 +271,33 @@ model AdminUser {
   auditLogs AdminAuditLog[]
 }
 
+model Member {
+  id           String           @id @default(cuid())
+  email        String           @unique
+  name         String
+  surname      String
+  country      String
+  phone        String
+  passwordHash String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  donations    MemberDonation[]
+}
+
+model MemberDonation {
+  id        String               @id @default(cuid())
+  memberId  String
+  member    Member               @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amount    Int
+  currency  String               @default("USD")
+  label     String
+  status    MemberDonationStatus @default(PENDING)
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+
+  @@index([memberId, createdAt])
+}
+
 model AdminAuditLog {
   id          String     @id @default(cuid())
   adminUserId String?
@@ -345,6 +379,7 @@ model AboutContent {
   heroEyebrow      String
   heroTitle        String
   heroDescription  String   @db.Text
+  heroImage        String?
   missionEyebrow   String
   missionTitle     String
   missionIntro     String   @db.Text

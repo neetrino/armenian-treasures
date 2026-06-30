@@ -21,7 +21,7 @@ export async function NationalGalleryPage() {
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <NationalGalleryHero imgBase={content.imgBase} />
+      <NationalGalleryHero imgBase={content.imgBase} heroImage={content.heroImage} />
       <NationalGalleryStatsBar stats={content.stats} />
       <NationalGalleryAbout facts={content.facts} />
       <KhndzoreskDivider />

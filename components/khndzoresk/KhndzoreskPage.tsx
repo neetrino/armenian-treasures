@@ -19,7 +19,7 @@ export async function KhndzoreskPage() {
     <div className="khndzoresk-page">
       <KhndzoreskParticles />
       <SvgDefs />
-      <KhndzoreskHero imgBase={content.imgBase} />
+      <KhndzoreskHero imgBase={content.imgBase} heroImage={content.heroImage} />
       <KhndzoreskStatsBar stats={content.stats} />
       <KhndzoreskAbout facts={content.facts} />
       <KhndzoreskDivider />

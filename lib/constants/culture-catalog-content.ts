@@ -237,7 +237,6 @@ function buildBaseContent(
     eyebrow: `✦ ${scope} · Cultural Portal · Armenia ✦`,
     accent: title,
     slogan: description || `Curated ${title.toLowerCase()} from the Armenian archive`,
-    heroImage: DEFAULT_HERO_IMAGE,
     about: {
       label: scope,
       title: `Discover ${title}`,
@@ -288,14 +287,14 @@ export function resolveCultureCatalogContent(
   const codeOverride = OVERRIDES[key] ?? OVERRIDES[node.slug];
   const dbOverride = parseMenuCatalogContent(node.catalogContent);
   const merged = mergeCultureCatalogLayers(base, codeOverride, dbOverride);
+  const adminHeroImage = dbOverride?.heroImage?.trim();
 
-  const heroImage =
-    dbOverride?.heroImage?.trim() ||
-    node.image?.trim() ||
-    merged.heroImage ||
-    DEFAULT_HERO_IMAGE;
+  if (adminHeroImage) {
+    return { ...merged, heroImage: adminHeroImage };
+  }
 
-  return { ...merged, heroImage };
+  const { heroImage: _removed, ...withoutHeroImage } = merged;
+  return withoutHeroImage;
 }
 
 export function resolveCultureCatalogFormContent(
