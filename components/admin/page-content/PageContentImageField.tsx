@@ -3,7 +3,8 @@
 import { useCallback, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Loader2, Upload, X } from 'lucide-react';
-import { uploadAdminImageAction } from '@/app/(admin)/admin/(panel)/upload-image-actions';
+import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
+import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
 import { cn } from '@/lib/utils';
 import {
@@ -20,7 +21,7 @@ interface PageContentImageFieldProps {
   layout?: AdminImagePreviewLayout;
 }
 
-const ACCEPT = 'image/jpeg,image/png,image/webp';
+const ACCEPT = ADMIN_IMAGE_ACCEPT;
 
 export function PageContentImageField({
   label,
@@ -41,11 +42,7 @@ export function PageContentImageField({
       setIsUploading(true);
       setUploadError(null);
 
-      const formData = new FormData();
-      formData.set('file', file);
-      formData.set('folder', 'culture');
-
-      const result = await uploadAdminImageAction(formData);
+      const result = await uploadAdminImage({ file, folder: 'culture' });
       setIsUploading(false);
 
       if (!result.ok || !result.url) {
