@@ -44,6 +44,12 @@ export const PAGE_CONTENT_SLUGS = [
 
 export type PageContentSlug = (typeof PAGE_CONTENT_SLUGS)[number];
 
+/** Fundraising / partnership copy — culture pages live under Culture admin. */
+export const MARKETING_PAGE_CONTENT_INDEX_SLUGS = [
+  'donation-page',
+  'partnership-page',
+] as const satisfies readonly PageContentSlug[];
+
 export const jsonRecordSchema = z.record(z.unknown());
 
 export type DonationPageContent = {

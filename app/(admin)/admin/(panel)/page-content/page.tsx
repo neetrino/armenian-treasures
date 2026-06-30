@@ -5,8 +5,8 @@ import { AdminNavCard } from '@/components/admin/AdminNavCard';
 import { AdminStagger } from '@/components/admin/AdminStagger';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import {
+  MARKETING_PAGE_CONTENT_INDEX_SLUGS,
   PAGE_CONTENT_DESCRIPTIONS,
-  PAGE_CONTENT_SLUGS,
   PAGE_CONTENT_TITLES,
 } from '@/lib/types/page-content';
 
@@ -20,17 +20,17 @@ async function AdminPageContentIndexPage() {
     <AdminPageShell
       user={user}
       topbarTitle="Marketing pages"
-      title="Marketing & landing pages"
-      description="Each page opens a visual editor — text fields, image uploads, and structured sections. No JSON required."
+      title="Marketing pages"
+      description="Donation and partnership page copy — text fields, images, and structured sections."
     >
-      <AdminHelpCallout title="Which page should I edit?">
-        Use this section for standalone marketing pages (donations, partnership, museum landings). For the
-        main homepage sections, use <strong>Site pages → Homepage</strong>. For culture catalog pages, use{' '}
-        <strong>Culture → Culture page copy</strong>.
+      <AdminHelpCallout title="Looking for culture pages?">
+        Culture portal copy, catalog labels, and heritage landings (Khndzoresk, museums) are under{' '}
+        <strong>Culture → Culture page copy</strong>. Homepage blocks are under{' '}
+        <strong>Site pages → Homepage</strong>.
       </AdminHelpCallout>
 
       <AdminStagger as="ul" className="grid gap-4 sm:grid-cols-2">
-        {PAGE_CONTENT_SLUGS.map((slug) => (
+        {MARKETING_PAGE_CONTENT_INDEX_SLUGS.map((slug) => (
           <li key={slug}>
             <AdminNavCard
               href={`/admin/page-content/${slug}`}
