@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { getPublishedCultureItemSlugs } from '@/lib/queries/culture-items';
+import { getPublishedBlogSlugs } from '@/lib/queries/blogs';
 import { getMenuTree } from '@/lib/queries/menu';
 import { collectMenuSitemapPaths } from '@/lib/sitemap/menu-paths';
 import { getSiteUrl } from '@/lib/site-url';
@@ -15,6 +16,7 @@ const STATIC_PATHS = [
   '/projects',
   '/partnership',
   '/donate',
+  '/blog',
   '/contacts',
   '/khndzoresk',
   '/khachaturian-museum',
@@ -64,6 +66,15 @@ export async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const itemRows = await getPublishedCultureItemSlugs();
     for (const row of itemRows) {
       pushPath(resolveCultureItemHref(row.slug), 0.55);
+    }
+  } catch {
+    // ignore DB failures (e.g. during local builds without DB)
+  }
+
+  try {
+    const blogRows = await getPublishedBlogSlugs();
+    for (const row of blogRows) {
+      pushPath(`/blog/${row.slug}`, 0.55);
     }
   } catch {
     // ignore DB failures (e.g. during local builds without DB)
