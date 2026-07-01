@@ -7,6 +7,11 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
 import { blogPostSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 
 export interface BlogFormState {
   status: 'idle' | 'error' | 'success';
@@ -15,14 +20,16 @@ export interface BlogFormState {
 }
 
 function parseForm(formData: FormData, existingSlug?: string) {
-  const titleRaw = formData.get('title')?.toString() ?? '';
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const contentI18n = readLocalizedTextFromFormData(formData, 'content');
+  const titleRaw = pickDefaultLocaleText(titleI18n);
   const slug = existingSlug ?? slugify(titleRaw, { lower: true, strict: true });
   const publishedAtRaw = formData.get('publishedAt')?.toString() ?? '';
 
   const parsed = blogPostSchema.safeParse({
     title: titleRaw,
     slug,
-    content: formData.get('content')?.toString() ?? '',
+    content: pickDefaultLocaleText(contentI18n),
     image: formData.get('image')?.toString() ?? '',
     publishedAt: publishedAtRaw || new Date().toISOString().slice(0, 10),
     order: 0,
@@ -32,7 +39,9 @@ function parseForm(formData: FormData, existingSlug?: string) {
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'title' || basePath === 'content' ? `${basePath}.EN` : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false as const, errors };
@@ -41,9 +50,9 @@ function parseForm(formData: FormData, existingSlug?: string) {
   return {
     ok: true as const,
     data: {
-      title: parsed.data.title,
+      title: encodeTranslatableText(titleI18n),
       slug: parsed.data.slug,
-      content: parsed.data.content,
+      content: encodeTranslatableText(contentI18n),
       image: parsed.data.image?.trim() ? parsed.data.image : null,
       publishedAt: parsed.data.publishedAt,
       order: parsed.data.order,
@@ -65,7 +74,7 @@ export async function createBlogPostAction(_p: BlogFormState, formData: FormData
   if (existing) {
     return {
       status: 'error',
-      fieldErrors: { title: 'A post with a similar title already exists.' },
+      fieldErrors: { 'title.EN': 'A post with a similar title already exists.' },
       message: 'Duplicate post.',
     };
   }

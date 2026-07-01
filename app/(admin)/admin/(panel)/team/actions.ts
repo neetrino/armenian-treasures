@@ -7,6 +7,11 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateTeamCache } from '@/lib/cache/revalidation';
 import { teamMemberSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 
 export interface TeamFormState {
   status: 'idle' | 'error' | 'success';
@@ -15,11 +20,14 @@ export interface TeamFormState {
 }
 
 function parseForm(formData: FormData) {
+  const nameI18n = readLocalizedTextFromFormData(formData, 'name');
+  const positionI18n = readLocalizedTextFromFormData(formData, 'position');
+  const bioI18n = readLocalizedTextFromFormData(formData, 'bio');
   const parsed = teamMemberSchema.safeParse({
-    name: formData.get('name')?.toString() ?? '',
+    name: pickDefaultLocaleText(nameI18n),
     initials: formData.get('initials')?.toString() ?? '',
-    position: formData.get('position')?.toString() ?? '',
-    bio: formData.get('bio')?.toString() ?? '',
+    position: pickDefaultLocaleText(positionI18n),
+    bio: pickDefaultLocaleText(bioI18n),
     image: formData.get('image')?.toString() ?? '',
     order: Number(formData.get('order') ?? 0),
     isActive: formData.get('isActive') === 'on',
@@ -27,7 +35,11 @@ function parseForm(formData: FormData) {
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'name' || basePath === 'position' || basePath === 'bio'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false as const, errors };
@@ -36,7 +48,9 @@ function parseForm(formData: FormData) {
     ok: true as const,
     data: {
       ...parsed.data,
-      bio: parsed.data.bio?.trim() ? parsed.data.bio : null,
+      name: encodeTranslatableText(nameI18n),
+      position: encodeTranslatableText(positionI18n),
+      bio: encodeTranslatableText(bioI18n) || null,
       image: parsed.data.image?.trim() ? parsed.data.image : null,
     },
   };

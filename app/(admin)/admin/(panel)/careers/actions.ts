@@ -7,6 +7,11 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateCareersCache } from '@/lib/cache/revalidation';
 import { careerSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 
 export interface CareerFormState {
   status: 'idle' | 'error' | 'success';
@@ -15,11 +20,15 @@ export interface CareerFormState {
 }
 
 function parseForm(formData: FormData) {
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const locationI18n = readLocalizedTextFromFormData(formData, 'location');
+  const employmentTypeI18n = readLocalizedTextFromFormData(formData, 'employmentType');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const parsed = careerSchema.safeParse({
-    title: formData.get('title')?.toString() ?? '',
-    location: formData.get('location')?.toString() ?? '',
-    employmentType: formData.get('employmentType')?.toString() ?? '',
-    description: formData.get('description')?.toString() ?? '',
+    title: pickDefaultLocaleText(titleI18n),
+    location: pickDefaultLocaleText(locationI18n),
+    employmentType: pickDefaultLocaleText(employmentTypeI18n),
+    description: pickDefaultLocaleText(descriptionI18n),
     applyUrl: formData.get('applyUrl')?.toString() ?? '',
     applyEmail: formData.get('applyEmail')?.toString() ?? '',
     order: Number(formData.get('order') ?? 0),
@@ -28,7 +37,14 @@ function parseForm(formData: FormData) {
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'title' ||
+        basePath === 'location' ||
+        basePath === 'employmentType' ||
+        basePath === 'description'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false as const, errors };
@@ -37,7 +53,10 @@ function parseForm(formData: FormData) {
     ok: true as const,
     data: {
       ...parsed.data,
-      description: parsed.data.description?.trim() ? parsed.data.description : null,
+      title: encodeTranslatableText(titleI18n),
+      location: encodeTranslatableText(locationI18n),
+      employmentType: encodeTranslatableText(employmentTypeI18n),
+      description: encodeTranslatableText(descriptionI18n) || null,
       applyUrl: parsed.data.applyUrl?.trim() ? parsed.data.applyUrl : null,
       applyEmail: parsed.data.applyEmail?.trim() ? parsed.data.applyEmail : null,
     },

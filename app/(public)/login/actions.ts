@@ -5,6 +5,7 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/lib/auth';
 import { isRateLimitAuthError } from '@/lib/auth/config';
+import { isAdminLoginEmail } from '@/lib/auth/is-admin-login-email';
 import { extractClientIp, getMemberLoginRateLimiter } from '@/lib/rate-limit';
 import { memberLoginSchema } from '@/lib/validation';
 
@@ -18,18 +19,10 @@ export async function loginAction(
   _prev: MemberLoginActionState,
   formData: FormData,
 ): Promise<MemberLoginActionState> {
-  const ip = extractClientIp(await headers());
   const email = formData.get('email')?.toString() ?? '';
-  const normalizedEmail = email.trim().toLowerCase();
-  const rateCheck = await getMemberLoginRateLimiter().check(`member-login:${normalizedEmail}:${ip}`);
-  if (!rateCheck.allowed) {
-    return { status: 'error', message: 'Too many login attempts. Please try again later.' };
-  }
+  const password = formData.get('password')?.toString() ?? '';
 
-  const parsed = memberLoginSchema.safeParse({
-    email,
-    password: formData.get('password')?.toString() ?? '',
-  });
+  const parsed = memberLoginSchema.safeParse({ email, password });
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
@@ -41,6 +34,36 @@ export async function loginAction(
       fieldErrors,
       message: 'Please check your credentials.',
     };
+  }
+
+  const normalizedEmail = parsed.data.email.trim().toLowerCase();
+  const isAdmin = await isAdminLoginEmail(normalizedEmail);
+
+  if (isAdmin) {
+    try {
+      await signIn('admin', {
+        email: parsed.data.email,
+        password: parsed.data.password,
+        redirect: false,
+        redirectTo: '/admin',
+      });
+    } catch (error) {
+      if (isRateLimitAuthError(error)) {
+        return { status: 'error', message: 'Too many login attempts. Please try again later.' };
+      }
+      if (error instanceof AuthError) {
+        return { status: 'error', message: 'Invalid email or password.' };
+      }
+      throw error;
+    }
+
+    redirect('/admin');
+  }
+
+  const ip = extractClientIp(await headers());
+  const rateCheck = await getMemberLoginRateLimiter().check(`member-login:${normalizedEmail}:${ip}`);
+  if (!rateCheck.allowed) {
+    return { status: 'error', message: 'Too many login attempts. Please try again later.' };
   }
 
   try {

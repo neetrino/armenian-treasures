@@ -1,3 +1,4 @@
+import '@/components/blog/blog.css';
 import { BlogCard } from '@/components/blog/BlogCard';
 import { getPublishedBlogPosts } from '@/lib/queries/blogs';
 import Link from 'next/link';

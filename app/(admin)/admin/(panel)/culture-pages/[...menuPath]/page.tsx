@@ -14,6 +14,7 @@ import { findCultureMenuItemByPath } from '@/lib/admin/find-menu-by-path';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { resolveMenuHref } from '@/lib/culture-menu';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,10 +83,10 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
   const entries: CultureCatalogEntryAdmin[] = entryRows.map((row) => ({
     id: row.id,
     slug: row.slug,
-    title: row.title,
-    description: row.description ?? '',
-    region: row.region ?? '',
-    periodLabel: row.periodLabel ?? '',
+    title: getAdminLocaleValue(row.title),
+    description: getAdminLocaleValue(row.description),
+    region: getAdminLocaleValue(row.region),
+    periodLabel: getAdminLocaleValue(row.periodLabel),
     image: row.image ?? '',
     tourUrl: row.tourUrl ?? '',
     order: row.order,
@@ -94,7 +95,7 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
 
   const subpageLinks = subcategoryRows.map((row) => ({
     menuPath: `${match.node.slug}/${row.slug}`,
-    label: row.title,
+    label: getAdminLocaleValue(row.title),
   }));
 
   return (

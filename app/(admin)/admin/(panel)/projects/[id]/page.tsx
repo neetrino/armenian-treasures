@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { ProjectForm } from '@/components/admin/ProjectForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Edit project', robots: { index: false, follow: false } };
@@ -21,7 +22,7 @@ async function EditProjectPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit project"
-      title={project.title}
+      title={getAdminLocaleValue(project.title)}
       description={`Editing project with slug “${project.slug}”.`}
       beforeHeader={<AdminBackLink href="/admin/projects" label="All projects" />}
     >

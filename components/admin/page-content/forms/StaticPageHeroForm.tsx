@@ -10,15 +10,17 @@ import {
   readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 type StaticHeroSlug = 'contacts-page' | 'projects-page';
 
 interface Props {
   slug: StaticHeroSlug;
   initial: Record<string, unknown>;
+  locale: SiteLocaleCode;
 }
 
-export function StaticPageHeroForm({ slug, initial }: Props) {
+export function StaticPageHeroForm({ slug, initial, locale }: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseStaticPageHeroContent(initial)),
   );
@@ -28,7 +30,7 @@ export function StaticPageHeroForm({ slug, initial }: Props) {
   };
 
   return (
-    <PageContentFormShell slug={slug as PageContentSlug} content={content}>
+    <PageContentFormShell slug={slug as PageContentSlug} content={content} locale={locale}>
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}

@@ -20,12 +20,14 @@ import {
   readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface Props {
   initial: Record<string, unknown>;
+  locale: SiteLocaleCode;
 }
 
-export function PartnershipPageContentForm({ initial }: Props) {
+export function PartnershipPageContentForm({ initial, locale }: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parsePartnershipPageContent(initial)),
   );
@@ -52,7 +54,7 @@ export function PartnershipPageContentForm({ initial }: Props) {
   }>(content.categories);
 
   return (
-    <PageContentFormShell slug="partnership-page" content={content}>
+    <PageContentFormShell slug="partnership-page" content={content} locale={locale}>
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}

@@ -2,6 +2,8 @@ import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { resolveLandingImg } from '@/lib/page-content-images';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { resolveLocalizedJsonContent } from '@/lib/i18n/translatable-json-content';
 import {
   buildDefaultCulturalPortalPageContent,
   buildDefaultDonationPageContent,
@@ -44,9 +46,10 @@ function createPageContentGetter<T>(
 ): () => Promise<T> {
   return unstable_cache(
     async () => {
+      const locale = await getCurrentSiteLocale();
       const raw = await fetchPageContentRaw(slug);
       if (raw === null) return fallback();
-      return parse(raw);
+      return parse(resolveLocalizedJsonContent(raw, locale));
     },
     [`page-content-${slug}`],
     { tags: [`page-content-${slug}`, 'page-content'], revalidate: 60 },

@@ -9,6 +9,11 @@ import {
   type PageContentSlug,
 } from '@/lib/types/page-content';
 import { validatePageContentJson } from '@/lib/validation/page-content';
+import {
+  mergeLocalizedJsonContent,
+  resolveLocalizedJsonContent,
+} from '@/lib/i18n/translatable-json-content';
+import { isSiteLocaleCode } from '@/lib/i18n/locale-config';
 import type { Prisma } from '@prisma/client';
 export interface PageContentFormState {
   status: 'idle' | 'success' | 'error';
@@ -22,6 +27,8 @@ export async function savePageContentAction(
 ): Promise<PageContentFormState> {
   await requireAdmin();
 
+  const localeRaw = formData.get('locale')?.toString().toUpperCase() ?? 'EN';
+  const locale = isSiteLocaleCode(localeRaw) ? localeRaw : 'EN';
   const raw = formData.get('contentJson')?.toString() ?? '';
   let parsed: unknown;
   try {
@@ -39,16 +46,31 @@ export async function savePageContentAction(
     return { status: 'error', message: validated.message };
   }
 
+  const existing = await prisma.pageContent.findUnique({
+    where: { slug },
+    select: { content: true },
+  });
+  const nextContent = mergeLocalizedJsonContent(
+    existing?.content ?? null,
+    locale,
+    parsed as Record<string, unknown>,
+  );
+  const validationTarget = resolveLocalizedJsonContent(nextContent, 'EN');
+  const validationForDefaultLocale = validatePageContentJson(slug, validationTarget);
+  if (!validationForDefaultLocale.ok) {
+    return { status: 'error', message: `Default locale failed validation: ${validationForDefaultLocale.message}` };
+  }
+
   await prisma.pageContent.upsert({
     where: { slug },
     create: {
       slug,
       title: PAGE_CONTENT_TITLES[slug],
-      content: validated.data as Prisma.InputJsonValue,
+      content: nextContent as Prisma.InputJsonValue,
     },
     update: {
       title: PAGE_CONTENT_TITLES[slug],
-      content: validated.data as Prisma.InputJsonValue,
+      content: nextContent as Prisma.InputJsonValue,
     },
   });
 

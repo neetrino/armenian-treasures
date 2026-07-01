@@ -13,8 +13,8 @@ import {
   type NavDropdownLink,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
-import { signOutMemberAction } from '@/app/(public)/profile/actions';
-import type { HeaderMemberSummary } from '@/lib/auth/member-session';
+import { signOutAccountAction } from '@/app/(public)/profile/actions';
+import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { MobileSectionLink } from './MobileSectionLink';
 import {
@@ -33,7 +33,7 @@ interface MobileMenuProps {
   cultureMegaMenu: MegaMenuColumn[];
   projectsMenu: NavDropdownLink[];
   enabledLocales: SiteLocaleCode[];
-  member: HeaderMemberSummary | null;
+  account: HeaderAccountSummary | null;
 }
 
 const MOBILE_SECTION =
@@ -48,7 +48,7 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabledLocales, member }: MobileMenuProps) {
+export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabledLocales, account }: MobileMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -256,16 +256,22 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabled
               </div>
 
               <div className="mt-6 border-t border-[rgba(214,184,90,0.16)] pt-6">
-                {member ? (
+                {account ? (
                   <div className="flex flex-col gap-3">
                     <p className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal">
-                      Account
+                      {account.kind === 'admin' ? 'Admin account' : 'Account'}
                     </p>
-                    <p className="font-display text-sm text-[var(--nav-text)]">{member.name}</p>
-                    <Link href="/profile" onClick={close} className={MOBILE_LINK}>
-                      Profile
-                    </Link>
-                    <form action={signOutMemberAction}>
+                    <p className="font-display text-sm text-[var(--nav-text)]">{account.name}</p>
+                    {account.kind === 'admin' ? (
+                      <Link href="/admin" onClick={close} className={MOBILE_LINK}>
+                        Admin panel
+                      </Link>
+                    ) : (
+                      <Link href="/profile" onClick={close} className={MOBILE_LINK}>
+                        Profile
+                      </Link>
+                    )}
+                    <form action={signOutAccountAction}>
                       <button type="submit" className={cn(MOBILE_LINK, 'text-left')}>
                         Sign out
                       </button>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ProjectsPageClient } from '@/components/admin/ProjectsPageClient';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Projects', robots: { index: false, follow: false } };
@@ -11,9 +12,9 @@ async function AdminProjectsPage() {
   const projects = await prisma.project.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'desc' }] });
   const rows = projects.map((project) => ({
     id: project.id,
-    title: project.title,
-    category: project.category,
-    region: project.region,
+    title: getAdminLocaleValue(project.title),
+    category: getAdminLocaleValue(project.category),
+    region: getAdminLocaleValue(project.region) || null,
     status: project.status,
     goalAmount: project.goalAmount,
     raisedAmount: project.raisedAmount,

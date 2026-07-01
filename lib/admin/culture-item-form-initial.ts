@@ -1,4 +1,5 @@
 import type { CultureItem } from '@prisma/client';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export interface CultureItemFormInitial {
   title: string;
@@ -31,11 +32,11 @@ export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInit
     description: item.description ?? '',
     shortDescription: item.shortDescription ?? '',
     menuItemId: item.menuItemId,
-    region: item.region ?? '',
-    locationName: item.locationName ?? '',
-    periodLabel: item.periodLabel ?? '',
+    region: getAdminLocaleValue(item.region),
+    locationName: getAdminLocaleValue(item.locationName),
+    periodLabel: getAdminLocaleValue(item.periodLabel),
     century: item.century !== null ? String(item.century) : '',
-    yearLabel: item.yearLabel ?? '',
+    yearLabel: getAdminLocaleValue(item.yearLabel),
     image: item.image ?? '',
     galleryImages: item.galleryImages ?? [],
     tourUrl: item.tourUrl ?? '',

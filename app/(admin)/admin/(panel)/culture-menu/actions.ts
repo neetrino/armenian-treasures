@@ -14,6 +14,11 @@ import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { cultureMenuItemSchema, cultureMenuReorderSchema } from '@/lib/validation';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 import { Prisma, type MenuRouteType } from '@prisma/client';
 function toSlug(value: string): string {
   return slugify(value, { lower: true, strict: true });
@@ -67,7 +72,9 @@ async function ensureSlugUnique(parentId: string | null, slug: string, ignoreId?
 }
 
 function parseForm(formData: FormData): { ok: true; data: ReturnType<typeof toData> } | { ok: false; errors: Record<string, string> } {
-  const titleRaw = formData.get('title')?.toString() ?? '';
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
+  const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const finalSlug = slugRaw.trim().length > 0 ? toSlug(slugRaw) : toSlug(titleRaw);
   const routeTypeRaw = formData.get('routeType')?.toString() ?? 'CATEGORY';
@@ -80,27 +87,36 @@ function parseForm(formData: FormData): { ok: true; data: ReturnType<typeof toDa
   const parsed = cultureMenuItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
-    description: formData.get('description')?.toString() ?? '',
+    description: pickDefaultLocaleText(descriptionI18n),
     parentId: emptyToNull(formData.get('parentId')?.toString() ?? ''),
     order: Number(formData.get('order') ?? 0),
     isActive: formData.get('isActive') === 'on',
     image: formData.get('image')?.toString() ?? '',
     routeType: routeTypeRaw,
     customUrl: emptyToNull(formData.get('customUrl')?.toString() ?? ''),
-  });  if (!parsed.success) {
+  });
+  if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'title' || basePath === 'description'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false, errors };
   }
-  return { ok: true, data: toData(parsed.data, formData) };
+  return { ok: true, data: toData(parsed.data, formData, { titleI18n, descriptionI18n }) };
 }
 
 function toData(
   input: ReturnType<typeof cultureMenuItemSchema.parse>,
   formData: FormData,
+  i18n: {
+    titleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    descriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+  },
 ) {
   const catalogContent =
     input.routeType === 'CATEGORY' || input.routeType === 'SUBCATEGORY'
@@ -108,9 +124,9 @@ function toData(
       : null;
 
   return {
-    title: input.title,
+    title: encodeTranslatableText(i18n.titleI18n),
     slug: input.slug,
-    description: input.description?.trim() ? input.description.trim() : null,
+    description: encodeTranslatableText(i18n.descriptionI18n) || null,
     parentId: input.parentId ?? null,
     order: input.order,
     isActive: input.isActive,

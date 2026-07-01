@@ -18,6 +18,11 @@ import {
   type HomeStat,
   type HomeTechCard,
 } from '@/lib/types/home-content';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 
 const SINGLETON_ID = 'home-content-singleton';
 
@@ -95,6 +100,19 @@ export async function saveHomeContentAction(
   formData: FormData,
 ): Promise<HomeContentFormState> {
   await requireAdmin();
+  const heroBadgeI18n = readLocalizedTextFromFormData(formData, 'heroBadge');
+  const heroTitleI18n = readLocalizedTextFromFormData(formData, 'heroTitle');
+  const heroHighlightI18n = readLocalizedTextFromFormData(formData, 'heroHighlight');
+  const heroSubtitleI18n = readLocalizedTextFromFormData(formData, 'heroSubtitle');
+  const heroTaglineI18n = readLocalizedTextFromFormData(formData, 'heroTagline');
+  const heroDescriptionI18n = readLocalizedTextFromFormData(formData, 'heroDescription');
+  const primaryCtaTextI18n = readLocalizedTextFromFormData(formData, 'primaryCtaText');
+  const secondaryCtaTextI18n = readLocalizedTextFromFormData(formData, 'secondaryCtaText');
+  const missionTitleI18n = readLocalizedTextFromFormData(formData, 'missionTitle');
+  const missionHighlightI18n = readLocalizedTextFromFormData(formData, 'missionHighlight');
+  const missionTextI18n = readLocalizedTextFromFormData(formData, 'missionText');
+  const ctaTitleI18n = readLocalizedTextFromFormData(formData, 'ctaTitle');
+  const ctaDescriptionI18n = readLocalizedTextFromFormData(formData, 'ctaDescription');
 
   const existing = await prisma.homeContent.findUnique({
     where: { id: SINGLETON_ID },
@@ -104,23 +122,23 @@ export async function saveHomeContentAction(
 
   const payload = {
     ...preserved,
-    heroBadge: formData.get('heroBadge')?.toString() ?? preserved.heroBadge,
-    heroTitle: formData.get('heroTitle')?.toString() ?? '',
-    heroHighlight: formData.get('heroHighlight')?.toString() ?? '',
-    heroSubtitle: formData.get('heroSubtitle')?.toString() ?? preserved.heroSubtitle,
-    heroTagline: formData.get('heroTagline')?.toString() ?? preserved.heroTagline,
-    heroDescription: formData.get('heroDescription')?.toString() ?? '',
+    heroBadge: pickDefaultLocaleText(heroBadgeI18n),
+    heroTitle: pickDefaultLocaleText(heroTitleI18n),
+    heroHighlight: pickDefaultLocaleText(heroHighlightI18n),
+    heroSubtitle: pickDefaultLocaleText(heroSubtitleI18n),
+    heroTagline: pickDefaultLocaleText(heroTaglineI18n),
+    heroDescription: pickDefaultLocaleText(heroDescriptionI18n),
     heroImage: formData.get('heroImage')?.toString() ?? '',
     heroMobileImage: formData.get('heroMobileImage')?.toString() ?? '',
-    primaryCtaText: formData.get('primaryCtaText')?.toString() ?? '',
+    primaryCtaText: pickDefaultLocaleText(primaryCtaTextI18n),
     primaryCtaUrl: formData.get('primaryCtaUrl')?.toString() ?? '',
-    secondaryCtaText: formData.get('secondaryCtaText')?.toString() ?? '',
+    secondaryCtaText: pickDefaultLocaleText(secondaryCtaTextI18n),
     secondaryCtaUrl: formData.get('secondaryCtaUrl')?.toString() ?? '',
-    missionTitle: formData.get('missionTitle')?.toString() ?? preserved.missionTitle,
-    missionHighlight: formData.get('missionHighlight')?.toString() ?? preserved.missionHighlight,
-    missionText: formData.get('missionText')?.toString() ?? preserved.missionText,
-    ctaTitle: formData.get('ctaTitle')?.toString() ?? preserved.ctaTitle,
-    ctaDescription: formData.get('ctaDescription')?.toString() ?? preserved.ctaDescription,
+    missionTitle: pickDefaultLocaleText(missionTitleI18n),
+    missionHighlight: pickDefaultLocaleText(missionHighlightI18n),
+    missionText: pickDefaultLocaleText(missionTextI18n),
+    ctaTitle: pickDefaultLocaleText(ctaTitleI18n),
+    ctaDescription: pickDefaultLocaleText(ctaDescriptionI18n),
     stats: parseStatsJson(formData.get('statsJson')?.toString() ?? null),
     techCards: parseTechCardsJson(formData.get('techCardsJson')?.toString() ?? null),
     sections: parseSectionsJson(formData.get('sectionsJson')?.toString() ?? null),
@@ -129,8 +147,24 @@ export async function saveHomeContentAction(
   const parsed = homeContentSchema.safeParse(payload);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
+    const localizedFields = new Set([
+      'heroBadge',
+      'heroTitle',
+      'heroHighlight',
+      'heroSubtitle',
+      'heroTagline',
+      'heroDescription',
+      'primaryCtaText',
+      'secondaryCtaText',
+      'missionTitle',
+      'missionHighlight',
+      'missionText',
+      'ctaTitle',
+      'ctaDescription',
+    ]);
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path = localizedFields.has(basePath) ? `${basePath}.EN` : basePath;
       if (!fieldErrors[path]) fieldErrors[path] = issue.message;
     }
     return { status: 'error', fieldErrors, message: 'Please correct the form.' };
@@ -138,6 +172,19 @@ export async function saveHomeContentAction(
 
   const data = {
     ...parsed.data,
+    heroBadge: encodeTranslatableText(heroBadgeI18n),
+    heroTitle: encodeTranslatableText(heroTitleI18n),
+    heroHighlight: encodeTranslatableText(heroHighlightI18n),
+    heroSubtitle: encodeTranslatableText(heroSubtitleI18n),
+    heroTagline: encodeTranslatableText(heroTaglineI18n),
+    heroDescription: encodeTranslatableText(heroDescriptionI18n),
+    primaryCtaText: encodeTranslatableText(primaryCtaTextI18n),
+    secondaryCtaText: encodeTranslatableText(secondaryCtaTextI18n),
+    missionTitle: encodeTranslatableText(missionTitleI18n),
+    missionHighlight: encodeTranslatableText(missionHighlightI18n),
+    missionText: encodeTranslatableText(missionTextI18n),
+    ctaTitle: encodeTranslatableText(ctaTitleI18n),
+    ctaDescription: encodeTranslatableText(ctaDescriptionI18n),
     heroImage: normalizeOptionalImage(parsed.data.heroImage),
     heroMobileImage: normalizeOptionalImage(parsed.data.heroMobileImage),
     sections: normalizeHomeSections(parsed.data.sections),

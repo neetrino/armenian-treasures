@@ -54,8 +54,6 @@ export function AdminMobileNav({ open, onClose }: AdminMobileNavProps) {
             <div className="border-t border-stone-200/70 bg-white/60 p-4 backdrop-blur-sm">
               <Link
                 href={ADMIN_PUBLIC_SITE_LINK.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 onClick={onClose}
                 className="flex items-center justify-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-medium text-ink-soft shadow-sm transition hover:border-bronze-300 hover:text-bronze-800"
               >

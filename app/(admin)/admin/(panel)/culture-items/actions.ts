@@ -11,6 +11,11 @@ import {
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { cultureItemSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 import type {
   ContentStatus,
   CultureItemType,
@@ -70,15 +75,18 @@ export interface CultureItemFormState {
 function parseForm(formData: FormData):
   | { ok: true; data: ReturnType<typeof toData> }
   | { ok: false; errors: Record<string, string> } {
-  const titleRaw = formData.get('title')?.toString() ?? '';
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
+  const shortDescriptionI18n = readLocalizedTextFromFormData(formData, 'shortDescription');
+  const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const slug = (slugRaw.trim() ? slugRaw : titleRaw).trim();
   const finalSlug = slugify(slug, { lower: true, strict: true });
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
-    description: formData.get('description')?.toString() ?? '',
-    shortDescription: formData.get('shortDescription')?.toString() ?? '',
+    description: pickDefaultLocaleText(descriptionI18n),
+    shortDescription: pickDefaultLocaleText(shortDescriptionI18n),
     menuItemId: formData.get('menuItemId')?.toString() ?? '',
     region: formData.get('region')?.toString() ?? '',
     locationName: formData.get('locationName')?.toString() ?? '',
@@ -103,20 +111,40 @@ function parseForm(formData: FormData):
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'title' ||
+        basePath === 'description' ||
+        basePath === 'shortDescription'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false, errors };
   }
-  return { ok: true, data: toData(parsed.data) };
+  return {
+    ok: true,
+    data: toData(parsed.data, {
+      titleI18n,
+      descriptionI18n,
+      shortDescriptionI18n,
+    }),
+  };
 }
 
-function toData(input: ReturnType<typeof cultureItemSchema.parse>) {
+function toData(
+  input: ReturnType<typeof cultureItemSchema.parse>,
+  i18n: {
+    titleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    descriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    shortDescriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+  },
+) {
   return {
-    title: input.title,
+    title: encodeTranslatableText(i18n.titleI18n),
     slug: input.slug,
-    description: input.description?.trim() ? input.description : null,
-    shortDescription: input.shortDescription?.trim() ? input.shortDescription : null,
+    description: encodeTranslatableText(i18n.descriptionI18n) || null,
+    shortDescription: encodeTranslatableText(i18n.shortDescriptionI18n) || null,
     menuItemId: input.menuItemId,
     region: input.region?.trim() ? input.region : null,
     locationName: input.locationName?.trim() ? input.locationName : null,

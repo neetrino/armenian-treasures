@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { ChevronDown, Globe } from 'lucide-react';
 import {
-  CURRENT_SITE_LANGUAGE,
   resolveEnabledSiteLanguages,
   type SiteLanguage,
 } from '@/lib/navigation/site-languages';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { SITE_LOCALE_COOKIE } from '@/lib/i18n/locale-cookie';
 import { cn } from '@/lib/utils';
 
 interface LanguageSelectorProps {
@@ -16,12 +17,30 @@ interface LanguageSelectorProps {
 }
 
 export function LanguageSelector({ className, enabledLocales = ['EN'] }: LanguageSelectorProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [activeCode, setActiveCode] = useState<SiteLocaleCode>('EN');
   const containerRef = useRef<HTMLDivElement>(null);
   const languages = resolveEnabledSiteLanguages(enabledLocales);
   const active =
-    languages.find((locale) => locale.code === CURRENT_SITE_LANGUAGE.code) ?? CURRENT_SITE_LANGUAGE;
+    languages.find((locale) => locale.code === activeCode) ??
+    languages[0] ?? {
+      code: 'EN',
+      flag: '🇬🇧',
+      name: 'English',
+      hasTranslations: true,
+    };
   const hasChoice = languages.length > 1;
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const cookieMatch = document.cookie
+      .split('; ')
+      .find((entry) => entry.startsWith(`${SITE_LOCALE_COOKIE}=`));
+    const cookieValue = cookieMatch?.split('=')[1]?.toUpperCase();
+    const fromCookie = languages.find((locale) => locale.code === cookieValue);
+    if (fromCookie) setActiveCode(fromCookie.code);
+  }, [languages]);
 
   useEffect(() => {
     if (!open) return;
@@ -34,7 +53,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
 
   const renderLocaleButton = (locale: SiteLanguage): ReactNode => {
     const isActive = locale.code === active.code;
-    const isAvailable = locale.hasTranslations;
+    const isAvailable = true;
     return (
       <button
         key={locale.code}
@@ -48,21 +67,17 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
             : 'cursor-not-allowed opacity-55',
         )}
         aria-current={isActive ? 'true' : undefined}
-        title={
-          isAvailable
-            ? `Content in ${locale.name}`
-            : `${locale.name} translations coming soon`
-        }
+        title={`Content in ${locale.name}`}
         onClick={() => {
           if (!isAvailable) return;
+          setActiveCode(locale.code);
+          document.cookie = `${SITE_LOCALE_COOKIE}=${locale.code}; Path=/; Max-Age=31536000; SameSite=Lax`;
           setOpen(false);
+          router.refresh();
         }}
       >
         <span aria-hidden>{locale.flag}</span>
         <span>{locale.code}</span>
-        {!isAvailable ? (
-          <span className="ml-auto text-[8px] tracking-[0.18em] text-heritage-teal">Soon</span>
-        ) : null}
       </button>
     );
   };

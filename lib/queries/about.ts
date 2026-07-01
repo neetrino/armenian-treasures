@@ -3,6 +3,7 @@ import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { prisma } from '@/lib/db';
 import { toPublicAboutContent, type PublicAboutContentDTO } from '@/lib/dto';
 import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 const FALLBACK_PILLARS: AboutPillar[] = [
   {
@@ -54,9 +55,10 @@ export const FALLBACK_ABOUT_CONTENT: PublicAboutContentDTO = {
 
 async function fetchAboutContent(): Promise<PublicAboutContentDTO> {
   try {
+    const locale = await getCurrentSiteLocale();
     const row = await prisma.aboutContent.findFirst();
     if (!row) return FALLBACK_ABOUT_CONTENT;
-    const content = toPublicAboutContent(row);
+    const content = toPublicAboutContent(row, locale);
     return {
       ...content,
       heroImage: content.heroImage ? resolvePublicAssetUrl(content.heroImage) : null,

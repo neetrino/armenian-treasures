@@ -3,6 +3,7 @@
 import { useActionState, useEffect } from 'react';
 import { CulturePageContentLink } from '@/components/admin/CulturePageContentLink';
 import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
+import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
@@ -13,6 +14,12 @@ import {
   updateMenuItemAction,
   type MenuFormState,
 } from '@/app/(admin)/admin/(panel)/culture-menu/actions';
+import {
+  buildTabErrorMap,
+  decodeTranslatableText,
+  type LocaleTextMap,
+} from '@/lib/i18n/translatable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface MenuFormProps {
   mode: 'create' | 'edit';
@@ -80,17 +87,35 @@ export function CultureMenuForm({
   const showCatalogFields =
     (initial?.routeType ?? 'CATEGORY') === 'CATEGORY' ||
     (initial?.routeType ?? 'CATEGORY') === 'SUBCATEGORY';
+  const titleValues = decodeTranslatableText(initial?.title ?? '');
+  const descriptionValues = decodeTranslatableText(initial?.description ?? '');
+  const tabErrors = buildTabErrorMap(state.fieldErrors);
+  const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <TranslatableFieldsTabs tabErrors={tabErrors}>
+        {(locale) => (
+          <div className="grid gap-5">
+            <TextField
+              label="Title"
+              name={`title.${locale}`}
+              required={locale === 'EN'}
+              defaultValue={valueFor(titleValues, locale)}
+              error={state.fieldErrors?.[`title.${locale}`]}
+            />
+            <TextareaField
+              label="Description (optional)"
+              name={`description.${locale}`}
+              rows={3}
+              defaultValue={valueFor(descriptionValues, locale)}
+              error={state.fieldErrors?.[`description.${locale}`]}
+            />
+          </div>
+        )}
+      </TranslatableFieldsTabs>
+
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
-          label="Title"
-          name="title"
-          required
-          defaultValue={initial?.title ?? ''}
-          error={state.fieldErrors?.title}
-        />
         <TextField
           label="Slug (leave empty to derive from title)"
           name="slug"
@@ -145,13 +170,6 @@ export function CultureMenuForm({
           Visible in public menu
         </label>
       </div>
-      <TextareaField
-        label="Description (optional)"
-        name="description"
-        rows={3}
-        defaultValue={initial?.description ?? ''}
-        error={state.fieldErrors?.description}
-      />
       {showCatalogFields && catalogPagePath ? (
         <CulturePageContentLink menuPath={catalogPagePath} pageLabel={initial?.title} />
       ) : showCatalogFields && mode === 'create' ? (

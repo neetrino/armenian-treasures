@@ -8,6 +8,7 @@ import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import { AdminFormSection } from '@/components/admin/AdminFormSection';
+import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { Button } from '@/components/ui/Button';
 import {
@@ -20,6 +21,12 @@ import {
   CULTURE_MAP_TYPE_OPTIONS,
   CULTURE_STATUS_OPTIONS,
 } from '@/lib/admin/enum-labels';
+import {
+  buildTabErrorMap,
+  decodeTranslatableText,
+  type LocaleTextMap,
+} from '@/lib/i18n/translatable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface MenuOption {
   id: string;
@@ -86,6 +93,12 @@ export function CultureItemForm({
     }
   }, [state.status, onSuccess, router]);
 
+  const titleValues = decodeTranslatableText(initial?.title ?? '');
+  const shortDescriptionValues = decodeTranslatableText(initial?.shortDescription ?? '');
+  const descriptionValues = decodeTranslatableText(initial?.description ?? '');
+  const tabErrors = buildTabErrorMap(state.fieldErrors);
+  const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
+
   return (
     <form action={formAction} className="flex flex-col gap-6">
       <AdminHelpCallout title="Culture entry">
@@ -94,14 +107,34 @@ export function CultureItemForm({
       </AdminHelpCallout>
 
       <AdminFormSection title="Basics" description="Title, category, location, and main image.">
+      <TranslatableFieldsTabs tabErrors={tabErrors}>
+        {(locale) => (
+          <div className="grid gap-5">
+            <TextField
+              label="Title"
+              name={`title.${locale}`}
+              required={locale === 'EN'}
+              defaultValue={valueFor(titleValues, locale)}
+              error={state.fieldErrors?.[`title.${locale}`]}
+            />
+            <TextareaField
+              label="Short description"
+              name={`shortDescription.${locale}`}
+              rows={2}
+              defaultValue={valueFor(shortDescriptionValues, locale)}
+              error={state.fieldErrors?.[`shortDescription.${locale}`]}
+            />
+            <TextareaField
+              label="Description"
+              name={`description.${locale}`}
+              rows={6}
+              defaultValue={valueFor(descriptionValues, locale)}
+              error={state.fieldErrors?.[`description.${locale}`]}
+            />
+          </div>
+        )}
+      </TranslatableFieldsTabs>
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
-          label="Title"
-          name="title"
-          required
-          defaultValue={initial?.title ?? ''}
-          error={state.fieldErrors?.title}
-        />
         <TextField
           label="Slug"
           name="slug"
@@ -183,23 +216,6 @@ export function CultureItemForm({
           error={state.fieldErrors?.status}
         />
       </div>
-      </AdminFormSection>
-
-      <AdminFormSection title="Descriptions" description="Short summary for cards and full text for the detail page.">
-      <TextareaField
-        label="Short description"
-        name="shortDescription"
-        rows={2}
-        defaultValue={initial?.shortDescription ?? ''}
-        error={state.fieldErrors?.shortDescription}
-      />
-      <TextareaField
-        label="Description"
-        name="description"
-        rows={6}
-        defaultValue={initial?.description ?? ''}
-        error={state.fieldErrors?.description}
-      />
       </AdminFormSection>
 
       <AdminFormSection title="Photo gallery" description="Additional images shown on the detail page.">

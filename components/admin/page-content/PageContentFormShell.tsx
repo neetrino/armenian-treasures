@@ -8,17 +8,25 @@ import {
   type PageContentFormState,
 } from '@/app/(admin)/admin/(panel)/page-content/actions';
 import type { PageContentSlug } from '@/lib/types/page-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: PageContentFormState = { status: 'idle' };
 
 interface PageContentFormShellProps {
   slug: PageContentSlug;
   content: Record<string, unknown>;
+  locale?: SiteLocaleCode;
   onSubmit?: (event: FormEvent<HTMLFormElement>) => boolean | void;
   children: ReactNode;
 }
 
-export function PageContentFormShell({ slug, content, onSubmit, children }: PageContentFormShellProps) {
+export function PageContentFormShell({
+  slug,
+  content,
+  locale = 'EN',
+  onSubmit,
+  children,
+}: PageContentFormShellProps) {
   const router = useRouter();
   const boundAction = savePageContentAction.bind(null, slug);
   const [state, formAction, isPending] = useActionState(boundAction, INITIAL);
@@ -39,6 +47,7 @@ export function PageContentFormShell({ slug, content, onSubmit, children }: Page
 
   return (
     <form action={formAction} onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <input type="hidden" name="locale" value={locale} readOnly />
       <input type="hidden" name="contentJson" value={JSON.stringify(content)} readOnly />
       {children}
       {state.status === 'error' && state.message ? (

@@ -8,7 +8,7 @@ import { LanguageSelector } from '@/components/navigation/LanguageSelector';
 import { HeaderProfileButton } from '@/components/navigation/HeaderProfileButton';
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import { useHeaderScrolled } from '@/components/layout/use-header-scrolled';
-import type { HeaderMemberSummary } from '@/lib/auth/member-session';
+import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import type { MenuNode } from '@/lib/culture-menu';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
@@ -22,7 +22,7 @@ interface HeaderBarProps {
   foundationName: string;
   foundationSubtitle: string;
   enabledLocales: SiteLocaleCode[];
-  member: HeaderMemberSummary | null;
+  account: HeaderAccountSummary | null;
 }
 
 export function HeaderBar({
@@ -32,7 +32,7 @@ export function HeaderBar({
   foundationName,
   foundationSubtitle: _foundationSubtitle,
   enabledLocales,
-  member,
+  account,
 }: HeaderBarProps) {
   const reduced = useReducedMotion();
   const scrolled = useHeaderScrolled();
@@ -79,13 +79,13 @@ export function HeaderBar({
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
         >
           <LanguageSelector className="hidden lg:inline-flex" enabledLocales={enabledLocales} />
-          <HeaderProfileButton member={member} />
+          <HeaderProfileButton account={account} />
           <MobileMenu
             tree={menuTree}
             cultureMegaMenu={cultureMegaMenu}
             projectsMenu={projectsMenu}
             enabledLocales={enabledLocales}
-            member={member}
+            account={account}
           />
         </motion.div>
       </div>

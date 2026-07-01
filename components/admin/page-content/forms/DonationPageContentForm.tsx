@@ -18,12 +18,14 @@ import {
   readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface Props {
   initial: Record<string, unknown>;
+  locale: SiteLocaleCode;
 }
 
-export function DonationPageContentForm({ initial }: Props) {
+export function DonationPageContentForm({ initial, locale }: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseDonationPageContent(initial)),
   );
@@ -61,7 +63,7 @@ export function DonationPageContentForm({ initial }: Props) {
   const trustItems = readArray<{ label: string }>(content.trustItems);
 
   return (
-    <PageContentFormShell slug="donation-page" content={content}>
+    <PageContentFormShell slug="donation-page" content={content} locale={locale}>
       <MetadataFields
         title={readString(metadata.title)}
         description={readString(metadata.description)}
