@@ -56,4 +56,4 @@ export const MEGA_MENU_ITEM =
   'group flex items-center gap-[9px] py-[5px] font-display text-[14.5px] leading-[1.25] text-[var(--dropdown-text)] no-underline transition-[color,gap] duration-150 ease-out hover:gap-[13px] hover:text-[var(--dropdown-text-hover)]';
 
 export const MEGA_MENU_ICON =
-  'h-4 w-4 shrink-0 opacity-60 transition-opacity duration-150 group-hover:opacity-100';
+  'h-4 w-4 shrink-0 opacity-75 transition-[opacity,filter] duration-150 group-hover:opacity-100 group-hover:brightness-110';

@@ -24,7 +24,7 @@ function LogoMark({ isDark, compact }: { isDark: boolean; compact?: boolean }) {
         className={cn(
           'h-auto w-auto shrink-0 object-contain transition-[filter] duration-300',
           compact
-            ? 'max-h-[var(--site-header-logo-height)] drop-shadow-[0_0_6px_rgba(42,191,191,0.25)] group-hover:drop-shadow-[0_0_14px_rgba(42,191,191,0.55)]'
+            ? 'max-h-[var(--site-header-logo-height)] drop-shadow-[0_2px_8px_rgba(214,184,90,0.35)] group-hover:drop-shadow-[0_4px_18px_rgba(214,184,90,0.55)] group-hover:brightness-105'
             : 'max-h-16 sm:max-h-[4.5rem]',
         )}
         priority

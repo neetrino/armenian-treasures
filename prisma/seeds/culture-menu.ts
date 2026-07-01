@@ -28,7 +28,7 @@ const TREE: TopNode[] = [
     children: [
       {
         slug: 'churches',
-        title: 'Churches',
+        title: 'Churches & Monasteries',
         description: 'Medieval monasteries and cliff-top churches.',
         order: 1,
         routeType: 'SUBCATEGORY',
@@ -65,7 +65,7 @@ const TREE: TopNode[] = [
       },
       {
         slug: 'legends-and-heroes',
-        title: 'Legends & Heroes',
+        title: 'Legendaries & Heroes',
         description: 'Epic cycles, folk heroes and oral traditions.',
         order: 2,
         routeType: 'SUBCATEGORY',
@@ -118,7 +118,7 @@ const TREE: TopNode[] = [
     children: [
       {
         slug: 'historical-events',
-        title: 'Historical Events',
+        title: 'Historical Events & Turning Points',
         description: 'Turning points and eras across three millennia.',
         order: 1,
         routeType: 'SUBCATEGORY',
@@ -169,7 +169,7 @@ const TREE: TopNode[] = [
   },
   {
     slug: 'heritage',
-    title: 'Culture',
+    title: 'Art & Culture',
     description: 'Eleven living domains of Armenian intangible and material heritage.',
     order: 6,
     routeType: 'CATEGORY',

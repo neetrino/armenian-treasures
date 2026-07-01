@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
-import { resolveMenuLucideIcon } from '@/lib/navigation/menu-icons';
+import { CultureOrnamentalIcon } from '@/components/icons/CultureOrnamentalIcon';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
 import {
@@ -63,13 +63,13 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
           <div
             id={panelId}
             role="menu"
-            className={cn(MEGA_MENU_PANEL, 'w-[min(1080px,calc(100vw-48px))]')}
+            className={cn(MEGA_MENU_PANEL, 'w-[min(1180px,calc(100vw-48px))]')}
             style={{
               backgroundImage:
                 'radial-gradient(circle at 70% 20%, rgba(39, 198, 200, 0.06), transparent 35%)',
             }}
           >
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:gap-x-0 lg:gap-y-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 lg:gap-x-0 lg:gap-y-5">
               {columns.map((column, columnIndex) => (
                 <div
                   key={column.heading}
@@ -87,9 +87,7 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
                     {column.heading}
                   </Link>
                   <ul className="flex flex-col">
-                    {column.items.map((item) => {
-                      const Icon = resolveMenuLucideIcon(item.icon);
-                      return (
+                    {column.items.map((item) => (
                         <li key={item.label}>
                           <Link
                             href={item.href}
@@ -97,12 +95,11 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
                             onClick={close}
                             className={MEGA_MENU_ITEM}
                           >
-                            <Icon className={MEGA_MENU_ICON} strokeWidth={1.35} aria-hidden />
+                            <CultureOrnamentalIcon iconKey={item.icon} className={MEGA_MENU_ICON} />
                             <span>{item.label}</span>
                           </Link>
                         </li>
-                      );
-                    })}
+                      ))}
                   </ul>
                 </div>
               ))}

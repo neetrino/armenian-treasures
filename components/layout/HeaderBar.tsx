@@ -9,6 +9,7 @@ import { HeaderProfileButton } from '@/components/navigation/HeaderProfileButton
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import { useHeaderScrolled } from '@/components/layout/use-header-scrolled';
 import type { HeaderMemberSummary } from '@/lib/auth/member-session';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import type { MenuNode } from '@/lib/culture-menu';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import type { NavDropdownLink } from '@/components/navigation/primary-links';
@@ -20,6 +21,7 @@ interface HeaderBarProps {
   projectsMenu: NavDropdownLink[];
   foundationName: string;
   foundationSubtitle: string;
+  enabledLocales: SiteLocaleCode[];
   member: HeaderMemberSummary | null;
 }
 
@@ -29,6 +31,7 @@ export function HeaderBar({
   projectsMenu,
   foundationName,
   foundationSubtitle: _foundationSubtitle,
+  enabledLocales,
   member,
 }: HeaderBarProps) {
   const reduced = useReducedMotion();
@@ -58,7 +61,7 @@ export function HeaderBar({
       <div className="relative mx-auto flex h-site-header w-full items-center justify-between gap-2 px-[clamp(1.25rem,2.6vw,3rem)] lg:px-12">
         <div className="flex min-w-0 flex-1 items-center gap-[clamp(1.125rem,1.45vw,2rem)]">
           <motion.div
-            className="mr-1 flex shrink-0 items-center lg:mr-7"
+            className="mr-1 flex shrink-0 items-center py-1 lg:mr-8"
             initial={reduced ? false : { opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.08 }}
@@ -75,12 +78,13 @@ export function HeaderBar({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
         >
-          <LanguageSelector className="hidden lg:inline-flex" />
+          <LanguageSelector className="hidden lg:inline-flex" enabledLocales={enabledLocales} />
           <HeaderProfileButton member={member} />
           <MobileMenu
             tree={menuTree}
             cultureMegaMenu={cultureMegaMenu}
             projectsMenu={projectsMenu}
+            enabledLocales={enabledLocales}
             member={member}
           />
         </motion.div>

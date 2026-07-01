@@ -5,7 +5,7 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --site-header-logo-height: 5rem;
+    --site-header-logo-height: 5.75rem;
     --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
@@ -130,14 +130,14 @@
 
   @media (min-width: 768px) {
     :root {
-      --site-header-logo-height: 5rem;
+      --site-header-logo-height: 5.75rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-logo-height: 5.75rem;
+      --site-header-logo-height: 6.25rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
@@ -335,6 +335,27 @@
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.06) inset,
       0 16px 48px rgba(8, 12, 18, 0.12);
+  }
+
+  .culture-ornamental-icon {
+    position: relative;
+    color: var(--heritage-gold);
+  }
+
+  .culture-ornamental-icon__glyph {
+    display: block;
+    height: 100%;
+    width: 100%;
+    filter: brightness(0) saturate(100%) invert(78%) sepia(28%) saturate(620%)
+      hue-rotate(6deg) brightness(96%) contrast(92%);
+    opacity: 0.82;
+    transition: filter 150ms ease, opacity 150ms ease;
+  }
+
+  .group:hover .culture-ornamental-icon__glyph {
+    filter: brightness(0) saturate(100%) invert(86%) sepia(35%) saturate(720%)
+      hue-rotate(6deg) brightness(102%) contrast(96%);
+    opacity: 1;
   }
 
   [data-site-hero] h1 {

@@ -195,6 +195,10 @@ export const siteSettingsSchema = z.object({
     )
     .max(10)
     .default([]),
+  enabledLocales: z
+    .array(z.enum(['HY', 'RU', 'EN', 'FR', 'PT']))
+    .min(1)
+    .default(['EN']),
 });
 
 export const homeStatSchema = z.object({

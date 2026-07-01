@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { toPublicSiteSettings, type PublicSiteSettingsDTO } from '@/lib/dto';
+import { DEFAULT_ENABLED_LOCALES } from '@/lib/i18n/locale-config';
 
 const FALLBACK: PublicSiteSettingsDTO = {
   foundationName: 'Armenian Treasures',
@@ -12,6 +13,7 @@ const FALLBACK: PublicSiteSettingsDTO = {
   address: 'Yerevan, Armenia',
   copyrightText: '© 2026 Armenian Treasures. All rights reserved.',
   socialLinks: null,
+  enabledLocales: [...DEFAULT_ENABLED_LOCALES],
 };
 
 async function fetchSiteSettings(): Promise<PublicSiteSettingsDTO> {

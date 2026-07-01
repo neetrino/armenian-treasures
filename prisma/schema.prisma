@@ -254,6 +254,7 @@ model SiteSettings {
   address            String
   copyrightText      String
   socialLinks        Json?
+  enabledLocales     Json      @default("[\"EN\"]")
   updatedAt          DateTime @updatedAt
 }
 

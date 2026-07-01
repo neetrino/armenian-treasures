@@ -55,7 +55,7 @@ export const CULTURAL_PORTAL_SECTION = {
 export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   withIconSource({
     icon: 'churches',
-    title: 'Churches',
+    title: 'Churches & Monasteries',
     description: 'Haghpat, Geghard, Etchmiadzin & more',
     href: '/culture/architecture/churches',
   }),
@@ -67,13 +67,13 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   }),
   withIconSource({
     icon: 'legends',
-    title: 'Legends',
+    title: 'Legendaries & Heroes',
     description: 'Oral traditions passed through millennia',
     href: '/culture/legends/legends-and-heroes',
   }),
   withIconSource({
     icon: 'mythology',
-    title: 'Mythology',
+    title: 'Myths & Gods',
     description: 'Gods, titans & cosmological epics',
     href: '/culture/legends/myths-and-gods',
   }),
@@ -85,13 +85,13 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   }),
   withIconSource({
     icon: 'kings',
-    title: 'Kings',
+    title: 'Icons of History',
     description: 'Tigranes the Great & the Artaxiad dynasty',
     href: '/culture/people/icons-of-history',
   }),
   withIconSource({
     icon: 'scientists',
-    title: 'Scientists',
+    title: 'Scientists & Inventors',
     description: 'Pioneers of medicine, astronomy & physics',
     href: '/culture/people/scientists',
   }),

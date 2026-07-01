@@ -14,6 +14,9 @@ interface HeaderProfileButtonProps {
 const ICON_BUTTON =
   'inline-flex h-9 w-9 items-center justify-center border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ring-offset)]';
 
+const MENU_ITEM =
+  'block px-3 py-2.5 font-display text-sm text-[var(--dropdown-text)] transition hover:bg-[rgba(201,168,76,0.08)] hover:text-[var(--dropdown-text-hover)]';
+
 const ICON_BUTTON_GUEST =
   'border-[var(--surface-border)] text-[var(--nav-text)] hover:border-[rgba(39,198,200,0.45)] hover:text-[var(--nav-text-active)]';
 
@@ -86,14 +89,14 @@ export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
           className="absolute right-0 top-[calc(100%+0.5rem)] z-[1003] min-w-[12rem] overflow-hidden rounded-md border border-surface bg-[var(--profile-menu-bg)] py-1 shadow-[var(--shadow-dropdown)] backdrop-blur-md"
         >
           <div className="border-b border-surface px-3 py-2.5">
-            <p className="truncate font-display text-sm text-surface">{member.name}</p>
+            <p className="truncate font-display text-sm text-[var(--dropdown-text)]">{member.name}</p>
             <p className="truncate text-xs text-surface-subtle">{member.email}</p>
           </div>
           <Link
             href="/profile"
             role="menuitem"
             onClick={() => setOpen(false)}
-            className="block px-3 py-2.5 font-display text-sm text-surface transition hover:bg-[rgba(201,168,76,0.08)] hover:text-[var(--accent-hover)]"
+            className={MENU_ITEM}
           >
             Profile
           </Link>
@@ -102,7 +105,7 @@ export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
             role="menuitem"
             disabled={signingOut}
             onClick={() => void handleSignOut()}
-            className="block w-full px-3 py-2.5 text-left font-display text-sm text-surface transition hover:bg-[rgba(201,168,76,0.08)] hover:text-[var(--accent-hover)] disabled:opacity-60"
+            className={cn(MENU_ITEM, 'w-full text-left disabled:opacity-60')}
           >
             {signingOut ? 'Signing out…' : 'Sign out'}
           </button>

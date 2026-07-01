@@ -24,7 +24,7 @@ function applyMenuHrefMap(columns: MegaMenuColumn[], tree: MenuNode[]): MegaMenu
   }));
 }
 
-/** Figma canonical 4-column Cultural Portal mega menu (19 items). */
+/** AT Features sheet — 6-column Cultural Portal mega menu (26 items). */
 export function resolveCultureMegaMenu(tree: MenuNode[]): MegaMenuColumn[] {
   return applyMenuHrefMap(CULTURE_MEGA_MENU, tree);
 }

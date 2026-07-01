@@ -26,6 +26,7 @@ export async function Header() {
         projectsMenu={projectsMenu}
         foundationName={settings.foundationName}
         foundationSubtitle={settings.foundationSubtitle}
+        enabledLocales={settings.enabledLocales}
         member={member}
       />
       <div aria-hidden className="h-site-header shrink-0" />

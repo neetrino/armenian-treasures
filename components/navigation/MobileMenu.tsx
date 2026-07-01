@@ -15,6 +15,7 @@ import {
 import { LanguageSelector } from './LanguageSelector';
 import { signOutMemberAction } from '@/app/(public)/profile/actions';
 import type { HeaderMemberSummary } from '@/lib/auth/member-session';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { MobileSectionLink } from './MobileSectionLink';
 import {
   isAboutNavActive,
@@ -31,6 +32,7 @@ interface MobileMenuProps {
   tree: MenuNode[];
   cultureMegaMenu: MegaMenuColumn[];
   projectsMenu: NavDropdownLink[];
+  enabledLocales: SiteLocaleCode[];
   member: HeaderMemberSummary | null;
 }
 
@@ -38,7 +40,7 @@ const MOBILE_SECTION =
   'font-cinzel text-[13px] font-bold uppercase tracking-[0.13em] text-[var(--nav-text)]';
 
 const MOBILE_LINK =
-  'block py-2.5 font-display text-lg text-surface transition hover:text-[var(--accent-hover)]';
+  'block py-2.5 font-display text-lg text-[var(--nav-text)] transition hover:text-[var(--accent-hover)]';
 
 const MOBILE_LINK_ACTIVE = 'block py-2.5 font-display text-lg text-heritage-teal';
 
@@ -46,7 +48,7 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member }: MobileMenuProps) {
+export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabledLocales, member }: MobileMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -250,7 +252,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
               </nav>
 
               <div className="mt-6 border-t border-[rgba(214,184,90,0.16)] pt-6 lg:hidden">
-                <LanguageSelector className="w-full" />
+                <LanguageSelector className="w-full" enabledLocales={enabledLocales} />
               </div>
 
               <div className="mt-6 border-t border-[rgba(214,184,90,0.16)] pt-6">
@@ -259,7 +261,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, member 
                     <p className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal">
                       Account
                     </p>
-                    <p className="font-display text-sm text-surface">{member.name}</p>
+                    <p className="font-display text-sm text-[var(--nav-text)]">{member.name}</p>
                     <Link href="/profile" onClick={close} className={MOBILE_LINK}>
                       Profile
                     </Link>
