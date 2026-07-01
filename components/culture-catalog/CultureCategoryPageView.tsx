@@ -5,6 +5,7 @@ import { CultureCatalogHero } from '@/components/culture-catalog/CultureCatalogH
 import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCatalogItemGrid';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { CultureCatalogSubcategoryGrid } from '@/components/culture-catalog/CultureCatalogSubcategoryGrid';
+import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { buildCultureCatalogCategoryStats } from '@/lib/mappers/culture-catalog-page';
@@ -44,7 +45,7 @@ export function CultureCategoryPageView({
         slogan={content.slogan}
         description={category.description ?? content.about.description}
         heroImage={content.heroImage}
-        breadcrumb={[{ label: category.title }]}
+        breadcrumb={buildCultureCatalogBreadcrumb(category)}
         ctas={[
           { label: hasChildren ? 'Browse Sub-catalogs' : 'Explore Entries', href: '#entries', variant: 'gold' },
           { label: 'Add your project', href: '/culture/submit', variant: 'teal' },

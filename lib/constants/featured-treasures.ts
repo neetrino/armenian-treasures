@@ -46,7 +46,7 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
     title: "TIGRANES THE GREAT'S EMPIRE",
     description:
       'At its zenith, the Armenian Empire stretched from the Caspian to the Mediterranean — the largest state in the Roman era.',
-    href: '/culture/people',
+    href: '/culture/people/icons-of-history',
     layout: 'top-right',
   },
   {

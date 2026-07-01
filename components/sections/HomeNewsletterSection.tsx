@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import '@/components/sections/home-newsletter/home-newsletter-section.css';
 import { HomeNewsletterForm } from '@/components/sections/home-newsletter/HomeNewsletterForm';
 import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
@@ -25,6 +26,13 @@ export async function HomeNewsletterSection({ home }: HomeSectionContentProps) {
           placeholder={newsletter.placeholder}
           submitLabel={newsletter.submitLabel}
         />
+        <p className="mt-8 font-display text-sm text-surface-muted">
+          Join the community for donor updates and heritage alerts.{' '}
+          <Link href="/register" className="text-heritage-teal underline-offset-4 hover:underline">
+            Create a free account
+          </Link>{' '}
+          — used only for outreach you opt into.
+        </p>
       </div>
     </section>
   );

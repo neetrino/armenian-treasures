@@ -33,6 +33,7 @@ export async function saveSiteSettingsAction(
   formData: FormData,
 ): Promise<SettingsFormState> {
   await requireAdmin();
+  const enabledLocaleValues = formData.getAll('enabledLocales').map((value) => value.toString());
   const parsed = siteSettingsFormSchema.safeParse({
     foundationName: formData.get('foundationName')?.toString() ?? '',
     foundationSubtitle: formData.get('foundationSubtitle')?.toString() ?? '',
@@ -41,6 +42,7 @@ export async function saveSiteSettingsAction(
     phone: formData.get('phone')?.toString() ?? '',
     address: formData.get('address')?.toString() ?? '',
     copyrightText: formData.get('copyrightText')?.toString() ?? '',
+    enabledLocales: enabledLocaleValues,
   });
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
@@ -61,8 +63,13 @@ export async function saveSiteSettingsAction(
 
   await prisma.siteSettings.upsert({
     where: { id: SINGLETON_ID },
-    create: { id: SINGLETON_ID, ...parsed.data, socialLinks },
-    update: { ...parsed.data, socialLinks },
+    create: {
+      id: SINGLETON_ID,
+      ...parsed.data,
+      socialLinks,
+      enabledLocales: parsed.data.enabledLocales,
+    },
+    update: { ...parsed.data, socialLinks, enabledLocales: parsed.data.enabledLocales },
   });
   revalidateSiteSettingsCache();
   return { status: 'success', message: 'Site settings saved.' };

@@ -13,6 +13,7 @@ import {
   type HomeTechCard,
 } from '@/lib/types/home-content';
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
+import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import type {
   Career,
   BlogPost,
@@ -132,7 +133,9 @@ export interface PublicDonatorDTO {
   order: number;
 }
 
-export type PublicSiteSettingsDTO = Omit<SiteSettings, 'id' | 'updatedAt'>;
+export type PublicSiteSettingsDTO = Omit<SiteSettings, 'id' | 'updatedAt' | 'enabledLocales'> & {
+  enabledLocales: SiteLocaleCode[];
+};
 
 export type PublicHomeContentDTO = Omit<
   HomeContent,
@@ -279,8 +282,11 @@ export function toPublicDonator(row: Donator): PublicDonatorDTO {
 }
 
 export function toPublicSiteSettings(row: SiteSettings): PublicSiteSettingsDTO {
-  const { id: _id, updatedAt: _u, ...rest } = row;
-  return rest;
+  const { id: _id, updatedAt: _u, enabledLocales, ...rest } = row;
+  return {
+    ...rest,
+    enabledLocales: parseEnabledLocales(enabledLocales),
+  };
 }
 
 export function toPublicHomeContent(row: HomeContent): PublicHomeContentDTO {

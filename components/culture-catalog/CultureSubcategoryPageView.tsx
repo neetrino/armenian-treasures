@@ -7,6 +7,7 @@ import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCata
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import type { MenuNode } from '@/lib/culture-menu';
 import { HERITAGE_MAP_LEGEND } from '@/lib/constants/heritage-map-section';
+import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import {
   buildCultureCatalogMapPins,
@@ -40,13 +41,10 @@ export function CultureSubcategoryPageView({
         slogan={content.slogan}
         description={subcategory.description ?? content.about.description}
         heroImage={content.heroImage}
-        breadcrumb={[
-          { label: parent.title, href: `/culture/${parent.slug}` },
-          { label: subcategory.title },
-        ]}
+        breadcrumb={buildCultureCatalogBreadcrumb(subcategory, parent)}
         ctas={[
           { label: 'Explore Entries', href: '#entries', variant: 'gold' },
-          { label: 'View on Map', href: '#map', variant: 'teal' },
+          { label: 'View on Map', href: '/map', variant: 'teal' },
           { label: `Back to ${parent.title}`, href: `/culture/${parent.slug}`, variant: 'outline' },
         ]}
       />
@@ -59,7 +57,7 @@ export function CultureSubcategoryPageView({
         eyebrow={content.map.eyebrow}
         title={content.map.title}
         description={content.map.description}
-        ctaHref="/#map"
+        ctaHref="/map"
         placeholderTitle={content.map.placeholderTitle}
         placeholderSubtitle={
           mapCount > 0

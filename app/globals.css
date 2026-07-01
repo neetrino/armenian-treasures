@@ -5,7 +5,7 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --site-header-logo-height: 5rem;
+    --site-header-logo-height: 5.75rem;
     --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
@@ -130,14 +130,14 @@
 
   @media (min-width: 768px) {
     :root {
-      --site-header-logo-height: 5rem;
+      --site-header-logo-height: 5.75rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-logo-height: 5.75rem;
+      --site-header-logo-height: 6.25rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
@@ -184,6 +184,10 @@
   .scrollbar-none {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 
   .heritage-cta-clip {
@@ -301,6 +305,57 @@
       padding-top: var(--section-padding-y-lg);
       padding-bottom: var(--section-padding-y-lg);
     }
+  }
+
+  .heritage-section-divider {
+    height: 1px;
+    margin-inline: auto;
+    max-width: 73.75rem;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(214, 184, 90, 0.22) 20%,
+      rgba(39, 198, 200, 0.14) 50%,
+      rgba(214, 184, 90, 0.22) 80%,
+      transparent
+    );
+  }
+
+  .heritage-card-surface {
+    border: 1px solid rgba(214, 184, 90, 0.12);
+    background: color-mix(in srgb, var(--surface-elevated, #fff) 88%, transparent);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 12px 40px rgba(8, 12, 18, 0.08);
+    backdrop-filter: blur(8px);
+  }
+
+  .heritage-card-surface:hover {
+    border-color: rgba(39, 198, 200, 0.22);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 16px 48px rgba(8, 12, 18, 0.12);
+  }
+
+  .culture-ornamental-icon {
+    position: relative;
+    color: var(--heritage-gold);
+  }
+
+  .culture-ornamental-icon__glyph {
+    display: block;
+    height: 100%;
+    width: 100%;
+    filter: brightness(0) saturate(100%) invert(78%) sepia(28%) saturate(620%)
+      hue-rotate(6deg) brightness(96%) contrast(92%);
+    opacity: 0.82;
+    transition: filter 150ms ease, opacity 150ms ease;
+  }
+
+  .group:hover .culture-ornamental-icon__glyph {
+    filter: brightness(0) saturate(100%) invert(86%) sepia(35%) saturate(720%)
+      hue-rotate(6deg) brightness(102%) contrast(96%);
+    opacity: 1;
   }
 
   [data-site-hero] h1 {

@@ -2,10 +2,10 @@ export const HERITAGE_MAP_SECTION = {
   eyebrow: 'HERITAGE MAP',
   title: "EXPLORE ARMENIA'S SACRED GEOGRAPHY",
   description:
-    'Navigate over 850 heritage sites, monasteries, fortresses, and cultural landmarks across historic and modern Armenia.',
+    'Navigate heritage sites, monasteries, fortresses, and cultural landmarks across historic and modern Armenia.',
   placeholderTitle: 'HERITAGE MAP',
-  placeholderSubtitle: 'Full map integration launching with the portal — 850+ locations',
-  ctaUrl: '/#map',
+  placeholderSubtitle: 'Open the interactive map — sites are added as the archive grows',
+  ctaUrl: '/map',
 } as const;
 
 export interface HeritageMapLegendItem {

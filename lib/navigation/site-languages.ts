@@ -1,24 +1,31 @@
+import {
+  DEFAULT_ENABLED_LOCALES,
+  resolveLocaleDefinition,
+  SITE_LOCALE_DEFINITIONS,
+  type SiteLocaleCode,
+} from '@/lib/i18n/locale-config';
+
 export interface SiteLanguage {
-  code: string;
+  code: SiteLocaleCode;
   flag: string;
   name: string;
+  hasTranslations: boolean;
 }
 
-/** Content is English-only today. Planned locales — not selectable until i18n ships. */
-export const CURRENT_SITE_LANGUAGE: SiteLanguage = {
-  code: 'EN',
-  flag: '🇬🇧',
-  name: 'English',
-};
+export const CURRENT_SITE_LANGUAGE: SiteLanguage = resolveLocaleDefinition('EN');
 
-export const PLANNED_SITE_LANGUAGES: SiteLanguage[] = [
-  { code: 'HY', flag: '🇦🇲', name: 'Armenian' },
-  { code: 'RU', flag: '🇷🇺', name: 'Russian' },
-  { code: 'FR', flag: '🇫🇷', name: 'French' },
-  { code: 'ES', flag: '🇪🇸', name: 'Spanish' },
-  { code: 'DE', flag: '🇩🇪', name: 'German' },
-  { code: 'AR', flag: '🇸🇦', name: 'Arabic' },
-];
+/** All locales defined for the product (HY, RU, EN, FR, PT). */
+export const ALL_SITE_LANGUAGES: SiteLanguage[] = SITE_LOCALE_DEFINITIONS.map((locale) => ({
+  code: locale.code,
+  flag: locale.flag,
+  name: locale.name,
+  hasTranslations: locale.hasTranslations,
+}));
 
-/** @deprecated Use CURRENT_SITE_LANGUAGE. Full list reserved for future i18n. */
-export const SITE_LANGUAGES: SiteLanguage[] = [CURRENT_SITE_LANGUAGE, ...PLANNED_SITE_LANGUAGES];
+export function resolveEnabledSiteLanguages(enabledCodes: SiteLocaleCode[]): SiteLanguage[] {
+  const enabled = new Set(enabledCodes);
+  return ALL_SITE_LANGUAGES.filter((locale) => enabled.has(locale.code));
+}
+
+/** @deprecated Use resolveEnabledSiteLanguages with admin settings. */
+export const SITE_LANGUAGES: SiteLanguage[] = resolveEnabledSiteLanguages(DEFAULT_ENABLED_LOCALES);

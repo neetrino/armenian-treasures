@@ -20,6 +20,8 @@ export const PUBLIC_LAYOUT_PATHS = [
   '/khndzoresk',
   '/khachaturian-museum',
   '/national-gallery-armenia',
+  '/map',
+  '/virtual-museum',
 ] as const;
 
 export const PAGE_CONTENT_PUBLIC_PATHS: Record<PageContentSlug, readonly string[]> = {

@@ -1,3 +1,4 @@
+import { parseEnabledLocales } from '@/lib/i18n/locale-config';
 import type { Metadata } from 'next';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
@@ -22,6 +23,7 @@ async function AdminSettingsPage() {
     address: settings?.address ?? 'Yerevan, Armenia',
     copyrightText:
       settings?.copyrightText ?? '© 2026 Armenian Treasures Foundation. All rights reserved.',
+    enabledLocales: parseEnabledLocales(settings?.enabledLocales),
   };
   return (
     <AdminPageShell

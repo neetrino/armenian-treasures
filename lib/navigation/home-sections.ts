@@ -10,12 +10,23 @@ export const HOME_SECTION_IDS = {
 
 export type HomeSectionId = (typeof HOME_SECTION_IDS)[keyof typeof HOME_SECTION_IDS];
 
+const DEDICATED_SECTION_ROUTES: Partial<Record<HomeSectionId, string>> = {
+  [HOME_SECTION_IDS.heritageMap]: '/map',
+  [HOME_SECTION_IDS.virtualMuseum]: '/virtual-museum',
+  [HOME_SECTION_IDS.upcomingProjects]: '/projects',
+  [HOME_SECTION_IDS.partnership]: '/partnership',
+};
+
+export function resolveDedicatedSectionRoute(sectionId: HomeSectionId): string | null {
+  return DEDICATED_SECTION_ROUTES[sectionId] ?? null;
+}
+
 export function isHomePage(pathname: string): boolean {
   return pathname === '/';
 }
 
 export function buildHomeSectionHref(sectionId: HomeSectionId): string {
-  return `/#${sectionId}`;
+  return resolveDedicatedSectionRoute(sectionId) ?? `/#${sectionId}`;
 }
 
 const HOME_SECTION_ID_SET = new Set<string>(Object.values(HOME_SECTION_IDS));

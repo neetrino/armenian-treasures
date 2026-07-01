@@ -8,6 +8,8 @@ import {
   saveSiteSettingsAction,
   type SettingsFormState,
 } from '@/app/(admin)/admin/(panel)/settings/actions';
+import { SiteLocaleSettingsField } from '@/components/admin/SiteLocaleSettingsField';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: SettingsFormState = { status: 'idle' };
 
@@ -19,6 +21,7 @@ interface Initial {
   phone: string;
   address: string;
   copyrightText: string;
+  enabledLocales: SiteLocaleCode[];
 }
 
 interface Props {
@@ -82,6 +85,7 @@ export function SiteSettingsForm({ initial }: Props) {
         defaultValue={initial.footerDescription}
         error={state.fieldErrors?.footerDescription}
       />
+      <SiteLocaleSettingsField defaultEnabled={initial.enabledLocales} />
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
       ) : null}

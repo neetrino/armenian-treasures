@@ -55,7 +55,7 @@ export const CULTURAL_PORTAL_SECTION = {
 export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   withIconSource({
     icon: 'churches',
-    title: 'Churches',
+    title: 'Churches & Monasteries',
     description: 'Haghpat, Geghard, Etchmiadzin & more',
     href: '/culture/architecture/churches',
   }),
@@ -67,15 +67,15 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   }),
   withIconSource({
     icon: 'legends',
-    title: 'Legends',
+    title: 'Legendaries & Heroes',
     description: 'Oral traditions passed through millennia',
-    href: '/culture/legends',
+    href: '/culture/legends/legends-and-heroes',
   }),
   withIconSource({
     icon: 'mythology',
-    title: 'Mythology',
+    title: 'Myths & Gods',
     description: 'Gods, titans & cosmological epics',
-    href: '/culture/legends',
+    href: '/culture/legends/myths-and-gods',
   }),
   withIconSource({
     icon: 'museums',
@@ -85,27 +85,27 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
   }),
   withIconSource({
     icon: 'kings',
-    title: 'Kings',
+    title: 'Icons of History',
     description: 'Tigranes the Great & the Artaxiad dynasty',
-    href: '/culture/people',
+    href: '/culture/people/icons-of-history',
   }),
   withIconSource({
     icon: 'scientists',
-    title: 'Scientists',
+    title: 'Scientists & Inventors',
     description: 'Pioneers of medicine, astronomy & physics',
-    href: '/culture/people',
+    href: '/culture/people/scientists',
   }),
   withIconSource({
     icon: 'famousArmenians',
     title: 'Famous Armenians',
     description: 'Artists, leaders & innovators worldwide',
-    href: '/culture/people',
+    href: '/culture/people/famous-armenians',
   }),
   withIconSource({
     icon: 'history',
     title: 'History',
     description: 'Urartu to the modern Republic',
-    href: '/culture/history',
+    href: '/culture/history/historical-events',
   }),
   withIconSource({
     icon: 'paintings',
@@ -141,7 +141,7 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
     icon: 'sculptors',
     title: 'Sculptors',
     description: 'Khachkars, monuments & contemporary works',
-    href: '/culture/heritage',
+    href: '/culture/heritage/sculpting',
   }),
   withIconSource({
     icon: 'foodDrink',

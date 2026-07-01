@@ -1,5 +1,5 @@
 import type { HomeSectionId } from '@/lib/navigation/home-sections';
-import { buildHomeSectionHref, HOME_SECTION_IDS } from '@/lib/navigation/home-sections';
+import { HERITAGE_MAP_PATH } from '@/lib/navigation/site-routes';
 
 export interface PrimaryLink {
   href: string;
@@ -20,9 +20,8 @@ export function navDropdownLinkKey(item: NavDropdownLink): string {
 
 export const PRIMARY_LINKS: PrimaryLink[] = [
   {
-    href: buildHomeSectionHref(HOME_SECTION_IDS.heritageMap),
+    href: HERITAGE_MAP_PATH,
     label: 'Heritage Map',
-    homeSectionId: HOME_SECTION_IDS.heritageMap,
   },
   {
     href: '/partnership',

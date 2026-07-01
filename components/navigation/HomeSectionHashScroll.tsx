@@ -1,15 +1,17 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   isHomePage,
   parseHomeSectionHash,
+  resolveDedicatedSectionRoute,
   scrollToHomeSection,
 } from '@/lib/navigation/home-sections';
 
 export function HomeSectionHashScroll() {
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (!isHomePage(pathname)) return;
@@ -17,6 +19,12 @@ export function HomeSectionHashScroll() {
     const scrollFromHash = (): void => {
       const sectionId = parseHomeSectionHash(window.location.hash);
       if (!sectionId) return;
+
+      const dedicatedRoute = resolveDedicatedSectionRoute(sectionId);
+      if (dedicatedRoute) {
+        router.replace(dedicatedRoute);
+        return;
+      }
 
       requestAnimationFrame(() => {
         scrollToHomeSection(sectionId);
@@ -29,7 +37,7 @@ export function HomeSectionHashScroll() {
     return () => {
       window.removeEventListener('hashchange', scrollFromHash);
     };
-  }, [pathname]);
+  }, [pathname, router]);
 
   return null;
 }

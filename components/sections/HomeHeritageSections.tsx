@@ -4,6 +4,7 @@ import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection
 import { CulturalPortalSection } from '@/components/sections/CulturalPortalSection';
 import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasuresSection';
 import { HeritageMapSection } from '@/components/sections/HeritageMapSection';
+import { HomeNewsFeedSection } from '@/components/sections/HomeNewsFeedSection';
 import { UpcomingProjectsSection } from '@/components/sections/UpcomingProjectsSection';
 import { PartnershipSection } from '@/components/sections/PartnershipSection';
 import { DonationsSection } from '@/components/sections/DonationsSection';
@@ -33,15 +34,19 @@ export async function HomeHeritageSections() {
         aria-hidden
       />
 
+      {/* Feedback order: Features explorer → Map → Culture → News → Projects → Partnership */}
       <VirtualMuseumSection embedded home={home} />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
+        <HeritageMapSection home={home} />
+      </Suspense>
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <CulturalPortalSection home={home} />
       </Suspense>
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[20rem]" />}>
         <FeaturedTreasuresSection home={home} />
       </Suspense>
-      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
-        <HeritageMapSection home={home} />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
+        <HomeNewsFeedSection />
       </Suspense>
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <UpcomingProjectsSection home={home} />

@@ -15,6 +15,7 @@ export async function seedSiteSettings(): Promise<void> {
       address: 'Yerevan, Armenia',
       copyrightText: '© 2026 Armenian Treasures. All rights reserved.',
       socialLinks: [],
+      enabledLocales: ['EN'],
     },
     create: {
       id: SINGLETON_ID,
@@ -27,6 +28,7 @@ export async function seedSiteSettings(): Promise<void> {
       address: 'Yerevan, Armenia',
       copyrightText: '© 2026 Armenian Treasures. All rights reserved.',
       socialLinks: [],
+      enabledLocales: ['EN'],
     },
   });
   console.log('✓ Site settings ready');
