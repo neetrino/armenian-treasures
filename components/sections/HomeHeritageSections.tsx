@@ -36,26 +36,35 @@ export async function HomeHeritageSections() {
 
       {/* Feedback order: Features explorer → Map → Culture → News → Projects → Partnership */}
       <VirtualMuseumSection embedded home={home} />
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
         <HeritageMapSection home={home} />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <CulturalPortalSection home={home} />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[20rem]" />}>
         <FeaturedTreasuresSection home={home} />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <HomeNewsFeedSection />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <UpcomingProjectsSection home={home} />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <PartnershipSection home={home} />
+      <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[14rem]" />}>
         <DonationsSection home={home} />
       </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
       <AboutUsSection home={home} />
+      <div className="heritage-section-divider my-2" aria-hidden />
       <HomeNewsletterSection home={home} />
     </div>
   );

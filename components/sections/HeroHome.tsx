@@ -39,7 +39,7 @@ export function HeroHome(props: HeroHomeProps) {
       />
 
       <div className="relative z-10 flex min-h-[calc(100svh-var(--site-header-height)-clamp(4.5rem,9vh,6.5rem)-30px)] flex-1 flex-col">
-        <div className="mx-auto flex w-full min-w-0 max-w-[61.25rem] flex-1 flex-col items-center justify-center px-6 pb-6 text-center">
+        <div className="mx-auto flex w-full min-w-0 max-w-[68rem] flex-1 flex-col items-center justify-center px-6 pb-6 text-center">
           <motion.div
             className="flex w-full min-w-0 flex-col items-center"
             initial={reduced ? false : { opacity: 0, y: 16 }}
@@ -55,13 +55,13 @@ export function HeroHome(props: HeroHomeProps) {
               description={props.description}
             />
             <HeroCtaButtons
-              className="mt-11"
+              className="mt-12"
               primaryText={props.primaryCtaText}
               primaryHref={props.primaryCtaUrl}
               secondaryText={props.secondaryCtaText}
               secondaryHref={props.secondaryCtaUrl}
             />
-            <HeroScrollIndicator className="mt-14" />
+            <HeroScrollIndicator className="mt-12" />
           </motion.div>
         </div>
 

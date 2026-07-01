@@ -1,5 +1,6 @@
 import '@/components/sections/about-us/about-us-section.css';
 import { AboutUsGrid } from '@/components/sections/about-us/AboutUsGrid';
+import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
 import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
 export async function AboutUsSection({ home }: HomeSectionContentProps) {
@@ -12,22 +13,12 @@ export async function AboutUsSection({ home }: HomeSectionContentProps) {
       aria-labelledby="about-us-heading"
     >
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">
-        <header className="mb-[52px] max-w-[43.75rem] text-left">
-          <p className="mb-[14px] font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
-            {aboutUs.eyebrow}
-          </p>
-
-          <h2
-            id="about-us-heading"
-            className="mb-[18px] font-cinzel text-[clamp(2.125rem,3vw,3.25rem)] font-extrabold uppercase leading-[1.05] tracking-[0.01em] text-heritage-gold"
-          >
-            {aboutUs.title}
-          </h2>
-
-          <p className="max-w-[41.25rem] font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.55] text-surface-muted">
-            {aboutUs.description}
-          </p>
-        </header>
+        <HomeSectionHeader
+          id="about-us-heading"
+          eyebrow={aboutUs.eyebrow}
+          title={aboutUs.title}
+          description={aboutUs.description}
+        />
 
         <AboutUsGrid cards={aboutUs.cards} />
       </div>
