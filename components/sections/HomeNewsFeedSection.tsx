@@ -1,5 +1,6 @@
 import '@/components/blog/blog.css';
 import { BlogCard } from '@/components/blog/BlogCard';
+import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
 import { getPublishedBlogPosts } from '@/lib/queries/blogs';
 import Link from 'next/link';
 
@@ -25,28 +26,17 @@ export async function HomeNewsFeedSection() {
         aria-hidden
       />
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">
-        <header className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
-          <div className="max-w-[43.75rem]">
-            <p className="mb-3 font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
-              {SECTION.eyebrow}
-            </p>
-            <h2
-              id="home-news-heading"
-              className="mb-3 font-cinzel text-[clamp(1.875rem,2.8vw,2.75rem)] font-extrabold uppercase leading-[1.08] tracking-[0.01em] text-heritage-gold"
-            >
-              {SECTION.title}
-            </h2>
-            <p className="font-display text-[clamp(0.9375rem,1vw,1.0625rem)] italic leading-[1.55] text-surface-muted">
-              {SECTION.description}
-            </p>
-          </div>
-          <Link
-            href="/blog"
-            className="btn-outline shrink-0 self-start sm:self-auto"
-          >
-            {SECTION.viewAllLabel}
-          </Link>
-        </header>
+        <HomeSectionHeader
+          id="home-news-heading"
+          eyebrow={SECTION.eyebrow}
+          title={SECTION.title}
+          description={SECTION.description}
+          action={
+            <Link href="/blog" className="btn-outline inline-flex h-11 items-center px-5">
+              {SECTION.viewAllLabel}
+            </Link>
+          }
+        />
 
         {posts.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
