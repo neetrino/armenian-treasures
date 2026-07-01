@@ -4,15 +4,15 @@ import {
   resolveCultureMegaMenu,
   resolveProjectsNavItems,
 } from '@/lib/navigation/resolve-header-nav';
-import { getHeaderMemberSummary } from '@/lib/auth/member-session';
+import { getHeaderAccountSummary } from '@/lib/auth/header-session';
 import { HeaderBar } from './HeaderBar';
 import { HeaderThemeProvider } from './header-theme';
 
 export async function Header() {
-  const [menuTree, settings, member] = await Promise.all([
+  const [menuTree, settings, account] = await Promise.all([
     getMenuTree(),
     getSiteSettings(),
-    getHeaderMemberSummary(),
+    getHeaderAccountSummary(),
   ]);
 
   const cultureMegaMenu = resolveCultureMegaMenu(menuTree);
@@ -27,7 +27,7 @@ export async function Header() {
         foundationName={settings.foundationName}
         foundationSubtitle={settings.foundationSubtitle}
         enabledLocales={settings.enabledLocales}
-        member={member}
+        account={account}
       />
       <div aria-hidden className="h-site-header shrink-0" />
     </HeaderThemeProvider>

@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { User } from 'lucide-react';
-import { signOutMemberAction } from '@/app/(public)/profile/actions';
+import { Shield, User } from 'lucide-react';
+import { signOutAccountAction } from '@/app/(public)/profile/actions';
 import { cn } from '@/lib/utils';
-import type { HeaderMemberSummary } from '@/lib/auth/member-session';
+import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 
 interface HeaderProfileButtonProps {
-  member: HeaderMemberSummary | null;
+  account: HeaderAccountSummary | null;
 }
 
 const ICON_BUTTON =
@@ -23,7 +23,10 @@ const ICON_BUTTON_GUEST =
 const ICON_BUTTON_MEMBER =
   'border-[rgba(39,198,200,0.35)] bg-[rgba(39,198,200,0.08)] text-heritage-teal hover:border-[rgba(39,198,200,0.55)] hover:text-[var(--accent-hover)]';
 
-export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
+const ICON_BUTTON_ADMIN =
+  'border-[rgba(201,168,76,0.45)] bg-[rgba(201,168,76,0.1)] text-bronze-300 hover:border-[rgba(201,168,76,0.65)] hover:text-bronze-200';
+
+export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -51,7 +54,7 @@ export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
     };
   }, [open]);
 
-  if (!member) {
+  if (!account) {
     return (
       <Link
         href="/login"
@@ -66,21 +69,27 @@ export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
 
   const handleSignOut = async (): Promise<void> => {
     setSigningOut(true);
-    await signOutMemberAction();
+    await signOutAccountAction();
   };
+
+  const isAdmin = account.kind === 'admin';
 
   return (
     <div ref={rootRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className={cn(ICON_BUTTON, ICON_BUTTON_MEMBER)}
+        className={cn(ICON_BUTTON, isAdmin ? ICON_BUTTON_ADMIN : ICON_BUTTON_MEMBER)}
         aria-label="Account menu"
         aria-expanded={open}
         aria-haspopup="menu"
-        title={member.name}
+        title={account.name}
       >
-        <User size={18} strokeWidth={1.5} aria-hidden />
+        {isAdmin ? (
+          <Shield size={18} strokeWidth={1.5} aria-hidden />
+        ) : (
+          <User size={18} strokeWidth={1.5} aria-hidden />
+        )}
       </button>
 
       {open ? (
@@ -89,17 +98,33 @@ export function HeaderProfileButton({ member }: HeaderProfileButtonProps) {
           className="absolute right-0 top-[calc(100%+0.5rem)] z-[1003] min-w-[12rem] overflow-hidden rounded-md border border-surface bg-[var(--profile-menu-bg)] py-1 shadow-[var(--shadow-dropdown)] backdrop-blur-md"
         >
           <div className="border-b border-surface px-3 py-2.5">
-            <p className="truncate font-display text-sm text-[var(--dropdown-text)]">{member.name}</p>
-            <p className="truncate text-xs text-surface-subtle">{member.email}</p>
+            <p className="truncate font-display text-sm text-[var(--dropdown-text)]">{account.name}</p>
+            <p className="truncate text-xs text-surface-subtle">{account.email}</p>
+            {isAdmin ? (
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-bronze-400">
+                Admin
+              </p>
+            ) : null}
           </div>
-          <Link
-            href="/profile"
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className={MENU_ITEM}
-          >
-            Profile
-          </Link>
+          {isAdmin ? (
+            <Link
+              href="/admin"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className={MENU_ITEM}
+            >
+              Admin panel
+            </Link>
+          ) : (
+            <Link
+              href="/profile"
+              role="menuitem"
+              onClick={() => setOpen(false)}
+              className={MENU_ITEM}
+            >
+              Profile
+            </Link>
+          )}
           <button
             type="button"
             role="menuitem"

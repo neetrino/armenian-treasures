@@ -157,8 +157,6 @@ export function AdminSidebar() {
       >
         <Link
           href={ADMIN_PUBLIC_SITE_LINK.href}
-          target="_blank"
-          rel="noopener noreferrer"
           title={collapsed ? ADMIN_PUBLIC_SITE_LINK.label : undefined}
           className={cn(
             'flex items-center rounded-xl border border-stone-200/80 bg-white text-sm font-medium text-ink-soft shadow-sm transition hover:border-bronze-300 hover:text-bronze-800',

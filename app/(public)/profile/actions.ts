@@ -1,12 +1,15 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
+import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signOut } from '@/lib/auth';
+import { signOut, auth } from '@/lib/auth';
+import { writeAdminAuditLog } from '@/lib/auth/admin-audit';
 import { hashPassword, verifyPassword } from '@/lib/auth/hash-password';
 import { getMemberOrNull } from '@/lib/auth/member-session';
 import { prisma } from '@/lib/db';
+import { extractClientIp } from '@/lib/rate-limit';
 import { sanitizeUserText } from '@/lib/sanitize';
 import { memberUpdateProfileSchema } from '@/lib/validation';
 
@@ -99,5 +102,21 @@ export async function updateProfileAction(
 }
 
 export async function signOutMemberAction(): Promise<void> {
+  await signOut({ redirectTo: '/' });
+}
+
+export async function signOutAccountAction(): Promise<void> {
+  const session = await auth();
+  const headerStore = await headers();
+
+  if (session?.user?.role === 'ADMIN' && (session.user.id || session.user.email)) {
+    await writeAdminAuditLog('logout', {
+      adminUserId: session.user.id ?? null,
+      email: session.user.email ?? null,
+      ipAddress: extractClientIp(headerStore),
+      userAgent: headerStore.get('user-agent'),
+    });
+  }
+
   await signOut({ redirectTo: '/' });
 }
