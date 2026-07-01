@@ -2,6 +2,8 @@ name: Deploy database migrations
 
 # Applies Prisma migrations to production Neon.
 # PR CI (ci.yml) intentionally does NOT run migrate deploy — it uses placeholder DB URLs.
+# Primary production path: Vercel build command `pnpm build:production` (includes migrate deploy).
+# This workflow is optional — manual or auto on schema push when GitHub secrets are configured.
 
 on:
   workflow_dispatch:
@@ -20,47 +22,60 @@ jobs:
     name: prisma migrate deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: production
 
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       DIRECT_URL: ${{ secrets.DIRECT_URL }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Generate Prisma client
-        run: pnpm prisma generate
-
       - name: Validate database secrets
+        id: secrets
         run: |
           if [ -z "${DATABASE_URL}" ]; then
-            echo "::error::DATABASE_URL is not set. Add it under Settings → Secrets → Actions (production environment)."
-            exit 1
+            if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+              echo "::error::DATABASE_URL is not set. Add it under Settings → Secrets and variables → Actions → New repository secret (name: DATABASE_URL). Optional: DIRECT_URL for Neon direct (non-pooled) connection."
+              exit 1
+            fi
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Migration skipped::DATABASE_URL is not configured in GitHub Actions. Production migrations still run via Vercel \`pnpm build:production\` when DATABASE_URL is set there. To use this workflow, add DATABASE_URL under Settings → Secrets and variables → Actions."
+            exit 0
           fi
+          echo "skip=false" >> "$GITHUB_OUTPUT"
           if [ -z "${DIRECT_URL}" ]; then
             echo "::warning::DIRECT_URL is not set; using DATABASE_URL for migrate deploy."
             echo "For Neon, add DIRECT_URL as the non-pooled connection string (without -pooler in the host)."
             echo "DIRECT_URL=${DATABASE_URL}" >> "$GITHUB_ENV"
           fi
 
+      - name: Checkout
+        if: steps.secrets.outputs.skip != 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        if: steps.secrets.outputs.skip != 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        if: steps.secrets.outputs.skip != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.secrets.outputs.skip != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        if: steps.secrets.outputs.skip != 'true'
+        run: pnpm prisma generate
+
       - name: Apply pending migrations
+        if: steps.secrets.outputs.skip != 'true'
         run: pnpm prisma migrate deploy
 
       - name: Verify migration status
+        if: steps.secrets.outputs.skip != 'true'
         run: pnpm prisma migrate status
