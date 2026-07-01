@@ -47,6 +47,18 @@ jobs:
       - name: Generate Prisma client
         run: pnpm prisma generate
 
+      - name: Validate database secrets
+        run: |
+          if [ -z "${DATABASE_URL}" ]; then
+            echo "::error::DATABASE_URL is not set. Add it under Settings → Secrets → Actions (production environment)."
+            exit 1
+          fi
+          if [ -z "${DIRECT_URL}" ]; then
+            echo "::warning::DIRECT_URL is not set; using DATABASE_URL for migrate deploy."
+            echo "For Neon, add DIRECT_URL as the non-pooled connection string (without -pooler in the host)."
+            echo "DIRECT_URL=${DATABASE_URL}" >> "$GITHUB_ENV"
+          fi
+
       - name: Apply pending migrations
         run: pnpm prisma migrate deploy
 
