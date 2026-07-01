@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
-import { SiteThemeProvider } from '@/components/theme/SiteThemeProvider';
 import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
 import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
@@ -62,7 +61,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: '#7E1C26',
-  colorScheme: 'dark light',
+  colorScheme: 'dark',
 };
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -74,7 +73,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
     >
       <body className="scrollbar-none min-h-screen antialiased">
         <ThemeInitScript />
-        <SiteThemeProvider>{children}</SiteThemeProvider>
+        {children}
       </body>
     </html>
   );
