@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import type { MouseEvent } from 'react';
 import {
   isHomePage,
+  resolveDedicatedSectionRoute,
   scrollToHomeSection,
   type HomeSectionId,
 } from '@/lib/navigation/home-sections';
@@ -23,7 +24,16 @@ export function useHomeSectionNav({
   const router = useRouter();
 
   const tryScrollToHomeSection = (): boolean => {
-    if (!homeSectionId || !isHomePage(pathname)) return false;
+    if (!homeSectionId) return false;
+
+    const dedicatedRoute = resolveDedicatedSectionRoute(homeSectionId);
+    if (dedicatedRoute) {
+      router.push(dedicatedRoute);
+      onScroll?.();
+      return true;
+    }
+
+    if (!isHomePage(pathname)) return false;
 
     scrollToHomeSection(homeSectionId);
     onScroll?.();

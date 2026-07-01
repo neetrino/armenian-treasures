@@ -4,6 +4,7 @@ import {
   parseMenuCatalogContent,
 } from '@/lib/types/culture-catalog-content';
 import { EXTENDED_CULTURE_CATALOG_OVERRIDES } from '@/lib/constants/culture-catalog-overrides-extended';
+import { CULTURE_CATALOG_SUBCATEGORY_OVERRIDES } from '@/lib/constants/culture-catalog-subcategory-overrides';
 
 export interface CultureCatalogFact {
   label: string;
@@ -205,6 +206,7 @@ const OVERRIDES: Record<string, Partial<CultureCatalogContent>> = {
     slogan: 'Every submission reviewed by hand',
   },
   ...EXTENDED_CULTURE_CATALOG_OVERRIDES,
+  ...CULTURE_CATALOG_SUBCATEGORY_OVERRIDES,
 };
 
 function mergeContent(

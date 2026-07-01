@@ -192,7 +192,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'hayk-the-patriarch',
     title: 'Hayk the Patriarch',
-    menuPath: 'legends',
+    menuPath: 'legends/myths-and-gods',
     itemType: 'LEGEND',
     description:
       'The legendary founder of the Armenian nation who, according to Movses Khorenatsi, defeated the Babylonian tyrant Bel near Lake Van.',
@@ -200,7 +200,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'ara-the-beautiful',
     title: 'Ara the Beautiful',
-    menuPath: 'legends',
+    menuPath: 'legends/myths-and-gods',
     itemType: 'LEGEND',
     description:
       'An Armenian king whose beauty so captivated the Assyrian queen Semiramis that she waged war for him, immortalised in countless retellings.',
@@ -208,7 +208,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'vahagn-the-dragon-reaper',
     title: 'Vahagn the Dragon-Reaper',
-    menuPath: 'legends',
+    menuPath: 'legends/myths-and-gods',
     itemType: 'LEGEND',
     description:
       'The fire-born god of thunder and war, slayer of dragons, whose cosmic birth from a reed of fire is preserved in pagan Armenian hymns.',
@@ -216,7 +216,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'david-of-sassoun',
     title: 'David of Sassoun',
-    menuPath: 'legends',
+    menuPath: 'legends/legends-and-heroes',
     itemType: 'LEGEND',
     description:
       'The hero of the medieval epic "Daredevils of Sassoun", a UNESCO-recognised oral masterpiece of Armenian resistance and chivalry.',
@@ -312,16 +312,25 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'mesrop-mashtots',
     title: 'Mesrop Mashtots',
-    menuPath: 'people',
+    menuPath: 'people/scientists',
     yearLabel: '362–440',
     itemType: 'PERSON',
     description:
       'Theologian and linguist who created the Armenian alphabet in 405 AD, securing the survival of a literature and a faith.',
   },
   {
+    slug: 'tigranes-the-great',
+    title: 'Tigranes the Great',
+    menuPath: 'people/icons-of-history',
+    yearLabel: '140–55 BC',
+    itemType: 'PERSON',
+    description:
+      'Artaxiad king who built the largest Armenian empire, stretching from the Caspian Sea to the Mediterranean at the height of Roman power.',
+  },
+  {
     slug: 'komitas',
     title: 'Komitas',
-    menuPath: 'people',
+    menuPath: 'people/famous-armenians',
     yearLabel: '1869–1935',
     itemType: 'PERSON',
     description:
@@ -330,7 +339,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'aram-khachaturian',
     title: 'Aram Khachaturian',
-    menuPath: 'people',
+    menuPath: 'people/famous-armenians',
     yearLabel: '1903–1978',
     itemType: 'PERSON',
     description:
@@ -339,7 +348,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'sergei-parajanov',
     title: 'Sergei Parajanov',
-    menuPath: 'people',
+    menuPath: 'people/famous-armenians',
     yearLabel: '1924–1990',
     itemType: 'PERSON',
     description:
@@ -348,7 +357,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'martiros-saryan-person',
     title: 'Martiros Saryan',
-    menuPath: 'people',
+    menuPath: 'people/famous-armenians',
     yearLabel: '1880–1972',
     itemType: 'PERSON',
     description:
@@ -357,7 +366,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'william-saroyan-person',
     title: 'William Saroyan',
-    menuPath: 'people',
+    menuPath: 'people/famous-armenians',
     yearLabel: '1908–1981',
     itemType: 'PERSON',
     description:
@@ -367,7 +376,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'foundation-of-erebuni',
     title: 'Foundation of Erebuni',
-    menuPath: 'history',
+    menuPath: 'history/capitals',
     yearLabel: '782 BC',
     century: -8,
     itemType: 'HISTORY_EVENT',
@@ -377,7 +386,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'armenia-adopts-christianity',
     title: 'Armenia adopts Christianity',
-    menuPath: 'history',
+    menuPath: 'history/christian-heritage',
     yearLabel: '301 AD',
     century: 4,
     itemType: 'HISTORY_EVENT',
@@ -387,8 +396,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'armenian-alphabet-invention',
     title: 'Armenian alphabet invention',
-    menuPath: 'history',
-    yearLabel: '405 AD',
+    menuPath: 'history/chronicles-and-manuscripts',
     century: 5,
     itemType: 'HISTORY_EVENT',
     description:
@@ -397,8 +405,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'bagratid-kingdom-restored',
     title: 'Bagratid Kingdom restored',
-    menuPath: 'history',
-    yearLabel: '885 AD',
+    menuPath: 'history/historical-events',
     century: 9,
     itemType: 'HISTORY_EVENT',
     description:
@@ -407,8 +414,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'fall-of-ani',
     title: 'Fall of Ani',
-    menuPath: 'history',
-    yearLabel: '1045 AD',
+    menuPath: 'history/capitals',
     century: 11,
     itemType: 'HISTORY_EVENT',
     description:
@@ -417,8 +423,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'first-printed-armenian-book',
     title: 'First printed Armenian book',
-    menuPath: 'history',
-    yearLabel: '1512',
+    menuPath: 'history/chronicles-and-manuscripts',
     century: 16,
     itemType: 'HISTORY_EVENT',
     description:
@@ -427,8 +432,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'eastern-armenia-joins-russia',
     title: 'Eastern Armenia joins the Russian Empire',
-    menuPath: 'history',
-    yearLabel: '1828',
+    menuPath: 'history/historical-events',
     century: 19,
     itemType: 'HISTORY_EVENT',
     description:
@@ -437,8 +441,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'armenian-genocide',
     title: 'Armenian Genocide',
-    menuPath: 'history',
-    yearLabel: '1915',
+    menuPath: 'history/historical-events',
     century: 20,
     itemType: 'HISTORY_EVENT',
     description:
@@ -447,8 +450,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'first-republic-of-armenia',
     title: 'First Republic of Armenia',
-    menuPath: 'history',
-    yearLabel: '1918',
+    menuPath: 'history/historical-events',
     century: 20,
     itemType: 'HISTORY_EVENT',
     description:
@@ -457,8 +459,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'independence-of-armenia',
     title: 'Independence of the Republic of Armenia',
-    menuPath: 'history',
-    yearLabel: '1991',
+    menuPath: 'history/historical-events',
     century: 20,
     itemType: 'HISTORY_EVENT',
     description:
@@ -467,8 +468,7 @@ const ITEMS: SeedItem[] = [
   {
     slug: 'khndzoresk-cave-settlement',
     title: 'Khndzoresk Cave Settlement',
-    menuPath: 'history',
-    region: 'Syunik',
+    menuPath: 'history/monuments-and-landmarks',
     periodLabel: '17th–20th c.',
     century: 17,
     yearLabel: '17th–20th century',

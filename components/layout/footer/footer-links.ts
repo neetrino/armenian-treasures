@@ -11,15 +11,16 @@ export const FOOTER_LINKS_CULTURAL_PORTAL: FooterLinkItem[] = [
   { href: '/culture/architecture/castles', label: 'Castles' },
   { href: '/culture/museums', label: 'Museums' },
   { href: '/culture/history', label: 'History' },
-  { href: '/culture/legends', label: 'Legends' },
-  { href: '/culture/people', label: 'Famous Armenians' },
+  { href: '/culture/legends/myths-and-gods', label: 'Myths & Gods' },
+  { href: '/culture/legends/legends-and-heroes', label: 'Legends' },
+  { href: '/culture/people/famous-armenians', label: 'Famous Armenians' },
   { href: '/culture/heritage/paintings', label: 'Paintings' },
   { href: '/culture/heritage/music', label: 'Music' },
 ];
 
 export const FOOTER_LINKS_EXPLORE: FooterLinkItem[] = [
-  { href: '/#virtual-museum', label: 'Virtual Museum' },
-  { href: '/#map', label: 'Heritage Map' },
+  { href: '/virtual-museum', label: 'Virtual Museum' },
+  { href: '/map', label: 'Heritage Map' },
   { href: '/#projects', label: 'Upcoming Projects' },
   { href: '/#partners', label: 'Partnership' },
   { href: '/culture', label: 'Treasures' },

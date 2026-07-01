@@ -63,13 +63,13 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
           <div
             id={panelId}
             role="menu"
-            className={cn(MEGA_MENU_PANEL, 'w-[min(860px,calc(100vw-80px))]')}
+            className={cn(MEGA_MENU_PANEL, 'w-[min(1080px,calc(100vw-48px))]')}
             style={{
               backgroundImage:
                 'radial-gradient(circle at 70% 20%, rgba(39, 198, 200, 0.06), transparent 35%)',
             }}
           >
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-0 lg:gap-y-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 lg:gap-x-0 lg:gap-y-5">
               {columns.map((column, columnIndex) => (
                 <div
                   key={column.heading}

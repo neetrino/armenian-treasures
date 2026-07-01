@@ -34,7 +34,7 @@ export const VIRTUAL_MUSEUM_SECTION = {
   description:
     'Experience Armenian heritage like never before. Our immersive digital museum brings ancient civilizations to life — making the past accessible from anywhere on Earth through cutting-edge virtual and spatial technology.',
   ctaText: 'ENTER VIRTUAL MUSEUM',
-  ctaUrl: '/culture',
+  ctaUrl: '/virtual-museum',
   features: [
     withIconSource({
       number: '01',

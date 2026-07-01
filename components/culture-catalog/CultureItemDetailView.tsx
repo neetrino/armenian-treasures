@@ -172,7 +172,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
               />
             ) : null}
             {item.showOnMap && hasCoords ? (
-              <Link href="/#map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
+              <Link href="/map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
                 View on heritage map
               </Link>
             ) : null}

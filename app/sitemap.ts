@@ -21,6 +21,8 @@ const STATIC_PATHS = [
   '/khndzoresk',
   '/khachaturian-museum',
   '/national-gallery-armenia',
+  '/map',
+  '/virtual-museum',
 ];
 
 function entryForPath(

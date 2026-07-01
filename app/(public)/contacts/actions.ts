@@ -2,6 +2,7 @@
 
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/db';
+import { getFoundationInbox, sendEmail } from '@/lib/email';
 import {
   FAST_SUBMIT_ERROR_MESSAGE,
   getFormRenderedAt,
@@ -58,7 +59,6 @@ export async function submitContactMessage(
     return { status: 'success', message: 'Thank you. We have received your message.' };
   }
 
-  // TODO: wire Resend or SES here to email the foundation inbox.
   await prisma.contactMessage.create({
     data: {
       name: sanitizeUserText(parsed.data.name),
@@ -67,6 +67,16 @@ export async function submitContactMessage(
       status: 'NEW',
     },
   });
+
+  const inbox = getFoundationInbox();
+  if (inbox) {
+    await sendEmail({
+      to: inbox,
+      subject: `Contact: ${parsed.data.name}`,
+      html: `<p>From: ${parsed.data.name} &lt;${parsed.data.email}&gt;</p><p>${sanitizeUserText(parsed.data.message)}</p>`,
+      replyTo: parsed.data.email,
+    });
+  }
 
   return { status: 'success', message: 'Thank you. We have received your message.' };
 }
