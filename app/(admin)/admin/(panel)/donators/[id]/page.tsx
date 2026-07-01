@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { DonatorForm } from '@/components/admin/DonatorForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Edit donator', robots: { index: false, follow: false } };
@@ -21,8 +22,8 @@ async function EditDonatorPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit donator"
-      title={donator.name}
-      description={donator.type}
+      title={getAdminLocaleValue(donator.name)}
+      description={getAdminLocaleValue(donator.type)}
       beforeHeader={<AdminBackLink href="/admin/donators" label="All donators" />}
     >
       <AdminPanelCard>

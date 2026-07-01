@@ -11,6 +11,11 @@ import {
 } from '@/lib/cache/revalidation';
 import { prisma } from '@/lib/db';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 import type { ContentStatus, Prisma } from '@prisma/client';
 
 export interface CultureCatalogPageFormState {
@@ -38,15 +43,23 @@ const catalogEntrySchema = z.object({
 });
 
 function readEntryFields(formData: FormData) {
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
+  const regionI18n = readLocalizedTextFromFormData(formData, 'region');
+  const periodLabelI18n = readLocalizedTextFromFormData(formData, 'periodLabel');
   return {
-    title: formData.get('title')?.toString() ?? '',
-    description: formData.get('description')?.toString() ?? '',
-    region: formData.get('region')?.toString() ?? '',
-    periodLabel: formData.get('periodLabel')?.toString() ?? '',
+    title: pickDefaultLocaleText(titleI18n),
+    description: pickDefaultLocaleText(descriptionI18n),
+    region: pickDefaultLocaleText(regionI18n),
+    periodLabel: pickDefaultLocaleText(periodLabelI18n),
     image: formData.get('image')?.toString() ?? '',
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
     order: formData.get('order')?.toString() ?? '0',
     status: formData.get('status')?.toString() ?? 'PUBLISHED',
+    titleI18n,
+    descriptionI18n,
+    regionI18n,
+    periodLabelI18n,
   };
 }
 
@@ -109,11 +122,19 @@ export async function saveCultureCatalogEntryAction(
 ): Promise<CultureCatalogEntryFormState> {
   await requireAdmin();
 
-  const parsed = catalogEntrySchema.safeParse(readEntryFields(formData));
+  const fields = readEntryFields(formData);
+  const parsed = catalogEntrySchema.safeParse(fields);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const key = issue.path[0]?.toString();
+                const rawKey = issue.path[0]?.toString();
+                const key =
+                  rawKey === 'title' ||
+                  rawKey === 'description' ||
+                  rawKey === 'region' ||
+                  rawKey === 'periodLabel'
+                    ? `${rawKey}.EN`
+                    : rawKey;
       if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
     }
     return { status: 'error', message: 'Please fix the highlighted fields.', fieldErrors };
@@ -131,10 +152,10 @@ export async function saveCultureCatalogEntryAction(
   await prisma.cultureItem.update({
     where: { id: entryId },
     data: {
-      title: data.title,
-      description: data.description,
-      region: data.region || null,
-      periodLabel: data.periodLabel || null,
+      title: encodeTranslatableText(fields.titleI18n),
+      description: encodeTranslatableText(fields.descriptionI18n),
+      region: encodeTranslatableText(fields.regionI18n) || null,
+      periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
       tourUrl: data.tourUrl || null,
       order: data.order,
@@ -155,11 +176,19 @@ export async function createCultureCatalogEntryAction(
 ): Promise<CultureCatalogEntryFormState> {
   await requireAdmin();
 
-  const parsed = catalogEntrySchema.safeParse(readEntryFields(formData));
+  const fields = readEntryFields(formData);
+  const parsed = catalogEntrySchema.safeParse(fields);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const key = issue.path[0]?.toString();
+      const rawKey = issue.path[0]?.toString();
+      const key =
+        rawKey === 'title' ||
+        rawKey === 'description' ||
+        rawKey === 'region' ||
+        rawKey === 'periodLabel'
+          ? `${rawKey}.EN`
+          : rawKey;
       if (key && !fieldErrors[key]) fieldErrors[key] = issue.message;
     }
     return { status: 'error', message: 'Please fix the highlighted fields.', fieldErrors };
@@ -184,13 +213,13 @@ export async function createCultureCatalogEntryAction(
 
   await prisma.cultureItem.create({
     data: {
-      title: data.title,
+      title: encodeTranslatableText(fields.titleI18n),
       slug,
-      description: data.description,
-      shortDescription: data.description.slice(0, 240),
+      description: encodeTranslatableText(fields.descriptionI18n),
+      shortDescription: encodeTranslatableText(fields.descriptionI18n),
       menuItemId,
-      region: data.region || null,
-      periodLabel: data.periodLabel || null,
+      region: encodeTranslatableText(fields.regionI18n) || null,
+      periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
       tourUrl: data.tourUrl || null,
       order: data.order,

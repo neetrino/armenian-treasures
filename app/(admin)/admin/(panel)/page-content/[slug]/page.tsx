@@ -12,6 +12,7 @@ import {
   PAGE_CONTENT_TITLES,
   type PageContentSlug,
 } from '@/lib/types/page-content';
+import { resolveLocalizedJsonContent } from '@/lib/i18n/translatable-json-content';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,9 @@ async function AdminPageContentEditPage(props: PageProps) {
 
   const user = await requireAdmin();
   const row = await prisma.pageContent.findUnique({ where: { slug: params.slug } });
-  const content = row?.content ?? getDefaultPageContent(params.slug);
+  const content = row?.content
+    ? resolveLocalizedJsonContent(row.content, 'EN')
+    : getDefaultPageContent(params.slug);
   const initial = content as Record<string, unknown>;
   const formKey = row?.updatedAt.toISOString() ?? 'default';
 

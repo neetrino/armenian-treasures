@@ -10,6 +10,7 @@ import {
   type HomeSections,
 } from '@/lib/types/home-sections';
 import { normalizeHomeStats, normalizeHomeTechCards } from '@/lib/types/home-content';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   heroBadge: '✦ DISCOVER · PRESERVE · CELEBRATE ✦',
@@ -103,8 +104,9 @@ export function getHomeSections(content: PublicHomeContentDTO): HomeSections {
 
 async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
   try {
+    const locale = await getCurrentSiteLocale();
     const row = await prisma.homeContent.findFirst();
-    const content = row ? toPublicHomeContent(row) : HOME_CONTENT_FALLBACK;
+    const content = row ? toPublicHomeContent(row, locale) : HOME_CONTENT_FALLBACK;
     return resolveHomeContentAssets(content);
   } catch {
     logQueryFallback({ query: 'home-content', reason: 'db-error' });

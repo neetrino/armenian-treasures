@@ -3,6 +3,7 @@ import type { AdminContext } from '@/lib/auth/require-admin';
 import { buildMenuTree, type MenuNode } from '@/lib/culture-menu';
 import { prisma } from '@/lib/db';
 import { toPublicMenuItem } from '@/lib/dto';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 interface CultureMenuPageContentProps {
   user: AdminContext;
@@ -19,7 +20,16 @@ export async function CultureMenuPageContent({ user }: CultureMenuPageContentPro
       select: { id: true, title: true },
     }),
   ]);
-  const tree = buildMenuTree(rows.map(toPublicMenuItem) as unknown as MenuNode[]);
+  const tree = buildMenuTree(rows.map((row) => toPublicMenuItem(row)) as unknown as MenuNode[]);
 
-  return <CultureMenuPageClient user={user} tree={tree} parents={parents} />;
+  return (
+    <CultureMenuPageClient
+      user={user}
+      tree={tree}
+      parents={parents.map((parent) => ({
+        ...parent,
+        title: getAdminLocaleValue(parent.title),
+      }))}
+    />
+  );
 }

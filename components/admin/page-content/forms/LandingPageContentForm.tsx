@@ -37,12 +37,14 @@ import {
   readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 type LandingSlug = 'khndzoresk' | 'khachaturian-museum' | 'national-gallery-armenia';
 
 interface Props {
   slug: LandingSlug;
   initial: Record<string, unknown>;
+  locale: SiteLocaleCode;
 }
 
 function parseLandingContent(slug: LandingSlug, initial: Record<string, unknown>): MutablePageContent {
@@ -83,7 +85,7 @@ function KhndzoreskGallerySection({
   );
 }
 
-export function LandingPageContentForm({ slug, initial }: Props) {
+export function LandingPageContentForm({ slug, initial, locale }: Props) {
   const [content, setContent] = useState<MutablePageContent>(() => parseLandingContent(slug, initial));
 
   const update = (patch: MutablePageContent): void => {
@@ -96,7 +98,7 @@ export function LandingPageContentForm({ slug, initial }: Props) {
   const tickets = readArray<{ label: string; title: string; price: string; sub: string }>(content.tickets);
 
   return (
-    <PageContentFormShell slug={slug} content={content}>
+    <PageContentFormShell slug={slug} content={content} locale={locale}>
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}

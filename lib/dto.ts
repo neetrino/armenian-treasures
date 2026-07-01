@@ -14,6 +14,7 @@ import {
 } from '@/lib/types/home-content';
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import type {
   Career,
   BlogPost,
@@ -149,12 +150,15 @@ export type PublicAboutContentDTO = Omit<AboutContent, 'id' | 'createdAt' | 'upd
   pillars: AboutPillar[];
 };
 
-export function toPublicMenuItem(row: CultureMenuItem): PublicCultureMenuItemDTO {
+export function toPublicMenuItem(
+  row: CultureMenuItem,
+  locale: SiteLocaleCode = 'EN',
+): PublicCultureMenuItemDTO {
   return {
     id: row.id,
-    title: row.title,
+    title: resolveLocalizedText(row.title, locale),
     slug: row.slug,
-    description: row.description,
+    description: resolveLocalizedText(row.description, locale) || null,
     image: row.image,
     catalogContent: row.catalogContent ?? null,
     routeType: row.routeType,
@@ -165,13 +169,16 @@ export function toPublicMenuItem(row: CultureMenuItem): PublicCultureMenuItemDTO
   };
 }
 
-export function toPublicCultureItem(row: CultureItem): PublicCultureItemDTO {
+export function toPublicCultureItem(
+  row: CultureItem,
+  locale: SiteLocaleCode = 'EN',
+): PublicCultureItemDTO {
   return {
     id: row.id,
-    title: row.title,
+    title: resolveLocalizedText(row.title, locale),
     slug: row.slug,
-    description: row.description,
-    shortDescription: row.shortDescription,
+    description: resolveLocalizedText(row.description, locale) || null,
+    shortDescription: resolveLocalizedText(row.shortDescription, locale) || null,
     menuItemId: row.menuItemId,
     region: row.region,
     locationName: row.locationName,
@@ -195,17 +202,20 @@ type CultureItemWithMenu = CultureItem & {
   menuItem: CultureMenuItem & { parent: CultureMenuItem | null };
 };
 
-export function toPublicCultureItemDetail(row: CultureItemWithMenu): PublicCultureItemDetailDTO {
+export function toPublicCultureItemDetail(
+  row: CultureItemWithMenu,
+  locale: SiteLocaleCode = 'EN',
+): PublicCultureItemDetailDTO {
   return {
-    ...toPublicCultureItem(row),
+    ...toPublicCultureItem(row, locale),
     menuItem: {
       id: row.menuItem.id,
-      title: row.menuItem.title,
+      title: resolveLocalizedText(row.menuItem.title, locale),
       slug: row.menuItem.slug,
       parent: row.menuItem.parent
         ? {
             id: row.menuItem.parent.id,
-            title: row.menuItem.parent.title,
+            title: resolveLocalizedText(row.menuItem.parent.title, locale),
             slug: row.menuItem.parent.slug,
           }
         : null,
@@ -213,14 +223,17 @@ export function toPublicCultureItemDetail(row: CultureItemWithMenu): PublicCultu
   };
 }
 
-export function toPublicProject(row: Project): PublicProjectDTO {
+export function toPublicProject(
+  row: Project,
+  locale: SiteLocaleCode = 'EN',
+): PublicProjectDTO {
   return {
     id: row.id,
-    title: row.title,
+    title: resolveLocalizedText(row.title, locale),
     slug: row.slug,
-    category: row.category,
-    region: row.region,
-    description: row.description,
+    category: resolveLocalizedText(row.category, locale),
+    region: resolveLocalizedText(row.region, locale) || null,
+    description: resolveLocalizedText(row.description, locale) || null,
     image: row.image,
     goalAmount: row.goalAmount,
     raisedAmount: row.raisedAmount,
@@ -229,54 +242,69 @@ export function toPublicProject(row: Project): PublicProjectDTO {
   };
 }
 
-export function toPublicTeamMember(row: TeamMember): PublicTeamMemberDTO {
+export function toPublicTeamMember(
+  row: TeamMember,
+  locale: SiteLocaleCode = 'EN',
+): PublicTeamMemberDTO {
   return {
     id: row.id,
-    name: row.name,
+    name: resolveLocalizedText(row.name, locale),
     initials: row.initials,
-    position: row.position,
-    bio: row.bio,
+    position: resolveLocalizedText(row.position, locale),
+    bio: resolveLocalizedText(row.bio, locale) || null,
     image: row.image,
     order: row.order,
   };
 }
 
-export function toPublicCareer(row: Career): PublicCareerDTO {
+export function toPublicCareer(
+  row: Career,
+  locale: SiteLocaleCode = 'EN',
+): PublicCareerDTO {
   return {
     id: row.id,
-    title: row.title,
-    location: row.location,
-    employmentType: row.employmentType,
-    description: row.description,
+    title: resolveLocalizedText(row.title, locale),
+    location: resolveLocalizedText(row.location, locale),
+    employmentType: resolveLocalizedText(row.employmentType, locale),
+    description: resolveLocalizedText(row.description, locale) || null,
     applyUrl: row.applyUrl,
     applyEmail: row.applyEmail,
     order: row.order,
   };
 }
 
-export function toPublicBlogPost(row: BlogPost): PublicBlogPostDTO {
+export function toPublicBlogPost(
+  row: BlogPost,
+  locale: SiteLocaleCode = 'EN',
+): PublicBlogPostDTO {
   return {
     id: row.id,
-    title: row.title,
+    title: resolveLocalizedText(row.title, locale),
     slug: row.slug,
-    content: row.content,
+    content: resolveLocalizedText(row.content, locale),
     image: row.image,
     publishedAt: row.publishedAt.toISOString(),
     order: row.order,
   };
 }
 
-export function toPublicBlogPostDetail(row: BlogPost): PublicBlogPostDetailDTO {
-  return toPublicBlogPost(row);
+export function toPublicBlogPostDetail(
+  row: BlogPost,
+  locale: SiteLocaleCode = 'EN',
+): PublicBlogPostDetailDTO {
+  return toPublicBlogPost(row, locale);
 }
 
-export function toPublicDonator(row: Donator): PublicDonatorDTO {
+export function toPublicDonator(
+  row: Donator,
+  locale: SiteLocaleCode = 'EN',
+): PublicDonatorDTO {
   return {
     id: row.id,
-    name: row.name,
-    type: row.type,
+    name: resolveLocalizedText(row.name, locale),
+    type: resolveLocalizedText(row.type, locale),
     year: row.year,
-    description: row.description,
+    description: resolveLocalizedText(row.description, locale) || null,
     order: row.order,
   };
 }
@@ -289,22 +317,57 @@ export function toPublicSiteSettings(row: SiteSettings): PublicSiteSettingsDTO {
   };
 }
 
-export function toPublicHomeContent(row: HomeContent): PublicHomeContentDTO {
+export function toPublicHomeContent(
+  row: HomeContent,
+  locale: SiteLocaleCode = 'EN',
+): PublicHomeContentDTO {
   const { id: _id, updatedAt: _u, stats, techCards, sections, ...rest } = row;
   return {
     ...rest,
-    heroSubtitle: row.heroSubtitle ?? '',
-    heroTagline: row.heroTagline ?? '',
+    heroBadge: resolveLocalizedText(row.heroBadge, locale),
+    heroTitle: resolveLocalizedText(row.heroTitle, locale),
+    heroHighlight: resolveLocalizedText(row.heroHighlight, locale),
+    heroSubtitle: resolveLocalizedText(row.heroSubtitle, locale),
+    heroTagline: resolveLocalizedText(row.heroTagline, locale),
+    heroDescription: resolveLocalizedText(row.heroDescription, locale),
+    primaryCtaText: resolveLocalizedText(row.primaryCtaText, locale),
+    primaryCtaUrl: row.primaryCtaUrl,
+    secondaryCtaText: resolveLocalizedText(row.secondaryCtaText, locale),
+    secondaryCtaUrl: row.secondaryCtaUrl,
+    missionTitle: resolveLocalizedText(row.missionTitle, locale),
+    missionHighlight: resolveLocalizedText(row.missionHighlight, locale),
+    missionText: resolveLocalizedText(row.missionText, locale),
+    ctaTitle: resolveLocalizedText(row.ctaTitle, locale),
+    ctaDescription: resolveLocalizedText(row.ctaDescription, locale),
     stats: normalizeHomeStats(stats),
     techCards: normalizeHomeTechCards(techCards),
     sections: normalizeHomeSections(sections),
   };
 }
 
-export function toPublicAboutContent(row: AboutContent): PublicAboutContentDTO {
+export function toPublicAboutContent(
+  row: AboutContent,
+  locale: SiteLocaleCode = 'EN',
+): PublicAboutContentDTO {
   const { id: _id, createdAt: _c, updatedAt: _u, pillars, ...rest } = row;
   return {
     ...rest,
+    heroEyebrow: resolveLocalizedText(row.heroEyebrow, locale),
+    heroTitle: resolveLocalizedText(row.heroTitle, locale),
+    heroDescription: resolveLocalizedText(row.heroDescription, locale),
+    missionEyebrow: resolveLocalizedText(row.missionEyebrow, locale),
+    missionTitle: resolveLocalizedText(row.missionTitle, locale),
+    missionIntro: resolveLocalizedText(row.missionIntro, locale),
+    whyNowHeading: resolveLocalizedText(row.whyNowHeading, locale),
+    whyNowBody: resolveLocalizedText(row.whyNowBody, locale),
+    howWeWorkHeading: resolveLocalizedText(row.howWeWorkHeading, locale),
+    howWeWorkBody: resolveLocalizedText(row.howWeWorkBody, locale),
+    teamEyebrow: resolveLocalizedText(row.teamEyebrow, locale),
+    teamTitle: resolveLocalizedText(row.teamTitle, locale),
+    teamIntro: resolveLocalizedText(row.teamIntro, locale),
+    careerEyebrow: resolveLocalizedText(row.careerEyebrow, locale),
+    careerTitle: resolveLocalizedText(row.careerTitle, locale),
+    careerIntro: resolveLocalizedText(row.careerIntro, locale),
     pillars: normalizeAboutPillars(pillars),
   };
 }

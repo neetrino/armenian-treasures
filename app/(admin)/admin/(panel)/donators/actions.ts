@@ -7,6 +7,11 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateDonatorsCache } from '@/lib/cache/revalidation';
 import { donatorSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 
 export interface DonatorFormState {
   status: 'idle' | 'error' | 'success';
@@ -16,18 +21,25 @@ export interface DonatorFormState {
 
 function parseForm(formData: FormData) {
   const yearRaw = formData.get('year')?.toString() ?? '';
+  const nameI18n = readLocalizedTextFromFormData(formData, 'name');
+  const typeI18n = readLocalizedTextFromFormData(formData, 'type');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const parsed = donatorSchema.safeParse({
-    name: formData.get('name')?.toString() ?? '',
-    type: formData.get('type')?.toString() ?? '',
+    name: pickDefaultLocaleText(nameI18n),
+    type: pickDefaultLocaleText(typeI18n),
     year: yearRaw.trim() === '' ? null : Number(yearRaw),
-    description: formData.get('description')?.toString() ?? '',
+    description: pickDefaultLocaleText(descriptionI18n),
     order: Number(formData.get('order') ?? 0),
     isPublic: formData.get('isPublic') === 'on',
   });
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'name' || basePath === 'type' || basePath === 'description'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false as const, errors };
@@ -36,8 +48,10 @@ function parseForm(formData: FormData) {
     ok: true as const,
     data: {
       ...parsed.data,
+      name: encodeTranslatableText(nameI18n),
+      type: encodeTranslatableText(typeI18n),
       year: parsed.data.year ?? null,
-      description: parsed.data.description?.trim() ? parsed.data.description : null,
+      description: encodeTranslatableText(descriptionI18n) || null,
     },
   };
 }

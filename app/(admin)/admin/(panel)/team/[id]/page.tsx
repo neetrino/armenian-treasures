@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { TeamMemberForm } from '@/components/admin/TeamMemberForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Edit team member', robots: { index: false, follow: false } };
@@ -21,8 +22,8 @@ async function EditTeamMemberPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit team member"
-      title={member.name}
-      description={member.position}
+      title={getAdminLocaleValue(member.name)}
+      description={getAdminLocaleValue(member.position)}
       beforeHeader={<AdminBackLink href="/admin/team" label="All team members" />}
     >
       <AdminPanelCard>

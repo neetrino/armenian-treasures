@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CareerForm } from '@/components/admin/CareerForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Edit role', robots: { index: false, follow: false } };
@@ -21,8 +22,8 @@ async function EditCareerPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit role"
-      title={career.title}
-      description={`${career.location} · ${career.employmentType}`}
+      title={getAdminLocaleValue(career.title)}
+      description={`${getAdminLocaleValue(career.location)} · ${getAdminLocaleValue(career.employmentType)}`}
       beforeHeader={<AdminBackLink href="/admin/careers" label="All careers" />}
     >
       <AdminPanelCard>

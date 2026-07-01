@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CultureMenuForm } from '@/components/admin/CultureMenuForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +49,7 @@ async function EditCultureMenuItemPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit menu item"
-      title={item.title}
+      title={getAdminLocaleValue(item.title)}
       description={`Editing menu item with slug “${item.slug}”.`}
       beforeHeader={<AdminBackLink href="/admin/culture-menu" label="Menu structure" />}
     >
@@ -57,7 +58,7 @@ async function EditCultureMenuItemPage(props: PageProps) {
           mode="edit"
           itemId={item.id}
           catalogPagePath={catalogPagePath}
-          parents={parents}
+          parents={parents.map((parent) => ({ ...parent, title: getAdminLocaleValue(parent.title) }))}
           initial={{
             title: item.title,
             slug: item.slug,

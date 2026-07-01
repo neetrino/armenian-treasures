@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
@@ -11,6 +12,12 @@ import {
   updateBlogPostAction,
   type BlogFormState,
 } from '@/app/(admin)/admin/(panel)/blog/actions';
+import {
+  buildTabErrorMap,
+  decodeTranslatableText,
+  type LocaleTextMap,
+} from '@/lib/i18n/translatable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: BlogFormState = { status: 'idle' };
 
@@ -45,17 +52,37 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
   const publishedAtDefault = initial?.publishedAt
     ? toBlogDateInputValue(initial.publishedAt)
     : new Date().toISOString().slice(0, 10);
+  const titleValues = decodeTranslatableText(initial?.title ?? '');
+  const contentValues = decodeTranslatableText(initial?.content ?? '');
+  const tabErrors = buildTabErrorMap(state.fieldErrors);
+  const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <TranslatableFieldsTabs tabErrors={tabErrors}>
+        {(locale) => (
+          <div className="grid gap-5">
+            <TextField
+              label="Title"
+              name={`title.${locale}`}
+              required={locale === 'EN'}
+              defaultValue={valueFor(titleValues, locale)}
+              error={state.fieldErrors?.[`title.${locale}`]}
+            />
+            <TextareaField
+              label="Description"
+              name={`content.${locale}`}
+              rows={12}
+              required={locale === 'EN'}
+              defaultValue={valueFor(contentValues, locale)}
+              hint="Shown in full on the article page. Long text is shortened automatically on blog cards."
+              error={state.fieldErrors?.[`content.${locale}`]}
+            />
+          </div>
+        )}
+      </TranslatableFieldsTabs>
+
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
-          label="Title"
-          name="title"
-          required
-          defaultValue={initial?.title ?? ''}
-          error={state.fieldErrors?.title}
-        />
         <TextField
           label="Publish date"
           name="publishedAt"
@@ -84,15 +111,6 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
           Published on the public blog
         </label>
       </div>
-      <TextareaField
-        label="Description"
-        name="content"
-        rows={12}
-        required
-        defaultValue={initial?.content ?? ''}
-        hint="Shown in full on the article page. Long text is shortened automatically on blog cards."
-        error={state.fieldErrors?.content}
-      />
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
       ) : null}

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
 import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
 import './globals.css';
@@ -63,10 +64,11 @@ export const viewport: Viewport = {
   themeColor: '#7E1C26',
   colorScheme: 'dark',
 };
-function RootLayout({ children }: { children: React.ReactNode }) {
+async function RootLayout({ children }: { children: React.ReactNode }) {
+  const currentLocale = await getCurrentSiteLocale();
   return (
     <html
-      lang="en"
+      lang={currentLocale.toLowerCase()}
       data-theme={DEFAULT_SITE_THEME}
       suppressHydrationWarning
       className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable}`}

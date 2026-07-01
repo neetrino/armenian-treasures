@@ -16,12 +16,14 @@ import {
   readString,
   type MutablePageContent,
 } from '@/lib/admin/page-content-form/mutable-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface Props {
   initial: Record<string, unknown>;
+  locale: SiteLocaleCode;
 }
 
-export function CulturalPortalPageContentForm({ initial }: Props) {
+export function CulturalPortalPageContentForm({ initial, locale }: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseCulturalPortalPageContent(initial)),
   );
@@ -47,7 +49,7 @@ export function CulturalPortalPageContentForm({ initial }: Props) {
   const partnershipSection = readRecord(content.HOME_PARTNERSHIP_SECTION);
 
   return (
-    <PageContentFormShell slug="cultural-portal-page" content={content}>
+    <PageContentFormShell slug="cultural-portal-page" content={content} locale={locale}>
       <MetadataFields
         title={readString(metadata.title)}
         description={readString(metadata.description)}

@@ -5,6 +5,11 @@ import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { revalidateProjectsCache } from '@/lib/cache/revalidation';
 import { projectSchema } from '@/lib/validation';
+import {
+  encodeTranslatableText,
+  pickDefaultLocaleText,
+  readLocalizedTextFromFormData,
+} from '@/lib/i18n/translatable-content';
 import type { ProjectStatus } from '@prisma/client';
 
 const STATUSES: ProjectStatus[] = ['UPCOMING', 'ACTIVE', 'FUNDED', 'COMPLETED', 'ARCHIVED'];
@@ -20,15 +25,19 @@ export interface ProjectFormState {
 }
 
 function parseForm(formData: FormData) {
-  const titleRaw = formData.get('title')?.toString() ?? '';
+  const titleI18n = readLocalizedTextFromFormData(formData, 'title');
+  const categoryI18n = readLocalizedTextFromFormData(formData, 'category');
+  const regionI18n = readLocalizedTextFromFormData(formData, 'region');
+  const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
+  const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const slug = slugify(slugRaw.trim() || titleRaw, { lower: true, strict: true });
   const parsed = projectSchema.safeParse({
     title: titleRaw,
     slug,
-    category: formData.get('category')?.toString() ?? '',
-    region: formData.get('region')?.toString() ?? '',
-    description: formData.get('description')?.toString() ?? '',
+    category: pickDefaultLocaleText(categoryI18n),
+    region: pickDefaultLocaleText(regionI18n),
+    description: pickDefaultLocaleText(descriptionI18n),
     image: formData.get('image')?.toString() ?? '',
     goalAmount: Number(formData.get('goalAmount') ?? 0),
     raisedAmount: Number(formData.get('raisedAmount') ?? 0),
@@ -39,7 +48,14 @@ function parseForm(formData: FormData) {
   if (!parsed.success) {
     const errors: Record<string, string> = {};
     for (const issue of parsed.error.issues) {
-      const path = issue.path.join('.') || 'form';
+      const basePath = issue.path.join('.') || 'form';
+      const path =
+        basePath === 'title' ||
+        basePath === 'category' ||
+        basePath === 'region' ||
+        basePath === 'description'
+          ? `${basePath}.EN`
+          : basePath;
       if (!errors[path]) errors[path] = issue.message;
     }
     return { ok: false as const, errors };
@@ -47,11 +63,11 @@ function parseForm(formData: FormData) {
   return {
     ok: true as const,
     data: {
-      title: parsed.data.title,
+      title: encodeTranslatableText(titleI18n),
       slug: parsed.data.slug,
-      category: parsed.data.category,
-      region: parsed.data.region?.trim() ? parsed.data.region : null,
-      description: parsed.data.description?.trim() ? parsed.data.description : null,
+      category: encodeTranslatableText(categoryI18n),
+      region: encodeTranslatableText(regionI18n) || null,
+      description: encodeTranslatableText(descriptionI18n) || null,
       image: parsed.data.image?.trim() ? parsed.data.image : null,
       goalAmount: parsed.data.goalAmount,
       raisedAmount: parsed.data.raisedAmount,
