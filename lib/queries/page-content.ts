@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { resolveLandingImg } from '@/lib/page-content-images';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { resolveLocalizedJsonContent } from '@/lib/i18n/translatable-json-content';
 import {
   buildDefaultCulturalPortalPageContent,
@@ -44,9 +45,8 @@ function createPageContentGetter<T>(
   fallback: () => T,
   parse: (value: unknown) => T,
 ): () => Promise<T> {
-  return unstable_cache(
-    async () => {
-      const locale = await getCurrentSiteLocale();
+  const getCachedPageContent = unstable_cache(
+    async (locale: SiteLocaleCode) => {
       const raw = await fetchPageContentRaw(slug);
       if (raw === null) return fallback();
       return parse(resolveLocalizedJsonContent(raw, locale));
@@ -54,6 +54,11 @@ function createPageContentGetter<T>(
     [`page-content-${slug}`],
     { tags: [`page-content-${slug}`, 'page-content'], revalidate: 60 },
   );
+
+  return async () => {
+    const locale = await getCurrentSiteLocale();
+    return getCachedPageContent(locale);
+  };
 }
 
 export const getDonationPageContent = createPageContentGetter(
