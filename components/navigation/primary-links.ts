@@ -32,6 +32,10 @@ export const PRIMARY_LINKS: PrimaryLink[] = [
     href: '/donate',
     label: 'Donate',
   },
+  {
+    href: '/blog',
+    label: 'Blog',
+  },
 ];
 
 export const PROJECTS_MENU: NavDropdownLink[] = [

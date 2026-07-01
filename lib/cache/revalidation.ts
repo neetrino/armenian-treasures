@@ -11,6 +11,7 @@ export const PUBLIC_LAYOUT_PATHS = [
   '/culture/submit',
   '/projects',
   '/donate',
+  '/blog',
   '/partnership',
   '/contacts',
   '/about/mission',
@@ -42,6 +43,7 @@ export const PUBLIC_API_ROUTES = {
   cultureItems: '/api/culture/items',
   team: '/api/team',
   careers: '/api/careers',
+  blogPosts: '/api/blog-posts',
 } as const;
 
 export function revalidatePublicApiRoutes(routes: readonly string[]): void {
@@ -171,6 +173,18 @@ export function revalidateCareersCache(): void {
   revalidatePublicPages(['/about/career']);
   revalidatePath('/admin/careers');
   revalidatePublicApiRoutes([PUBLIC_API_ROUTES.careers]);
+}
+
+export function revalidateBlogPostsCache(slugs: string[] = []): void {
+  revalidateTag('blog-posts', 'max');
+  revalidatePublicPages(['/blog']);
+  revalidatePath('/admin/blog');
+  for (const slug of slugs) {
+    const trimmed = slug.trim();
+    if (!trimmed) continue;
+    revalidatePath(`/blog/${trimmed}`);
+  }
+  revalidatePublicApiRoutes([PUBLIC_API_ROUTES.blogPosts]);
 }
 
 export function revalidateAboutContentCache(): void {

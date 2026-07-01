@@ -28,7 +28,12 @@ describe('page content admin index split', () => {
     const culture = [...CULTURE_PAGE_CONTENT_INDEX_SLUGS];
     const combined = [...marketing, ...culture].sort();
 
-    expect(marketing).toEqual(['donation-page', 'partnership-page']);
+    expect(marketing).toEqual([
+      'donation-page',
+      'partnership-page',
+      'contacts-page',
+      'projects-page',
+    ]);
     expect(culture).toContain('cultural-portal-page');
     expect(culture).toContain('khndzoresk');
     expect(culture).toContain('khachaturian-museum');

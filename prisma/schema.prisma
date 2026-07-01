@@ -374,6 +374,22 @@ model PageContent {
   updatedAt DateTime @updatedAt
 }
 
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String   @db.Text
+  image       String?
+  publishedAt DateTime @default(now())
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, publishedAt])
+  @@index([order])
+}
+
 model AboutContent {
   id               String   @id @default("about-content-singleton")
   heroEyebrow      String

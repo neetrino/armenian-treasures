@@ -3,7 +3,6 @@ import {
   FOOTER_LEGAL_LINKS,
   FOOTER_SITE_DOMAIN,
 } from '@/components/layout/footer/footer-links';
-import { ThemeSwitcher } from '@/components/layout/footer/ThemeSwitcher';
 import type { PublicSiteSettingsDTO } from '@/lib/dto';
 
 interface FooterBottomBarProps {
@@ -20,8 +19,6 @@ export function FooterBottomBar({ settings }: FooterBottomBarProps) {
       </p>
 
       <div className="site-footer__bottom-meta">
-        <ThemeSwitcher />
-
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-surface-subtle">
           {FOOTER_LEGAL_LINKS.map((link, index) => (
             <span key={link.label} className="inline-flex items-center gap-2">

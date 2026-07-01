@@ -148,6 +148,16 @@ export const careerSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
+export const blogPostSchema = z.object({
+  title: z.string().trim().min(2).max(160),
+  slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9-]+$/),
+  content: z.string().trim().min(10).max(20000),
+  image: optionalShortString,
+  publishedAt: z.coerce.date(),
+  order: z.number().int().min(0).default(0),
+  isPublished: z.boolean().default(true),
+});
+
 export const donatorSchema = z.object({
   name: z.string().trim().min(2).max(140),
   type: z.string().trim().min(1).max(60),
@@ -264,6 +274,7 @@ export type CultureItemInput = z.infer<typeof cultureItemSchema>;
 export type ProjectInput = z.infer<typeof projectSchema>;
 export type TeamMemberInput = z.infer<typeof teamMemberSchema>;
 export type CareerInput = z.infer<typeof careerSchema>;
+export type BlogPostInput = z.infer<typeof blogPostSchema>;
 export type DonatorInput = z.infer<typeof donatorSchema>;
 export type SubmissionUpdateInput = z.infer<typeof submissionUpdateSchema>;
 export type ContactMessageUpdateInput = z.infer<typeof contactMessageUpdateSchema>;

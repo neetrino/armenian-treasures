@@ -160,15 +160,3 @@
     transform: none;
   }
 }
-
-[data-theme='light'] .virtual-museum-card-group:hover .virtual-museum-card,
-[data-theme='light'] .virtual-museum-card-group:focus-within .virtual-museum-card {
-  background: var(--surface-card-bg-hover);
-  border-color: var(--surface-card-hover-border);
-  box-shadow: var(--surface-card-hover-shadow);
-}
-
-[data-theme='light'] .virtual-museum-card-group:hover .virtual-museum-card__title,
-[data-theme='light'] .virtual-museum-card-group:focus-within .virtual-museum-card__title {
-  color: var(--heritage-gold-muted);
-}

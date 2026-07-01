@@ -15,6 +15,7 @@ import {
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import type {
   Career,
+  BlogPost,
   ContactMessage,
   CultureItem,
   CultureMenuItem,
@@ -109,6 +110,18 @@ export interface PublicCareerDTO {
   applyEmail: string | null;
   order: number;
 }
+
+export interface PublicBlogPostDTO {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  image: string | null;
+  publishedAt: string;
+  order: number;
+}
+
+export type PublicBlogPostDetailDTO = PublicBlogPostDTO;
 
 export interface PublicDonatorDTO {
   id: string;
@@ -236,6 +249,22 @@ export function toPublicCareer(row: Career): PublicCareerDTO {
     applyEmail: row.applyEmail,
     order: row.order,
   };
+}
+
+export function toPublicBlogPost(row: BlogPost): PublicBlogPostDTO {
+  return {
+    id: row.id,
+    title: row.title,
+    slug: row.slug,
+    content: row.content,
+    image: row.image,
+    publishedAt: row.publishedAt.toISOString(),
+    order: row.order,
+  };
+}
+
+export function toPublicBlogPostDetail(row: BlogPost): PublicBlogPostDetailDTO {
+  return toPublicBlogPost(row);
 }
 
 export function toPublicDonator(row: Donator): PublicDonatorDTO {

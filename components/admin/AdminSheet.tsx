@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
@@ -50,6 +50,12 @@ export function AdminSheet({
   size = '2xl',
   icon,
 }: AdminSheetProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent): void => {
@@ -168,6 +174,8 @@ export function AdminSheet({
       ) : null}
     </AnimatePresence>
   );
+
+  if (!mounted) return null;
 
   return createPortal(sheetNode, document.body);
 }
