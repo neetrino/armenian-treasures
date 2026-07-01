@@ -19,10 +19,13 @@ import {
   type HomeTechCard,
 } from '@/lib/types/home-content';
 import {
+  decodeTranslatableText,
   encodeTranslatableText,
+  type LocaleTextMap,
   pickDefaultLocaleText,
   readLocalizedTextFromFormData,
 } from '@/lib/i18n/translatable-content';
+import { SITE_LOCALE_CODES } from '@/lib/i18n/locale-config';
 
 const SINGLETON_ID = 'home-content-singleton';
 
@@ -68,8 +71,15 @@ function getPreservedFields(existing: HomeContent | null) {
   if (existing) {
     return {
       heroBadge: existing.heroBadge,
+      heroTitle: existing.heroTitle,
+      heroHighlight: existing.heroHighlight,
       heroSubtitle: existing.heroSubtitle,
       heroTagline: existing.heroTagline,
+      heroDescription: existing.heroDescription,
+      primaryCtaText: existing.primaryCtaText,
+      primaryCtaUrl: existing.primaryCtaUrl,
+      secondaryCtaText: existing.secondaryCtaText,
+      secondaryCtaUrl: existing.secondaryCtaUrl,
       stats: existing.stats,
       missionTitle: existing.missionTitle,
       missionHighlight: existing.missionHighlight,
@@ -82,8 +92,15 @@ function getPreservedFields(existing: HomeContent | null) {
   }
   return {
     heroBadge: HOME_CONTENT_FALLBACK.heroBadge,
+    heroTitle: HOME_CONTENT_FALLBACK.heroTitle,
+    heroHighlight: HOME_CONTENT_FALLBACK.heroHighlight,
     heroSubtitle: HOME_CONTENT_FALLBACK.heroSubtitle,
     heroTagline: HOME_CONTENT_FALLBACK.heroTagline,
+    heroDescription: HOME_CONTENT_FALLBACK.heroDescription,
+    primaryCtaText: HOME_CONTENT_FALLBACK.primaryCtaText,
+    primaryCtaUrl: HOME_CONTENT_FALLBACK.primaryCtaUrl,
+    secondaryCtaText: HOME_CONTENT_FALLBACK.secondaryCtaText,
+    secondaryCtaUrl: HOME_CONTENT_FALLBACK.secondaryCtaUrl,
     stats: HOME_CONTENT_FALLBACK.stats,
     missionTitle: HOME_CONTENT_FALLBACK.missionTitle,
     missionHighlight: HOME_CONTENT_FALLBACK.missionHighlight,
@@ -95,30 +112,56 @@ function getPreservedFields(existing: HomeContent | null) {
   };
 }
 
+function hasLocalizedInputs(formData: FormData, fieldName: string): boolean {
+  return SITE_LOCALE_CODES.some((locale) => formData.has(`${fieldName}.${locale}`));
+}
+
+function readLocalizedOrPreserved(
+  formData: FormData,
+  fieldName: string,
+  preservedRaw: string,
+): LocaleTextMap {
+  if (hasLocalizedInputs(formData, fieldName)) {
+    return readLocalizedTextFromFormData(formData, fieldName);
+  }
+  return decodeTranslatableText(preservedRaw);
+}
+
+function readFormStringOrPreserved(
+  formData: FormData,
+  fieldName: string,
+  preservedValue: string,
+): string {
+  if (formData.has(fieldName)) {
+    return formData.get(fieldName)?.toString() ?? '';
+  }
+  return preservedValue;
+}
+
 export async function saveHomeContentAction(
   _prev: HomeContentFormState,
   formData: FormData,
 ): Promise<HomeContentFormState> {
   await requireAdmin();
-  const heroBadgeI18n = readLocalizedTextFromFormData(formData, 'heroBadge');
-  const heroTitleI18n = readLocalizedTextFromFormData(formData, 'heroTitle');
-  const heroHighlightI18n = readLocalizedTextFromFormData(formData, 'heroHighlight');
-  const heroSubtitleI18n = readLocalizedTextFromFormData(formData, 'heroSubtitle');
-  const heroTaglineI18n = readLocalizedTextFromFormData(formData, 'heroTagline');
-  const heroDescriptionI18n = readLocalizedTextFromFormData(formData, 'heroDescription');
-  const primaryCtaTextI18n = readLocalizedTextFromFormData(formData, 'primaryCtaText');
-  const secondaryCtaTextI18n = readLocalizedTextFromFormData(formData, 'secondaryCtaText');
-  const missionTitleI18n = readLocalizedTextFromFormData(formData, 'missionTitle');
-  const missionHighlightI18n = readLocalizedTextFromFormData(formData, 'missionHighlight');
-  const missionTextI18n = readLocalizedTextFromFormData(formData, 'missionText');
-  const ctaTitleI18n = readLocalizedTextFromFormData(formData, 'ctaTitle');
-  const ctaDescriptionI18n = readLocalizedTextFromFormData(formData, 'ctaDescription');
 
   const existing = await prisma.homeContent.findUnique({
     where: { id: SINGLETON_ID },
   });
 
   const preserved = getPreservedFields(existing);
+  const heroBadgeI18n = readLocalizedOrPreserved(formData, 'heroBadge', preserved.heroBadge);
+  const heroTitleI18n = readLocalizedOrPreserved(formData, 'heroTitle', preserved.heroTitle);
+  const heroHighlightI18n = readLocalizedOrPreserved(formData, 'heroHighlight', preserved.heroHighlight);
+  const heroSubtitleI18n = readLocalizedOrPreserved(formData, 'heroSubtitle', preserved.heroSubtitle);
+  const heroTaglineI18n = readLocalizedOrPreserved(formData, 'heroTagline', preserved.heroTagline);
+  const heroDescriptionI18n = readLocalizedOrPreserved(formData, 'heroDescription', preserved.heroDescription);
+  const primaryCtaTextI18n = readLocalizedOrPreserved(formData, 'primaryCtaText', preserved.primaryCtaText);
+  const secondaryCtaTextI18n = readLocalizedOrPreserved(formData, 'secondaryCtaText', preserved.secondaryCtaText);
+  const missionTitleI18n = readLocalizedOrPreserved(formData, 'missionTitle', preserved.missionTitle);
+  const missionHighlightI18n = readLocalizedOrPreserved(formData, 'missionHighlight', preserved.missionHighlight);
+  const missionTextI18n = readLocalizedOrPreserved(formData, 'missionText', preserved.missionText);
+  const ctaTitleI18n = readLocalizedOrPreserved(formData, 'ctaTitle', preserved.ctaTitle);
+  const ctaDescriptionI18n = readLocalizedOrPreserved(formData, 'ctaDescription', preserved.ctaDescription);
 
   const payload = {
     ...preserved,
@@ -128,12 +171,12 @@ export async function saveHomeContentAction(
     heroSubtitle: pickDefaultLocaleText(heroSubtitleI18n),
     heroTagline: pickDefaultLocaleText(heroTaglineI18n),
     heroDescription: pickDefaultLocaleText(heroDescriptionI18n),
-    heroImage: formData.get('heroImage')?.toString() ?? '',
-    heroMobileImage: formData.get('heroMobileImage')?.toString() ?? '',
+    heroImage: readFormStringOrPreserved(formData, 'heroImage', existing?.heroImage ?? ''),
+    heroMobileImage: readFormStringOrPreserved(formData, 'heroMobileImage', existing?.heroMobileImage ?? ''),
     primaryCtaText: pickDefaultLocaleText(primaryCtaTextI18n),
-    primaryCtaUrl: formData.get('primaryCtaUrl')?.toString() ?? '',
+    primaryCtaUrl: formData.get('primaryCtaUrl')?.toString() ?? preserved.primaryCtaUrl,
     secondaryCtaText: pickDefaultLocaleText(secondaryCtaTextI18n),
-    secondaryCtaUrl: formData.get('secondaryCtaUrl')?.toString() ?? '',
+    secondaryCtaUrl: formData.get('secondaryCtaUrl')?.toString() ?? preserved.secondaryCtaUrl,
     missionTitle: pickDefaultLocaleText(missionTitleI18n),
     missionHighlight: pickDefaultLocaleText(missionHighlightI18n),
     missionText: pickDefaultLocaleText(missionTextI18n),
