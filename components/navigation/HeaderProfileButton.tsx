@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
-import { Shield, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { signOutAccountAction } from '@/app/(public)/profile/actions';
 import { cn } from '@/lib/utils';
 import type { HeaderAccountSummary } from '@/lib/auth/header-session';
@@ -85,11 +85,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
         aria-haspopup="menu"
         title={account.name}
       >
-        {isAdmin ? (
-          <Shield size={18} strokeWidth={1.5} aria-hidden className="shrink-0" />
-        ) : (
-          <User size={18} strokeWidth={1.5} aria-hidden className="shrink-0" />
-        )}
+        <User size={18} strokeWidth={1.5} aria-hidden className="shrink-0" />
       </button>
 
       {open ? (
