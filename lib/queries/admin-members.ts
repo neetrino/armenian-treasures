@@ -49,23 +49,48 @@ export async function listAdminMembers(
   where: Prisma.MemberWhereInput,
   skip: number,
   take: number,
+  options?: { donationSort?: 'asc' | 'desc' },
 ): Promise<AdminMemberListRow[]> {
+  const select = {
+    id: true,
+    name: true,
+    surname: true,
+    email: true,
+    country: true,
+    phone: true,
+    createdAt: true,
+  } as const;
+
+  if (options?.donationSort) {
+    const allMembers = await prisma.member.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      select,
+    });
+    const donationCounts = await getDonationCountsByMemberId(allMembers.map((member) => member.id));
+    const sorted = allMembers
+      .map((member) => ({
+        ...member,
+        donationCount: donationCounts.get(member.id) ?? 0,
+      }))
+      .sort((a, b) => {
+        const factor = options.donationSort === 'asc' ? 1 : -1;
+        if (a.donationCount !== b.donationCount) {
+          return (a.donationCount - b.donationCount) * factor;
+        }
+        return b.createdAt.getTime() - a.createdAt.getTime();
+      });
+
+    return sorted.slice(skip, skip + take);
+  }
+
   const members = await prisma.member.findMany({
     where,
     orderBy: { createdAt: 'desc' },
     skip,
     take,
-    select: {
-      id: true,
-      name: true,
-      surname: true,
-      email: true,
-      country: true,
-      phone: true,
-      createdAt: true,
-    },
+    select,
   });
-
   const donationCounts = await getDonationCountsByMemberId(members.map((member) => member.id));
 
   return members.map((member) => ({

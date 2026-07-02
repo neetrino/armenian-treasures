@@ -17,6 +17,14 @@ async function AdminDonatorsPage() {
         ...row,
         name: getAdminLocaleValue(row.name),
         type: getAdminLocaleValue(row.type),
+        editInitial: {
+          name: row.name,
+          type: row.type,
+          year: row.year,
+          description: row.description ?? '',
+          order: row.order,
+          isPublic: row.isPublic,
+        },
       }))}
     />
   );

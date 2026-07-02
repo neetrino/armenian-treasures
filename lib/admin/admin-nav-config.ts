@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   Briefcase,
   Gauge,
   Globe,
@@ -39,6 +40,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Dashboard',
         description: 'Stats and quick links',
         icon: Gauge,
+      },
+      {
+        href: '/admin/analytics',
+        label: 'Analytics',
+        description: 'Full site performance snapshot',
+        icon: BarChart3,
       },
     ],
   },
@@ -119,6 +126,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Users',
         description: 'Registered member accounts',
         icon: UserCircle,
+      },
+      {
+        href: '/admin/member-donations',
+        label: 'Donations',
+        description: 'Member payment history',
+        icon: HandCoins,
       },
       {
         href: '/admin/team',

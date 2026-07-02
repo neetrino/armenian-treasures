@@ -17,6 +17,15 @@ async function AdminTeamPage() {
         ...row,
         name: getAdminLocaleValue(row.name),
         position: getAdminLocaleValue(row.position),
+        editInitial: {
+          name: row.name,
+          initials: row.initials,
+          position: row.position,
+          bio: row.bio ?? '',
+          image: row.image ?? '',
+          order: row.order,
+          isActive: row.isActive,
+        },
       }))}
     />
   );
