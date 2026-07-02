@@ -5,6 +5,8 @@ interface CultureCatalogAboutProps {
 }
 
 export function CultureCatalogAbout({ content }: CultureCatalogAboutProps) {
+  const hasFacts = content.facts.length > 0;
+
   return (
     <section id="about">
       <p className="sec-label">{content.label}</p>
@@ -18,14 +20,16 @@ export function CultureCatalogAbout({ content }: CultureCatalogAboutProps) {
           {content.extraHeading ? <h3>{content.extraHeading}</h3> : null}
           {content.extraParagraph ? <p>{content.extraParagraph}</p> : null}
         </div>
-        <div className="about-aside">
-          {content.facts.map((fact) => (
-            <div key={fact.label} className="fact-card reveal">
-              <div className="fact-label">{fact.label}</div>
-              <div className="fact-value">{fact.value}</div>
-            </div>
-          ))}
-        </div>
+        {hasFacts ? (
+          <div className="about-aside">
+            {content.facts.map((fact) => (
+              <div key={fact.label} className="fact-card reveal">
+                <div className="fact-label">{fact.label}</div>
+                <div className="fact-value">{fact.value}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

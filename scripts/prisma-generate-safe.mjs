@@ -13,24 +13,25 @@ const runGenerate = () =>
       shell: true,
     });
 
-    let output = "";
+    let stdout = "";
+    let stderr = "";
     child.stdout.on("data", (data) => {
       process.stdout.write(data);
-      output += data.toString();
+      stdout += data.toString();
     });
     child.stderr.on("data", (data) => {
-      process.stderr.write(data);
-      output += data.toString();
+      stderr += data.toString();
     });
-    child.on("close", (code) => resolve({ code: code ?? 1, output }));
+    child.on("close", (code) => resolve({ code: code ?? 1, stdout, stderr }));
   });
 
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
-  const { code: exitCode, output } = await runGenerate();
+  const { code: exitCode, stdout, stderr } = await runGenerate();
   if (exitCode === 0) {
     process.exit(0);
   }
 
+  const output = `${stdout}${stderr}`;
   const hasLockedEngineError = output.includes(
     "EPERM: operation not permitted, rename"
   );
@@ -39,6 +40,10 @@ for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       "[prisma-generate-safe] Prisma engine file is locked by another process; using existing generated client."
     );
     process.exit(0);
+  }
+
+  if (stderr.trim().length > 0) {
+    process.stderr.write(stderr);
   }
 
   if (attempt === MAX_ATTEMPTS) {

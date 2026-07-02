@@ -43,42 +43,46 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
   if (!match) notFound();
 
   const navItem = findCultureCatalogNavItem(menuPath);
-  const resolvedContent = resolveCultureCatalogContent(match.node, match.parent);
   const publicHref = navItem?.publicHref ?? resolveMenuHref(match.node, match.parent);
   const formKey =
     match.node.catalogContent != null
       ? JSON.stringify(match.node.catalogContent)
       : `default-${menuPath}`;
 
-  const managesGridCards = match.node.routeType === 'SUBCATEGORY';
-
-  const [entryRows, subcategoryRows] = await Promise.all([
-    managesGridCards
-      ? prisma.cultureItem.findMany({
-          where: { menuItemId: match.node.id },
-          orderBy: [{ order: 'asc' }, { title: 'asc' }],
-          select: {
-            id: true,
-            slug: true,
-            title: true,
-            description: true,
-            region: true,
-            periodLabel: true,
-            image: true,
-            tourUrl: true,
-            order: true,
-            status: true,
-          },
-        })
-      : Promise.resolve([]),
+  const subcategoryRows =
     match.node.routeType === 'CATEGORY'
-      ? prisma.cultureMenuItem.findMany({
+      ? await prisma.cultureMenuItem.findMany({
           where: { parentId: match.node.id, routeType: 'SUBCATEGORY' },
           orderBy: { order: 'asc' },
           select: { slug: true, title: true },
         })
-      : Promise.resolve([]),
-  ]);
+      : [];
+  const hasSubcategories = subcategoryRows.length > 0;
+  const resolvedContent = resolveCultureCatalogContent(match.node, match.parent, {
+    hasSubcategories,
+  });
+  const managesGridCards =
+    match.node.routeType === 'SUBCATEGORY' ||
+    (match.node.routeType === 'CATEGORY' && !hasSubcategories);
+
+  const entryRows = managesGridCards
+    ? await prisma.cultureItem.findMany({
+        where: { menuItemId: match.node.id },
+        orderBy: [{ order: 'asc' }, { title: 'asc' }],
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          description: true,
+          region: true,
+          periodLabel: true,
+          image: true,
+          tourUrl: true,
+          order: true,
+          status: true,
+        },
+      })
+    : [];
 
   const entries: CultureCatalogEntryAdmin[] = entryRows.map((row) => ({
     id: row.id,

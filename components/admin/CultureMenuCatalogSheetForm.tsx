@@ -22,6 +22,25 @@ import {
 } from '@/lib/types/culture-catalog-content';
 
 type SectionId = 'hero' | 'about' | 'facts' | 'entries' | 'map' | 'stats';
+type SectionPresetId = 'church-like' | 'minimal' | 'map-heavy';
+const SECTION_FIELD: Record<SectionId, string> = {
+  hero: 'catalogSectionHero',
+  about: 'catalogSectionAbout',
+  facts: 'catalogSectionFacts',
+  entries: 'catalogSectionEntries',
+  map: 'catalogSectionMap',
+  stats: 'catalogSectionStats',
+};
+const SECTION_PRESETS: Record<SectionPresetId, Record<SectionId, boolean>> = {
+  'church-like': { hero: true, about: true, facts: true, entries: true, map: true, stats: true },
+  minimal: { hero: true, about: true, facts: false, entries: true, map: false, stats: false },
+  'map-heavy': { hero: true, about: true, facts: false, entries: true, map: true, stats: true },
+};
+const SECTION_PRESET_LABEL: Record<SectionPresetId, string> = {
+  'church-like': 'Church-like',
+  minimal: 'Minimal',
+  'map-heavy': 'Map-heavy',
+};
 
 interface CultureMenuCatalogSheetFormProps {
   catalogContent?: unknown;
@@ -69,6 +88,21 @@ export function CultureMenuCatalogSheetForm({
 
   const setField = (name: string, value: string): void => {
     setValues((prev) => ({ ...prev, [name]: value }));
+  };
+  const isSectionEnabled = (sectionId: SectionId): boolean =>
+    (values[SECTION_FIELD[sectionId]] ?? '1') !== '0';
+  const setSectionEnabled = (sectionId: SectionId, enabled: boolean): void => {
+    setField(SECTION_FIELD[sectionId], enabled ? '1' : '0');
+  };
+  const applySectionPreset = (presetId: SectionPresetId): void => {
+    const preset = SECTION_PRESETS[presetId];
+    setValues((prev) => {
+      const next = { ...prev };
+      for (const sectionId of Object.keys(SECTION_FIELD) as SectionId[]) {
+        next[SECTION_FIELD[sectionId]] = preset[sectionId] ? '1' : '0';
+      }
+      return next;
+    });
   };
 
   const sections: Array<{
@@ -126,12 +160,29 @@ export function CultureMenuCatalogSheetForm({
     <>
       <HiddenCatalogFields values={values} />
 
+      <div className="rounded-xl border border-stone-100 bg-parchment-50 p-4">
+        <p className="text-sm font-medium text-ink">Section presets</p>
+        <p className="mt-1 text-xs text-ink-muted">Quickly apply a visibility setup, then fine-tune section by section.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {(Object.keys(SECTION_PRESETS) as SectionPresetId[]).map((presetId) => (
+            <button
+              key={presetId}
+              type="button"
+              onClick={() => applySectionPreset(presetId)}
+              className="rounded-full border border-stone-300 px-3 py-1.5 text-xs font-medium text-ink transition hover:border-bronze-500 hover:text-bronze-700"
+            >
+              {SECTION_PRESET_LABEL[presetId]}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-2">
         {sections.map((section) => (
           <AdminSectionCard
             key={section.id}
             title={section.title}
-            description={section.description}
+            description={`${section.description} ${isSectionEnabled(section.id) ? '(Enabled)' : '(Hidden)'}`}
             preview={section.preview}
             icon={section.icon}
             onClick={() => setOpenSection(section.id)}
@@ -148,6 +199,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="flex flex-col gap-5">
+          <label className="flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('hero')}
+              onChange={(event) => setSectionEnabled('hero', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           <PageContentImageField
             label="Hero banner image"
             layout="banner"
@@ -186,6 +246,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="sm:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('about')}
+              onChange={(event) => setSectionEnabled('about', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           <TextField
             label="About label"
             value={values.catalogAboutLabel ?? ''}
@@ -235,6 +304,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="sm:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('facts')}
+              onChange={(event) => setSectionEnabled('facts', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           {[1, 2, 3, 4].map((index) => (
             <div key={index} className="grid gap-3 rounded-xl border border-stone-100 bg-parchment-50 p-4">
               <p className="text-xs font-medium uppercase tracking-eyebrow text-bronze-700">Fact {index}</p>
@@ -262,6 +340,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="sm:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('entries')}
+              onChange={(event) => setSectionEnabled('entries', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           <TextField
             label="Section label"
             value={values.catalogItemsLabel ?? ''}
@@ -301,6 +388,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="sm:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('map')}
+              onChange={(event) => setSectionEnabled('map', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           <TextField
             label="Map eyebrow"
             value={values.catalogMapEyebrow ?? ''}
@@ -335,6 +431,15 @@ export function CultureMenuCatalogSheetForm({
         size="2xl"
       >
         <div className="grid gap-4 sm:grid-cols-2">
+          <label className="sm:col-span-2 flex items-center gap-2 text-sm text-ink-soft">
+            <input
+              type="checkbox"
+              checked={isSectionEnabled('stats')}
+              onChange={(event) => setSectionEnabled('stats', event.target.checked)}
+              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+            />
+            Show this section on the public page
+          </label>
           <TextField
             label="Entries label"
             value={values.catalogStatEntries ?? ''}

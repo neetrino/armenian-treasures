@@ -48,6 +48,16 @@ export const menuCatalogContentSchema = z
         fourth: z.string().trim().max(80).optional(),
       })
       .optional(),
+    sectionVisibility: z
+      .object({
+        hero: z.boolean().optional(),
+        about: z.boolean().optional(),
+        facts: z.boolean().optional(),
+        entries: z.boolean().optional(),
+        map: z.boolean().optional(),
+        stats: z.boolean().optional(),
+      })
+      .optional(),
   })
   .strict();
 
@@ -69,6 +79,10 @@ export function mergeCultureCatalogLayers(
     result = {
       ...result,
       ...override,
+      sectionVisibility: {
+        ...result.sectionVisibility,
+        ...override.sectionVisibility,
+      },
       about: {
         ...result.about,
         ...override.about,
@@ -91,6 +105,12 @@ export function isMenuCatalogContentEmpty(value: MenuCatalogContentOverride | nu
 function optionalTrim(value: string): string | undefined {
   const trimmed = value.trim();
   return trimmed || undefined;
+}
+
+function optionalBoolean(value: string): boolean | undefined {
+  const normalized = value.trim().toLowerCase();
+  if (!normalized) return undefined;
+  return normalized === '1' || normalized === 'true' || normalized === 'on' || normalized === 'yes';
 }
 
 export function catalogContentFromFormFields(formData: FormData): MenuCatalogContentOverride | null {
@@ -142,6 +162,14 @@ export function catalogContentFromFormFields(formData: FormData): MenuCatalogCon
       third: optionalTrim(read('catalogStatThird')),
       fourth: optionalTrim(read('catalogStatFourth')),
     },
+    sectionVisibility: {
+      hero: optionalBoolean(read('catalogSectionHero')),
+      about: optionalBoolean(read('catalogSectionAbout')),
+      facts: optionalBoolean(read('catalogSectionFacts')),
+      entries: optionalBoolean(read('catalogSectionEntries')),
+      map: optionalBoolean(read('catalogSectionMap')),
+      stats: optionalBoolean(read('catalogSectionStats')),
+    },
   };
 
   const parsed = menuCatalogContentSchema.safeParse(draft);
@@ -157,6 +185,7 @@ export function cultureCatalogContentToOverride(
     accent: content.accent,
     slogan: content.slogan,
     heroImage: content.heroImage,
+    sectionVisibility: { ...content.sectionVisibility },
     about: {
       label: content.about.label,
       title: content.about.title,
@@ -201,6 +230,12 @@ export function menuCatalogContentToFormDefaults(
     catalogStatRegions: content.statLabels?.regions ?? '',
     catalogStatThird: content.statLabels?.third ?? '',
     catalogStatFourth: content.statLabels?.fourth ?? '',
+    catalogSectionHero: content.sectionVisibility?.hero === false ? '0' : '1',
+    catalogSectionAbout: content.sectionVisibility?.about === false ? '0' : '1',
+    catalogSectionFacts: content.sectionVisibility?.facts === false ? '0' : '1',
+    catalogSectionEntries: content.sectionVisibility?.entries === false ? '0' : '1',
+    catalogSectionMap: content.sectionVisibility?.map === false ? '0' : '1',
+    catalogSectionStats: content.sectionVisibility?.stats === false ? '0' : '1',
     catalogFact1Label: facts[0]?.label ?? '',
     catalogFact1Value: facts[0]?.value ?? '',
     catalogFact2Label: facts[1]?.label ?? '',
