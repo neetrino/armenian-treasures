@@ -173,6 +173,15 @@
 }
 
 @layer components {
+  .admin-no-motion,
+  .admin-no-motion *,
+  .admin-no-motion *::before,
+  .admin-no-motion *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
   .container-page {
     @apply mx-auto w-full min-w-0 max-w-7xl px-4 sm:px-6 lg:px-8;
   }

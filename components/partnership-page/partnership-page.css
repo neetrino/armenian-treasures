@@ -49,7 +49,7 @@
 .khndzoresk-page .partner-row-1{grid-template-columns:1fr}
 .khndzoresk-page .partner-row-2{grid-template-columns:repeat(2,1fr)}
 .khndzoresk-page .partner-row-3{grid-template-columns:repeat(3,1fr)}
-.khndzoresk-page .partner-row-4{grid-template-columns:repeat(4,1fr)}
+.khndzoresk-page .partner-row-4{grid-template-columns:repeat(3,1fr)}
 
 .khndzoresk-page .p-card{background:linear-gradient(135deg,rgba(20,20,20,.95),rgba(14,14,14,.98));border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .35s,box-shadow .35s,transform .35s;display:flex;flex-direction:column;align-items:center;text-align:center;padding:44px 32px 40px;text-decoration:none;color:inherit}
 .khndzoresk-page .p-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent 0%,var(--teal) 20%,var(--gold) 50%,var(--teal) 80%,transparent 100%);opacity:0;transition:opacity .35s}
@@ -63,9 +63,7 @@
 .khndzoresk-page .p-card.future{opacity:.62;border-style:dashed}
 
 .khndzoresk-page .medallion{width:220px;height:220px;position:relative;margin:0 auto 32px;flex-shrink:0}
-.khndzoresk-page .medallion-outer{width:100%;height:100%;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg,rgba(201,168,76,.08),rgba(42,191,191,.06),rgba(201,168,76,.12),rgba(42,191,191,.04),rgba(201,168,76,.08));animation:spinConic 28s linear infinite}
-@keyframes spinConic{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.khndzoresk-page .p-card:hover .medallion-outer{animation-duration:12s}
+.khndzoresk-page .medallion-outer{width:100%;height:100%;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;background:conic-gradient(from 0deg,rgba(201,168,76,.08),rgba(42,191,191,.06),rgba(201,168,76,.12),rgba(42,191,191,.04),rgba(201,168,76,.08))}
 .khndzoresk-page .medallion-ring1{position:absolute;inset:6px;border-radius:50%;border:1px solid rgba(201,168,76,.28);transition:border-color .35s}
 .khndzoresk-page .medallion-ring2{position:absolute;inset:14px;border-radius:50%;border:1px solid rgba(42,191,191,.18);transition:border-color .35s}
 .khndzoresk-page .p-card:hover .medallion-ring1{border-color:rgba(201,168,76,.6)}

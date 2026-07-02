@@ -45,7 +45,6 @@ export async function DonationPage() {
         donators={donators}
       />
       <DonationClosingSections
-        quote={content.page.quote}
         newsletter={content.page.newsletter}
         trustItems={content.trustItems}
       />
