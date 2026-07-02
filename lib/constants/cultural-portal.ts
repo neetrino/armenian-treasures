@@ -23,7 +23,14 @@ export type CulturalPortalIconKey =
   | 'dance'
   | 'theatre'
   | 'armaments'
-  | 'publications';
+  | 'publications'
+  | 'capitals'
+  | 'battlesAndWars'
+  | 'christianHeritage'
+  | 'chroniclesAndManuscripts'
+  | 'monumentsAndLandmarks'
+  | 'traditions'
+  | 'kingsAndDynasties';
 
 export interface CulturalPortalCategory {
   icon: CulturalPortalIconKey;

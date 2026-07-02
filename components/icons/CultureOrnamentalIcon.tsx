@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { CULTURAL_PORTAL_ICON_SOURCES } from '@/lib/constants/cultural-portal-icon-sources';
 import type { CulturalPortalIconKey } from '@/lib/constants/cultural-portal';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
 
 interface CultureOrnamentalIconProps {
@@ -23,6 +24,7 @@ export function CultureOrnamentalIcon({
 }: CultureOrnamentalIconProps) {
   const src = resolveIconSrc(iconKey);
   if (!src) return null;
+  const resolvedSrc = resolvePublicAssetUrl(src);
 
   return (
     <span
@@ -32,7 +34,13 @@ export function CultureOrnamentalIcon({
       )}
       aria-hidden
     >
-      <Image src={src} alt="" width={size} height={size} className="culture-ornamental-icon__glyph" />
+      <Image
+        src={resolvedSrc}
+        alt=""
+        width={size}
+        height={size}
+        className="culture-ornamental-icon__glyph"
+      />
     </span>
   );
 }

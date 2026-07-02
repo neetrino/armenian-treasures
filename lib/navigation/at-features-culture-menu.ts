@@ -69,7 +69,7 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
     items: [
       {
         label: 'Icons of History',
-        icon: 'kings',
+        icon: 'kingsAndDynasties',
         menuPath: 'people/icons-of-history',
         fallbackHref: '/culture/people/icons-of-history',
       },
@@ -180,37 +180,37 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
       },
       {
         label: 'Capitals',
-        icon: 'history',
+        icon: 'capitals',
         menuPath: 'history/capitals',
         fallbackHref: '/culture/history/capitals',
       },
       {
         label: 'Battles & Wars',
-        icon: 'armaments',
+        icon: 'battlesAndWars',
         menuPath: 'history/battles-and-wars',
         fallbackHref: '/culture/history/battles-and-wars',
       },
       {
         label: 'Christian Heritage',
-        icon: 'churches',
+        icon: 'christianHeritage',
         menuPath: 'history/christian-heritage',
         fallbackHref: '/culture/history/christian-heritage',
       },
       {
         label: 'Chronicles & Manuscripts',
-        icon: 'publications',
+        icon: 'chroniclesAndManuscripts',
         menuPath: 'history/chronicles-and-manuscripts',
         fallbackHref: '/culture/history/chronicles-and-manuscripts',
       },
       {
         label: 'Monuments & Landmarks',
-        icon: 'sculptors',
+        icon: 'monumentsAndLandmarks',
         menuPath: 'history/monuments-and-landmarks',
         fallbackHref: '/culture/history/monuments-and-landmarks',
       },
       {
         label: 'Traditions',
-        icon: 'dance',
+        icon: 'traditions',
         menuPath: 'history/traditions',
         fallbackHref: '/culture/history/traditions',
       },
