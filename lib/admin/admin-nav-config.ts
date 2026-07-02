@@ -1,6 +1,6 @@
 import {
+  BarChart3,
   Briefcase,
-  Folders,
   Gauge,
   Globe,
   HeartHandshake,
@@ -40,6 +40,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Dashboard',
         description: 'Stats and quick links',
         icon: Gauge,
+      },
+      {
+        href: '/admin/analytics',
+        label: 'Analytics',
+        description: 'Full site performance snapshot',
+        icon: BarChart3,
       },
     ],
   },
@@ -83,15 +89,9 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       },
       {
         href: '/admin/culture-pages',
-        label: 'Culture page copy',
+        label: 'Culture Portal',
         description: 'Portal, landings, catalog copy',
         icon: LayoutGrid,
-      },
-      {
-        href: '/admin/culture-items',
-        label: 'Culture entries',
-        description: 'Monuments, museums, people…',
-        icon: Folders,
       },
     ],
   },
@@ -100,9 +100,15 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     links: [
       {
         href: '/admin/projects',
-        label: 'Projects',
+        label: 'Project list',
         description: 'Active fundraising campaigns',
         icon: HeartHandshake,
+      },
+      {
+        href: '/admin/page-content/projects-page',
+        label: 'Project banner',
+        description: 'Projects page hero banner image',
+        icon: LayoutGrid,
       },
       {
         href: '/admin/donators',
@@ -120,6 +126,12 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Users',
         description: 'Registered member accounts',
         icon: UserCircle,
+      },
+      {
+        href: '/admin/member-donations',
+        label: 'Donations',
+        description: 'Member payment history',
+        icon: HandCoins,
       },
       {
         href: '/admin/team',

@@ -29,19 +29,18 @@ export function CultureCatalogSubcategoryGrid({
           const href = resolveMenuHref(node, parent);
 
           return (
-            <Link key={node.id} href={href} className="cat-card reveal group">
-              <div className="cat-icon">
+            <Link key={node.id} href={href} className="cat-card cat-card--catalog reveal group">
+              <div className="cat-media">
                 <CulturalCategoryIcon
                   type={iconKey}
-                  className="h-[72px] w-[72px] max-sm:h-16 max-sm:w-16"
-                  iconClassName="h-9 w-9 max-sm:h-8 max-sm:w-8"
+                  withBadge={false}
+                  iconClassName="h-full w-full rounded-none object-cover"
                 />
               </div>
-              <div className="cat-card-title">{node.title}</div>
-              <div className="cat-card-sub">{node.description ?? `Browse ${node.title.toLowerCase()}.`}</div>
-              <span className="cat-arrow" aria-hidden>
-                →
-              </span>
+              <div className="cat-content cat-content--catalog">
+                <div className="cat-card-title">{node.title}</div>
+                <div className="cat-card-sub">{node.description ?? `Browse ${node.title.toLowerCase()}.`}</div>
+              </div>
             </Link>
           );
         })}

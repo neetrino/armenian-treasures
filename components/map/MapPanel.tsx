@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import {
@@ -64,6 +64,7 @@ function resolveMapItemIcon(mapType: PublicCultureItemDTO['mapType']): LucideIco
 export function MapPanel({ items }: MapPanelProps) {
   const [filter, setFilter] = useState<HeritageMapFilterValue>('ALL');
   const [selectedId, setSelectedId] = useState<string | null>(items[0]?.id ?? null);
+  const mapViewportRef = useRef<HTMLDivElement>(null);
 
   const visible = useMemo(() => filterMapItemsByCategory(items, filter), [items, filter]);
 
@@ -72,6 +73,11 @@ export function MapPanel({ items }: MapPanelProps) {
   const handleFilterChange = (next: HeritageMapFilterValue): void => {
     setFilter(next);
     setSelectedId(null);
+  };
+
+  const handleSelectItem = (id: string): void => {
+    setSelectedId(id);
+    mapViewportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   };
 
   return (
@@ -143,7 +149,7 @@ export function MapPanel({ items }: MapPanelProps) {
                   <li key={item.id}>
                     <button
                       type="button"
-                      onClick={() => setSelectedId(item.id)}
+                      onClick={() => handleSelectItem(item.id)}
                       className={cn(
                         'group relative w-full overflow-hidden rounded-2xl border px-3.5 py-3 text-left transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-heritage-gold/70',
                         active
@@ -192,7 +198,7 @@ export function MapPanel({ items }: MapPanelProps) {
                           <span
                             className={cn(
                               'mt-1.5 inline-flex max-w-full flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em]',
-                              active ? 'text-heritage-gold/95' : 'text-amber-200/75',
+                              active ? 'text-heritage-champagne' : 'text-amber-200/75',
                             )}
                           >
                             <span className="truncate">{item.region ?? 'Armenia'}</span>
@@ -221,7 +227,10 @@ export function MapPanel({ items }: MapPanelProps) {
           </ul>
         </div>
 
-        <div className="relative h-[420px] overflow-hidden rounded-2xl border border-stone-200/70 bg-stone-100 shadow-card lg:h-[640px]">
+        <div
+          ref={mapViewportRef}
+          className="relative h-[420px] overflow-hidden rounded-2xl border border-stone-200/70 bg-stone-100 shadow-card lg:h-[640px]"
+        >
           {items.length > 0 ? (
             <LeafletMap items={visible} selectedId={selectedId} onSelect={setSelectedId} />
           ) : (

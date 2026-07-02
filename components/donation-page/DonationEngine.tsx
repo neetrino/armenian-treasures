@@ -8,7 +8,6 @@ import {
   type DonationTier,
 } from '@/lib/constants/donation-page';
 import type { DonationPageContent } from '@/lib/queries/page-content';
-import { NarrativeOrnamentIcon } from '@/components/donation-page/donation-icons';
 import { DonationPatronSlider } from '@/components/donation-page/DonationPatronSlider';
 import { DonationTierCards } from '@/components/donation-page/DonationTierCards';
 import { PATRON_DEFAULT, clampPatronAmount } from '@/components/donation-page/donation-utils';
@@ -64,18 +63,6 @@ export function DonationEngine({
   return (
     <>
       <section className="sec" id="give" aria-label="Choose your patronage level">
-        <div className="narrative-block reveal">
-          <div className="narrative-ornament" aria-hidden>
-            <NarrativeOrnamentIcon />
-          </div>
-          {engine.narrative.paragraphs.map((paragraph) => (
-            <p key={paragraph.slice(0, 40)} className="narrative-text">
-              {paragraph}
-            </p>
-          ))}
-          <p className="narrative-closing">{engine.narrative.closing}</p>
-        </div>
-
         <div className="reveal">
           <p className="sec-label">{engine.label}</p>
           <h2 className="sec-title">{engine.title}</h2>

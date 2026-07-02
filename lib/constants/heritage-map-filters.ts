@@ -16,7 +16,7 @@ export interface HeritageMapFilterOption {
 }
 
 export const HERITAGE_MAP_FILTER_OPTIONS: HeritageMapFilterOption[] = [
-  { value: 'ALL', label: 'All Sites', mapTypes: null },
+  { value: 'ALL', label: 'All', mapTypes: null },
   {
     value: 'RELIGIOUS',
     label: 'Religious Sites',

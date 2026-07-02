@@ -6,16 +6,15 @@ export interface FooterLinkItem {
 export const FOOTER_BRAND_DESCRIPTION =
   'A living portal dedicated to the art, history, and people of one of humanity’s oldest civilizations.';
 
-export const FOOTER_LINKS_CULTURAL_PORTAL: FooterLinkItem[] = [
-  { href: '/culture/architecture/churches', label: 'Churches' },
+export const FOOTER_LINKS_CULTURAL_PORTAL_MAIN: FooterLinkItem[] = [
+  { href: '/culture/architecture/churches', label: 'Churches & Monasteries' },
   { href: '/culture/architecture/castles', label: 'Castles' },
   { href: '/culture/museums', label: 'Museums' },
-  { href: '/culture/history', label: 'History' },
   { href: '/culture/legends/myths-and-gods', label: 'Myths & Gods' },
-  { href: '/culture/legends/legends-and-heroes', label: 'Legends' },
+  { href: '/culture/legends/legends-and-heroes', label: 'Legendaries & Heroes' },
+  { href: '/culture/people/icons-of-history', label: 'Icons of History' },
+  { href: '/culture/people/scientists', label: 'Scientists & Inventors' },
   { href: '/culture/people/famous-armenians', label: 'Famous Armenians' },
-  { href: '/culture/heritage/paintings', label: 'Paintings' },
-  { href: '/culture/heritage/music', label: 'Music' },
 ];
 
 export const FOOTER_LINKS_EXPLORE: FooterLinkItem[] = [

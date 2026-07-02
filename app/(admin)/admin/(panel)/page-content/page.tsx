@@ -21,7 +21,7 @@ async function AdminPageContentIndexPage() {
       user={user}
       topbarTitle="Marketing pages"
       title="Marketing pages"
-      description="Donation, partnership, contact, and projects page copy — text fields, images, and structured sections."
+      description="Donation, partnership, and contact page copy — text fields, images, and structured sections."
     >
       <AdminHelpCallout title="Looking for culture pages?">
         Culture portal copy, catalog labels, and heritage landings (Khndzoresk, museums) are under{' '}

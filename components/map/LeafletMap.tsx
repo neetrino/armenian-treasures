@@ -14,6 +14,7 @@ interface LeafletMapProps {
 const ARMENIA_CENTER: [number, number] = [40.1, 44.95];
 const TILE_ATTRIBUTION = '© OpenStreetMap contributors';
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const SELECTED_ITEM_ZOOM = 18;
 
 interface MarkerIconNode {
   tag: 'path' | 'line' | 'polygon';
@@ -203,7 +204,7 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
     const item = mappableItems(items).find((entry) => entry.id === selectedId);
     if (!item) return;
 
-    map.flyTo([item.latitude!, item.longitude!], 10, { duration: 0.8 });
+    map.flyTo([item.latitude!, item.longitude!], SELECTED_ITEM_ZOOM, { duration: 0.8 });
   }, [selectedId, items]);
 
   return (

@@ -30,12 +30,11 @@ function TrustIcon() {
 }
 
 type DonationClosingSectionsProps = {
-  quote: DonationPageContent['page']['quote'];
   newsletter: DonationPageContent['page']['newsletter'];
   trustItems: DonationTrustItem[];
 };
 
-export function DonationClosingSections({ quote, newsletter, trustItems }: DonationClosingSectionsProps) {
+export function DonationClosingSections({ newsletter, trustItems }: DonationClosingSectionsProps) {
   return (
     <>
       <div className="trust-row reveal" role="list" aria-label="Trust and security signals">
@@ -45,11 +44,6 @@ export function DonationClosingSections({ quote, newsletter, trustItems }: Donat
             {item.label}
           </div>
         ))}
-      </div>
-
-      <div className="quote-band reveal" role="complementary">
-        <blockquote>{quote.text}</blockquote>
-        <cite>{quote.cite}</cite>
       </div>
 
       <div className="donation-nl-outer">

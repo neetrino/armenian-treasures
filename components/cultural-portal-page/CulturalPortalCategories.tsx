@@ -20,15 +20,17 @@ export function CulturalPortalCategories({ section, categories }: CulturalPortal
       <div className="cat-grid">
         {categories.map((category) => (
           <Link key={category.icon} href={category.href} className="cat-card reveal group">
-            <div className="cat-icon">
+            <div className="cat-media">
               <CulturalCategoryIcon
                 type={category.icon}
                 withBadge={false}
-                iconClassName="h-[72px] w-[72px] max-sm:h-16 max-sm:w-16"
+                iconClassName="h-full w-full rounded-none object-cover"
               />
             </div>
-            <div className="cat-card-title">{category.title}</div>
-            <div className="cat-card-sub">{category.description}</div>
+            <div className="cat-content">
+              <div className="cat-card-title">{category.title}</div>
+              <div className="cat-card-sub">{category.description}</div>
+            </div>
             <span className="cat-arrow" aria-hidden>
               →
             </span>

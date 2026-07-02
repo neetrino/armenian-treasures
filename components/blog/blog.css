@@ -309,7 +309,6 @@
   font-size: clamp(1.05rem, 1.5vw, 1.125rem);
   line-height: 1.85;
   color: rgba(212, 200, 154, 0.82);
-  white-space: pre-wrap;
 }
 
 .blog-detail-prose p {
@@ -318,4 +317,35 @@
 
 .blog-detail-prose p:last-child {
   margin-bottom: 0;
+}
+
+.blog-detail-prose h2,
+.blog-detail-prose h3 {
+  margin: 1.5rem 0 0.8rem;
+  font-family: var(--font-cinzel), serif;
+  line-height: 1.25;
+  color: var(--surface, #f5f0e6);
+}
+
+.blog-detail-prose h2 {
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+.blog-detail-prose h3 {
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+}
+
+.blog-detail-prose ul,
+.blog-detail-prose ol {
+  margin: 0 0 1.25rem;
+  padding-left: 1.4rem;
+}
+
+.blog-detail-prose li + li {
+  margin-top: 0.35rem;
+}
+
+.blog-detail-prose a {
+  color: var(--heritage-teal, #27c6c8);
+  text-decoration: underline;
 }

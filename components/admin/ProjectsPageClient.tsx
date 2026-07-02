@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { ProjectForm } from '@/components/admin/ProjectForm';
 import { InlineRaisedAmountCell } from '@/components/admin/InlineRaisedAmountCell';
@@ -176,12 +177,13 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
         </AdminModal>
       ) : null}
       {editingRow ? (
-        <AdminModal
+        <AdminSheet
+          open={editingRow !== null}
+          onClose={closeEditModal}
           eyebrow="Projects"
           title="Edit project"
           description={editingRow.title}
-          onClose={closeEditModal}
-          maxWidthClass="max-w-3xl"
+          size="2xl"
         >
           <ProjectForm
             key={editingRow.id}
@@ -191,7 +193,7 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
             onSuccess={handleModalSuccess}
             onCancel={closeEditModal}
           />
-        </AdminModal>
+        </AdminSheet>
       ) : null}
     </>
   );

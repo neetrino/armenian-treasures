@@ -18,6 +18,16 @@ async function AdminCareersPage() {
         title: getAdminLocaleValue(row.title),
         location: getAdminLocaleValue(row.location),
         employmentType: getAdminLocaleValue(row.employmentType),
+        editInitial: {
+          title: row.title,
+          location: row.location,
+          employmentType: row.employmentType,
+          description: row.description ?? '',
+          applyUrl: row.applyUrl ?? '',
+          applyEmail: row.applyEmail ?? '',
+          order: row.order,
+          isActive: row.isActive,
+        },
       }))}
     />
   );

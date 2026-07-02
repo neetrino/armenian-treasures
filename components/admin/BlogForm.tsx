@@ -3,8 +3,8 @@
 import { useActionState, useEffect } from 'react';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
+import { RichTextField } from '@/components/forms/fields/RichTextField';
 import { TextField } from '@/components/forms/fields/TextField';
-import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
 import { toBlogDateInputValue } from '@/lib/format-blog-date';
 import {
@@ -69,10 +69,9 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
               defaultValue={valueFor(titleValues, locale)}
               error={state.fieldErrors?.[`title.${locale}`]}
             />
-            <TextareaField
+            <RichTextField
               label="Description"
               name={`content.${locale}`}
-              rows={12}
               required={locale === 'EN'}
               defaultValue={valueFor(contentValues, locale)}
               hint="Shown in full on the article page. Long text is shortened automatically on blog cards."
