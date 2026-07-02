@@ -124,3 +124,16 @@
     height: 320px;
   }
 }
+
+/* Keep inner-page heroes more compact than the home hero. */
+.khndzoresk-page .hero {
+  min-height: clamp(520px, 82svh, 760px);
+  padding: 128px 40px 72px;
+}
+
+@media (max-width: 768px) {
+  .khndzoresk-page .hero {
+    min-height: 72svh;
+    padding: 120px 20px 68px;
+  }
+}

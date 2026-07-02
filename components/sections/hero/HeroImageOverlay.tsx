@@ -12,6 +12,20 @@ interface HeroImageOverlayProps {
   className?: string;
 }
 
+function deriveLocalPublicPath(url: string): string | null {
+  if (!/^https?:\/\//i.test(url)) return null;
+  try {
+    const parsed = new URL(url);
+    const pathname = parsed.pathname;
+    if (/^\/images\/.+/i.test(pathname)) {
+      return pathname;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export function HeroImageOverlay({
   imageUrl,
   fallbackUrl,
@@ -19,7 +33,10 @@ export function HeroImageOverlay({
   className = 'hero-img-overlay',
 }: HeroImageOverlayProps) {
   const resolvedPrimary = resolvePublicAssetUrl(imageUrl);
-  const resolvedFallback = fallbackUrl ? resolvePublicAssetUrl(fallbackUrl) : resolvedPrimary;
+  const localPathFallback = deriveLocalPublicPath(resolvedPrimary);
+  const resolvedFallback = fallbackUrl
+    ? resolvePublicAssetUrl(fallbackUrl)
+    : localPathFallback ?? resolvedPrimary;
   const [resolvedUrl, setResolvedUrl] = useState(resolvedPrimary);
 
   useEffect(() => {
@@ -29,7 +46,10 @@ export function HeroImageOverlay({
     probe.onload = () => setResolvedUrl(resolvedPrimary);
     probe.onerror = () => {
       if (process.env.NODE_ENV === 'development') {
-        console.warn('[hero-image] image failed to load, using fallback:', resolvedPrimary);
+        console.warn('[hero-image] image failed to load, using fallback:', {
+          primary: resolvedPrimary,
+          fallback: resolvedFallback,
+        });
       }
       setResolvedUrl(resolvedFallback);
     };
