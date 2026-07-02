@@ -9,6 +9,8 @@ interface CulturalPortalProject {
   statusLabel: string;
   date: string;
   icon: CulturalPortalProjectIcon;
+  goalUsd?: number;
+  raisedUsd?: number;
 }
 
 interface CulturalPortalProjectsProps {
@@ -16,6 +18,14 @@ interface CulturalPortalProjectsProps {
   title: string;
   description: string;
   projects: CulturalPortalProject[];
+}
+
+function formatUsd(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(amount);
 }
 
 function ProjectIcon({ type }: { type: CulturalPortalProjectIcon }) {
@@ -102,6 +112,11 @@ export function CulturalPortalProjects({ eyebrow, title, description, projects }
               <ProjectIcon type={project.icon} />
               <div className="proj-title">{project.title}</div>
               <p className="proj-desc">{project.description}</p>
+              {typeof project.goalUsd === 'number' && typeof project.raisedUsd === 'number' ? (
+                <div className="proj-date">
+                  ▸ Raised: {formatUsd(project.raisedUsd)} · Goal: {formatUsd(project.goalUsd)}
+                </div>
+              ) : null}
               <div className="proj-date">▸ {project.date}</div>
             </Link>
           ))}

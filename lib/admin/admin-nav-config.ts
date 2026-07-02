@@ -1,6 +1,5 @@
 import {
   Briefcase,
-  Folders,
   Gauge,
   Globe,
   HeartHandshake,
@@ -83,15 +82,9 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       },
       {
         href: '/admin/culture-pages',
-        label: 'Culture page copy',
+        label: 'Culture Portal',
         description: 'Portal, landings, catalog copy',
         icon: LayoutGrid,
-      },
-      {
-        href: '/admin/culture-items',
-        label: 'Culture entries',
-        description: 'Monuments, museums, people…',
-        icon: Folders,
       },
     ],
   },
@@ -100,9 +93,15 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
     links: [
       {
         href: '/admin/projects',
-        label: 'Projects',
+        label: 'Project list',
         description: 'Active fundraising campaigns',
         icon: HeartHandshake,
+      },
+      {
+        href: '/admin/page-content/projects-page',
+        label: 'Project banner',
+        description: 'Projects page hero banner image',
+        icon: LayoutGrid,
       },
       {
         href: '/admin/donators',

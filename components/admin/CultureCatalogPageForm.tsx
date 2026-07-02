@@ -22,7 +22,6 @@ interface CultureCatalogPageFormProps {
   menuItemId: string;
   menuPath: string;
   pageLabel: string;
-  publicHref: string;
   resolvedContent: CultureCatalogContent;
   catalogContent?: unknown;
   entries: CultureCatalogEntryAdmin[];
@@ -34,7 +33,6 @@ export function CultureCatalogPageForm({
   menuItemId,
   menuPath,
   pageLabel,
-  publicHref,
   resolvedContent,
   catalogContent,
   entries,
@@ -63,15 +61,6 @@ export function CultureCatalogPageForm({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-xl border border-stone-100 bg-parchment-50 px-4 py-3 text-sm text-ink-soft">
-        <p>
-          Editing <span className="font-medium text-ink">{pageLabel}</span> — public page{' '}
-          <a href={publicHref} target="_blank" rel="noreferrer" className="text-bronze-700 underline">
-            {publicHref}
-          </a>
-        </p>
-      </div>
-
       <AdminFormTabs tabs={tabs} activeId={activeTab} onChange={(id) => setActiveTab(id as 'cards' | 'page')} />
 
       {activeTab === 'cards' ? (

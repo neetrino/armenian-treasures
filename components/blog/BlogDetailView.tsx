@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { toBlogRenderHtml } from '@/lib/blog-content';
 import type { PublicBlogPostDetailDTO } from '@/lib/dto';
 import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/blog/blog.css';
@@ -15,6 +16,7 @@ interface BlogDetailViewProps {
 export function BlogDetailView({ post }: BlogDetailViewProps) {
   const imageUrl = post.image?.trim() || '/images/culture/card-heritage.webp';
   const resolvedImageUrl = resolvePublicAssetUrl(imageUrl);
+  const contentHtml = toBlogRenderHtml(post.content);
 
   return (
     <div className="khndzoresk-page blog-detail-page">
@@ -46,11 +48,7 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
       <KhndzoreskDivider />
 
       <article className="blog-detail-article">
-        <div className="blog-detail-prose">
-          {post.content.split('\n\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
-        </div>
+        <div className="blog-detail-prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
     </div>
   );

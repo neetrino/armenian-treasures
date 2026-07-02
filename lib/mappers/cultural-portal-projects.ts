@@ -46,6 +46,8 @@ export function mapProjectToCulturalPortalProject(
     description: project.description ?? '',
     date: timeline,
     href: '/projects',
+    goalUsd: project.goalAmount,
+    raisedUsd: project.raisedAmount,
   };
 }
 

@@ -22,7 +22,6 @@ import {
 } from '@/lib/types/culture-catalog-content';
 
 type SectionId = 'hero' | 'about' | 'facts' | 'entries' | 'map' | 'stats';
-type SectionPresetId = 'church-like' | 'minimal' | 'map-heavy';
 const SECTION_FIELD: Record<SectionId, string> = {
   hero: 'catalogSectionHero',
   about: 'catalogSectionAbout',
@@ -30,16 +29,6 @@ const SECTION_FIELD: Record<SectionId, string> = {
   entries: 'catalogSectionEntries',
   map: 'catalogSectionMap',
   stats: 'catalogSectionStats',
-};
-const SECTION_PRESETS: Record<SectionPresetId, Record<SectionId, boolean>> = {
-  'church-like': { hero: true, about: true, facts: true, entries: true, map: true, stats: true },
-  minimal: { hero: true, about: true, facts: false, entries: true, map: false, stats: false },
-  'map-heavy': { hero: true, about: true, facts: false, entries: true, map: true, stats: true },
-};
-const SECTION_PRESET_LABEL: Record<SectionPresetId, string> = {
-  'church-like': 'Church-like',
-  minimal: 'Minimal',
-  'map-heavy': 'Map-heavy',
 };
 
 interface CultureMenuCatalogSheetFormProps {
@@ -93,16 +82,6 @@ export function CultureMenuCatalogSheetForm({
     (values[SECTION_FIELD[sectionId]] ?? '1') !== '0';
   const setSectionEnabled = (sectionId: SectionId, enabled: boolean): void => {
     setField(SECTION_FIELD[sectionId], enabled ? '1' : '0');
-  };
-  const applySectionPreset = (presetId: SectionPresetId): void => {
-    const preset = SECTION_PRESETS[presetId];
-    setValues((prev) => {
-      const next = { ...prev };
-      for (const sectionId of Object.keys(SECTION_FIELD) as SectionId[]) {
-        next[SECTION_FIELD[sectionId]] = preset[sectionId] ? '1' : '0';
-      }
-      return next;
-    });
   };
 
   const sections: Array<{
@@ -159,23 +138,6 @@ export function CultureMenuCatalogSheetForm({
   return (
     <>
       <HiddenCatalogFields values={values} />
-
-      <div className="rounded-xl border border-stone-100 bg-parchment-50 p-4">
-        <p className="text-sm font-medium text-ink">Section presets</p>
-        <p className="mt-1 text-xs text-ink-muted">Quickly apply a visibility setup, then fine-tune section by section.</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {(Object.keys(SECTION_PRESETS) as SectionPresetId[]).map((presetId) => (
-            <button
-              key={presetId}
-              type="button"
-              onClick={() => applySectionPreset(presetId)}
-              className="rounded-full border border-stone-300 px-3 py-1.5 text-xs font-medium text-ink transition hover:border-bronze-500 hover:text-bronze-700"
-            >
-              {SECTION_PRESET_LABEL[presetId]}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         {sections.map((section) => (

@@ -1,7 +1,9 @@
+import { stripBlogHtml } from '@/lib/blog-content';
+
 const DEFAULT_CARD_PREVIEW_LENGTH = 220;
 
 export function truncateBlogDescription(text: string, maxLength = DEFAULT_CARD_PREVIEW_LENGTH): string {
-  const normalized = text.replace(/\s+/g, ' ').trim();
+  const normalized = stripBlogHtml(text).replace(/\s+/g, ' ').trim();
   if (!normalized) return '';
   if (normalized.length <= maxLength) return normalized;
   const slice = normalized.slice(0, maxLength);

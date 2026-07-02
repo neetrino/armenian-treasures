@@ -121,7 +121,6 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
           menuItemId={match.node.id}
           menuPath={menuPath}
           pageLabel={navItem?.label ?? match.node.title}
-          publicHref={publicHref}
           resolvedContent={resolvedContent}
           catalogContent={match.node.catalogContent}
           entries={entries}

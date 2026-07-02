@@ -72,16 +72,6 @@ export function AdminNavContent({ collapsed = false, onNavigate, className }: Ad
                     {!collapsed ? (
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-medium leading-tight">{link.label}</span>
-                        {link.description ? (
-                          <span
-                            className={cn(
-                              'mt-0.5 block text-[11px] leading-snug',
-                              active ? 'text-parchment-50/80' : 'text-ink-muted',
-                            )}
-                          >
-                            {link.description}
-                          </span>
-                        ) : null}
                       </span>
                     ) : null}
                   </Link>

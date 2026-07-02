@@ -140,6 +140,8 @@ export interface CulturalPortalProject {
   description: string;
   date: string;
   href: string;
+  goalUsd?: number;
+  raisedUsd?: number;
 }
 
 export const CULTURAL_PORTAL_PROJECTS_SECTION = {
