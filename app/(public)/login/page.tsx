@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { AuthBrand } from '@/components/auth/AuthBrand';
 import { AuthCard, AuthCardIntro } from '@/components/auth/AuthCard';
 import { AuthPageShell } from '@/components/auth/AuthPageShell';
 import { MemberLoginForm } from '@/components/forms/MemberLoginForm';
+import { getMemberOrNull } from '@/lib/auth/member-session';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +15,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-function LoginPage() {
+async function LoginPage() {
+  const member = await getMemberOrNull();
+  if (member) redirect('/profile');
+
   return (
     <AuthPageShell>
       <AuthCard>

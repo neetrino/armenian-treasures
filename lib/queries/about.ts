@@ -2,7 +2,8 @@ import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { toPublicAboutContent, type PublicAboutContentDTO } from '@/lib/dto';
 import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
-import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { DEFAULT_SITE_LOCALE, getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 const FALLBACK_PILLARS: AboutPillar[] = [
@@ -55,7 +56,15 @@ export const FALLBACK_ABOUT_CONTENT: PublicAboutContentDTO = {
 
 async function fetchAboutContent(): Promise<PublicAboutContentDTO> {
   try {
-    const locale = await getCurrentSiteLocale();
+    const locale = await getCurrentSiteLocale().catch(() => DEFAULT_SITE_LOCALE);
+    return getAboutContentCachedByLocale(locale);
+  } catch {
+    return FALLBACK_ABOUT_CONTENT;
+  }
+}
+
+const getAboutContentCachedByLocale = unstable_cache(
+  async (locale: SiteLocaleCode): Promise<PublicAboutContentDTO> => {
     const row = await prisma.aboutContent.findFirst();
     if (!row) return FALLBACK_ABOUT_CONTENT;
     const content = toPublicAboutContent(row, locale);
@@ -67,12 +76,14 @@ async function fetchAboutContent(): Promise<PublicAboutContentDTO> {
           ? normalizeAboutPillars(content.pillars)
           : FALLBACK_PILLARS,
     };
-  } catch {
-    return FALLBACK_ABOUT_CONTENT;
-  }
-}
+  },
+  ['about-content'],
+  {
+    tags: ['about-content'],
+    revalidate: 60,
+  },
+);
 
-export const getAboutContent = unstable_cache(fetchAboutContent, ['about-content'], {
-  tags: ['about-content'],
-  revalidate: 60,
-});
+export async function getAboutContent(): Promise<PublicAboutContentDTO> {
+  return fetchAboutContent();
+}

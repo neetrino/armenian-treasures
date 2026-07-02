@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { CultureItemsPageClient } from '@/components/admin/CultureItemsPageClient';
-import { AdminPagination } from '@/components/admin/AdminPagination';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import { buildAdminPageCount, parseAdminListQuery } from '@/lib/admin/list-query';
@@ -81,19 +80,18 @@ async function AdminCultureItemsPage(props: PageProps) {
   const pageCount = buildAdminPageCount(total, listQuery.pageSize);
 
   return (
-    <>
-      <CultureItemsPageClient user={user} rows={rows} menuOptions={menuOptions} />
-      <div className="px-6 pb-6">
-        <AdminPagination
-          page={listQuery.page}
-          pageCount={pageCount}
-          total={total}
-          pageSize={listQuery.pageSize}
-          basePath="/admin/culture-items"
-          query={listQuery.query || undefined}
-        />
-      </div>
-    </>
+    <CultureItemsPageClient
+      user={user}
+      rows={rows}
+      menuOptions={menuOptions}
+      pagination={{
+        page: listQuery.page,
+        pageCount,
+        total,
+        pageSize: listQuery.pageSize,
+        query: listQuery.query || undefined,
+      }}
+    />
   );
 }
 
