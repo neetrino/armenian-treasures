@@ -4,11 +4,10 @@ export const VIRTUAL_MUSEUM_CONTAINER_CLASS =
 export const HERITAGE_ICON_BADGE_CLASS = [
   'heritage-icon-badge relative mb-8 flex h-[3.875rem] w-[3.875rem] shrink-0 items-center justify-center rounded-full',
   'border border-[rgba(214,184,90,0.42)]',
-  'bg-[radial-gradient(circle_at_center,rgba(214,184,90,0.08),transparent_68%)]',
+  'bg-black',
   'shadow-[inset_0_0_22px_rgba(214,184,90,0.045),0_0_22px_rgba(214,184,90,0.055)]',
-  'transition-[border-color,box-shadow,transform,background] duration-[320ms] ease-out',
+  'transition-[border-color,box-shadow,transform] duration-[320ms] ease-out',
   'motion-safe:group-hover:border-[rgba(214,184,90,0.68)]',
-  'motion-safe:group-hover:bg-[radial-gradient(circle,rgba(214,184,90,0.13),transparent_68%)]',
   'motion-safe:group-hover:shadow-[inset_0_0_24px_rgba(214,184,90,0.07),0_0_26px_rgba(214,184,90,0.10)]',
   'motion-safe:group-hover:-translate-y-px motion-safe:group-hover:scale-[1.02]',
   'motion-reduce:transition-none motion-reduce:group-hover:transform-none',

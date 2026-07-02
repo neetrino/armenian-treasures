@@ -61,8 +61,8 @@ async function ContactsPage() {
       <KhndzoreskDivider />
 
       <section id="contact-form" className="contact-wrap">
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.7fr]">
-          <aside className="contact-direct-card p-6 text-sm text-surface-muted lg:p-8">
+        <div className="grid gap-9 lg:grid-cols-[1fr_1.7fr] lg:gap-10">
+          <aside className="contact-direct-card p-6 text-sm text-surface-muted lg:p-9">
             <p className="contact-direct-eyebrow">
               Direct lines
             </p>
@@ -92,7 +92,7 @@ async function ContactsPage() {
             </ul>
           </aside>
 
-          <div className="contact-form-shell p-6 lg:p-10">
+          <div className="contact-form-shell">
             <ContactForm />
           </div>
         </div>

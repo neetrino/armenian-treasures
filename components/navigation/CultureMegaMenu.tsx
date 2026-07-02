@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
-import { CultureOrnamentalIcon } from '@/components/icons/CultureOrnamentalIcon';
+import { resolveMenuLucideIcon } from '@/lib/navigation/menu-icons';
 import { NavDropdownArrow } from '@/components/navigation/NavDropdownArrow';
 import { NavDropdownPortal } from '@/components/navigation/NavDropdownPortal';
 import {
@@ -87,7 +87,9 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
                     {column.heading}
                   </Link>
                   <ul className="flex flex-col">
-                    {column.items.map((item) => (
+                    {column.items.map((item) => {
+                      const Icon = resolveMenuLucideIcon(item.icon);
+                      return (
                         <li key={item.label}>
                           <Link
                             href={item.href}
@@ -95,11 +97,12 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
                             onClick={close}
                             className={MEGA_MENU_ITEM}
                           >
-                            <CultureOrnamentalIcon iconKey={item.icon} className={MEGA_MENU_ICON} />
+                            <Icon className={MEGA_MENU_ICON} aria-hidden strokeWidth={1.75} />
                             <span>{item.label}</span>
                           </Link>
                         </li>
-                      ))}
+                      );
+                    })}
                   </ul>
                 </div>
               ))}

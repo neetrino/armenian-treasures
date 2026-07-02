@@ -1,11 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import { logoutAction } from '@/app/(admin)/admin/(panel)/logout-action';
 import { AdminNavContent } from '@/components/admin/AdminNavContent';
-import { Logo } from '@/components/brand/Logo';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { ADMIN_PUBLIC_SITE_LINK } from '@/lib/admin/admin-nav-config';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +16,7 @@ const COLLAPSED_WIDTH = 84;
 const DEFAULT_WIDTH = 284;
 const MIN_WIDTH = 250;
 const MAX_WIDTH = 420;
+const ADMIN_SIDEBAR_LOGO_SRC = resolvePublicAssetUrl('/images/brand/header-logo.webp');
 
 export function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -98,16 +100,37 @@ export function AdminSidebar() {
         />
         <div className={cn('flex items-center', collapsed ? 'justify-center' : 'justify-between')}>
           {collapsed ? (
-            <span
-              className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-pomegranate to-pomegranate-600 text-parchment-50 shadow-md shadow-pomegranate/20"
-              aria-hidden
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-                <path d="M12 3 L14 9 H19 L15 12.5 L16.5 19 L12 15.5 L7.5 19 L9 12.5 L5 9 H10 Z" opacity="0.95" />
-              </svg>
-            </span>
+            <Image
+              src={ADMIN_SIDEBAR_LOGO_SRC}
+              alt="Armenian Treasures logo"
+              width={700}
+              height={923}
+              className="h-11 w-auto object-contain"
+              priority
+            />
           ) : (
-            <Logo variant="on-light" subtitle="Admin Panel" />
+            <Link
+              href="/"
+              className="group inline-flex min-w-0 items-center gap-3 text-left"
+              aria-label="Armenian Treasures — home"
+            >
+              <Image
+                src={ADMIN_SIDEBAR_LOGO_SRC}
+                alt="Armenian Treasures logo"
+                width={700}
+                height={923}
+                className="h-14 w-auto shrink-0 object-contain"
+                priority
+              />
+              <span className="flex min-w-0 flex-col leading-tight">
+                <span className="truncate font-cinzel text-base font-semibold tracking-wide text-ink sm:text-lg">
+                  Armenian Treasures
+                </span>
+                <span className="truncate font-cinzel text-[9px] font-medium uppercase tracking-[0.16em] text-bronze-700 sm:text-[10px]">
+                  Admin Panel
+                </span>
+              </span>
+            </Link>
           )}
           <button
             type="button"

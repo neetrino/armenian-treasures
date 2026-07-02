@@ -26,6 +26,10 @@ function isAdminUploadPublicPath(path: string): boolean {
   return path.startsWith('/uploads/');
 }
 
+function isR2OnlyCulturalPortalIconPath(path: string): boolean {
+  return /^\/icons\/cultural-portal\/[^/]+\.(png|webp)$/i.test(path);
+}
+
 /**
  * Admin uploads under `public/uploads/` are gitignored and never deployed to Vercel.
  * Always resolve them to durable storage (R2) via env base URL or the committed manifest.
@@ -57,6 +61,16 @@ export function resolvePublicAssetUrl(path: string): string {
 
   if (isAdminUploadPublicPath(normalizedLegacySafe)) {
     return resolveAdminUploadPath(normalizedLegacySafe);
+  }
+
+  // Drive-imported cultural icons exist only in R2, so local fallback would 404.
+  if (isR2OnlyCulturalPortalIconPath(normalizedLegacySafe)) {
+    const base = getPublicR2BaseUrl() ?? getR2ManifestPublicBaseUrl();
+    if (base) {
+      return `${base}${normalizedLegacySafe}`;
+    }
+    const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
+    if (fromManifest) return fromManifest;
   }
 
   if (!shouldUseR2PublicAssets()) {
