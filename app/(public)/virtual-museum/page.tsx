@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection';
 import { getHomeContent } from '@/lib/queries/home';
+import { getMenuTree } from '@/lib/queries/menu';
 import { AI_HISTORIAN_ROADMAP, PRODUCT_ROADMAP_MODULES } from '@/lib/constants/product-roadmap';
+import { buildMenuHrefMap, resolveMenuHrefFromMap } from '@/lib/navigation/menu-href-map';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
@@ -17,7 +19,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function VirtualMuseumPage() {
-  const home = await getHomeContent();
+  const [home, menuTree] = await Promise.all([getHomeContent(), getMenuTree()]);
+  const menuHrefMap = buildMenuHrefMap(menuTree);
+  const churchesHref = resolveMenuHrefFromMap(
+    menuHrefMap,
+    'architecture/churches',
+    '/culture/architecture/churches',
+  );
   const roadmapModules = PRODUCT_ROADMAP_MODULES.filter(
     (module) => module.id !== 'ai-historian',
   );
@@ -92,7 +100,7 @@ async function VirtualMuseumPage() {
               Explore heritage map
             </Link>
             <Link
-              href="/culture/architecture/churches"
+              href={churchesHref}
               className="inline-flex items-center rounded-full border border-heritage-gold/30 bg-heritage-gold/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-eyebrow text-heritage-gold transition hover:bg-heritage-gold/15"
             >
               Browse churches with tours

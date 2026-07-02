@@ -15,6 +15,7 @@ import { StatusPill } from '@/components/ui/StatusPill';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
+import { AdminPagination } from '@/components/admin/AdminPagination';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { deleteCultureItemAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
@@ -44,6 +45,13 @@ interface CultureItemsPageClientProps {
   user: AdminContext;
   rows: Row[];
   menuOptions: MenuOption[];
+  pagination: {
+    page: number;
+    pageCount: number;
+    total: number;
+    pageSize: number;
+    query?: string;
+  };
 }
 
 const FALLBACK_CULTURE_ENTRY_IMAGE = resolvePublicAssetUrl('/images/culture/card-heritage.webp');
@@ -84,7 +92,12 @@ function rowSearchText(row: Row): string {
     .toLowerCase();
 }
 
-export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItemsPageClientProps) {
+export function CultureItemsPageClient({
+  user,
+  rows,
+  menuOptions,
+  pagination,
+}: CultureItemsPageClientProps) {
   const router = useRouter();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<Row | null>(null);
@@ -275,6 +288,16 @@ export function CultureItemsPageClient({ user, rows, menuOptions }: CultureItems
           empty={tableEmpty}
           onRowClick={openEditModal}
         />
+        <div className="px-6 pb-6">
+          <AdminPagination
+            page={pagination.page}
+            pageCount={pagination.pageCount}
+            total={pagination.total}
+            pageSize={pagination.pageSize}
+            basePath="/admin/culture-items"
+            query={pagination.query}
+          />
+        </div>
       </AdminPageShell>
       {isCreateModalOpen ? (
         <AdminModal

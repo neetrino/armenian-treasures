@@ -10,13 +10,44 @@ import {
 } from '@/lib/admin/culture-landing-pages';
 import {
   CULTURE_CATALOG_PAGE_GROUPS,
+  type CultureCatalogPageGroup,
   cultureCatalogPageAdminHref,
 } from '@/lib/admin/culture-catalog-pages';
+import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
+function filterCatalogGroupsByAvailablePaths(
+  groups: readonly CultureCatalogPageGroup[],
+  availablePaths: ReadonlySet<string>,
+): CultureCatalogPageGroup[] {
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => availablePaths.has(item.menuPath)),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
 async function AdminCulturePagesIndexPage() {
   const user = await requireAdmin();
+  const activeMenuItems = await prisma.cultureMenuItem.findMany({
+    where: { isActive: true },
+    select: {
+      slug: true,
+      parentId: true,
+      parent: { select: { slug: true } },
+    },
+  });
+  const availablePaths = new Set(
+    activeMenuItems.map((item) =>
+      item.parent?.slug ? `${item.parent.slug}/${item.slug}` : item.slug,
+    ),
+  );
+  const visibleCatalogGroups = filterCatalogGroupsByAvailablePaths(
+    CULTURE_CATALOG_PAGE_GROUPS,
+    availablePaths,
+  );
 
   return (
     <AdminPageShell
@@ -69,7 +100,7 @@ async function AdminCulturePagesIndexPage() {
       </AdminStagger>
 
       <AdminStagger className="grid gap-6 xl:grid-cols-2">
-        {CULTURE_CATALOG_PAGE_GROUPS.map((group) => (
+        {visibleCatalogGroups.map((group) => (
           <AdminGroupCard key={group.heading} title={group.heading}>
             <ul className="flex flex-col gap-2">
               {group.items.map((item) => (

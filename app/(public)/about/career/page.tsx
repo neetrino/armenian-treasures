@@ -1,15 +1,16 @@
-import type { Metadata } from 'next';
 import { ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
 import { getActiveCareers } from '@/lib/queries/careers';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicPageMetadata({
   title: 'Career',
   description: 'Join Armenian Treasures — open roles in digitization, engineering and research.',
-};
+  pathname: '/about/career',
+});
 
 async function AboutCareerPage() {
   const [careers, content] = await Promise.all([getActiveCareers(), getAboutContent()]);

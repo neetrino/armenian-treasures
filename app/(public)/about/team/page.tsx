@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
 import { getActiveTeam } from '@/lib/queries/team';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicPageMetadata({
   title: 'Team',
   description: 'The researchers, engineers and curators behind Armenian Treasures.',
-};
+  pathname: '/about/team',
+});
 
 async function AboutTeamPage() {
   const [members, content] = await Promise.all([getActiveTeam(), getAboutContent()]);

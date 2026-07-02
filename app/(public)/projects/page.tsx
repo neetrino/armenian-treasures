@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/cultural-portal-page/cultural-portal-page.css';
@@ -10,13 +9,15 @@ import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-port
 import { getPublishedProjects } from '@/lib/queries/projects';
 import { getProjectsPageContent } from '@/lib/queries/page-content';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicPageMetadata({
   title: 'Projects',
   description: 'Active and funded digitization projects of the Armenian Treasures Foundation.',
-};
+  pathname: '/projects',
+});
 
 async function ProjectsPage() {
   const [projects, pageContent] = await Promise.all([getPublishedProjects(), getProjectsPageContent()]);

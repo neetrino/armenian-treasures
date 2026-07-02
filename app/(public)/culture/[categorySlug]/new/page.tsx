@@ -16,7 +16,10 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;
   const tree = await getMenuTree();
   const node = findCategoryPageNode(tree, params.categorySlug);
-  if (!node) return buildNotFoundMetadata('Sub-catalog form');
+  const formChild = node?.children?.find(
+    (child) => child.isActive && child.routeType === 'SUBCATEGORY_FORM',
+  );
+  if (!node || !formChild) return buildNotFoundMetadata('Sub-catalog form');
   return buildPublicPageMetadata({
     title: `Add a new ${node.title} sub-catalog`,
     description: `Propose a new ${node.title.toLowerCase()} sub-catalog to expand the open archive.`,
@@ -28,7 +31,10 @@ async function NewSubcategoryFormPage(props: PageProps) {
   const params = await props.params;
   const tree = await getMenuTree();
   const node = findCategoryPageNode(tree, params.categorySlug);
-  if (!node) notFound();
+  const formChild = node?.children?.find(
+    (child) => child.isActive && child.routeType === 'SUBCATEGORY_FORM',
+  );
+  if (!node || !formChild) notFound();
 
   return (
     <CultureFormPageView

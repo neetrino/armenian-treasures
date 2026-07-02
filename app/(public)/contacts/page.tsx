@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
 import '@/components/khndzoresk/khndzoresk.css';
@@ -11,13 +10,15 @@ import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { getSiteSettings } from '@/lib/queries/settings';
 import { getContactsPageContent } from '@/lib/queries/page-content';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicPageMetadata({
   title: 'Contact us',
   description: 'Write to the Armenian Treasures foundation — partnerships, press, research and more.',
-};
+  pathname: '/contacts',
+});
 
 async function ContactsPage() {
   const [settings, pageContent] = await Promise.all([getSiteSettings(), getContactsPageContent()]);

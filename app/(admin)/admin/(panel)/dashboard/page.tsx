@@ -41,12 +41,12 @@ async function AdminDashboardPage() {
       take: 5,
       orderBy: { createdAt: 'desc' },
       select: { id: true, title: true, type: true, status: true, submitterName: true, createdAt: true },
-    }).catch(() => []),
+    }),
     prisma.contactMessage.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
       select: { id: true, name: true, email: true, message: true, status: true, createdAt: true },
-    }).catch(() => []),
+    }),
   ]);
 
   const kpis = [

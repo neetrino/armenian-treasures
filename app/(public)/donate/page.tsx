@@ -3,6 +3,8 @@ import { DonationPage } from '@/components/donation-page/DonationPage';
 import { getDonationPageContent } from '@/lib/queries/page-content';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getDonationPageContent();
   return buildPublicPageMetadata({

@@ -1,16 +1,17 @@
-import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
+import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
+export const metadata = buildPublicPageMetadata({
   title: 'Mission',
   description:
     'Three pillars guide Armenian Treasures: digitization, scholarship and accessibility for the Armenian world.',
-};
+  pathname: '/about/mission',
+});
 
 function resolveIcon(name: string): LucideIcon {
   const icons = LucideIcons as unknown as Record<string, LucideIcon>;
