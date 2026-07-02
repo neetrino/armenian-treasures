@@ -11,11 +11,21 @@ export interface CultureCatalogFact {
   value: string;
 }
 
+export interface CultureCatalogSectionVisibility {
+  hero: boolean;
+  about: boolean;
+  facts: boolean;
+  entries: boolean;
+  map: boolean;
+  stats: boolean;
+}
+
 export interface CultureCatalogContent {
   eyebrow: string;
   accent: string;
   slogan: string;
   heroImage?: string;
+  sectionVisibility: CultureCatalogSectionVisibility;
   about: {
     label: string;
     title: string;
@@ -217,6 +227,10 @@ function mergeContent(
   return {
     ...base,
     ...override,
+    sectionVisibility: {
+      ...base.sectionVisibility,
+      ...override.sectionVisibility,
+    },
     about: {
       ...base.about,
       ...override.about,
@@ -233,12 +247,22 @@ function buildBaseContent(
   title: string,
   description: string,
   parentTitle?: string,
+  options?: { hasSubcategories?: boolean },
 ): CultureCatalogContent {
   const scope = parentTitle ? `${parentTitle} / ${title}` : title;
+  const hasSubcategories = options?.hasSubcategories === true;
   return {
     eyebrow: `✦ ${scope} · Cultural Portal · Armenia ✦`,
     accent: title,
     slogan: description || `Curated ${title.toLowerCase()} from the Armenian archive`,
+    sectionVisibility: {
+      hero: true,
+      about: true,
+      facts: true,
+      entries: true,
+      map: !hasSubcategories,
+      stats: true,
+    },
     about: {
       label: scope,
       title: `Discover ${title}`,
@@ -279,12 +303,14 @@ function buildBaseContent(
 export function resolveCultureCatalogContent(
   node: MenuNode,
   parent?: MenuNode,
+  options?: { hasSubcategories?: boolean },
 ): CultureCatalogContent {
   const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
   const base = buildBaseContent(
     node.title,
     node.description ?? '',
     parent?.title,
+    options,
   );
   const codeOverride = OVERRIDES[key] ?? OVERRIDES[node.slug];
   const dbOverride = parseMenuCatalogContent(node.catalogContent);

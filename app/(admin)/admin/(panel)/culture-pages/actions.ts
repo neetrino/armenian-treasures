@@ -198,7 +198,19 @@ export async function createCultureCatalogEntryAction(
     where: { id: menuItemId },
     select: { id: true, routeType: true },
   });
-  if (!menuItem || menuItem.routeType !== 'SUBCATEGORY') {
+  if (!menuItem) {
+    return { status: 'error', message: 'This page cannot accept grid entries.' };
+  }
+  const subcategoryCount =
+    menuItem.routeType === 'CATEGORY'
+      ? await prisma.cultureMenuItem.count({
+          where: { parentId: menuItem.id, routeType: 'SUBCATEGORY' },
+        })
+      : 0;
+  const supportsGridEntries =
+    menuItem.routeType === 'SUBCATEGORY' ||
+    (menuItem.routeType === 'CATEGORY' && subcategoryCount === 0);
+  if (!supportsGridEntries) {
     return { status: 'error', message: 'This page cannot accept grid entries.' };
   }
 
