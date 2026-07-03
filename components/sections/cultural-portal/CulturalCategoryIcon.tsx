@@ -3,6 +3,7 @@ import type { CulturalPortalIconKey } from '@/lib/constants/cultural-portal';
 import { CULTURAL_PORTAL_ICON_SOURCES } from '@/lib/constants/cultural-portal-icon-sources';
 import {
   CULTURAL_PORTAL_ICON_BADGE_CLASS,
+  CULTURAL_PORTAL_ICON_BADGED_IMAGE_CLASS,
   CULTURAL_PORTAL_ICON_SVG_CLASS,
 } from '@/components/sections/cultural-portal/cultural-portal-icon-styles';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
@@ -23,13 +24,16 @@ export function CulturalCategoryIcon({
 }: CulturalCategoryIconProps) {
   const { iconSrc, sourceHref } = CULTURAL_PORTAL_ICON_SOURCES[type];
   const resolvedIconSrc = resolvePublicAssetUrl(iconSrc);
+  const resolvedIconClass = withBadge
+    ? cn(CULTURAL_PORTAL_ICON_BADGED_IMAGE_CLASS, iconClassName)
+    : cn(CULTURAL_PORTAL_ICON_SVG_CLASS, iconClassName);
   const icon = (
     <Image
       src={resolvedIconSrc}
       alt=""
       width={72}
       height={72}
-      className={cn(CULTURAL_PORTAL_ICON_SVG_CLASS, iconClassName)}
+      className={resolvedIconClass}
       unoptimized
       aria-hidden
       data-icon-src={iconSrc}

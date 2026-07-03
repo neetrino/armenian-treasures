@@ -1,5 +1,8 @@
-import Link from 'next/link';
-import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
+import '@/components/sections/cultural-portal/cultural-portal-section.css';
+import { Stagger, StaggerItem } from '@/components/motion/Stagger';
+import { CulturalCategoryCard } from '@/components/sections/cultural-portal/CulturalCategoryCard';
+import { CulturalPortalOrnament } from '@/components/sections/cultural-portal/CulturalPortalOrnament';
+import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
 import type { CulturalPortalCategory } from '@/lib/constants/cultural-portal';
 
 interface CulturalPortalCategoriesProps {
@@ -13,29 +16,27 @@ interface CulturalPortalCategoriesProps {
 
 export function CulturalPortalCategories({ section, categories }: CulturalPortalCategoriesProps) {
   return (
-    <section id="cultural">
-      <p className="sec-label">{section.eyebrow}</p>
-      <h2 className="sec-title">{section.title}</h2>
-      <p className="sec-desc">{section.description}</p>
-      <div className="cat-grid">
-        {categories.map((category) => (
-          <Link key={category.icon} href={category.href} className="cat-card reveal group">
-            <div className="cat-media">
-              <CulturalCategoryIcon
-                type={category.icon}
-                withBadge={false}
-                iconClassName="h-full w-full rounded-none object-cover"
-              />
-            </div>
-            <div className="cat-content">
-              <div className="cat-card-title">{category.title}</div>
-              <div className="cat-card-sub">{category.description}</div>
-            </div>
-            <span className="cat-arrow" aria-hidden>
-              →
-            </span>
-          </Link>
-        ))}
+    <section
+      id="cultural"
+      className="relative scroll-mt-[calc(var(--site-header-height)+1rem)] bg-transparent px-5 heritage-section-py sm:px-6"
+      aria-labelledby="culture-page-portal-heading"
+    >
+      <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">
+        <HomeSectionHeader
+          id="culture-page-portal-heading"
+          eyebrow={section.eyebrow}
+          title={section.title}
+          description={section.description}
+        />
+
+        <Stagger className="cultural-portal-grid">
+          {categories.map((category) => (
+            <StaggerItem key={category.icon} className="h-full">
+              <CulturalCategoryCard category={category} />
+            </StaggerItem>
+          ))}
+        </Stagger>
+        <CulturalPortalOrnament />
       </div>
     </section>
   );
