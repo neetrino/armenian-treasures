@@ -17,7 +17,7 @@ export function DesktopNav({ cultureMegaMenu, projectsMenu }: DesktopNavProps) {
   return (
     <nav
       aria-label="Primary"
-      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-stretch justify-start lg:ml-5 xl:ml-6 lg:flex"
+      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-6 lg:ml-5 xl:ml-6 lg:flex"
     >
       <CultureMegaMenu columns={cultureMegaMenu} />
       <ProjectsDropdown items={projectsMenu} />

@@ -36,7 +36,7 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-full items-center"
+      className="relative flex items-center"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
