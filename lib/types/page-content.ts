@@ -51,6 +51,7 @@ export const MARKETING_PAGE_CONTENT_INDEX_SLUGS = [
   'donation-page',
   'partnership-page',
   'contacts-page',
+  'projects-page',
 ] as const satisfies readonly PageContentSlug[];
 
 export const jsonRecordSchema = z.record(z.unknown());
