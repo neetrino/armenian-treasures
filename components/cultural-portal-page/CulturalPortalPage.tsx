@@ -15,11 +15,10 @@ import { CulturalPortalProjects } from '@/components/cultural-portal-page/Cultur
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
 import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
 import { buildCulturePortalCategories } from '@/lib/mappers/culture-portal-categories';
-import { mapCultureItemsToHighlights } from '@/lib/mappers/cultural-portal-highlights';
 import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
 import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
 import { groupDonatorsForHomeSection } from '@/lib/mappers/donations-patrons';
-import { getFeaturedCultureItems, getMapItems } from '@/lib/queries/culture-items';
+import { getMapItems } from '@/lib/queries/culture-items';
 import { getHomeContent } from '@/lib/queries/home';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getPublishedProjects } from '@/lib/queries/projects';
@@ -63,15 +62,13 @@ async function CulturalPortalDeferredSections({
 }: {
   pageContent: Awaited<ReturnType<typeof getCulturalPortalPageContent>>;
 }) {
-  const [featuredItems, mapItems, projects, donators, about] = await Promise.all([
-    getFeaturedCultureItems(4),
+  const [mapItems, projects, donators, about] = await Promise.all([
     getMapItems(),
     getPublishedProjects(),
     getPublicDonators(),
     getAboutContent(),
   ]);
 
-  const highlights = mapCultureItemsToHighlights(featuredItems);
   const mapNodes = mapItemsToHeritageMapNodes(mapItems);
   const donorGroups = groupDonatorsForHomeSection(donators);
   const mapSection = pageContent.CULTURAL_PORTAL_MAP;
@@ -80,7 +77,7 @@ async function CulturalPortalDeferredSections({
 
   return (
     <>
-      <CulturalPortalHighlights highlights={highlights} />
+      <CulturalPortalHighlights />
       <CulturalPortalMap
         eyebrow={mapSection.eyebrow}
         title={mapSection.title}

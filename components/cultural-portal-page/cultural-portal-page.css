@@ -53,107 +53,8 @@
   display: none;
 }
 
-.khndzoresk-page .hl-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr 1fr;
-  gap: 2px;
+.khndzoresk-page .cultural-portal-featured-treasures {
   margin-top: 48px;
-}
-
-.khndzoresk-page .hl-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 34px 28px;
-  position: relative;
-  overflow: hidden;
-  text-decoration: none;
-  display: block;
-  transition: border-color 0.25s;
-}
-
-.khndzoresk-page .hl-card:hover {
-  border-color: var(--gold);
-}
-
-.khndzoresk-page .hl-card.featured {
-  grid-row: 1 / 3;
-}
-
-.khndzoresk-page .hl-tag {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.3em;
-  color: var(--teal);
-  text-transform: uppercase;
-  margin-bottom: 14px;
-  display: block;
-}
-
-.khndzoresk-page .hl-title {
-  font-family: var(--font-cinzel), serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--gold);
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.khndzoresk-page .hl-card.featured .hl-title {
-  font-size: 28px;
-}
-
-.khndzoresk-page .hl-excerpt {
-  font-size: 15px;
-  color: var(--text);
-  opacity: 0.72;
-  line-height: 1.65;
-}
-
-.khndzoresk-page .hl-num {
-  position: absolute;
-  bottom: 16px;
-  right: 22px;
-  font-family: var(--font-cinzel), serif;
-  font-size: 68px;
-  font-weight: 900;
-  color: rgba(201, 168, 76, 0.04);
-  line-height: 1;
-  pointer-events: none;
-}
-
-.khndzoresk-page .hl-icon-badge {
-  width: 82px;
-  height: 82px;
-  border-radius: 9999px;
-  border: 1px solid rgba(201, 168, 76, 0.45);
-  background: radial-gradient(circle at 45% 40%, rgba(20, 33, 38, 0.78), rgba(4, 8, 10, 0.96));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  margin-bottom: 14px;
-  box-shadow: inset 0 0 0 1px rgba(201, 168, 76, 0.08);
-}
-
-.khndzoresk-page .hl-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 9999px;
-  opacity: 0.96;
-  transform: scale(2);
-}
-
-.khndzoresk-page .hl-card.featured .hl-icon-badge {
-  width: 86px;
-  height: 86px;
-}
-
-.khndzoresk-page .hl-card.featured .hl-icon {
-  width: 100%;
-  height: 100%;
-  transform: scale(2);
 }
 
 .khndzoresk-page .map-section {
@@ -450,14 +351,6 @@
 @media (max-width: 900px) {
   .khndzoresk-page .map-section {
     padding: var(--section-padding-y) 20px;
-  }
-
-  .khndzoresk-page .hl-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .khndzoresk-page .hl-card.featured {
-    grid-row: auto;
   }
 
   .khndzoresk-page .about-grid {
