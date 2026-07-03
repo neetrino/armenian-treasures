@@ -1,10 +1,11 @@
-import '@/components/sections/heritage-map/heritage-map-section.css';
-import { HeritageMapPreview } from '@/components/sections/heritage-map/HeritageMapPreview';
+import { MapPanel } from '@/components/map/MapPanel';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
+import { getMapItems } from '@/lib/queries/culture-items';
 import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
 export async function HeritageMapSection({ home }: HomeSectionContentProps) {
   const { heritageMap } = getHomeSections(home);
+  const items = await getMapItems();
 
   return (
     <section
@@ -20,12 +21,7 @@ export async function HeritageMapSection({ home }: HomeSectionContentProps) {
           description={heritageMap.description}
         />
 
-        <HeritageMapPreview
-          placeholderTitle={heritageMap.placeholderTitle}
-          placeholderSubtitle={heritageMap.placeholderSubtitle}
-          ctaUrl={heritageMap.ctaUrl}
-          legend={heritageMap.legend}
-        />
+        <MapPanel items={items} />
       </div>
     </section>
   );

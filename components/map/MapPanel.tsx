@@ -304,19 +304,37 @@ export function MapPanel({ items }: MapPanelProps) {
       ) : null}
 
       {selected ? (
-        <div className="rounded-2xl border border-stone-200/70 bg-white/90 p-6 shadow-card backdrop-blur-sm">
-          <p className="eyebrow">{selected.mapType ?? 'Heritage site'}</p>
-          <h2 className="mt-2 font-display text-2xl text-ink">{selected.title}</h2>
-          <p className="mt-1 text-xs uppercase tracking-eyebrow text-bronze-700">
+        <div className="relative overflow-hidden rounded-3xl border border-heritage-gold/20 bg-slate-950/75 p-6 shadow-[0_8px_24px_rgba(15,23,42,0.25)] backdrop-blur-md">
+          <div
+            className="pointer-events-none absolute inset-0 opacity-30"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at 18% 12%, rgba(214,184,90,0.28) 0%, transparent 55%), linear-gradient(150deg, rgba(39,198,200,0.08), transparent 50%)',
+            }}
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(45deg, rgba(214,184,90,0.12) 0px, rgba(214,184,90,0.12) 1px, transparent 1px, transparent 14px)',
+            }}
+            aria-hidden
+          />
+          <p className="relative font-cinzel text-[11px] uppercase tracking-[0.24em] text-heritage-gold/90">
+            {selected.mapType ?? 'Heritage site'}
+          </p>
+          <h2 className="relative mt-2 font-display text-2xl text-white">{selected.title}</h2>
+          <p className="relative mt-1 text-xs uppercase tracking-eyebrow text-heritage-champagne">
             {selected.region ?? 'Armenia'}
             {selected.periodLabel ? ` · ${selected.periodLabel}` : ''}
           </p>
           {selected.description ? (
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ink-soft">
+            <p className="relative mt-4 max-w-3xl text-sm leading-relaxed text-slate-300">
               {selected.description}
             </p>
           ) : null}
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="relative mt-5 flex flex-wrap gap-3">
             <Link
               href={resolveCultureItemHref(selected.slug)}
               className="inline-flex items-center rounded-full border border-heritage-gold/30 bg-heritage-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-eyebrow text-heritage-gold transition hover:bg-heritage-gold/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500"
