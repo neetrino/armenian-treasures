@@ -8,7 +8,11 @@ interface CulturalCategoryCardProps {
 
 export function CulturalCategoryCard({ category }: CulturalCategoryCardProps) {
   return (
-    <Link href={category.href} className="cultural-portal-card group block h-full outline-none">
+    <Link
+      href={category.href}
+      className="cultural-portal-card group block h-full outline-none"
+      data-category-icon={category.icon}
+    >
       <div className="cultural-portal-card__media">
         <CulturalCategoryIcon
           type={category.icon}
