@@ -127,13 +127,6 @@ export function revalidateProjectsCache(): void {
   revalidatePublicApiRoutes([PUBLIC_API_ROUTES.projects]);
 }
 
-export function revalidateDonatorsCache(): void {
-  revalidateTag('donators', 'max');
-  revalidatePublicPages(['/donate', '/', '/culture']);
-  revalidatePath('/admin/donators');
-  revalidatePublicApiRoutes([PUBLIC_API_ROUTES.donators]);
-}
-
 export async function revalidateCultureMenuCache(): Promise<void> {
   revalidateTag('culture-menu', 'max');
   revalidateTag('culture-items', 'max');

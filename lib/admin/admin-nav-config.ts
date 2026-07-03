@@ -110,12 +110,6 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         description: 'Projects page hero banner image',
         icon: LayoutGrid,
       },
-      {
-        href: '/admin/donators',
-        label: 'Donators',
-        description: 'Public donor wall entries',
-        icon: HandCoins,
-      },
     ],
   },
   {
