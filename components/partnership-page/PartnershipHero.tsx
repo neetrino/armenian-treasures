@@ -53,7 +53,6 @@ export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
         </div>
       </div>
       <div className="hero-scroll" aria-hidden>
-        <span>Explore</span>
         <div className="scroll-line" />
       </div>
     </div>
