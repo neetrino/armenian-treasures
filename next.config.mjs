@@ -42,6 +42,7 @@ const nextConfig = {
   },
   images: {
     remotePatterns: buildR2RemotePatterns(),
+    qualities: [75, 90],
   },
   outputFileTracingExcludes: {
     '*': ['next.config.mjs'],
