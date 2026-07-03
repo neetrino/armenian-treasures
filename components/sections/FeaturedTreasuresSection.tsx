@@ -1,10 +1,18 @@
 import '@/components/sections/featured-treasures/featured-treasures-section.css';
 import { FeaturedTreasuresGrid } from '@/components/sections/featured-treasures/FeaturedTreasuresGrid';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
+import { getFeaturedCultureItems } from '@/lib/queries/culture-items';
+import { mapCultureItemsToFeaturedTreasures } from '@/lib/mappers/featured-treasures';
 import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 
 export async function FeaturedTreasuresSection({ home }: HomeSectionContentProps) {
   const { featuredTreasures } = getHomeSections(home);
+  const items = await getFeaturedCultureItems(5);
+  const treasures = mapCultureItemsToFeaturedTreasures(items);
+
+  if (treasures.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -18,7 +26,7 @@ export async function FeaturedTreasuresSection({ home }: HomeSectionContentProps
           title={featuredTreasures.title}
         />
 
-        <FeaturedTreasuresGrid />
+        <FeaturedTreasuresGrid treasures={treasures} />
       </div>
     </section>
   );

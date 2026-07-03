@@ -1,0 +1,205 @@
+.project-portal {
+  --pp-card: var(--card, #141414);
+  --pp-border: var(--border, rgba(214, 184, 90, 0.18));
+  --pp-gold: var(--gold, var(--heritage-gold));
+  --pp-gold-dk: var(--gold-dk, var(--heritage-gold-muted));
+  --pp-teal: var(--teal, var(--heritage-teal));
+  --pp-text: var(--text, var(--surface-text-body));
+  --pp-muted: var(--muted, var(--surface-text-muted));
+}
+
+.project-portal .proj-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 48px;
+}
+
+.project-portal--embedded .proj-grid {
+  margin-top: 0;
+}
+
+.project-portal .proj-card {
+  background: var(--pp-card);
+  border: 1px solid var(--pp-border);
+  padding: 30px 24px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-portal .proj-card:hover {
+  border-color: var(--pp-gold);
+}
+
+.project-portal .proj-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--pp-gold-dk), var(--pp-gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.project-portal .proj-card:hover::before {
+  transform: scaleX(1);
+}
+
+.project-portal .proj-status {
+  display: inline-block;
+  padding: 3px 12px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.project-portal .status-soon {
+  background: rgba(42, 191, 191, 0.12);
+  color: var(--pp-teal);
+}
+
+.project-portal .status-dev {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--pp-gold);
+}
+
+.project-portal .status-plan {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--pp-muted);
+}
+
+.project-portal .proj-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--pp-gold);
+  margin-bottom: 14px;
+  opacity: 0.7;
+}
+
+.project-portal .proj-title {
+  font-family: var(--font-cinzel), serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--pp-gold);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.project-portal .proj-desc {
+  font-size: 14.5px;
+  color: var(--pp-text);
+  opacity: 0.68;
+  line-height: 1.55;
+}
+
+.project-portal .proj-date {
+  margin-top: 18px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 10.5px;
+  color: var(--pp-teal);
+  letter-spacing: 0.1em;
+}
+
+.project-portal .proj-funding {
+  margin-top: 20px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-portal .proj-funding-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.project-portal .proj-funding-raised {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+}
+
+.project-portal .proj-funding-raised-value {
+  font-family: var(--font-cinzel), serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--pp-gold);
+}
+
+.project-portal .proj-funding-percent {
+  font-family: var(--font-cinzel), serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--pp-gold);
+}
+
+.project-portal .proj-funding-track {
+  position: relative;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(201, 168, 76, 0.12);
+  overflow: visible;
+}
+
+.project-portal .proj-funding-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--pp-gold-dk) 0%, var(--pp-gold) 100%);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.35);
+  transition: width 0.4s ease;
+}
+
+.project-portal .proj-funding-thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--pp-card, #141414);
+  border: 2px solid var(--pp-gold);
+  box-shadow:
+    0 0 0 3px rgba(201, 168, 76, 0.12),
+    0 3px 8px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+  transition: left 0.4s ease;
+}
+
+.project-portal .proj-funding-goal {
+  margin-top: 9px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-muted);
+  opacity: 0.85;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-portal .proj-funding-fill,
+  .project-portal .proj-funding-thumb {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .project-portal .proj-grid {
+    grid-template-columns: 1fr;
+  }
+}

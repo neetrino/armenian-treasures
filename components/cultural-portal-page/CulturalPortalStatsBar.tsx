@@ -8,6 +8,10 @@ interface CulturalPortalStatsBarProps {
 }
 
 export function CulturalPortalStatsBar({ stats }: CulturalPortalStatsBarProps) {
+  if (stats.length === 0) {
+    return null;
+  }
+
   return (
     <div className="stats-bar">
       {stats.map((stat) => (

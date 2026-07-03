@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useCallback, useRef } from 'react';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 function RestorationCard({
   before,
@@ -49,6 +50,10 @@ type KhndzoreskRestorationProps = {
 };
 
 export function KhndzoreskRestoration({ restorations }: KhndzoreskRestorationProps) {
+  if (!hasNonEmptyArray(restorations)) {
+    return null;
+  }
+
   return (
     <section id="restoration">
       <p className="sec-label">Visual Restoration</p>

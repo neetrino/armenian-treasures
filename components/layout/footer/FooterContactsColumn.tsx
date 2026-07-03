@@ -11,15 +11,13 @@ function toTelHref(phone: string): string {
 export function FooterContactsColumn({ settings }: FooterContactsColumnProps) {
   return (
     <section aria-label="Contact" className="min-w-0">
-      <p className="font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
-        Contact
-      </p>
+      <p className="site-footer__column-title">Contact</p>
 
-      <ul className="mt-5 flex flex-col gap-3">
+      <ul className="mt-5 flex flex-col gap-2.5">
         <li>
           <a
             href={`mailto:${settings.contactEmail}`}
-            className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-surface-body transition-colors duration-[240ms] hover:text-surface-text"
+            className="site-footer__category-link site-footer__category-link--plain"
           >
             {settings.contactEmail}
           </a>
@@ -27,13 +25,13 @@ export function FooterContactsColumn({ settings }: FooterContactsColumnProps) {
         <li>
           <a
             href={toTelHref(settings.phone)}
-            className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-surface-body transition-colors duration-[240ms] hover:text-surface-text"
+            className="site-footer__category-link site-footer__category-link--plain"
           >
             {settings.phone}
           </a>
         </li>
         <li>
-          <p className="font-display text-[clamp(0.875rem,0.95vw,0.9375rem)] leading-[1.4] text-surface-body">
+          <p className="site-footer__category-link site-footer__category-link--plain site-footer__category-link--static">
             {settings.address}
           </p>
         </li>

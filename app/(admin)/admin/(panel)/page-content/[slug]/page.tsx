@@ -51,7 +51,7 @@ async function AdminPageContentEditPage(props: PageProps) {
       topbarTitle={PAGE_CONTENT_TITLES[params.slug]}
       title={PAGE_CONTENT_TITLES[params.slug]}
       description="Edit text, images, and sections visually. Changes appear on the public page after save."
-      beforeHeader={<AdminBackLink href="/admin/page-content" label="All marketing pages" />}
+      beforeHeader={<AdminBackLink href="/admin/page-content" label="All pages" />}
     >
       <AdminPanelCard>
         <PageContentForm key={formKey} slug={params.slug} initial={initial} />

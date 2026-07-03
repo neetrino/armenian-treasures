@@ -14,6 +14,7 @@ export function PartnershipBreadcrumb() {
 export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
   return (
     <div className="hero partnership-hero">
+      <PartnershipBreadcrumb />
       {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
@@ -53,7 +54,6 @@ export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
         </div>
       </div>
       <div className="hero-scroll" aria-hidden>
-        <span>Explore</span>
         <div className="scroll-line" />
       </div>
     </div>

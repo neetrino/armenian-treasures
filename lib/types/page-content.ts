@@ -32,6 +32,14 @@ import {
 import * as khndzoresk from '@/lib/constants/khndzoresk';
 import * as khachaturian from '@/lib/constants/khachaturian-museum';
 import * as nga from '@/lib/constants/national-gallery-armenia';
+import type {
+  CulturalPortalSectionVisibility,
+  DonationSectionVisibility,
+  KhachaturianSectionVisibility,
+  KhndzoreskSectionVisibility,
+  NationalGallerySectionVisibility,
+  PartnershipSectionVisibility,
+} from '@/lib/landing/landing-section-visibility';
 
 export const PAGE_CONTENT_SLUGS = [
   'donation-page',
@@ -58,6 +66,7 @@ export const jsonRecordSchema = z.record(z.unknown());
 
 export type DonationPageContent = {
   heroImage?: string;
+  sectionVisibility?: DonationSectionVisibility;
   metadata: { title: string; description: string };
   page: typeof DONATION_PAGE;
   stats: typeof DONATION_STATS;
@@ -73,6 +82,7 @@ export type DonationPageContent = {
 
 export type PartnershipPageContent = {
   heroImage?: string;
+  sectionVisibility?: PartnershipSectionVisibility;
   stats: typeof PARTNERSHIP_STATS;
   impact: typeof PARTNERSHIP_IMPACT;
   categories: typeof PARTNERSHIP_CATEGORIES;
@@ -82,6 +92,7 @@ export type PartnershipPageContent = {
 
 export type CulturalPortalPageContent = typeof CULTURAL_PORTAL_PAGE & {
   heroImage?: string;
+  sectionVisibility?: CulturalPortalSectionVisibility;
   CULTURAL_PORTAL_SECTION: typeof CULTURAL_PORTAL_SECTION;
   CULTURAL_PORTAL_MAP: typeof CULTURAL_PORTAL_MAP;
   CULTURAL_PORTAL_PROJECTS_SECTION: typeof CULTURAL_PORTAL_PROJECTS_SECTION;
@@ -94,11 +105,15 @@ export type CulturalPortalPageContent = typeof CULTURAL_PORTAL_PAGE & {
 
 export type KhndzoreskPageContent = {
   heroImage?: string;
+  sectionVisibility?: KhndzoreskSectionVisibility;
   imgBase: string;
   stats: typeof khndzoresk.KHNDZORESK_STATS;
   facts: typeof khndzoresk.KHNDZORESK_FACTS;
   sites: typeof khndzoresk.KHNDZORESK_SITES;
   tours: typeof khndzoresk.KHNDZORESK_TOURS;
+  aerial: typeof khndzoresk.KHNDZORESK_AERIAL;
+  panorama: typeof khndzoresk.KHNDZORESK_PANORAMA;
+  map: typeof khndzoresk.KHNDZORESK_MAP;
   gallery: typeof khndzoresk.KHNDZORESK_GALLERY;
   restorations: typeof khndzoresk.KHNDZORESK_RESTORATIONS;
   related: typeof khndzoresk.KHNDZORESK_RELATED;
@@ -107,6 +122,7 @@ export type KhndzoreskPageContent = {
 
 export type KhachaturianPageContent = {
   heroImage?: string;
+  sectionVisibility?: KhachaturianSectionVisibility;
   imgBase: string;
   stats: typeof khachaturian.KHACHATURIAN_STATS;
   facts: typeof khachaturian.KHACHATURIAN_FACTS;
@@ -114,11 +130,13 @@ export type KhachaturianPageContent = {
   works: typeof khachaturian.KHACHATURIAN_WORKS;
   gallery: typeof khachaturian.KHACHATURIAN_GALLERY;
   audioTracks: typeof khachaturian.KHACHATURIAN_AUDIO_TRACKS;
+  virtualTour: typeof khachaturian.KHACHATURIAN_VIRTUAL_TOUR;
   related: typeof khachaturian.KHACHATURIAN_RELATED;
 };
 
 export type NationalGalleryPageContent = {
   heroImage?: string;
+  sectionVisibility?: NationalGallerySectionVisibility;
   imgBase: string;
   stats: typeof nga.NGA_STATS;
   facts: typeof nga.NGA_FACTS;
@@ -127,6 +145,7 @@ export type NationalGalleryPageContent = {
   artists: typeof nga.NGA_ARTISTS;
   exhibitions: typeof nga.NGA_EXHIBITIONS;
   tickets: typeof nga.NGA_TICKETS;
+  virtualTour: typeof nga.NGA_VIRTUAL_TOUR;
   related: typeof nga.NGA_RELATED;
 };
 
@@ -185,6 +204,9 @@ export function buildDefaultKhndzoreskContent(): KhndzoreskPageContent {
     facts: [...khndzoresk.KHNDZORESK_FACTS],
     sites: [...khndzoresk.KHNDZORESK_SITES],
     tours: structuredClone(khndzoresk.KHNDZORESK_TOURS),
+    aerial: structuredClone(khndzoresk.KHNDZORESK_AERIAL),
+    panorama: structuredClone(khndzoresk.KHNDZORESK_PANORAMA),
+    map: structuredClone(khndzoresk.KHNDZORESK_MAP),
     gallery: structuredClone(khndzoresk.KHNDZORESK_GALLERY),
     restorations: [...khndzoresk.KHNDZORESK_RESTORATIONS],
     related: [...khndzoresk.KHNDZORESK_RELATED],
@@ -201,6 +223,7 @@ export function buildDefaultKhachaturianContent(): KhachaturianPageContent {
     works: [...khachaturian.KHACHATURIAN_WORKS],
     gallery: [...khachaturian.KHACHATURIAN_GALLERY],
     audioTracks: [...khachaturian.KHACHATURIAN_AUDIO_TRACKS],
+    virtualTour: structuredClone(khachaturian.KHACHATURIAN_VIRTUAL_TOUR),
     related: [...khachaturian.KHACHATURIAN_RELATED],
   };
 }
@@ -215,6 +238,7 @@ export function buildDefaultNationalGalleryContent(): NationalGalleryPageContent
     artists: [...nga.NGA_ARTISTS],
     exhibitions: [...nga.NGA_EXHIBITIONS],
     tickets: [...nga.NGA_TICKETS],
+    virtualTour: structuredClone(nga.NGA_VIRTUAL_TOUR),
     related: [...nga.NGA_RELATED],
   };
 }
@@ -285,24 +309,49 @@ export function parseCulturalPortalPageContent(value: unknown): CulturalPortalPa
 }
 
 export function parseKhndzoreskPageContent(value: unknown): KhndzoreskPageContent {
+  const defaults = buildDefaultKhndzoreskContent();
   if (typeof value === 'object' && value !== null) {
-    return value as KhndzoreskPageContent;
+    const stored = value as Partial<KhndzoreskPageContent>;
+    return {
+      ...defaults,
+      ...stored,
+      sectionVisibility: stored.sectionVisibility,
+      tours: stored.tours ?? defaults.tours,
+      aerial: stored.aerial ?? defaults.aerial,
+      panorama: stored.panorama ?? defaults.panorama,
+      map: stored.map ?? defaults.map,
+      gallery: stored.gallery ?? defaults.gallery,
+    };
   }
-  return buildDefaultKhndzoreskContent();
+  return defaults;
 }
 
 export function parseKhachaturianPageContent(value: unknown): KhachaturianPageContent {
+  const defaults = buildDefaultKhachaturianContent();
   if (typeof value === 'object' && value !== null) {
-    return value as KhachaturianPageContent;
+    const stored = value as Partial<KhachaturianPageContent>;
+    return {
+      ...defaults,
+      ...stored,
+      sectionVisibility: stored.sectionVisibility,
+      virtualTour: stored.virtualTour ?? defaults.virtualTour,
+    };
   }
-  return buildDefaultKhachaturianContent();
+  return defaults;
 }
 
 export function parseNationalGalleryPageContent(value: unknown): NationalGalleryPageContent {
+  const defaults = buildDefaultNationalGalleryContent();
   if (typeof value === 'object' && value !== null) {
-    return value as NationalGalleryPageContent;
+    const stored = value as Partial<NationalGalleryPageContent>;
+    return {
+      ...defaults,
+      ...stored,
+      sectionVisibility: stored.sectionVisibility,
+      virtualTour: stored.virtualTour ?? defaults.virtualTour,
+    };
   }
-  return buildDefaultNationalGalleryContent();
+  return defaults;
 }
 
 export function parseStaticPageHeroContent(value: unknown): StaticPageHeroContent {

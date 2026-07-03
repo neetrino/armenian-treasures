@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 import {
   CaveDwellingsIcon,
   SparapetTombIcon,
@@ -23,6 +24,10 @@ type KhndzoreskSitesProps = {
 };
 
 export function KhndzoreskSites({ sites }: KhndzoreskSitesProps) {
+  if (!hasNonEmptyArray(sites)) {
+    return null;
+  }
+
   return (
     <section id="sites">
       <p className="sec-label">Sacred Monuments</p>

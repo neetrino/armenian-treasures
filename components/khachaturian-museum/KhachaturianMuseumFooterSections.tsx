@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 export function KhachaturianMuseumVisit() {
   return (
@@ -128,6 +129,10 @@ type KhachaturianMuseumRelatedProps = {
 };
 
 export function KhachaturianMuseumRelated({ related }: KhachaturianMuseumRelatedProps) {
+  if (!hasNonEmptyArray(related)) {
+    return null;
+  }
+
   return (
     <section style={{ paddingTop: 'var(--section-padding-y-lg)', paddingBottom: 'var(--section-padding-y-lg)' }}>
       <p className="sec-label">Explore Further</p>

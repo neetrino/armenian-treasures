@@ -4,6 +4,75 @@
   font-size: clamp(40px, 6.5vw, 82px);
 }
 
+.khndzoresk-page .catalog-section-intro {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px 32px;
+}
+
+.khndzoresk-page .catalog-section-intro__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.khndzoresk-page .catalog-section-intro__search {
+  position: relative;
+  flex-shrink: 0;
+  width: min(100%, 320px);
+  margin-top: 10px;
+}
+
+.khndzoresk-page .catalog-section-intro__search-icon {
+  pointer-events: none;
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--teal);
+  opacity: 0.75;
+}
+
+.khndzoresk-page .catalog-section-intro__search-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 11px 40px 11px 40px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.khndzoresk-page .catalog-section-intro__search-input::placeholder {
+  color: var(--muted);
+  opacity: 0.85;
+}
+
+.khndzoresk-page .catalog-section-intro__search-input:focus {
+  border-color: rgba(201, 168, 76, 0.45);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.12);
+}
+
+.khndzoresk-page .catalog-section-intro__search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.khndzoresk-page .catalog-section-intro__search-clear:hover {
+  color: var(--gold);
+}
+
 .khndzoresk-page .catalog-item-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -417,6 +486,16 @@
 }
 
 @media (max-width: 900px) {
+  .khndzoresk-page .catalog-section-intro {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .khndzoresk-page .catalog-section-intro__search {
+    width: 100%;
+    margin-top: 0;
+  }
+
   .khndzoresk-page .cat-card--catalog {
     min-height: 240px;
   }

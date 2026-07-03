@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
-import { CultureCatalogHero } from '@/components/culture-catalog/CultureCatalogHero';
+import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
+import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
 import { resolveCultureCatalogFormContent } from '@/lib/constants/culture-catalog-content';
 import type { MenuNode } from '@/lib/culture-menu';
 
@@ -27,13 +28,13 @@ export function CultureFormPageView({
 
   return (
     <CultureCatalogShell>
-      <CultureCatalogHero
+      <CultureCatalogLandingHero
         title={title}
         eyebrow={content.eyebrow}
         accent={content.accent}
         slogan={content.slogan}
         description={description}
-        breadcrumb={breadcrumb}
+        breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         showScroll={false}
         ctas={[{ label: 'Go to form', href: '#form', variant: 'gold' }]}
       />

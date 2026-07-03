@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/cultural-portal-page/cultural-portal-page.css';
 import '@/components/blog/blog.css';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
-import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
 import { BlogGrid } from '@/components/blog/BlogGrid';
+import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
+import { LandingHero } from '@/components/landing/LandingHero';
 import { getPublishedBlogPosts } from '@/lib/queries/blogs';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
@@ -21,39 +20,17 @@ async function BlogPage() {
   const posts = await getPublishedBlogPosts();
 
   return (
-    <div className="khndzoresk-page">
-      <KhndzoreskParticles />
-
-      <div className="hero cultural-portal-hero">
-        <div className="hero-bg" />
-        <div className="hero-grain" />
-        <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>
-          <path d="M48 0 Q40 0 40 8 L40 40 Q40 48 32 48" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
-        </svg>
-        <div className="hero-content">
-          <p className="hero-eyebrow reveal">BLOG</p>
-          <h1 className="reveal">
-            STORIES FROM
-            <span>THE MISSION</span>
-          </h1>
-          <p className="hero-sub reveal">
-            Field reports, restoration updates, and cultural heritage insights from across Armenia and the diaspora.
-          </p>
-          <div className="hero-btns reveal">
-            <a href="#blog-posts" className="btn-gold">
-              Read Articles
-            </a>
-            <Link href="/donate" className="btn-teal">
-              Support The Mission
-            </Link>
-          </div>
-        </div>
-        <div className="hero-scroll">
-          <div className="scroll-line" />
-          <span>SCROLL</span>
-        </div>
-      </div>
+    <HeritageLandingShell>
+      <LandingHero
+        eyebrow="BLOG"
+        title="STORIES FROM"
+        accent="THE MISSION"
+        subtitle="Field reports, restoration updates, and cultural heritage insights from across Armenia and the diaspora."
+        ctas={[
+          { label: 'Read Articles', href: '#blog-posts', variant: 'gold' },
+          { label: 'Support The Mission', href: '/donate', variant: 'teal' },
+        ]}
+      />
 
       <KhndzoreskDivider />
 
@@ -69,7 +46,7 @@ async function BlogPage() {
           <BlogGrid posts={posts} />
         </div>
       </section>
-    </div>
+    </HeritageLandingShell>
   );
 }
 

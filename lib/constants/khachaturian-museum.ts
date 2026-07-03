@@ -101,6 +101,12 @@ export const KHACHATURIAN_HIGHLIGHTS = [
   },
 ] as const;
 
+export const KHACHATURIAN_VIRTUAL_TOUR = {
+  embed: 'https://link.vcity.guide/aramkhachaturyan',
+  title: 'Aram Khachaturian House-Museum · Yerevan',
+  tag: '✦ Virtual Walkthrough',
+} as const;
+
 export const KHACHATURIAN_RELATED = [
   { num: '01', name: 'Komitas Museum-Institute', type: 'Music · Yerevan', href: '/culture' },
   { num: '02', name: 'Matenadaran', type: 'Manuscripts · Yerevan', href: '/culture' },

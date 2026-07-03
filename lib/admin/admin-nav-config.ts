@@ -6,14 +6,12 @@ import {
   HeartHandshake,
   Home,
   Inbox,
-  Landmark,
   LayoutGrid,
   ListTree,
   Mail,
   Megaphone,
   Newspaper,
   Settings,
-  Users,
   HandCoins,
   UserCircle,
 } from 'lucide-react';
@@ -59,15 +57,9 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         icon: Home,
       },
       {
-        href: '/admin/about-content',
-        label: 'About page',
-        description: 'Mission, pillars, team intro',
-        icon: Landmark,
-      },
-      {
         href: '/admin/page-content',
-        label: 'Marketing pages',
-        description: 'Donation, partnership & page heroes',
+        label: 'Pages',
+        description: 'About, team, donation, partnership & contact',
         icon: Megaphone,
       },
       {
@@ -110,12 +102,6 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         description: 'Projects page hero banner image',
         icon: LayoutGrid,
       },
-      {
-        href: '/admin/donators',
-        label: 'Donators',
-        description: 'Public donor wall entries',
-        icon: HandCoins,
-      },
     ],
   },
   {
@@ -132,12 +118,6 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Donations',
         description: 'Member payment history',
         icon: HandCoins,
-      },
-      {
-        href: '/admin/team',
-        label: 'Team members',
-        description: 'Staff and board profiles',
-        icon: Users,
       },
       {
         href: '/admin/careers',

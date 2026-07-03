@@ -1,10 +1,15 @@
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type KhachaturianMuseumStatsBarProps = {
   stats: KhachaturianPageContent['stats'];
 };
 
 export function KhachaturianMuseumStatsBar({ stats }: KhachaturianMuseumStatsBarProps) {
+  if (!hasNonEmptyArray(stats)) {
+    return null;
+  }
+
   return (
     <div className="stats-bar">
       {stats.map((stat) => (

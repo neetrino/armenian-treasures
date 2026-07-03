@@ -1,36 +1,42 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { khndzoreskImg, type KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
 
-export function KhndzoreskMap() {
+type KhndzoreskMapProps = {
+  map: KhndzoreskPageContent['map'];
+};
+
+export function KhndzoreskMap({ map }: KhndzoreskMapProps) {
+  if (!hasTrimmedText(map.embed)) {
+    return null;
+  }
+
   return (
     <section id="map">
       <p className="sec-label">Location &amp; Geography</p>
       <h2 className="sec-title">Find Khndzoresk</h2>
-      <p className="sec-desc">
-        Goris Municipality, Syunik Province — accessible via the Goris–Stepanakert highway at 39°29′12.7″N,
-        46°25′19.3″E.
-      </p>
+      <p className="sec-desc">{map.description}</p>
       <div className="map-wrap reveal">
         <iframe
           className="map-embed"
-          src="https://maps.google.com/maps?q=39%C2%B029%2712.7%22N+46%C2%B025%2719.3%22E&t=m&z=13&output=embed&iwloc=near"
+          src={map.embed}
           allowFullScreen
           loading="lazy"
           title="Khndzoresk Location"
         />
         <div className="map-info">
           <span className="map-coord">
-            Coordinates: <span>39°29′12.7″N · 46°25′19.3″E</span>
+            Coordinates: <span>{map.coords}</span>
           </span>
           <span className="map-coord">
-            Province: <span>Syunik · Goris Municipality</span>
+            Province: <span>{map.province}</span>
           </span>
           <span className="map-coord">
-            Elevation: <span>1,580 m</span>
+            Elevation: <span>{map.elevation}</span>
           </span>
           <span className="map-coord">
-            Area: <span>6,772.8 ha</span>
+            Area: <span>{map.area}</span>
           </span>
         </div>
       </div>
@@ -43,6 +49,10 @@ type KhndzoreskCreditsProps = {
 };
 
 export function KhndzoreskCredits({ imgBase }: KhndzoreskCreditsProps) {
+  if (!hasTrimmedText(imgBase)) {
+    return null;
+  }
+
   return (
     <section style={{ paddingBottom: 'var(--section-padding-y)' }}>
       <p className="sec-label">Digitization Credits</p>
@@ -80,6 +90,10 @@ type KhndzoreskRelatedProps = {
 };
 
 export function KhndzoreskRelated({ related }: KhndzoreskRelatedProps) {
+  if (!hasNonEmptyArray(related)) {
+    return null;
+  }
+
   return (
     <section style={{ paddingTop: 'var(--section-padding-y-lg)', paddingBottom: 'var(--section-padding-y-lg)' }}>
       <p className="sec-label">Explore Further</p>

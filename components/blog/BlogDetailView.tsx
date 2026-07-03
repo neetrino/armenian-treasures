@@ -2,11 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
+import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { toBlogRenderHtml } from '@/lib/blog-content';
 import type { PublicBlogPostDetailDTO } from '@/lib/dto';
-import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/blog/blog.css';
 
 interface BlogDetailViewProps {
@@ -19,8 +19,8 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
   const contentHtml = toBlogRenderHtml(post.content);
 
   return (
-    <div className="khndzoresk-page blog-detail-page">
-      <section className="blog-detail-hero">
+    <HeritageLandingShell>
+      <section className="blog-detail-hero blog-detail-page">
         <div className="blog-detail-hero__image">
           <Image
             src={resolvedImageUrl}
@@ -50,6 +50,6 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
       <article className="blog-detail-article">
         <div className="blog-detail-prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
-    </div>
+    </HeritageLandingShell>
   );
 }

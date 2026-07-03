@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from 'react';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 function PlayIcon() {
   return (
@@ -46,6 +47,10 @@ export function KhachaturianMuseumAudio({ audioTracks }: KhachaturianMuseumAudio
       audioRef.current = null;
     };
   }, [activeIndex]);
+
+  if (!hasNonEmptyArray(audioTracks)) {
+    return null;
+  }
 
   return (
     <section id="audio">

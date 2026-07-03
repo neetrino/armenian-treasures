@@ -1,45 +1,26 @@
 import type { ReactNode } from 'react';
-import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/cultural-portal-page/cultural-portal-page.css';
 import './about-page.css';
 import { AboutSidebarNav } from '@/components/navigation/AboutSidebarNav';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
-import { KhndzoreskParticles } from '@/components/khndzoresk/KhndzoreskParticles';
-import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
+import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
+import { LandingHero } from '@/components/landing/LandingHero';
 import { getAboutContent } from '@/lib/queries/about';
 
 async function AboutLayout({ children }: { children: ReactNode }) {
   const content = await getAboutContent();
-  return (
-    <div className="khndzoresk-page">
-      <KhndzoreskParticles />
 
-      <div className="hero cultural-portal-hero about-portal-hero">
-        {content.heroImage ? <HeroImageOverlay imageUrl={content.heroImage} /> : null}
-        <div className="hero-bg" />
-        <div className="hero-grain" />
-        <svg className="corner-ornament" viewBox="0 0 48 48" fill="none" aria-hidden>
-          <path d="M48 0 Q40 0 40 8 L40 40 Q40 48 32 48" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
-        </svg>
-        <div className="hero-content">
-          <p className="hero-eyebrow reveal">{content.heroEyebrow}</p>
-          <h1 className="reveal">
-            {content.heroTitle}
-            <span>ABOUT US</span>
-          </h1>
-          <p className="hero-sub reveal">{content.heroDescription}</p>
-          <div className="hero-btns reveal">
-            <a href="#about-main" className="btn-gold">
-              Explore Sections
-            </a>
-          </div>
-        </div>
-        <div className="hero-scroll">
-          <div className="scroll-line" />
-          <span>SCROLL</span>
-        </div>
-      </div>
+  return (
+    <HeritageLandingShell>
+      <LandingHero
+        eyebrow={content.heroEyebrow}
+        title={content.heroTitle}
+        accent="ABOUT US"
+        subtitle={content.heroDescription}
+        heroImage={content.heroImage}
+        heroClassName="cultural-portal-hero about-portal-hero"
+        ctas={[{ label: 'Explore Sections', href: '#about-main', variant: 'gold' }]}
+      />
 
       <KhndzoreskDivider />
 
@@ -52,7 +33,7 @@ async function AboutLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto mt-8 w-full max-w-[1000px]">{children}</div>
         </div>
       </section>
-    </div>
+    </HeritageLandingShell>
   );
 }
 

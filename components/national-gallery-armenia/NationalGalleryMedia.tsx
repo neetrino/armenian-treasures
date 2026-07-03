@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import {
   AivazovskyCollectionIcon,
   ArmenianPaintingIcon,
@@ -23,6 +24,10 @@ type NationalGalleryCollectionProps = {
 };
 
 export function NationalGalleryCollection({ collections }: NationalGalleryCollectionProps) {
+  if (!hasNonEmptyArray(collections)) {
+    return null;
+  }
+
   return (
     <section id="collection">
       <p className="sec-label">Permanent Collection</p>
@@ -50,7 +55,15 @@ export function NationalGalleryCollection({ collections }: NationalGalleryCollec
   );
 }
 
-export function NationalGalleryVirtualTour() {
+export function NationalGalleryVirtualTour({
+  virtualTour,
+}: {
+  virtualTour: NationalGalleryPageContent['virtualTour'];
+}) {
+  if (!hasTrimmedText(virtualTour.embed)) {
+    return null;
+  }
+
   return (
     <section id="virtual-tour">
       <p className="sec-label">Virtual Experience</p>
@@ -62,14 +75,14 @@ export function NationalGalleryVirtualTour() {
       <div className="tour-wrap reveal">
         <iframe
           className="tour-embed"
-          src="https://link.vcity.guide/aivazovsky"
+          src={virtualTour.embed}
           allowFullScreen
           allow="xr-spatial-tracking"
           title="National Gallery of Armenia — Aivazovsky Hall Virtual Tour"
         />
         <div className="tour-label">
-          <span className="tour-name">National Gallery of Armenia · Aivazovsky Hall</span>
-          <span className="tour-tag">✦ Virtual Walkthrough</span>
+          <span className="tour-name">{virtualTour.title}</span>
+          <span className="tour-tag">{virtualTour.tag}</span>
         </div>
       </div>
     </section>

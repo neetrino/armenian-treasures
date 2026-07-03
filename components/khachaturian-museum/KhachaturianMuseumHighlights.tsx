@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 function HighlightIcon({ type }: { type: KhachaturianPageContent['highlights'][number]['icon'] }) {
   if (type === 'rooms') {
@@ -43,6 +44,10 @@ type KhachaturianMuseumHighlightsProps = {
 };
 
 export function KhachaturianMuseumHighlights({ highlights }: KhachaturianMuseumHighlightsProps) {
+  if (!hasNonEmptyArray(highlights)) {
+    return null;
+  }
+
   return (
     <section>
       <p className="sec-label">Museum Highlights</p>

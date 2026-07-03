@@ -1,11 +1,16 @@
 import Image from 'next/image';
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type NationalGalleryGalleryProps = {
   gallery: NationalGalleryPageContent['gallery'];
 };
 
 export function NationalGalleryGallery({ gallery }: NationalGalleryGalleryProps) {
+  if (!hasNonEmptyArray(gallery)) {
+    return null;
+  }
+
   return (
     <section id="gallery">
       <p className="sec-label">Photography Archive</p>

@@ -1,9 +1,15 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Box, MapPin } from 'lucide-react';
+import { CultureCatalogSectionHeader } from '@/components/culture-catalog/CultureCatalogSectionHeader';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { filterCatalogItemsBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
 interface CultureCatalogItemGridProps {
@@ -17,18 +23,33 @@ export function CultureCatalogItemGrid({
   content,
   sectionId = 'entries',
 }: CultureCatalogItemGridProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const visibleItems = useMemo(
+    () => filterCatalogItemsBySearch(items, searchQuery),
+    [items, searchQuery],
+  );
+
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <section id={sectionId}>
-      <p className="sec-label">{content.label}</p>
-      <h2 className="sec-title">{content.title}</h2>
-      <p className="sec-desc">{content.description}</p>
-      {items.length === 0 ? (
+      <CultureCatalogSectionHeader
+        label={content.label}
+        title={content.title}
+        description={content.description}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search sites…"
+      />
+      {visibleItems.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
-          {content.emptyMessage}
+          No entries match your search. Try another name, region, or period.
         </p>
       ) : (
         <div className="catalog-item-grid">
-          {items.map((item, index) => {
+          {visibleItems.map((item, index) => {
             const href = resolveCultureItemHref(item.slug);
             const imageSrc = item.image
               ? resolvePublicAssetUrl(item.image)
@@ -76,12 +97,14 @@ export function CultureCatalogItemGrid({
           })}
         </div>
       )}
-      <div className="catalog-submit-cta reveal">
-        <p>{content.submitPrompt}</p>
-        <Link href="/culture/submit" className="btn-outline">
-          Suggest an Entry
-        </Link>
-      </div>
+      {hasTrimmedText(content.submitPrompt) ? (
+        <div className="catalog-submit-cta reveal">
+          <p>{content.submitPrompt}</p>
+          <Link href="/culture/submit" className="btn-outline">
+            Suggest an Entry
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }

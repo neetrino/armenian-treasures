@@ -6,17 +6,6 @@ export interface FooterLinkItem {
 export const FOOTER_BRAND_DESCRIPTION =
   'A living portal dedicated to the art, history, and people of one of humanity’s oldest civilizations.';
 
-export const FOOTER_LINKS_CULTURAL_PORTAL_MAIN: FooterLinkItem[] = [
-  { href: '/culture/architecture/churches', label: 'Churches & Monasteries' },
-  { href: '/culture/architecture/castles', label: 'Castles' },
-  { href: '/culture/museums', label: 'Museums' },
-  { href: '/culture/legends/myths-and-gods', label: 'Myths & Gods' },
-  { href: '/culture/legends/legends-and-heroes', label: 'Legendaries & Heroes' },
-  { href: '/culture/people/icons-of-history', label: 'Icons of History' },
-  { href: '/culture/people/scientists', label: 'Scientists & Inventors' },
-  { href: '/culture/people/famous-armenians', label: 'Famous Armenians' },
-];
-
 export const FOOTER_LINKS_EXPLORE: FooterLinkItem[] = [
   { href: '/virtual-museum', label: 'Virtual Museum' },
   { href: '/map', label: 'Heritage Map' },
@@ -36,5 +25,3 @@ export const FOOTER_LEGAL_LINKS: FooterLinkItem[] = [
   { href: '/contacts', label: 'Privacy Policy' },
   { href: '/contacts', label: 'Terms of Use' },
 ];
-
-export const FOOTER_SITE_DOMAIN = 'armeniantreasures.com';

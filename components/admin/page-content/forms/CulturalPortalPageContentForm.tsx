@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
+import { SectionVisibilityPanel } from '@/components/admin/page-content/SectionVisibilityPanel';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
 import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import { MetadataFields, SectionTextFields } from '@/components/admin/page-content/editors/SectionTextFields';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { parseCulturalPortalPageContent } from '@/lib/types/page-content';
+import { CULTURAL_PORTAL_SECTION_TOGGLES } from '@/lib/landing/landing-section-visibility';
 import {
   asMutableContent,
   patchContent,
@@ -50,6 +52,12 @@ export function CulturalPortalPageContentForm({ initial, locale }: Props) {
 
   return (
     <PageContentFormShell slug="cultural-portal-page" content={content} locale={locale}>
+      <SectionVisibilityPanel
+        sections={CULTURAL_PORTAL_SECTION_TOGGLES}
+        visibility={content.sectionVisibility as Record<string, boolean | undefined> | undefined}
+        onChange={(sectionVisibility) => update({ sectionVisibility })}
+      />
+
       <MetadataFields
         title={readString(metadata.title)}
         description={readString(metadata.description)}

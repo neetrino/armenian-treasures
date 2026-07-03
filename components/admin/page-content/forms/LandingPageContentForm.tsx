@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
+import { SectionVisibilityPanel } from '@/components/admin/page-content/SectionVisibilityPanel';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
 import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import {
@@ -30,6 +31,11 @@ import {
   type KhndzoreskPageContent,
   type NationalGalleryPageContent,
 } from '@/lib/types/page-content';
+import {
+  KHACHATURIAN_SECTION_TOGGLES,
+  KHNDZORESK_SECTION_TOGGLES,
+  NGA_SECTION_TOGGLES,
+} from '@/lib/landing/landing-section-visibility';
 import {
   asMutableContent,
   patchContent,
@@ -99,6 +105,18 @@ export function LandingPageContentForm({ slug, initial, locale }: Props) {
 
   return (
     <PageContentFormShell slug={slug} content={content} locale={locale}>
+      <SectionVisibilityPanel
+        sections={
+          slug === 'khndzoresk'
+            ? KHNDZORESK_SECTION_TOGGLES
+            : slug === 'khachaturian-museum'
+              ? KHACHATURIAN_SECTION_TOGGLES
+              : NGA_SECTION_TOGGLES
+        }
+        visibility={content.sectionVisibility as Record<string, boolean | undefined> | undefined}
+        onChange={(sectionVisibility) => update({ sectionVisibility })}
+      />
+
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}
@@ -194,11 +212,82 @@ export function LandingPageContentForm({ slug, initial, locale }: Props) {
               onChange={(restorations) => update({ restorations })}
             />
           </PageContentSection>
+
+          <PageContentSection title="Aerial 3D model">
+            <TextField
+              label="Sketchfab embed URL"
+              value={khndzoresk.aerial.embed}
+              onChange={(e) =>
+                update({ aerial: { ...khndzoresk.aerial, embed: e.target.value } })
+              }
+            />
+            <TextField
+              label="Model title"
+              value={khndzoresk.aerial.modelTitle}
+              onChange={(e) =>
+                update({ aerial: { ...khndzoresk.aerial, modelTitle: e.target.value } })
+              }
+            />
+          </PageContentSection>
+
+          <PageContentSection title="360° panorama">
+            <TextField
+              label="Panorama embed URL"
+              value={khndzoresk.panorama.embed}
+              onChange={(e) =>
+                update({ panorama: { ...khndzoresk.panorama, embed: e.target.value } })
+              }
+            />
+            <TextField
+              label="Footer title"
+              value={khndzoresk.panorama.footerTitle}
+              onChange={(e) =>
+                update({ panorama: { ...khndzoresk.panorama, footerTitle: e.target.value } })
+              }
+            />
+          </PageContentSection>
+
+          <PageContentSection title="Location map">
+            <TextField
+              label="Google Maps embed URL"
+              value={khndzoresk.map.embed}
+              onChange={(e) => update({ map: { ...khndzoresk.map, embed: e.target.value } })}
+            />
+            <TextareaField
+              label="Description"
+              rows={2}
+              value={khndzoresk.map.description}
+              onChange={(e) =>
+                update({ map: { ...khndzoresk.map, description: e.target.value } })
+              }
+            />
+          </PageContentSection>
         </>
       ) : null}
 
       {slug === 'khachaturian-museum' ? (
         <>
+          <PageContentSection title="Virtual tour">
+            <TextField
+              label="Embed URL"
+              value={khachaturian.virtualTour.embed}
+              onChange={(e) =>
+                update({
+                  virtualTour: { ...khachaturian.virtualTour, embed: e.target.value },
+                })
+              }
+            />
+            <TextField
+              label="Title"
+              value={khachaturian.virtualTour.title}
+              onChange={(e) =>
+                update({
+                  virtualTour: { ...khachaturian.virtualTour, title: e.target.value },
+                })
+              }
+            />
+          </PageContentSection>
+
           <PageContentSection title="Highlights">
             <HighlightCardsEditor
               items={[...khachaturian.highlights]}
@@ -228,6 +317,23 @@ export function LandingPageContentForm({ slug, initial, locale }: Props) {
 
       {slug === 'national-gallery-armenia' ? (
         <>
+          <PageContentSection title="Virtual tour">
+            <TextField
+              label="Embed URL"
+              value={nga.virtualTour.embed}
+              onChange={(e) =>
+                update({ virtualTour: { ...nga.virtualTour, embed: e.target.value } })
+              }
+            />
+            <TextField
+              label="Title"
+              value={nga.virtualTour.title}
+              onChange={(e) =>
+                update({ virtualTour: { ...nga.virtualTour, title: e.target.value } })
+              }
+            />
+          </PageContentSection>
+
           <PageContentSection title="Collections">
             <CardGridEditor items={[...nga.collections]} onChange={(collections) => update({ collections })} />
           </PageContentSection>

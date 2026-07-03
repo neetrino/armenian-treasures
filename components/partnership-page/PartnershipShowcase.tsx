@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { PartnerLogo } from '@/lib/constants/partnership-page';
+import { hasPartnershipCategories } from '@/lib/landing/landing-section-utils';
 import { getPartnershipPageContent } from '@/lib/queries/page-content';
 
 function PlaceholderIcon() {
@@ -45,6 +46,10 @@ function PartnerMedallion({ logo }: { logo: PartnerLogo }) {
 
 export async function PartnershipShowcase() {
   const { categories } = await getPartnershipPageContent();
+
+  if (!hasPartnershipCategories(categories)) {
+    return null;
+  }
 
   return (
     <div className="partners-outer" id="partners">

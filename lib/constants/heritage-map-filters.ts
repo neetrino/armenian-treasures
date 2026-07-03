@@ -53,6 +53,29 @@ export function filterMapItemsByCategory(
   return items.filter((item) => item.mapType != null && option.mapTypes!.includes(item.mapType));
 }
 
+export function filterMapItemsBySearch(
+  items: PublicCultureItemDTO[],
+  query: string,
+): PublicCultureItemDTO[] {
+  const normalized = query.trim().toLowerCase();
+  if (!normalized) return items;
+
+  return items.filter((item) => {
+    const searchable = [
+      item.title,
+      item.region,
+      item.locationName,
+      item.periodLabel,
+      item.yearLabel,
+      item.shortDescription,
+      item.description,
+      item.mapType?.replaceAll('_', ' '),
+    ];
+
+    return searchable.some((value) => value?.toLowerCase().includes(normalized));
+  });
+}
+
 /** Aligns marketing legend colours with filter chips on the map page. */
 export const HERITAGE_MAP_FILTER_COLORS: Record<HeritageMapFilterValue, string> = {
   ALL: '#D6B85A',

@@ -1,14 +1,15 @@
+import '@/components/project-portal/project-portal.css';
 import { getPublishedProjects, HOME_UPCOMING_PROJECTS_LIMIT } from '@/lib/queries/projects';
-import { mapProjectsToUpcomingProjects } from '@/lib/mappers/upcoming-projects';
+import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
-import { UpcomingProjectCard } from '@/components/sections/upcoming-projects/UpcomingProjectCard';
+import { ProjectPortalCard } from '@/components/project-portal/ProjectPortalCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 
 export async function UpcomingProjectsGrid() {
   const projects = await getPublishedProjects(HOME_UPCOMING_PROJECTS_LIMIT);
-  const upcoming = mapProjectsToUpcomingProjects(projects);
+  const portalProjects = mapProjectsToCulturalPortalProjects(projects);
 
-  if (upcoming.length === 0) {
+  if (portalProjects.length === 0) {
     return (
       <EmptyState
         title="No projects published yet"
@@ -18,12 +19,14 @@ export async function UpcomingProjectsGrid() {
   }
 
   return (
-    <Stagger className="upcoming-projects-grid">
-      {upcoming.map((project) => (
-        <StaggerItem key={project.number} className="h-full">
-          <UpcomingProjectCard project={project} />
-        </StaggerItem>
-      ))}
+    <Stagger className="project-portal project-portal--embedded">
+      <div className="proj-grid">
+        {portalProjects.map((project) => (
+          <StaggerItem key={project.title} className="h-full">
+            <ProjectPortalCard project={project} className="h-full" />
+          </StaggerItem>
+        ))}
+      </div>
     </Stagger>
   );
 }

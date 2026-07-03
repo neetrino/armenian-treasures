@@ -166,6 +166,28 @@ export const KHNDZORESK_RELATED = [
   { num: '06', name: 'Erebuni Fortress', type: 'Urartian · Yerevan', href: '/culture' },
 ] as const;
 
+export const KHNDZORESK_AERIAL = {
+  embed:
+    'https://sketchfab.com/models/65ffde4982d7424a8eb3ef7216bc9699/embed?autostart=0&ui_theme=dark&ui_infos=0',
+  modelTitle: 'St. Hripsime Church, Khndzoresk · by Arsho.Mk',
+} as const;
+
+export const KHNDZORESK_PANORAMA = {
+  embed: 'https://khndzoresk.armeniantreasures.com/pano/',
+  footerTitle: 'Khndzoresk Aerial 360° · Syunik Province',
+} as const;
+
+export const KHNDZORESK_MAP = {
+  embed:
+    'https://maps.google.com/maps?q=39%C2%B029%2712.7%22N+46%C2%B025%2719.3%22E&t=m&z=13&output=embed&iwloc=near',
+  description:
+    'Goris Municipality, Syunik Province — accessible via the Goris–Stepanakert highway at 39°29′12.7″N, 46°25′19.3″E.',
+  coords: '39°29′12.7″N · 46°25′19.3″E',
+  province: 'Syunik · Goris Municipality',
+  elevation: '1,580 m',
+  area: '6,772.8 ha',
+} as const;
+
 export const KHNDZORESK_PARTICLES = Array.from({ length: 38 }, (_, i) => ({
   left: ((i * 37 + 11) % 97) + 1,
   baseY: 3 + ((i * 17) % 80),

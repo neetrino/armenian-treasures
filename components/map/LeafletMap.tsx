@@ -165,6 +165,7 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
       center: ARMENIA_CENTER,
       zoom: 7,
       scrollWheelZoom: false,
+      touchZoom: true,
       attributionControl: false,
     });
 
@@ -172,7 +173,24 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
     markersLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
+    const enableWheelZoom = (): void => {
+      map.scrollWheelZoom.enable();
+    };
+
+    const disableWheelZoom = (): void => {
+      map.scrollWheelZoom.disable();
+    };
+
+    container.addEventListener('mouseenter', enableWheelZoom);
+    container.addEventListener('mouseleave', disableWheelZoom);
+    container.addEventListener('focusin', enableWheelZoom);
+    container.addEventListener('focusout', disableWheelZoom);
+
     return () => {
+      container.removeEventListener('mouseenter', enableWheelZoom);
+      container.removeEventListener('mouseleave', disableWheelZoom);
+      container.removeEventListener('focusin', enableWheelZoom);
+      container.removeEventListener('focusout', disableWheelZoom);
       map.remove();
       mapRef.current = null;
       markersLayerRef.current = null;
@@ -213,6 +231,7 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
       className="z-0 h-full w-full"
       role="application"
       aria-label="Interactive heritage map"
+      tabIndex={0}
     />
   );
 }

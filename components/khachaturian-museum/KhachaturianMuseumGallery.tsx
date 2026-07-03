@@ -1,11 +1,16 @@
 import Image from 'next/image';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type KhachaturianMuseumGalleryProps = {
   gallery: KhachaturianPageContent['gallery'];
 };
 
 export function KhachaturianMuseumGallery({ gallery }: KhachaturianMuseumGalleryProps) {
+  if (!hasNonEmptyArray(gallery)) {
+    return null;
+  }
+
   return (
     <section id="gallery">
       <p className="sec-label">Photography Archive</p>

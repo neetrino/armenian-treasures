@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 function ArtistIcon({ type }: { type: NationalGalleryPageContent['artists'][number]['icon'] }) {
   if (type === 'aivazovsky') {
@@ -40,6 +41,10 @@ type NationalGalleryArtistsProps = {
 };
 
 export function NationalGalleryArtists({ artists }: NationalGalleryArtistsProps) {
+  if (!hasNonEmptyArray(artists)) {
+    return null;
+  }
+
   return (
     <section id="artists">
       <p className="sec-label">Master Artists</p>

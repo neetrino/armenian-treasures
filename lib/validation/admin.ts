@@ -158,15 +158,6 @@ export const blogPostSchema = z.object({
   isPublished: z.boolean().default(true),
 });
 
-export const donatorSchema = z.object({
-  name: z.string().trim().min(2).max(140),
-  type: z.string().trim().min(1).max(60),
-  year: z.number().int().min(1900).max(2200).optional().nullable(),
-  description: z.string().trim().max(600).optional().or(z.literal('')),
-  order: z.number().int().min(0).default(0),
-  isPublic: z.boolean().default(true),
-});
-
 export const submissionUpdateSchema = z.object({
   status: submissionStatusEnum,
   adminNote: z.string().trim().max(4000).optional().or(z.literal('')),
@@ -279,7 +270,6 @@ export type ProjectInput = z.infer<typeof projectSchema>;
 export type TeamMemberInput = z.infer<typeof teamMemberSchema>;
 export type CareerInput = z.infer<typeof careerSchema>;
 export type BlogPostInput = z.infer<typeof blogPostSchema>;
-export type DonatorInput = z.infer<typeof donatorSchema>;
 export type SubmissionUpdateInput = z.infer<typeof submissionUpdateSchema>;
 export type ContactMessageUpdateInput = z.infer<typeof contactMessageUpdateSchema>;
 export type SiteSettingsInput = z.infer<typeof siteSettingsSchema>;

@@ -1,8 +1,5 @@
 import Link from 'next/link';
-import {
-  FOOTER_LEGAL_LINKS,
-  FOOTER_SITE_DOMAIN,
-} from '@/components/layout/footer/footer-links';
+import { FOOTER_LEGAL_LINKS } from '@/components/layout/footer/footer-links';
 import type { PublicSiteSettingsDTO } from '@/lib/dto';
 
 interface FooterBottomBarProps {
@@ -14,34 +11,28 @@ export function FooterBottomBar({ settings }: FooterBottomBarProps) {
 
   return (
     <div className="site-footer__bottom">
-      <p className="font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-surface-body">
-        {`Copyright © ${year} ${settings.foundationName} | Բոլոր իրավունքները պաշտպանված են | Ստեղծվել է `}
+      <p className="site-footer__copy font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.5]">
+        {`Copyright © ${year} ${settings.foundationName} | All rights reserved | Created by `}
         <a
           href="https://www.neetrino.com/"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-colors duration-[240ms] hover:text-surface-text"
+          className="site-footer__credit"
         >
           Neetrino IT Company
-        </a>{' '}
-        կողմից
+        </a>
       </p>
 
       <div className="site-footer__bottom-meta">
-        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.4] text-surface-body">
+        <p className="site-footer__meta font-display text-[clamp(0.75rem,0.85vw,0.8125rem)] leading-[1.5]">
           {FOOTER_LEGAL_LINKS.map((link, index) => (
             <span key={link.label} className="inline-flex items-center gap-2">
               {index > 0 ? <span aria-hidden>·</span> : null}
-              <Link
-                href={link.href}
-                className="transition-colors duration-[240ms] hover:text-surface-text"
-              >
+              <Link href={link.href} className="site-footer__link site-footer__link--inline">
                 {link.label}
               </Link>
             </span>
           ))}
-          <span aria-hidden>·</span>
-          <span>{FOOTER_SITE_DOMAIN}</span>
         </p>
       </div>
     </div>

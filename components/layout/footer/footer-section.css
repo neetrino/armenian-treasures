@@ -1,7 +1,107 @@
 .site-footer {
   border-top: 1px solid var(--surface-border);
   background: var(--footer-bg);
-  color: var(--surface-text-body);
+  color: var(--surface-text-muted);
+}
+
+.site-footer__link {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(0.875rem, 0.95vw, 0.9375rem);
+  line-height: 1.45;
+  color: var(--surface-text-muted);
+  text-decoration: none;
+  transition: color 240ms ease;
+}
+
+.site-footer__link:hover {
+  color: var(--surface-text);
+}
+
+.site-footer__link--inline {
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.site-footer__link--static {
+  margin: 0;
+}
+
+.site-footer__column-title {
+  margin: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-family: var(--font-cinzel), Georgia, serif;
+  font-size: clamp(0.6875rem, 0.75vw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--heritage-teal);
+}
+
+.site-footer__category-link {
+  display: block;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-family: var(--font-cinzel), Georgia, serif;
+  font-size: clamp(0.6875rem, 0.75vw, 0.75rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--surface-text-muted);
+  text-decoration: none;
+  transition: color 240ms ease;
+}
+
+.site-footer__category-link:hover {
+  color: var(--heritage-champagne);
+}
+
+.site-footer__category-link--plain {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(0.875rem, 0.95vw, 0.9375rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--surface-text-muted);
+}
+
+.site-footer__category-link--plain:hover {
+  color: var(--heritage-champagne);
+}
+
+.site-footer__category-link--static {
+  margin: 0;
+}
+
+.site-footer__copy,
+.site-footer__meta {
+  color: var(--surface-text-muted);
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.site-footer__credit {
+  font-family: var(--font-cinzel), Georgia, serif;
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--heritage-teal);
+  text-decoration: none;
+  transition:
+    color 240ms ease,
+    text-shadow 240ms ease;
+}
+
+.site-footer__credit:hover {
+  color: #5ee8ea;
+  text-shadow: 0 0 14px rgba(39, 198, 200, 0.45);
 }
 
 .site-footer__grid {

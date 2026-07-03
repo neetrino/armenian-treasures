@@ -24,13 +24,15 @@ export function DonationBreadcrumb({ breadcrumb }: DonationBreadcrumbProps) {
 }
 
 type DonationHeroProps = {
+  breadcrumb: string;
   hero: DonationPageContent['page']['hero'];
   heroImage?: string | null;
 };
 
-export function DonationHero({ hero, heroImage }: DonationHeroProps) {
+export function DonationHero({ breadcrumb, hero, heroImage }: DonationHeroProps) {
   return (
     <div className="hero donation-hero">
+      <DonationBreadcrumb breadcrumb={breadcrumb} />
       {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />

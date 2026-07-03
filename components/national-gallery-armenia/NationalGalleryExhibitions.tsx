@@ -1,10 +1,15 @@
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type NationalGalleryExhibitionsProps = {
   exhibitions: NationalGalleryPageContent['exhibitions'];
 };
 
 export function NationalGalleryExhibitions({ exhibitions }: NationalGalleryExhibitionsProps) {
+  if (!hasNonEmptyArray(exhibitions)) {
+    return null;
+  }
+
   return (
     <section id="exhibitions">
       <p className="sec-label">Exhibitions</p>

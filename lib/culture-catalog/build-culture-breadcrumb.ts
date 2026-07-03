@@ -1,12 +1,12 @@
-import type { CultureCatalogBreadcrumbSegment } from '@/components/culture-catalog/CultureCatalogBreadcrumb';
+import type { LandingBreadcrumbSegment } from '@/components/landing/LandingBreadcrumb';
 import type { MenuNode } from '@/lib/culture-menu';
 
 /** Builds breadcrumb segments from Cultural Portal root through optional parent category. */
 export function buildCultureCatalogBreadcrumb(
   category: MenuNode,
   parent?: MenuNode | null,
-): CultureCatalogBreadcrumbSegment[] {
-  const segments: CultureCatalogBreadcrumbSegment[] = [];
+): LandingBreadcrumbSegment[] {
+  const segments: LandingBreadcrumbSegment[] = [];
 
   if (parent && parent.slug !== category.slug) {
     segments.push({ label: parent.title, href: `/culture/${parent.slug}` });
