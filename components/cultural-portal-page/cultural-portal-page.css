@@ -297,103 +297,6 @@
   flex-shrink: 0;
 }
 
-.khndzoresk-page .proj-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px;
-  margin-top: 48px;
-}
-
-.khndzoresk-page .proj-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 30px 24px;
-  text-decoration: none;
-  display: block;
-  transition: border-color 0.25s;
-  position: relative;
-  overflow: hidden;
-}
-
-.khndzoresk-page .proj-card:hover {
-  border-color: var(--gold);
-}
-
-.khndzoresk-page .proj-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--gold-dk), var(--gold));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-
-.khndzoresk-page .proj-card:hover::before {
-  transform: scaleX(1);
-}
-
-.khndzoresk-page .proj-status {
-  display: inline-block;
-  padding: 3px 12px;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 8.5px;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.khndzoresk-page .status-soon {
-  background: rgba(42, 191, 191, 0.12);
-  color: var(--teal);
-}
-
-.khndzoresk-page .status-dev {
-  background: rgba(201, 168, 76, 0.12);
-  color: var(--gold);
-}
-
-.khndzoresk-page .status-plan {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--muted);
-}
-
-.khndzoresk-page .proj-icon {
-  width: 40px;
-  height: 40px;
-  color: var(--gold);
-  margin-bottom: 14px;
-  opacity: 0.7;
-}
-
-.khndzoresk-page .proj-title {
-  font-family: var(--font-cinzel), serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--gold);
-  margin-bottom: 10px;
-  line-height: 1.25;
-}
-
-.khndzoresk-page .proj-desc {
-  font-size: 14.5px;
-  color: var(--text);
-  opacity: 0.68;
-  line-height: 1.55;
-}
-
-.khndzoresk-page .proj-date {
-  margin-top: 18px;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 10.5px;
-  color: var(--teal);
-  letter-spacing: 0.1em;
-}
-
 .khndzoresk-page .partner-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
@@ -555,10 +458,6 @@
 
   .khndzoresk-page .hl-card.featured {
     grid-row: auto;
-  }
-
-  .khndzoresk-page .proj-grid {
-    grid-template-columns: 1fr;
   }
 
   .khndzoresk-page .about-grid {

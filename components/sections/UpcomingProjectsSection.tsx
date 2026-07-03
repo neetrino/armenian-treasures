@@ -1,4 +1,3 @@
-import '@/components/sections/upcoming-projects/upcoming-projects-section.css';
 import { UpcomingProjectsGrid } from '@/components/sections/upcoming-projects/UpcomingProjectsGrid';
 import { UpcomingProjectsOrnament } from '@/components/sections/upcoming-projects/UpcomingProjectsOrnament';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
