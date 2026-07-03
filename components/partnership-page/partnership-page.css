@@ -5,7 +5,7 @@
 .khndzoresk-page .breadcrumb a:hover{color:var(--gold)}
 .khndzoresk-page .breadcrumb span{color:var(--gold)}
 
-.khndzoresk-page .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 40px 100px;position:relative;overflow:hidden}
+.khndzoresk-page .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
 .khndzoresk-page .hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 70% 55% at 50% 38%,rgba(42,191,191,.05) 0%,transparent 70%),radial-gradient(ellipse 50% 45% at 18% 82%,rgba(201,168,76,.06) 0%,transparent 60%),radial-gradient(ellipse 45% 40% at 84% 78%,rgba(201,168,76,.04) 0%,transparent 60%)}
 .khndzoresk-page .hero-grain{position:absolute;inset:0;z-index:0;opacity:.022;background-image:repeating-linear-gradient(45deg,var(--gold) 0,var(--gold) 1px,transparent 1px,transparent 38px),repeating-linear-gradient(-45deg,var(--teal) 0,var(--teal) 1px,transparent 1px,transparent 38px)}
 .khndzoresk-page .hero-geo{position:absolute;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
@@ -152,10 +152,6 @@
 }
 
 @media (max-width: 768px) {
-  .khndzoresk-page .hero {
-    padding: 120px 20px 80px;
-  }
-
   .khndzoresk-page .partnership-hero .hero-sub {
     font-size: 16px;
     line-height: 1.55;

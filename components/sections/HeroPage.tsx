@@ -18,9 +18,9 @@ interface HeroPageProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<HeroPageProps['size']>, string> = {
-  sm: 'min-h-[320px] py-16 lg:min-h-[360px] lg:py-20',
-  md: 'min-h-[420px] py-20 lg:min-h-[480px] lg:py-24',
-  lg: 'min-h-[480px] py-24 lg:min-h-[560px] lg:py-28',
+  sm: 'min-h-[clamp(520px,82svh,760px)] py-[clamp(7.5rem,12vw,8rem)]',
+  md: 'min-h-[clamp(520px,82svh,760px)] py-[clamp(7.5rem,12vw,8rem)]',
+  lg: 'min-h-[clamp(520px,82svh,760px)] py-[clamp(7.5rem,12vw,8rem)]',
 };
 
 export function HeroPage({
