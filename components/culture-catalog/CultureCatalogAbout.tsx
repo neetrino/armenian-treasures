@@ -1,10 +1,25 @@
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
 
 interface CultureCatalogAboutProps {
   content: CultureCatalogContent['about'];
 }
 
+function hasAboutContent(content: CultureCatalogContent['about']): boolean {
+  return (
+    hasTrimmedText(content.description) ||
+    content.paragraphs.some((paragraph) => hasTrimmedText(paragraph)) ||
+    hasTrimmedText(content.extraHeading) ||
+    hasTrimmedText(content.extraParagraph) ||
+    hasNonEmptyArray(content.facts)
+  );
+}
+
 export function CultureCatalogAbout({ content }: CultureCatalogAboutProps) {
+  if (!hasAboutContent(content)) {
+    return null;
+  }
+
   const hasFacts = content.facts.length > 0;
 
   return (

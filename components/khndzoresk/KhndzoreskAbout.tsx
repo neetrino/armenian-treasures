@@ -1,10 +1,15 @@
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type KhndzoreskStatsBarProps = {
   stats: KhndzoreskPageContent['stats'];
 };
 
 export function KhndzoreskStatsBar({ stats }: KhndzoreskStatsBarProps) {
+  if (!hasNonEmptyArray(stats)) {
+    return null;
+  }
+
   return (
     <div className="stats-bar">
       {stats.map((stat) => (
@@ -64,14 +69,16 @@ export function KhndzoreskAbout({ facts }: KhndzoreskAboutProps) {
             most spiritually resonant heritage landscapes.
           </p>
         </div>
-        <div className="about-aside">
-          {facts.map((fact) => (
-            <div key={fact.label} className="fact-card reveal">
-              <div className="fact-label">{fact.label}</div>
-              <div className="fact-value">{fact.value}</div>
-            </div>
-          ))}
-        </div>
+        {hasNonEmptyArray(facts) ? (
+          <div className="about-aside">
+            {facts.map((fact) => (
+              <div key={fact.label} className="fact-card reveal">
+                <div className="fact-label">{fact.label}</div>
+                <div className="fact-value">{fact.value}</div>
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

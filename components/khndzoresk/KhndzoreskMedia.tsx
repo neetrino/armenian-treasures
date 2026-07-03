@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasTrimmedText, hasVirtualTourContent } from '@/lib/landing/landing-section-utils';
 
 function PlayIcon() {
   return (
@@ -14,7 +15,12 @@ type KhndzoreskVirtualTourProps = {
 };
 
 export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
+  if (!hasVirtualTourContent(tours)) {
+    return null;
+  }
+
   const { featured, mini } = tours;
+  const hasFeatured = hasTrimmedText(featured.embed);
 
   return (
     <section id="virtual-tour">
@@ -25,21 +31,24 @@ export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
         the gorge without leaving home.
       </p>
       <div className="tour-grid">
-        <div className="tour-main reveal">
-          <iframe
-            className="tour-embed"
-            src={featured.embed}
-            allowFullScreen
-            allow="xr-spatial-tracking"
-            title="St. Hripsime Church Virtual Tour"
-          />
-          <div className="tour-label">
-            <span className="tour-name">{featured.title}</span>
-            <span className="tour-tag">{featured.tag}</span>
+        {hasFeatured ? (
+          <div className="tour-main reveal">
+            <iframe
+              className="tour-embed"
+              src={featured.embed}
+              allowFullScreen
+              allow="xr-spatial-tracking"
+              title="St. Hripsime Church Virtual Tour"
+            />
+            <div className="tour-label">
+              <span className="tour-name">{featured.title}</span>
+              <span className="tour-tag">{featured.tag}</span>
+            </div>
           </div>
-        </div>
-        <div className="tour-side">
-          {mini.map((tour) => (
+        ) : null}
+        {mini.length > 0 ? (
+          <div className="tour-side">
+            {mini.map((tour) => (
             <a
               key={tour.title}
               href={tour.href}
@@ -63,13 +72,22 @@ export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
               </div>
             </a>
           ))}
-        </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );
 }
 
-export function KhndzoreskAerial() {
+type KhndzoreskAerialProps = {
+  aerial: KhndzoreskPageContent['aerial'];
+};
+
+export function KhndzoreskAerial({ aerial }: KhndzoreskAerialProps) {
+  if (!hasTrimmedText(aerial.embed)) {
+    return null;
+  }
+
   return (
     <section id="3d-aerial">
       <p className="sec-label">Aerial 3D Model</p>
@@ -85,11 +103,11 @@ export function KhndzoreskAerial() {
           frameBorder={0}
           allowFullScreen
           allow="autoplay; fullscreen; xr-spatial-tracking"
-          src="https://sketchfab.com/models/65ffde4982d7424a8eb3ef7216bc9699/embed?autostart=0&ui_theme=dark&ui_infos=0"
+          src={aerial.embed}
         />
         <div className="aerial-label">
           <span className="aerial-badge">✦ 3D Photogrammetry</span>
-          <span className="aerial-title">St. Hripsime Church, Khndzoresk · by Arsho.Mk</span>
+          <span className="aerial-title">{aerial.modelTitle}</span>
           <span className="aerial-badge tc">Drone Capture</span>
         </div>
       </div>
@@ -97,7 +115,15 @@ export function KhndzoreskAerial() {
   );
 }
 
-export function KhndzoreskPanorama() {
+type KhndzoreskPanoramaProps = {
+  panorama: KhndzoreskPageContent['panorama'];
+};
+
+export function KhndzoreskPanorama({ panorama }: KhndzoreskPanoramaProps) {
+  if (!hasTrimmedText(panorama.embed)) {
+    return null;
+  }
+
   return (
     <section id="panorama">
       <p className="sec-label">Aerial 360° Panorama</p>
@@ -109,12 +135,12 @@ export function KhndzoreskPanorama() {
       <div className="pano-wrap reveal">
         <iframe
           className="pano-frame"
-          src="https://khndzoresk.armeniantreasures.com/pano/"
+          src={panorama.embed}
           allowFullScreen
           title="Aerial 360° Panorama — Khndzoresk"
         />
         <div className="pano-footer">
-          <span className="pano-title">Khndzoresk Aerial 360° · Syunik Province</span>
+          <span className="pano-title">{panorama.footerTitle}</span>
           <span className="aerial-badge tc">Highest Resolution</span>
         </div>
       </div>

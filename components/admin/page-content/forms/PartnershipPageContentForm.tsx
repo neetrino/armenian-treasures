@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { PageContentFormShell } from '@/components/admin/page-content/PageContentFormShell';
+import { SectionVisibilityPanel } from '@/components/admin/page-content/SectionVisibilityPanel';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
 import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
 import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
@@ -13,6 +14,7 @@ import { Trash2 } from 'lucide-react';
 import {
   parsePartnershipPageContent,
 } from '@/lib/types/page-content';
+import { PARTNERSHIP_SECTION_TOGGLES } from '@/lib/landing/landing-section-visibility';
 import {
   asMutableContent,
   patchContent,
@@ -55,6 +57,12 @@ export function PartnershipPageContentForm({ initial, locale }: Props) {
 
   return (
     <PageContentFormShell slug="partnership-page" content={content} locale={locale}>
+      <SectionVisibilityPanel
+        sections={PARTNERSHIP_SECTION_TOGGLES}
+        visibility={content.sectionVisibility as Record<string, boolean | undefined> | undefined}
+        onChange={(sectionVisibility) => update({ sectionVisibility })}
+      />
+
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}

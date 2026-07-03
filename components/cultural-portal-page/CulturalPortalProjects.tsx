@@ -10,16 +10,16 @@ interface CulturalPortalProjectsProps {
 }
 
 export function CulturalPortalProjects({ eyebrow, title, description, projects }: CulturalPortalProjectsProps) {
+  if (projects.length === 0) {
+    return null;
+  }
+
   return (
     <section id="projects">
       <p className="sec-label">{eyebrow}</p>
       <h2 className="sec-title">{title}</h2>
       <p className="sec-desc">{description}</p>
-      {projects.length === 0 ? (
-        <p className="sec-desc">Projects will appear here once published in the admin panel.</p>
-      ) : (
-        <ProjectPortalGrid projects={projects} />
-      )}
+      <ProjectPortalGrid projects={projects} />
     </section>
   );
 }

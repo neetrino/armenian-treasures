@@ -14,6 +14,7 @@ export function PartnershipBreadcrumb() {
 export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
   return (
     <div className="hero partnership-hero">
+      <PartnershipBreadcrumb />
       {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />

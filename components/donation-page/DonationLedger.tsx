@@ -1,4 +1,5 @@
 import type { DonationLedgerItem } from '@/lib/constants/donation-page';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 import type { DonationPageContent } from '@/lib/queries/page-content';
 
 type DonationLedgerProps = {
@@ -7,6 +8,10 @@ type DonationLedgerProps = {
 };
 
 export function DonationLedger({ ledger, items }: DonationLedgerProps) {
+  if (!hasNonEmptyArray(items)) {
+    return null;
+  }
+
   return (
     <div className="sec" aria-label="Where your patronage goes">
       <div className="reveal">

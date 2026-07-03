@@ -9,6 +9,7 @@ import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { filterCatalogItemsBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
 interface CultureCatalogItemGridProps {
@@ -28,6 +29,10 @@ export function CultureCatalogItemGrid({
     [items, searchQuery],
   );
 
+  if (items.length === 0) {
+    return null;
+  }
+
   return (
     <section id={sectionId}>
       <CultureCatalogSectionHeader
@@ -38,11 +43,7 @@ export function CultureCatalogItemGrid({
         onSearchChange={setSearchQuery}
         searchPlaceholder="Search sites…"
       />
-      {items.length === 0 ? (
-        <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
-          {content.emptyMessage}
-        </p>
-      ) : visibleItems.length === 0 ? (
+      {visibleItems.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
           No entries match your search. Try another name, region, or period.
         </p>
@@ -96,12 +97,14 @@ export function CultureCatalogItemGrid({
           })}
         </div>
       )}
-      <div className="catalog-submit-cta reveal">
-        <p>{content.submitPrompt}</p>
-        <Link href="/culture/submit" className="btn-outline">
-          Suggest an Entry
-        </Link>
-      </div>
+      {hasTrimmedText(content.submitPrompt) ? (
+        <div className="catalog-submit-cta reveal">
+          <p>{content.submitPrompt}</p>
+          <Link href="/culture/submit" className="btn-outline">
+            Suggest an Entry
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }

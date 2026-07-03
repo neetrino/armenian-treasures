@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { DonationsPatronGroup } from '@/lib/mappers/donations-patrons';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 interface CulturalPortalDonorsProps {
   eyebrow: string;
@@ -49,15 +50,16 @@ export function CulturalPortalDonors({
   ctaHref,
   ctaLabel,
 }: CulturalPortalDonorsProps) {
+  if (!hasNonEmptyArray(groups)) {
+    return null;
+  }
+
   return (
     <section id="donors">
       <p className="sec-label">{eyebrow}</p>
       <h2 className="sec-title">{title}</h2>
       <p className="sec-desc">{description}</p>
-      {groups.length === 0 ? (
-        <p className="sec-desc">Public patrons will appear here once published in the admin panel.</p>
-      ) : (
-        <div className="donor-list">
+      <div className="donor-list">
           {groups.map((tier) => (
             <div key={tier.id} className="donor-row reveal">
               <DonorTierIcon stroke={ICON_STROKE[tier.icon] ?? '#CD7F32'} />
@@ -65,8 +67,7 @@ export function CulturalPortalDonors({
               <div className="donor-names">{tier.description}</div>
             </div>
           ))}
-        </div>
-      )}
+      </div>
       <div className="section-cta">
         <Link href={ctaHref} className="btn-gold">
           {ctaLabel}

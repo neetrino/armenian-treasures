@@ -1,11 +1,16 @@
 import Link from 'next/link';
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type NationalGalleryVisitProps = {
   tickets: NationalGalleryPageContent['tickets'];
 };
 
 export function NationalGalleryVisit({ tickets }: NationalGalleryVisitProps) {
+  if (!hasNonEmptyArray(tickets)) {
+    return null;
+  }
+
   return (
     <section id="visit">
       <p className="sec-label">Plan Your Visit</p>
@@ -141,6 +146,10 @@ type NationalGalleryRelatedProps = {
 };
 
 export function NationalGalleryRelated({ related }: NationalGalleryRelatedProps) {
+  if (!hasNonEmptyArray(related)) {
+    return null;
+  }
+
   return (
     <section style={{ paddingTop: 'var(--section-padding-y-lg)', paddingBottom: 'var(--section-padding-y-lg)' }}>
       <p className="sec-label">Explore Further</p>

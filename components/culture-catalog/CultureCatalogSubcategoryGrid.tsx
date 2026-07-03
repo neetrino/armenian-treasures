@@ -8,6 +8,7 @@ import { resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
 import { filterCatalogSubcategoriesBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
 
 interface CultureCatalogSubcategoryGridProps {
@@ -29,6 +30,10 @@ export function CultureCatalogSubcategoryGrid({
     [nodes, searchQuery],
   );
 
+  if (nodes.length === 0) {
+    return null;
+  }
+
   return (
     <section id="entries">
       <CultureCatalogSectionHeader
@@ -39,11 +44,7 @@ export function CultureCatalogSubcategoryGrid({
         onSearchChange={setSearchQuery}
         searchPlaceholder="Search categories…"
       />
-      {nodes.length === 0 ? (
-        <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
-          {content.emptyMessage}
-        </p>
-      ) : visibleNodes.length === 0 ? (
+      {visibleNodes.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
           No categories match your search. Try another title or keyword.
         </p>
@@ -84,12 +85,14 @@ export function CultureCatalogSubcategoryGrid({
           ) : null}
         </div>
       )}
-      <div className="catalog-submit-cta reveal">
-        <p>{content.submitPrompt}</p>
-        <Link href="/culture/submit" className="btn-outline">
-          Suggest an Entry
-        </Link>
-      </div>
+      {hasTrimmedText(content.submitPrompt) ? (
+        <div className="catalog-submit-cta reveal">
+          <p>{content.submitPrompt}</p>
+          <Link href="/culture/submit" className="btn-outline">
+            Suggest an Entry
+          </Link>
+        </div>
+      ) : null}
     </section>
   );
 }

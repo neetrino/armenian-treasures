@@ -1,10 +1,15 @@
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
 
 type NationalGalleryStatsBarProps = {
   stats: NationalGalleryPageContent['stats'];
 };
 
 export function NationalGalleryStatsBar({ stats }: NationalGalleryStatsBarProps) {
+  if (!hasNonEmptyArray(stats)) {
+    return null;
+  }
+
   return (
     <div className="stats-bar">
       {stats.map((stat) => (

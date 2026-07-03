@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
+import { hasGalleryGroups } from '@/lib/landing/landing-section-utils';
 
 type GalleryItem = {
   src: string;
@@ -42,6 +43,10 @@ type KhndzoreskGalleryProps = {
 };
 
 export function KhndzoreskGallery({ gallery }: KhndzoreskGalleryProps) {
+  if (!hasGalleryGroups(gallery)) {
+    return null;
+  }
+
   return (
     <section id="gallery">
       <p className="sec-label">Photography Archive</p>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import {
   FilmMusicIcon,
   GayaneIcon,
@@ -23,6 +24,10 @@ type KhachaturianMuseumWorksProps = {
 };
 
 export function KhachaturianMuseumWorks({ works }: KhachaturianMuseumWorksProps) {
+  if (!hasNonEmptyArray(works)) {
+    return null;
+  }
+
   return (
     <section id="works">
       <p className="sec-label">Musical Legacy</p>
@@ -50,7 +55,15 @@ export function KhachaturianMuseumWorks({ works }: KhachaturianMuseumWorksProps)
   );
 }
 
-export function KhachaturianMuseumVirtualTour() {
+export function KhachaturianMuseumVirtualTour({
+  virtualTour,
+}: {
+  virtualTour: KhachaturianPageContent['virtualTour'];
+}) {
+  if (!hasTrimmedText(virtualTour.embed)) {
+    return null;
+  }
+
   return (
     <section id="virtual-tour">
       <p className="sec-label">Virtual Experience</p>
@@ -62,14 +75,14 @@ export function KhachaturianMuseumVirtualTour() {
       <div className="tour-wrap reveal">
         <iframe
           className="tour-embed"
-          src="https://link.vcity.guide/aramkhachaturyan"
+          src={virtualTour.embed}
           allowFullScreen
           allow="xr-spatial-tracking"
           title="Aram Khachaturian House-Museum Virtual Tour"
         />
         <div className="tour-label">
-          <span className="tour-name">Aram Khachaturian House-Museum · Yerevan</span>
-          <span className="tour-tag">✦ Virtual Walkthrough</span>
+          <span className="tour-name">{virtualTour.title}</span>
+          <span className="tour-tag">{virtualTour.tag}</span>
         </div>
       </div>
     </section>

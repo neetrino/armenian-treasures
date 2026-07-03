@@ -135,6 +135,12 @@ export const NGA_TICKETS = [
   },
 ] as const;
 
+export const NGA_VIRTUAL_TOUR = {
+  embed: 'https://link.vcity.guide/aivazovsky',
+  title: 'National Gallery of Armenia · Aivazovsky Hall',
+  tag: '✦ Virtual Walkthrough',
+} as const;
+
 export const NGA_RELATED = [
   { num: '01', name: 'Aram Khachaturian House-Museum', type: 'Music Heritage · Yerevan', href: '/khachaturian-museum' },
   { num: '02', name: 'Matenadaran', type: 'Ancient Manuscripts · Yerevan', href: '/culture' },
