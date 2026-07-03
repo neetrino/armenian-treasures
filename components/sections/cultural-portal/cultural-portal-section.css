@@ -8,6 +8,9 @@
 }
 
 .cultural-portal-card {
+  --cultural-portal-image-scale: 1;
+  --cultural-portal-image-hover-scale: 1.035;
+  --cultural-portal-image-extra-size: 0px;
   position: relative;
   z-index: 1;
   display: flex;
@@ -28,28 +31,44 @@
 
 .cultural-portal-card__media {
   position: relative;
-  flex: 0 0 80%;
+  flex: 0 0 76%;
   min-height: 0;
   overflow: hidden;
   background: #080808;
 }
 
 .cultural-portal-card__image {
-  width: 100%;
-  height: 100%;
+  width: calc(100% + var(--cultural-portal-image-extra-size));
+  height: calc(100% + var(--cultural-portal-image-extra-size));
+  margin-left: calc(var(--cultural-portal-image-extra-size) / -2);
+  margin-top: calc(var(--cultural-portal-image-extra-size) / -2);
   border-radius: 0;
   object-fit: cover;
+  transform: scale(var(--cultural-portal-image-scale));
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cultural-portal-card[data-category-icon='churches'],
+.cultural-portal-card[data-category-icon='castles'] {
+  --cultural-portal-image-extra-size: 18px;
+  --cultural-portal-image-scale: 1.18;
+  --cultural-portal-image-hover-scale: 1.22;
+}
+
+.cultural-portal-card[data-category-icon='museums'] {
+  --cultural-portal-image-scale: 1.12;
+  --cultural-portal-image-hover-scale: 1.16;
 }
 
 .cultural-portal-card__content {
   flex: 1 1 auto;
+  min-height: 4.8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  padding: 0.75rem 0.875rem 0.9rem;
+  padding: 0.8rem 0.875rem 1.1rem;
   text-align: center;
 }
 
@@ -112,7 +131,7 @@
   }
 
   .cultural-portal-card:hover .cultural-portal-card__image {
-    transform: scale(1.035);
+    transform: scale(var(--cultural-portal-image-hover-scale));
   }
 
   .cultural-portal-card:hover .cultural-portal-card__title {
@@ -146,7 +165,7 @@
 
 @media (min-width: 1024px) {
   .cultural-portal-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .cultural-portal-card {
@@ -156,7 +175,7 @@
 
 @media (min-width: 1280px) {
   .cultural-portal-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
