@@ -28,17 +28,32 @@ export function CulturalCategoryIcon({
     ? cn(CULTURAL_PORTAL_ICON_BADGED_IMAGE_CLASS, iconClassName)
     : cn(CULTURAL_PORTAL_ICON_SVG_CLASS, iconClassName);
   const icon = (
-    <Image
-      src={resolvedIconSrc}
-      alt=""
-      width={72}
-      height={72}
-      className={resolvedIconClass}
-      unoptimized
-      aria-hidden
-      data-icon-src={iconSrc}
-      data-icon-source={sourceHref}
-    />
+    withBadge ? (
+      <Image
+        src={resolvedIconSrc}
+        alt=""
+        width={82}
+        height={82}
+        sizes="82px"
+        unoptimized
+        className={resolvedIconClass}
+        aria-hidden
+        data-icon-src={iconSrc}
+        data-icon-source={sourceHref}
+      />
+    ) : (
+      <Image
+        src={resolvedIconSrc}
+        alt=""
+        fill
+        sizes="(max-width: 379px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, 20vw"
+        unoptimized
+        className={resolvedIconClass}
+        aria-hidden
+        data-icon-src={iconSrc}
+        data-icon-source={sourceHref}
+      />
+    )
   );
 
   if (!withBadge) {

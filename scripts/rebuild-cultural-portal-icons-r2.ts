@@ -41,6 +41,7 @@ const QUALITY_CANDIDATES = [
   54, 52, 50, 48, 46, 44, 42, 40,
 ];
 const SOURCE_OVERRIDES: Partial<Record<(typeof ICON_KEYS)[number], string>> = {
+  legends: 'public/icons/cultural-portal/legends.svg',
   writers:
     'C:/Users/ROG/.cursor/projects/d-armenian-treasure/assets/c__Users_ROG_AppData_Roaming_Cursor_User_workspaceStorage_2b2eca483bfdb1193077b2f757165ae3_images_Writers-e1fc6797-b2b3-4a70-af73-ab90cfec9b6d.png',
 };
@@ -100,6 +101,23 @@ async function fetchSourceBuffer(key: string, baseUrl: string): Promise<{ source
       sourceUrl: overridePath,
       buffer: await readFile(overridePath),
     };
+  }
+
+  const localCandidates = [
+    `public/icons/cultural-portal/${key}.png`,
+    `public/icons/cultural-portal/${key}.svg`,
+    `public/icons/cultural-portal/${key}.webp`,
+  ];
+
+  for (const localPath of localCandidates) {
+    try {
+      return {
+        sourceUrl: localPath,
+        buffer: await readFile(localPath),
+      };
+    } catch {
+      // Try next local candidate.
+    }
   }
 
   const candidates = [
