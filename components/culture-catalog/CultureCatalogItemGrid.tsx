@@ -1,8 +1,13 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Box, MapPin } from 'lucide-react';
+import { CultureCatalogSectionHeader } from '@/components/culture-catalog/CultureCatalogSectionHeader';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { filterCatalogItemsBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -17,18 +22,33 @@ export function CultureCatalogItemGrid({
   content,
   sectionId = 'entries',
 }: CultureCatalogItemGridProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const visibleItems = useMemo(
+    () => filterCatalogItemsBySearch(items, searchQuery),
+    [items, searchQuery],
+  );
+
   return (
     <section id={sectionId}>
-      <p className="sec-label">{content.label}</p>
-      <h2 className="sec-title">{content.title}</h2>
-      <p className="sec-desc">{content.description}</p>
+      <CultureCatalogSectionHeader
+        label={content.label}
+        title={content.title}
+        description={content.description}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search sites…"
+      />
       {items.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
           {content.emptyMessage}
         </p>
+      ) : visibleItems.length === 0 ? (
+        <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
+          No entries match your search. Try another name, region, or period.
+        </p>
       ) : (
         <div className="catalog-item-grid">
-          {items.map((item, index) => {
+          {visibleItems.map((item, index) => {
             const href = resolveCultureItemHref(item.slug);
             const imageSrc = item.image
               ? resolvePublicAssetUrl(item.image)
