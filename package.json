@@ -25,6 +25,7 @@
     "r2:sync-drive-missing": "tsx scripts/sync-drive-missing-icons-to-r2.ts",
     "images:optimize-200": "tsx scripts/optimize-images-200.ts",
     "images:audit": "tsx scripts/audit-image-paths.ts",
+    "images:set-global-hero": "tsx scripts/set-global-hero-banner.ts",
     "images:webp": "tsx scripts/convert-images-to-webp.ts",
     "images:webp:keep-sources": "tsx scripts/convert-public-to-webp.ts",
     "test": "vitest run",
