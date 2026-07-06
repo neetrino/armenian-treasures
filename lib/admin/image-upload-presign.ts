@@ -36,6 +36,12 @@ export interface AdminImagePresignResult {
   error?: string;
 }
 
+export function validateAdminImagePresignRequest(
+  input: AdminImagePresignRequest,
+): { ok: true; folder: AdminImageFolder; mimeType: AdminImageMimeType; variant?: AdminImageVariant } | { ok: false; error: string } {
+  return validatePresignRequest(input);
+}
+
 function validatePresignRequest(
   input: AdminImagePresignRequest,
 ): { ok: true; folder: AdminImageFolder; mimeType: AdminImageMimeType; variant?: AdminImageVariant } | { ok: false; error: string } {
@@ -61,10 +67,10 @@ function validatePresignRequest(
 
   let variant: AdminImageVariant | undefined;
   if (folder === 'hero') {
-    if (!input.variant || !ADMIN_IMAGE_VARIANTS.includes(input.variant as AdminImageVariant)) {
+    if (input.variant && !ADMIN_IMAGE_VARIANTS.includes(input.variant as AdminImageVariant)) {
       return { ok: false, error: 'Invalid image variant.' };
     }
-    variant = input.variant as AdminImageVariant;
+    variant = (input.variant as AdminImageVariant | undefined) ?? 'desktop';
   } else if (input.variant) {
     return { ok: false, error: 'Variant is only allowed for hero images.' };
   }

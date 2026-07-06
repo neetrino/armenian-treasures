@@ -141,6 +141,11 @@ export function getUploadRateLimiter(): RateLimiter {
   return getLimiter('upload', { capacity: 10, windowMs: 10 * 60 * 1000 });
 }
 
+/** Authenticated admin image uploads (presign only; higher than public upload cap). */
+export function getAdminUploadRateLimiter(): RateLimiter {
+  return getLimiter('admin-upload', { capacity: 40, windowMs: 10 * 60 * 1000 });
+}
+
 export function getUploadTokenMintRateLimiter(): RateLimiter {
   return getLimiter('upload-token-mint', { capacity: 5, windowMs: 15 * 60 * 1000 });
 }

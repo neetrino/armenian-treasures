@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server';
 import { confirmAdminImageUpload } from '@/lib/admin/image-upload-confirm';
 import { handleRequireAdminApi } from '@/lib/auth/require-admin';
-import {
-  extractClientIp,
-  getUploadRateLimiter,
-  tooManyRequestsResponse,
-} from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: Request): Promise<Response> {
   return handleRequireAdminApi(async (admin) => {
-    const ip = extractClientIp(request.headers);
-    const limiter = getUploadRateLimiter();
-    const check = await limiter.check(`upload:admin:${admin.id}:${ip}`);
-    if (!check.allowed) {
-      return tooManyRequestsResponse();
-    }
-
     let body: unknown;
     try {
       body = await request.json();

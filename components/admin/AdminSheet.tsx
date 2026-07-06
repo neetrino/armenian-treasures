@@ -162,7 +162,7 @@ export function AdminSheet({
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col bg-white">
-              <div className="flex-1 overflow-y-auto px-8 py-8 sm:px-10 sm:py-9">{children}</div>
+              <div className="flex-1 overflow-x-hidden overflow-y-auto px-8 py-8 sm:px-10 sm:py-9">{children}</div>
               {footer ? (
                 <div className="shrink-0 border-t border-stone-200/80 bg-gradient-to-t from-parchment-50 to-white px-8 py-5 sm:px-10">
                   {footer}

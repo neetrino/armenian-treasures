@@ -64,7 +64,7 @@ export function CultureMenuCatalogFields({
         layout="banner"
         value={values.catalogHeroImage ?? ''}
         onChange={(url) => setField('catalogHeroImage', url)}
-        hint="Wide banner at the top of the catalog page (16:9)."
+        hint="Compact preview with the same wide crop as the live page."
       />
       {fieldErrors?.catalogHeroImage ? (
         <p className="-mt-3 text-xs text-pomegranate">{fieldErrors.catalogHeroImage}</p>

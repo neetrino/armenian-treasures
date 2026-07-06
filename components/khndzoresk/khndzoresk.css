@@ -133,3 +133,9 @@
     padding: 120px 20px 68px;
   }
 }
+
+/* Banner photo sits below the fixed navbar instead of behind it. */
+.khndzoresk-page .hero-img-overlay {
+  inset: auto 0 0 0;
+  top: var(--site-header-height);
+}
