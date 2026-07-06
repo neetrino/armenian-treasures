@@ -2,6 +2,11 @@ import Image from 'next/image';
 import type { CulturalPortalIconKey } from '@/lib/constants/cultural-portal';
 import { CULTURAL_PORTAL_ICON_SOURCES } from '@/lib/constants/cultural-portal-icon-sources';
 import {
+  CULTURAL_PORTAL_BADGE_IMAGE_PX,
+  CULTURAL_PORTAL_BADGE_IMAGE_SIZES,
+  CULTURAL_PORTAL_CARD_IMAGE_SIZES,
+} from '@/lib/constants/cultural-portal-image-metrics';
+import {
   CULTURAL_PORTAL_ICON_BADGE_CLASS,
   CULTURAL_PORTAL_ICON_BADGED_IMAGE_CLASS,
   CULTURAL_PORTAL_ICON_SVG_CLASS,
@@ -27,33 +32,29 @@ export function CulturalCategoryIcon({
   const resolvedIconClass = withBadge
     ? cn(CULTURAL_PORTAL_ICON_BADGED_IMAGE_CLASS, iconClassName)
     : cn(CULTURAL_PORTAL_ICON_SVG_CLASS, iconClassName);
-  const icon = (
-    withBadge ? (
-      <Image
-        src={resolvedIconSrc}
-        alt=""
-        width={82}
-        height={82}
-        sizes="82px"
-        unoptimized
-        className={resolvedIconClass}
-        aria-hidden
-        data-icon-src={iconSrc}
-        data-icon-source={sourceHref}
-      />
-    ) : (
-      <Image
-        src={resolvedIconSrc}
-        alt=""
-        fill
-        sizes="(max-width: 379px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, 20vw"
-        unoptimized
-        className={resolvedIconClass}
-        aria-hidden
-        data-icon-src={iconSrc}
-        data-icon-source={sourceHref}
-      />
-    )
+  const icon = withBadge ? (
+    <Image
+      src={resolvedIconSrc}
+      alt=""
+      width={CULTURAL_PORTAL_BADGE_IMAGE_PX}
+      height={CULTURAL_PORTAL_BADGE_IMAGE_PX}
+      sizes={CULTURAL_PORTAL_BADGE_IMAGE_SIZES}
+      className={resolvedIconClass}
+      aria-hidden
+      data-icon-src={iconSrc}
+      data-icon-source={sourceHref}
+    />
+  ) : (
+    <Image
+      src={resolvedIconSrc}
+      alt=""
+      fill
+      sizes={CULTURAL_PORTAL_CARD_IMAGE_SIZES}
+      className={resolvedIconClass}
+      aria-hidden
+      data-icon-src={iconSrc}
+      data-icon-source={sourceHref}
+    />
   );
 
   if (!withBadge) {

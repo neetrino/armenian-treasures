@@ -288,24 +288,27 @@ export const PAGE_CONTENT_TITLES: Record<PageContentSlug, string> = {
 };
 
 export function parseDonationPageContent(value: unknown): DonationPageContent {
+  const defaults = buildDefaultDonationPageContent();
   if (typeof value === 'object' && value !== null) {
-    return value as DonationPageContent;
+    return { ...defaults, ...(value as Partial<DonationPageContent>) };
   }
-  return buildDefaultDonationPageContent();
+  return defaults;
 }
 
 export function parsePartnershipPageContent(value: unknown): PartnershipPageContent {
+  const defaults = buildDefaultPartnershipPageContent();
   if (typeof value === 'object' && value !== null) {
-    return value as PartnershipPageContent;
+    return { ...defaults, ...(value as Partial<PartnershipPageContent>) };
   }
-  return buildDefaultPartnershipPageContent();
+  return defaults;
 }
 
 export function parseCulturalPortalPageContent(value: unknown): CulturalPortalPageContent {
+  const defaults = buildDefaultCulturalPortalPageContent();
   if (typeof value === 'object' && value !== null) {
-    return value as CulturalPortalPageContent;
+    return { ...defaults, ...(value as Partial<CulturalPortalPageContent>) };
   }
-  return buildDefaultCulturalPortalPageContent();
+  return defaults;
 }
 
 export function parseKhndzoreskPageContent(value: unknown): KhndzoreskPageContent {

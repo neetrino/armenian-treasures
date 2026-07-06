@@ -19,9 +19,10 @@ export function HeroBannerImageField({ value, onChange, hint }: HeroBannerImageF
         label="Banner image"
         layout="banner"
         folder="hero"
+        variant="desktop"
         value={value}
         onChange={onChange}
-        hint={hint ?? 'Wide banner (16:9). Leave empty to use the default page background.'}
+        hint={hint ?? 'Compact preview with the same wide crop as the live page.'}
       />
     </PageContentSection>
   );

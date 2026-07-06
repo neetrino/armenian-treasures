@@ -96,6 +96,7 @@ export function AboutContentForm({ initial }: Props) {
         label="Hero banner image"
         name="heroImage"
         folder="hero"
+        variant="desktop"
         defaultValue={initial.heroImage}
         error={state.fieldErrors?.heroImage}
         hint="Optional wide banner at the top of About pages. Remove to use the default gradient background."

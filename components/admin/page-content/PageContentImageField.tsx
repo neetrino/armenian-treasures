@@ -1,28 +1,33 @@
 'use client';
 
 import { useCallback, useId, useRef, useState } from 'react';
-import Image from 'next/image';
 import { Loader2, Upload, X } from 'lucide-react';
 import {
   ADMIN_IMAGE_ACCEPT,
   type AdminImageFolder,
+  type AdminImageVariant,
 } from '@/lib/admin/image-upload-constants';
 import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
-import { cn } from '@/lib/utils';
 import {
+  getAdminImagePreviewContainerClass,
+  getAdminImagePreviewDropzoneClass,
+  getAdminImagePreviewHint,
   getAdminImagePreviewStyle,
   type AdminImagePreviewLayout,
 } from '@/lib/admin/image-preview-layout';
+import { AdminManagedImagePreview } from '@/components/admin/AdminManagedImagePreview';
 
 interface PageContentImageFieldProps {
   label: string;
   value: string;
   onChange: (url: string) => void;
   hint?: string;
-  /** `card` matches public catalog card media (16:10). `banner` is wide hero (16:9). */
+  /** `card` matches catalog cards (16:10). `banner` matches public page heroes. */
   layout?: AdminImagePreviewLayout;
   folder?: AdminImageFolder;
+  /** Required for `hero` folder uploads (defaults to `desktop` on the server if omitted). */
+  variant?: AdminImageVariant;
 }
 
 const ACCEPT = ADMIN_IMAGE_ACCEPT;
@@ -34,6 +39,7 @@ export function PageContentImageField({
   hint,
   layout = 'banner',
   folder = 'culture',
+  variant,
 }: PageContentImageFieldProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +53,11 @@ export function PageContentImageField({
       setIsUploading(true);
       setUploadError(null);
 
-      const result = await uploadAdminImage({ file, folder });
+      const result = await uploadAdminImage({
+        file,
+        folder,
+        ...(variant ? { variant } : {}),
+      });
       setIsUploading(false);
 
       if (!result.ok || !result.url) {
@@ -57,7 +67,7 @@ export function PageContentImageField({
 
       onChange(result.url);
     },
-    [folder, onChange],
+    [folder, onChange, variant],
   );
 
   const handleFiles = useCallback(
@@ -75,26 +85,12 @@ export function PageContentImageField({
       <Label htmlFor={inputId}>{label}</Label>
 
       {previewSrc ? (
-        <div
-          className={cn(
-            'relative overflow-hidden rounded-xl border border-stone-200 bg-stone-900',
-            previewStyle.containerClass,
-          )}
-        >
-          <div className={cn('relative w-full', previewStyle.aspectClass)}>
-            <Image
-              src={previewSrc}
-              alt=""
-              fill
-              unoptimized
-              className="object-cover"
-              sizes={previewStyle.sizes}
-            />
-          </div>
+        <div className={getAdminImagePreviewContainerClass(layout, previewStyle)}>
+          <AdminManagedImagePreview src={previewSrc} previewStyle={previewStyle} />
           <button
             type="button"
             onClick={() => onChange('')}
-            className="absolute right-2 top-2 rounded-full bg-midnight-900/70 p-1.5 text-white transition hover:bg-midnight-900"
+            className="absolute right-2 top-2 z-10 rounded-full bg-midnight-900/70 p-1.5 text-white transition hover:bg-midnight-900"
             aria-label="Remove image"
           >
             <X size={14} aria-hidden />
@@ -128,14 +124,7 @@ export function PageContentImageField({
             handleFiles(event.dataTransfer.files);
           }}
           onClick={() => fileInputRef.current?.click()}
-          className={cn(
-            'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-6 text-center transition',
-            previewStyle.dropzoneClass,
-            previewStyle.aspectClass,
-            isDragging
-              ? 'border-bronze-500 bg-bronze-50/40'
-              : 'border-stone-300 bg-white hover:border-bronze-500 hover:bg-parchment-50/60',
-          )}
+          className={getAdminImagePreviewDropzoneClass(layout, previewStyle, isDragging)}
         >
           {isUploading ? (
             <Loader2 size={22} className="animate-spin text-bronze-600" aria-hidden />
@@ -145,9 +134,7 @@ export function PageContentImageField({
           <span className="text-sm font-medium text-ink">
             {isUploading ? 'Uploading…' : 'Drag & drop or click to upload'}
           </span>
-          <span className="text-xs text-ink-muted">
-            {layout === 'card' ? 'Card ratio 16:10 · JPG, PNG, WebP' : 'Wide banner 16:9 · JPG, PNG, WebP'}
-          </span>
+          <span className="text-xs text-ink-muted">{getAdminImagePreviewHint(layout)}</span>
         </div>
       )}
 

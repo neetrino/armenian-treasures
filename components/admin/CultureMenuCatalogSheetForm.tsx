@@ -175,7 +175,7 @@ export function CultureMenuCatalogSheetForm({
             layout="banner"
             value={values.catalogHeroImage ?? ''}
             onChange={(url) => setField('catalogHeroImage', url)}
-            hint="Wide banner at the top of the catalog page (16:9)."
+            hint="Compact preview with the same wide crop as the live page."
           />
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField

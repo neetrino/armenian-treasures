@@ -32,10 +32,12 @@ const ICON_KEYS = [
   'publications',
 ] as const;
 
-const MIN_TARGET_BYTES = 100 * 1024;
-const MAX_TARGET_BYTES = 150 * 1024;
-const TARGET_CENTER_BYTES = 125 * 1024;
-const DIMENSION_CANDIDATES = [768, 896, 1024, 1152, 1280, 1536];
+/** Matches `CULTURAL_PORTAL_CARD_IMAGE_PX` — 2× largest rendered card media edge. */
+const TARGET_DIMENSION = 840;
+const MIN_TARGET_BYTES = 35 * 1024;
+const MAX_TARGET_BYTES = 85 * 1024;
+const TARGET_CENTER_BYTES = 55 * 1024;
+const DIMENSION_CANDIDATES = [TARGET_DIMENSION];
 const QUALITY_CANDIDATES = [
   100, 98, 96, 94, 92, 90, 88, 86, 84, 82, 80, 78, 76, 74, 72, 70, 68, 66, 64, 62, 60, 58, 56,
   54, 52, 50, 48, 46, 44, 42, 40,

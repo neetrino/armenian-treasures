@@ -71,6 +71,12 @@ export async function uploadAdminImage(
   }
 
   const presign = await readJson<PresignResponse>(presignResponse);
+  if (presignResponse.status === 429) {
+    return {
+      ok: false,
+      error: 'Too many upload attempts. Please wait a few minutes and try again.',
+    };
+  }
   if (!presignResponse.ok || !presign?.ok || !presign.uploadUrl || !presign.confirmToken) {
     return {
       ok: false,

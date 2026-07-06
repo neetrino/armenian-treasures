@@ -72,4 +72,10 @@ describe('resolvePublicAssetUrl', () => {
       'https://cdn.example.com/uploads/images/culture/culture-abc123def456.jpg',
     );
   });
+
+  it('resolves cultural portal card WebP assets from the committed manifest', () => {
+    expect(resolvePublicAssetUrl('/icons/cultural-portal/churches.webp')).toBe(
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/icons/cultural-portal/churches.webp',
+    );
+  });
 });

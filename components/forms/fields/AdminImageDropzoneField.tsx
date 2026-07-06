@@ -1,14 +1,15 @@
 'use client';
 
 import { useCallback, useId, useRef, useState } from 'react';
-import Image from 'next/image';
 import { Loader2, Upload, X } from 'lucide-react';
 import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
 import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
-import { cn } from '@/lib/utils';
-
+import { AdminManagedImagePreview } from '@/components/admin/AdminManagedImagePreview';
 import {
+  getAdminImagePreviewContainerClass,
+  getAdminImagePreviewDropzoneClass,
+  getAdminImagePreviewHint,
   getAdminImagePreviewStyle,
   type AdminImagePreviewLayout,
 } from '@/lib/admin/image-preview-layout';
@@ -18,7 +19,7 @@ interface AdminImageDropzoneFieldProps {
   name: string;
   folder: 'hero' | 'culture';
   variant?: 'desktop' | 'mobile';
-  /** `card` = catalog card (16:10). `banner` = wide hero (16:9). */
+  /** `card` = catalog card (16:10). `banner` = public page hero. `home-hero` = homepage hero. */
   layout?: AdminImagePreviewLayout;
   defaultValue?: string;
   hint?: string;
@@ -89,26 +90,12 @@ export function AdminImageDropzoneField({
       <input type="hidden" name={name} value={url} />
 
       {previewSrc ? (
-        <div
-          className={cn(
-            'relative overflow-hidden rounded-xl border border-stone-200 bg-stone-900',
-            previewStyle.containerClass,
-          )}
-        >
-          <div className={cn('relative w-full', previewStyle.aspectClass)}>
-            <Image
-              src={previewSrc}
-              alt=""
-              fill
-              unoptimized
-              className="object-cover"
-              sizes={previewStyle.sizes}
-            />
-          </div>
+        <div className={getAdminImagePreviewContainerClass(layout, previewStyle)}>
+          <AdminManagedImagePreview src={previewSrc} previewStyle={previewStyle} />
           <button
             type="button"
             onClick={() => setUrl('')}
-            className="absolute right-2 top-2 rounded-full bg-midnight-900/70 p-1.5 text-white transition hover:bg-midnight-900"
+            className="absolute right-2 top-2 z-10 rounded-full bg-midnight-900/70 p-1.5 text-white transition hover:bg-midnight-900"
             aria-label="Remove image"
           >
             <X size={14} aria-hidden />
@@ -138,14 +125,7 @@ export function AdminImageDropzoneField({
           }}
           onDrop={onDrop}
           onClick={() => fileInputRef.current?.click()}
-          className={cn(
-            'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center transition',
-            previewStyle.dropzoneClass,
-            previewStyle.aspectClass,
-            isDragging
-              ? 'border-bronze-500 bg-bronze-50/40'
-              : 'border-stone-300 bg-parchment-50 hover:border-bronze-500 hover:bg-parchment-100/60',
-          )}
+          className={getAdminImagePreviewDropzoneClass(layout, previewStyle, isDragging)}
         >
           {isUploading ? (
             <Loader2 size={24} className="animate-spin text-bronze-600" aria-hidden />
@@ -155,7 +135,7 @@ export function AdminImageDropzoneField({
           <span className="text-sm font-medium text-ink">
             {isUploading ? 'Uploading…' : 'Drag and drop an image, or click to browse'}
           </span>
-          <span className="text-xs text-ink-muted">JPG, PNG, or WebP</span>
+          <span className="text-xs text-ink-muted">{getAdminImagePreviewHint(layout)}</span>
         </div>
       )}
 
