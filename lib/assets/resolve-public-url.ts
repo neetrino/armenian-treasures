@@ -63,7 +63,7 @@ export function resolvePublicAssetUrl(path: string): string {
     return resolveAdminUploadPath(normalizedLegacySafe);
   }
 
-  // Drive-imported cultural icons exist only in R2, so local fallback would 404.
+  // Cultural portal card images (png/webp) are stored in R2 only.
   if (isR2OnlyCulturalPortalIconPath(normalizedLegacySafe)) {
     const base = getPublicR2BaseUrl() ?? getR2ManifestPublicBaseUrl();
     if (base) {
