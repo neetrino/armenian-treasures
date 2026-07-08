@@ -42,7 +42,6 @@ const culturalPortalPageContentSchema = z
     CULTURAL_PORTAL_PROJECTS_SECTION: z.record(z.unknown()),
     CULTURAL_PORTAL_DONORS: z.record(z.unknown()),
     CULTURAL_PORTAL_ABOUT: z.record(z.unknown()),
-    CULTURAL_PORTAL_NEWSLETTER: z.record(z.unknown()),
     HOME_PARTNERSHIP_SECTION: z.record(z.unknown()),
     HOME_PARTNERSHIP_CATEGORIES: z.array(z.unknown()),
   })

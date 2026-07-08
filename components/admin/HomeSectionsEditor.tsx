@@ -314,7 +314,6 @@ export function HomeSectionsEditor({ sections, onChange, sectionError }: HomeSec
       <PartnershipSectionEditor sections={sections} onChange={onChange} />
       <DonationsSectionEditor sections={sections} onChange={onChange} />
       <AboutSectionEditor sections={sections} onChange={onChange} />
-      <NewsletterSectionEditor sections={sections} onChange={onChange} />
 
       {sectionError ? <p className="text-sm text-pomegranate">{sectionError}</p> : null}
     </div>
@@ -540,51 +539,6 @@ function AboutSectionEditor({
             />
           </div>
         ))}
-      </div>
-    </AdminFormSection>
-  );
-}
-
-function NewsletterSectionEditor({
-  sections,
-  onChange,
-}: {
-  sections: HomeSections;
-  onChange: (sections: HomeSections) => void;
-}) {
-  const newsletter = sections.newsletter;
-  return (
-    <AdminFormSection title="Newsletter block" tone="white">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <TextField
-          label="Title"
-          value={newsletter.title}
-          onChange={(e) => onChange({ ...sections, newsletter: { ...newsletter, title: e.target.value } })}
-        />
-        <TextField
-          label="Email placeholder"
-          value={newsletter.placeholder}
-          onChange={(e) =>
-            onChange({ ...sections, newsletter: { ...newsletter, placeholder: e.target.value } })
-          }
-        />
-        <TextField
-          label="Submit button label"
-          value={newsletter.submitLabel}
-          onChange={(e) =>
-            onChange({ ...sections, newsletter: { ...newsletter, submitLabel: e.target.value } })
-          }
-        />
-        <div className="sm:col-span-2">
-          <TextareaField
-            label="Description"
-            rows={3}
-            value={newsletter.description}
-            onChange={(e) =>
-              onChange({ ...sections, newsletter: { ...newsletter, description: e.target.value } })
-            }
-          />
-        </div>
       </div>
     </AdminFormSection>
   );

@@ -53,7 +53,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         href: '/admin/home-content',
         label: 'Homepage',
-        description: 'Hero, sections, newsletter',
+        description: 'Hero and homepage sections',
         icon: Home,
       },
       {
@@ -139,7 +139,7 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       {
         href: '/admin/contact-messages',
         label: 'Public inbox',
-        description: 'Contact and newsletter',
+        description: 'Contact form messages',
         icon: Mail,
       },
     ],

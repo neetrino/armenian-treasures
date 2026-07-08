@@ -15,7 +15,6 @@ import {
   updateContactNoteAction,
 } from '@/app/(admin)/admin/(panel)/contact-messages/actions';
 import { requireAdmin } from '@/lib/auth/require-admin';
-import { getContactMessageKind } from '@/lib/inbox/contact-message-kind';
 import { prisma } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -29,19 +28,12 @@ async function AdminContactMessageDetailPage(props: PageProps) {
   const message = await prisma.contactMessage.findUnique({ where: { id: params.id } });
   if (!message) notFound();
 
-  const kind = getContactMessageKind(message);
-  const isNewsletter = kind === 'newsletter';
-
   return (
     <AdminPageShell
       user={user}
-      topbarTitle={isNewsletter ? 'Newsletter signup' : 'Contact message'}
-      title={isNewsletter ? message.email : message.name}
-      description={
-        isNewsletter
-          ? 'Newsletter signup — stored in inbox only; not synced to an email provider yet.'
-          : message.email
-      }
+      topbarTitle="Contact message"
+      title={message.name}
+      description={message.email}
       beforeHeader={<AdminBackLink href="/admin/contact-messages" label="Back to public inbox" />}
       actions={
         <div className="flex flex-wrap items-center gap-2">
@@ -56,30 +48,16 @@ async function AdminContactMessageDetailPage(props: PageProps) {
       }
     >
       <AdminStagger className="grid gap-6 lg:grid-cols-3">
-        <AdminDetailCard className="lg:col-span-2" title={isNewsletter ? 'Signup details' : 'Message'}>
-          {isNewsletter ? (
-            <div className="space-y-3 text-sm text-ink-soft">
-              <p>
-                <span className="font-medium text-ink">Email:</span>{' '}
-                <Link href={`mailto:${message.email}`} className="hover:text-pomegranate">
-                  {message.email}
-                </Link>
-              </p>
-              <p className="text-xs text-ink-muted">{message.message}</p>
-            </div>
-          ) : (
-            <p className="whitespace-pre-line text-sm leading-relaxed text-ink-soft">{message.message}</p>
-          )}
+        <AdminDetailCard className="lg:col-span-2" title="Message">
+          <p className="whitespace-pre-line text-sm leading-relaxed text-ink-soft">{message.message}</p>
         </AdminDetailCard>
 
         <aside className="flex flex-col gap-4">
-          <AdminDetailCard title={isNewsletter ? 'Subscriber' : 'Sender'}>
+          <AdminDetailCard title="Sender">
             <ul className="flex flex-col gap-2 text-sm text-ink-soft">
-              {!isNewsletter ? (
-                <li className="flex items-center gap-2">
-                  <User size={14} aria-hidden /> {message.name}
-                </li>
-              ) : null}
+              <li className="flex items-center gap-2">
+                <User size={14} aria-hidden /> {message.name}
+              </li>
               <li className="flex items-center gap-2">
                 <Mail size={14} aria-hidden />
                 <Link href={`mailto:${message.email}`} className="hover:text-pomegranate">

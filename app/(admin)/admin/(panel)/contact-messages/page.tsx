@@ -9,7 +9,6 @@ import { AdminPagination } from '@/components/admin/AdminPagination';
 import { deleteContactMessageAction } from '@/app/(admin)/admin/(panel)/contact-messages/actions';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { buildAdminPageCount, parseAdminListQuery } from '@/lib/admin/list-query';
-import { getContactMessageKind } from '@/lib/inbox/contact-message-kind';
 import { prisma } from '@/lib/db';
 import type { Prisma } from '@prisma/client';
 
@@ -29,13 +28,6 @@ interface Row {
   message: string;
   status: ContactStatus;
   createdAt: Date;
-}
-
-function inboxPreview(row: Row): string {
-  if (getContactMessageKind(row) === 'newsletter') {
-    return `Email signup · ${row.email}`;
-  }
-  return row.message;
 }
 
 async function AdminContactMessagesPage(props: PageProps) {
@@ -71,26 +63,21 @@ async function AdminContactMessagesPage(props: PageProps) {
     {
       key: 'sender',
       header: 'From',
-      cell: (row) => {
-        const isNewsletter = getContactMessageKind(row) === 'newsletter';
-        return (
-          <Link
-            href={`/admin/contact-messages/${row.id}`}
-            className="flex flex-col text-left text-ink hover:text-pomegranate"
-          >
-            <span className="font-medium">{isNewsletter ? row.email : row.name}</span>
-            <span className="text-xs text-ink-muted">
-              {isNewsletter ? 'Newsletter subscriber' : row.email}
-            </span>
-          </Link>
-        );
-      },
+      cell: (row) => (
+        <Link
+          href={`/admin/contact-messages/${row.id}`}
+          className="flex flex-col text-left text-ink hover:text-pomegranate"
+        >
+          <span className="font-medium">{row.name}</span>
+          <span className="text-xs text-ink-muted">{row.email}</span>
+        </Link>
+      ),
     },
     {
       key: 'preview',
       header: 'Preview',
       cell: (row) => (
-        <p className="line-clamp-2 max-w-md text-sm text-ink-soft">{inboxPreview(row)}</p>
+        <p className="line-clamp-2 max-w-md text-sm text-ink-soft">{row.message}</p>
       ),
     },
     {
@@ -121,7 +108,7 @@ async function AdminContactMessagesPage(props: PageProps) {
       user={user}
       topbarTitle="Public inbox"
       title="Public inbox"
-      description="Contact form messages and newsletter signup requests. Newsletter rows are stored here until a dedicated email list is connected — they are not sent to an ESP automatically."
+      description="Contact form messages from the public site."
       size="wide"
     >
       <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} empty="No inbox entries yet." />

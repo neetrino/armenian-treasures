@@ -14,8 +14,6 @@ import { KhachaturianMuseumHighlights } from '@/components/khachaturian-museum/K
 
 import { KhachaturianMuseumVirtualTour, KhachaturianMuseumWorks } from '@/components/khachaturian-museum/KhachaturianMuseumMedia';
 
-import { KhachaturianMuseumNewsletter } from '@/components/khachaturian-museum/KhachaturianMuseumNewsletter';
-
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
 
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
@@ -74,7 +72,6 @@ export async function KhachaturianMuseumPage() {
 
         {isSectionEnabled(visibility, 'related') ? <KhachaturianMuseumRelated related={content.related} /> : null}
 
-        {isSectionEnabled(visibility, 'newsletter') ? <KhachaturianMuseumNewsletter /> : null}
 
       </LandingSectionStack>
 

@@ -15,7 +15,6 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ContactInboxTypeBadge } from '@/components/admin/ContactInboxTypeBadge';
 import { requireAdmin } from '@/lib/auth/require-admin';
-import { getContactMessageKind } from '@/lib/inbox/contact-message-kind';
 import { getAdminStats } from '@/lib/queries/admin-stats';
 import { prisma } from '@/lib/db';
 
@@ -191,28 +190,21 @@ async function AdminDashboardPage() {
             {latestMessages.length === 0 ? (
               <li className="py-6 text-sm text-ink-muted">No inbox entries yet.</li>
             ) : (
-              latestMessages.map((m) => {
-                const isNewsletter = getContactMessageKind(m) === 'newsletter';
-                return (
+              latestMessages.map((m) => (
                   <li
                     key={m.id}
                     className="flex items-center justify-between gap-4 py-3 text-sm transition hover:bg-parchment-50/50"
                   >
                     <div className="min-w-0">
-                      <p className="truncate font-medium text-ink">
-                        {isNewsletter ? m.email : m.name}
-                      </p>
-                      <p className="truncate text-xs text-ink-muted">
-                        {isNewsletter ? 'Newsletter signup' : m.email}
-                      </p>
+                      <p className="truncate font-medium text-ink">{m.name}</p>
+                      <p className="truncate text-xs text-ink-muted">{m.email}</p>
                     </div>
                     <div className="flex shrink-0 flex-col items-end gap-1">
                       <ContactInboxTypeBadge name={m.name} message={m.message} />
                       <Badge tone={m.status === 'NEW' ? 'pomegranate' : 'stone'}>{m.status}</Badge>
                     </div>
                   </li>
-                );
-              })
+                ))
             )}
           </ul>
         </Card>

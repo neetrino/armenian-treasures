@@ -14,8 +14,6 @@ import { CulturalPortalHighlights } from '@/components/cultural-portal-page/Cult
 
 import { CulturalPortalMap } from '@/components/cultural-portal-page/CulturalPortalMap';
 
-import { CulturalPortalNewsletter } from '@/components/cultural-portal-page/CulturalPortalNewsletter';
-
 import { CulturalPortalPartnership } from '@/components/cultural-portal-page/CulturalPortalPartnership';
 
 import { CulturalPortalProjects } from '@/components/cultural-portal-page/CulturalPortalProjects';
@@ -263,18 +261,6 @@ async function CulturalPortalDeferredSections({
           }}
 
           cards={aboutCards}
-
-        />
-
-      ) : null}
-
-      {isSectionEnabled(visibility, 'newsletter') ? (
-
-        <CulturalPortalNewsletter
-
-          title={pageContent.CULTURAL_PORTAL_NEWSLETTER.title}
-
-          description={pageContent.CULTURAL_PORTAL_NEWSLETTER.description}
 
         />
 

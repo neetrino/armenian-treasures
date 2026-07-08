@@ -10,7 +10,6 @@ import {
   HERITAGE_DOWNLOADS_HOME_VISIBLE,
   HeritageDownloadSection,
 } from '@/components/sections/HeritageDownloadSection';
-import { HomeNewsletterSection } from '@/components/sections/HomeNewsletterSection';
 import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
 
 export async function HomeHeritageSections() {
@@ -63,8 +62,6 @@ export async function HomeHeritageSections() {
       ) : null}
       <div className="heritage-section-divider my-2" aria-hidden />
       <AboutUsSection home={home} />
-      <div className="heritage-section-divider my-2" aria-hidden />
-      <HomeNewsletterSection home={home} />
     </div>
   );
 }
