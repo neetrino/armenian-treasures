@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { validateMenuParentRules, validateMenuRouteRules } from '@/lib/admin/validate-menu-route';
 import { validatePageContentJson } from '@/lib/validation/page-content';
 import { buildDefaultDonationPageContent } from '@/lib/types/page-content';
-
+ 
 describe('validateMenuRouteRules', () => {
   it('requires parent for sub-catalog routes', () => {
     const errors = validateMenuRouteRules({
