@@ -1,16 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   DONATION_CHECKOUT_ENABLED,
   DONATION_CHECKOUT_UNAVAILABLE,
   DONATION_PAGE,
   type DonationImpactRange,
   type DonationTier,
+  type DonationTierId,
 } from '@/lib/constants/donation-page';
 import type { DonationPageContent } from '@/lib/queries/page-content';
+import { DonationPatronSlider } from '@/components/donation-page/DonationPatronSlider';
 import { DonationTierCards } from '@/components/donation-page/DonationTierCards';
 import { DonationCertificateBlock } from '@/components/donation-page/DonationCertificateBlock';
+import { PATRON_DEFAULT, clampPatronAmount } from '@/components/donation-page/donation-utils';
 
 type DonationEngineProps = {
   engine: DonationPageContent['page']['engine'];
@@ -20,11 +23,44 @@ type DonationEngineProps = {
   patronQuickChips: readonly number[];
 };
 
-export function DonationEngine({ engine, tiers }: DonationEngineProps) {
-  const [selectedId, setSelectedId] = useState<DonationTier['id'] | null>(null);
+export function DonationEngine({
+  engine,
+  tiers,
+  impactRanges,
+  patronSliderTicks,
+  patronQuickChips,
+}: DonationEngineProps) {
+  const patronCardRef = useRef<HTMLDivElement>(null);
+  const customInputRef = useRef<HTMLInputElement>(null);
+
+  const [selectedId, setSelectedId] = useState<DonationTierId | null>(null);
+  const [sliderVal, setSliderVal] = useState(PATRON_DEFAULT);
+  const [inputNudge, setInputNudge] = useState(false);
+
   const checkoutEnabled = DONATION_CHECKOUT_ENABLED;
   const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
   const certificates = DONATION_PAGE.certificates;
+
+  function handleTierSelect(tierId: DonationTierId) {
+    setSelectedId(tierId);
+    const tier = tiers.find((item) => item.id === tierId);
+    if (tier) setSliderVal(clampPatronAmount(tier.amountAmd));
+  }
+
+  function handleSliderChange(value: number) {
+    const clamped = clampPatronAmount(value);
+    setSliderVal(clamped);
+    const matchingTier = tiers.find((tier) => tier.amountAmd === clamped);
+    setSelectedId(matchingTier?.id ?? null);
+  }
+
+  function handleCustomBlur(value: string) {
+    const parsed = parseInt(value, 10);
+    if (!Number.isNaN(parsed) && parsed > 0 && parsed < 1000) {
+      setInputNudge(true);
+      window.setTimeout(() => setInputNudge(false), 2000);
+    }
+  }
 
   return (
     <section className="sec" id="give" aria-label="Choose your patronage level">
@@ -45,7 +81,20 @@ export function DonationEngine({ engine, tiers }: DonationEngineProps) {
         tiers={tiers}
         selectedId={selectedId}
         checkoutEnabled={checkoutEnabled}
-        onSelect={setSelectedId}
+        onSelect={handleTierSelect}
+      />
+
+      <DonationPatronSlider
+        cardRef={patronCardRef}
+        inputRef={customInputRef}
+        sliderVal={sliderVal}
+        inputNudge={inputNudge}
+        impactRanges={impactRanges}
+        patronSliderTicks={patronSliderTicks}
+        patronQuickChips={patronQuickChips}
+        checkoutEnabled={checkoutEnabled}
+        onSliderChange={handleSliderChange}
+        onCustomBlur={handleCustomBlur}
       />
 
       <DonationCertificateBlock
