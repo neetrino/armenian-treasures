@@ -11,7 +11,6 @@ export type KhndzoreskSectionVisibility = {
   map?: boolean;
   credits?: boolean;
   related?: boolean;
-  newsletter?: boolean;
 };
 
 export type KhachaturianSectionVisibility = {
@@ -25,7 +24,6 @@ export type KhachaturianSectionVisibility = {
   highlights?: boolean;
   visit?: boolean;
   related?: boolean;
-  newsletter?: boolean;
 };
 
 export type NationalGallerySectionVisibility = {
@@ -39,7 +37,6 @@ export type NationalGallerySectionVisibility = {
   gallery?: boolean;
   visit?: boolean;
   related?: boolean;
-  newsletter?: boolean;
 };
 
 export type CulturalPortalSectionVisibility = {
@@ -52,7 +49,6 @@ export type CulturalPortalSectionVisibility = {
   partnership?: boolean;
   donors?: boolean;
   about?: boolean;
-  newsletter?: boolean;
 };
 
 export type PartnershipSectionVisibility = {
@@ -60,7 +56,6 @@ export type PartnershipSectionVisibility = {
   stats?: boolean;
   showcase?: boolean;
   inquiry?: boolean;
-  newsletter?: boolean;
 };
 
 export type DonationSectionVisibility = {
@@ -91,7 +86,6 @@ export const KHNDZORESK_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'map', label: 'Location map' },
   { id: 'credits', label: 'Digitization credits' },
   { id: 'related', label: 'Related destinations' },
-  { id: 'newsletter', label: 'Newsletter signup' },
 ];
 
 export const KHACHATURIAN_SECTION_TOGGLES: SectionToggleOption[] = [
@@ -105,7 +99,6 @@ export const KHACHATURIAN_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'highlights', label: 'Museum highlights' },
   { id: 'visit', label: 'Visit & contact' },
   { id: 'related', label: 'Related destinations' },
-  { id: 'newsletter', label: 'Newsletter signup' },
 ];
 
 export const NGA_SECTION_TOGGLES: SectionToggleOption[] = [
@@ -119,7 +112,6 @@ export const NGA_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'gallery', label: 'Photo gallery' },
   { id: 'visit', label: 'Tickets & visiting' },
   { id: 'related', label: 'Related destinations' },
-  { id: 'newsletter', label: 'Newsletter signup' },
 ];
 
 export const CULTURAL_PORTAL_SECTION_TOGGLES: SectionToggleOption[] = [
@@ -132,7 +124,6 @@ export const CULTURAL_PORTAL_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'partnership', label: 'Partnership' },
   { id: 'donors', label: 'Donors wall' },
   { id: 'about', label: 'About cards' },
-  { id: 'newsletter', label: 'Newsletter signup' },
 ];
 
 export const PARTNERSHIP_SECTION_TOGGLES: SectionToggleOption[] = [
@@ -140,7 +131,6 @@ export const PARTNERSHIP_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'stats', label: 'Statistics bar' },
   { id: 'showcase', label: 'Partner showcase' },
   { id: 'inquiry', label: 'Inquiry form' },
-  { id: 'newsletter', label: 'Newsletter signup' },
 ];
 
 export const DONATION_SECTION_TOGGLES: SectionToggleOption[] = [
@@ -150,5 +140,5 @@ export const DONATION_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'engine', label: 'Donation engine' },
   { id: 'ledger', label: 'Impact ledger' },
   { id: 'patronWall', label: 'Patron wall' },
-  { id: 'closing', label: 'Trust items & newsletter' },
+  { id: 'closing', label: 'Trust items' },
 ];

@@ -1,25 +1,6 @@
 'use client';
 
 import type { DonationTrustItem } from '@/lib/constants/donation-page';
-import type { DonationPageContent } from '@/lib/queries/page-content';
-import { NewsletterSubscribeForm } from '@/components/forms/NewsletterSubscribeForm';
-
-function StarIcon() {
-  return (
-    <svg
-      width="38"
-      height="38"
-      viewBox="0 0 56 56"
-      fill="none"
-      style={{ color: 'var(--gold)', opacity: 0.35, marginBottom: 14 }}
-      stroke="currentColor"
-      strokeWidth="1.2"
-      aria-hidden
-    >
-      <path d="M28 6l4 14h14L35 28l4 14-11-8-11 8 4-14L10 20h14z" />
-    </svg>
-  );
-}
 
 function TrustIcon() {
   return (
@@ -30,34 +11,18 @@ function TrustIcon() {
 }
 
 type DonationClosingSectionsProps = {
-  newsletter: DonationPageContent['page']['newsletter'];
   trustItems: DonationTrustItem[];
 };
 
-export function DonationClosingSections({ newsletter, trustItems }: DonationClosingSectionsProps) {
+export function DonationClosingSections({ trustItems }: DonationClosingSectionsProps) {
   return (
-    <>
-      <div className="trust-row reveal" role="list" aria-label="Trust and security signals">
-        {trustItems.map((item) => (
-          <div key={item.label} className="trust-item" role="listitem">
-            <TrustIcon />
-            {item.label}
-          </div>
-        ))}
-      </div>
-
-      <div className="donation-nl-outer">
-        <div className="newsletter reveal" role="complementary" aria-label="Newsletter signup">
-          <StarIcon />
-          <h2>{newsletter.title}</h2>
-          <p>{newsletter.description}</p>
-          <NewsletterSubscribeForm
-            placeholder={newsletter.placeholder}
-            submitLabel={newsletter.buttonLabel}
-            successMessage={newsletter.successMessage}
-          />
+    <div className="trust-row reveal" role="list" aria-label="Trust and security signals">
+      {trustItems.map((item) => (
+        <div key={item.label} className="trust-item" role="listitem">
+          <TrustIcon />
+          {item.label}
         </div>
-      </div>
-    </>
+      ))}
+    </div>
   );
 }

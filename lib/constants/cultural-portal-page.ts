@@ -261,12 +261,6 @@ export const CULTURAL_PORTAL_ABOUT = {
   })),
 } as const;
 
-export const CULTURAL_PORTAL_NEWSLETTER = {
-  title: 'Stay Connected to the Heritage',
-  description:
-    'New discoveries, upcoming events, and stories from across the Armenian world — delivered to your inbox.',
-} as const;
-
 export {
   HOME_PARTNERSHIP_SECTION,
   HOME_PARTNERSHIP_CATEGORIES,

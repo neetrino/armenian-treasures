@@ -1,4 +1,4 @@
-import type { DonationImpactRange } from '@/lib/constants/donation-page';
+import type { DonationImpactRange, DonationTier } from '@/lib/constants/donation-page';
 
 export const PATRON_MIN = 500;
 export const PATRON_MAX = 50000;
@@ -21,5 +21,11 @@ export function getImpactText(value: number, impactRanges: DonationImpactRange[]
 }
 
 export function clampPatronAmount(value: number): number {
+  if (!Number.isFinite(value)) return PATRON_DEFAULT;
   return Math.max(PATRON_MIN, Math.min(PATRON_MAX, value));
+}
+
+export function getTierAmountAmd(tier: DonationTier): number {
+  const raw = tier.amountAmd ?? tier.monthlyAmd ?? tier.annualAmd;
+  return clampPatronAmount(typeof raw === 'number' ? raw : PATRON_DEFAULT);
 }

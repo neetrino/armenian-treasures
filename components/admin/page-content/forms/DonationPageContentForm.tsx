@@ -49,7 +49,6 @@ export function DonationPageContentForm({ initial, locale }: Props) {
   const narrative = readRecord(engine.narrative);
   const narrativeParagraphs = readArray<string>(narrative.paragraphs);
   const quote = readRecord(page.quote);
-  const newsletter = readRecord(page.newsletter);
   const stats = readArray<{ target: number; suffix: string; label: string }>(content.stats);
   const pillars = readArray<{ num: string; title: string; description: string }>(content.pillars);
   const tiers = readArray<{
@@ -418,7 +417,7 @@ export function DonationPageContentForm({ initial, locale }: Props) {
         />
       </PageContentSection>
 
-      <PageContentSection title="Quote & newsletter">
+      <PageContentSection title="Quote">
         <TextareaField
           label="Quote text"
           rows={3}
@@ -429,17 +428,6 @@ export function DonationPageContentForm({ initial, locale }: Props) {
           label="Quote attribution"
           value={readString(quote.cite)}
           onChange={(e) => updatePage({ quote: { ...quote, cite: e.target.value } })}
-        />
-        <TextField
-          label="Newsletter title"
-          value={readString(newsletter.title)}
-          onChange={(e) => updatePage({ newsletter: { ...newsletter, title: e.target.value } })}
-        />
-        <TextareaField
-          label="Newsletter description"
-          rows={2}
-          value={readString(newsletter.description)}
-          onChange={(e) => updatePage({ newsletter: { ...newsletter, description: e.target.value } })}
         />
       </PageContentSection>
     </PageContentFormShell>

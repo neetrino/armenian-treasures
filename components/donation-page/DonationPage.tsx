@@ -50,7 +50,7 @@ export async function DonationPage() {
           />
         ) : null}
         {isSectionEnabled(visibility, 'closing') ? (
-          <DonationClosingSections newsletter={content.page.newsletter} trustItems={content.trustItems} />
+          <DonationClosingSections trustItems={content.trustItems} />
         ) : null}
       </LandingSectionStack>
     </HeritageLandingShell>

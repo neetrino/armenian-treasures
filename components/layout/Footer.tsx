@@ -15,7 +15,7 @@ export async function Footer() {
 
   return (
     <footer className="site-footer">
-      <Container className="px-5 py-[clamp(3.5rem,6vw,4.5rem)] sm:px-6">
+      <Container className="px-5 pb-[clamp(3.5rem,6vw,4.5rem)] sm:px-6">
         <div className="site-footer__grid">
           <FooterBrand settings={settings} />
           <FooterNavColumn

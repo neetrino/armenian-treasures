@@ -8,7 +8,6 @@ import {
   type HomeAboutCard,
 } from '@/lib/constants/home-about-section';
 import { HOME_DONATIONS_SECTION } from '@/lib/constants/home-donations-section';
-import { HOME_NEWSLETTER_SECTION } from '@/lib/constants/home-newsletter-section';
 import {
   HOME_PARTNERSHIP_CATEGORIES,
   HOME_PARTNERSHIP_SECTION,
@@ -96,12 +95,6 @@ export const homeSectionsSchema = z.object({
   aboutUs: sectionHeaderSchema.extend({
     cards: z.array(homeAboutCardSchema).min(1).max(8),
   }),
-  newsletter: z.object({
-    title: z.string().trim().min(1).max(200),
-    description: z.string().trim().min(1).max(500),
-    placeholder: z.string().trim().min(1).max(120),
-    submitLabel: z.string().trim().min(1).max(80),
-  }),
 });
 
 export type HomeSections = z.infer<typeof homeSectionsSchema>;
@@ -160,12 +153,6 @@ export function buildDefaultHomeSections(): HomeSections {
       title: HOME_ABOUT_SECTION.title,
       description: HOME_ABOUT_SECTION.description,
       cards: HOME_ABOUT_CARDS.map((card) => ({ ...card })),
-    },
-    newsletter: {
-      title: HOME_NEWSLETTER_SECTION.title,
-      description: HOME_NEWSLETTER_SECTION.description,
-      placeholder: HOME_NEWSLETTER_SECTION.placeholder,
-      submitLabel: HOME_NEWSLETTER_SECTION.submitLabel,
     },
   };
 }

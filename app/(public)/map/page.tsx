@@ -30,7 +30,7 @@ async function HeritageMapPage() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[73.75rem] px-5 pb-12 pt-6 sm:px-6 sm:pb-16 sm:pt-8">
+      <div className="relative z-10 mx-auto w-full max-w-[90rem] px-3 pb-12 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
         <header className="mb-8 max-w-[43.75rem] text-left">
           <p className="mb-[14px] font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
             Heritage Map
@@ -54,7 +54,9 @@ async function HeritageMapPage() {
           ) : null}
         </header>
 
-        <MapPanel items={items} />
+        <div className="heritage-map-embed">
+          <MapPanel items={items} embedToolbar />
+        </div>
       </div>
     </div>
   );

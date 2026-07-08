@@ -47,7 +47,6 @@ export function CulturalPortalPageContentForm({ initial, locale }: Props) {
   );
   const donorsSection = readRecord(content.CULTURAL_PORTAL_DONORS);
   const donorTiers = readArray<{ badge: string; names: string }>(donorsSection.tiers);
-  const newsletter = readRecord(content.CULTURAL_PORTAL_NEWSLETTER);
   const partnershipSection = readRecord(content.HOME_PARTNERSHIP_SECTION);
 
   return (
@@ -242,22 +241,6 @@ export function CulturalPortalPageContentForm({ initial, locale }: Props) {
             />
           </div>
         ))}
-      </PageContentSection>
-
-      <PageContentSection title="Newsletter">
-        <TextField
-          label="Title"
-          value={readString(newsletter.title)}
-          onChange={(e) => update({ CULTURAL_PORTAL_NEWSLETTER: { ...newsletter, title: e.target.value } })}
-        />
-        <TextareaField
-          label="Description"
-          rows={2}
-          value={readString(newsletter.description)}
-          onChange={(e) =>
-            update({ CULTURAL_PORTAL_NEWSLETTER: { ...newsletter, description: e.target.value } })
-          }
-        />
       </PageContentSection>
 
       <PageContentSection title="Partnership strip">

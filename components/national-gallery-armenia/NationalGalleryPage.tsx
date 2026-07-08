@@ -16,8 +16,6 @@ import { NationalGalleryHero } from '@/components/national-gallery-armenia/Natio
 
 import { NationalGalleryCollection, NationalGalleryVirtualTour } from '@/components/national-gallery-armenia/NationalGalleryMedia';
 
-import { NationalGalleryNewsletter } from '@/components/national-gallery-armenia/NationalGalleryNewsletter';
-
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
 
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
@@ -80,7 +78,6 @@ export async function NationalGalleryPage() {
 
         {isSectionEnabled(visibility, 'related') ? <NationalGalleryRelated related={content.related} /> : null}
 
-        {isSectionEnabled(visibility, 'newsletter') ? <NationalGalleryNewsletter /> : null}
 
       </LandingSectionStack>
 

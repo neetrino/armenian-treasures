@@ -128,14 +128,6 @@ export const DONATION_PAGE = {
     text: "A civilization that loses its memory loses its claim on the future. The archive is not a museum — it is a living argument that Armenia will be remembered.",
     cite: 'Armenian Treasures · Mission Statement · 2024',
   },
-  newsletter: {
-    title: 'Stay Connected to the Heritage',
-    description:
-      'New discoveries, project updates, and stories from the Armenian world — in your inbox.',
-    placeholder: 'Your email address',
-    buttonLabel: 'Subscribe',
-    successMessage: '✦ Thank you — you are now part of the heritage community.',
-  },
 } as const;
 
 export const DONATION_STATS: DonationStat[] = [

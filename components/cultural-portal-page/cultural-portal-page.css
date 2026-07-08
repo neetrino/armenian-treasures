@@ -63,8 +63,14 @@
 }
 
 .khndzoresk-page .map-section-inner {
-  max-width: 1300px;
+  max-width: 90rem;
   margin: 0 auto;
+}
+
+.khndzoresk-page .heritage-map-embed {
+  margin-top: 2rem;
+  color: var(--surface-text-muted);
+  font-family: var(--font-cormorant), Georgia, serif;
 }
 
 .khndzoresk-page .map-area {

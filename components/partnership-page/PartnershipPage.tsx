@@ -2,7 +2,6 @@ import '@/components/partnership-page/partnership-page.css';
 
 import { PartnershipHero } from '@/components/partnership-page/PartnershipHero';
 import { PartnershipInquiryForm } from '@/components/partnership-page/PartnershipInquiryForm';
-import { PartnershipNewsletter } from '@/components/partnership-page/PartnershipNewsletter';
 import { PartnershipShowcase } from '@/components/partnership-page/PartnershipShowcase';
 import { PartnershipStatsBar } from '@/components/partnership-page/PartnershipStatsBar';
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
@@ -24,7 +23,6 @@ export async function PartnershipPage() {
       <LandingSectionStack>
         {isSectionEnabled(visibility, 'showcase') ? <PartnershipShowcase /> : null}
         {isSectionEnabled(visibility, 'inquiry') ? <PartnershipInquiryForm /> : null}
-        {isSectionEnabled(visibility, 'newsletter') ? <PartnershipNewsletter /> : null}
       </LandingSectionStack>
     </HeritageLandingShell>
   );

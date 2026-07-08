@@ -7,7 +7,13 @@
   scroll-behavior:smooth;
   background:var(--black);color:var(--text);font-family:var(--font-cormorant),Georgia,serif;font-size:18px;line-height:1.7;overflow-x:hidden;min-height:100vh;position:relative;
 }
-.khndzoresk-page *, .khndzoresk-page *::before, .khndzoresk-page *::after { box-sizing:border-box;margin:0;padding:0; }
+.khndzoresk-page *:where(:not(.heritage-map-embed, .heritage-map-embed *)),
+.khndzoresk-page *:where(:not(.heritage-map-embed, .heritage-map-embed *))::before,
+.khndzoresk-page *:where(:not(.heritage-map-embed, .heritage-map-embed *))::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 .khndzoresk-page ::-webkit-scrollbar{width:5px}
 .khndzoresk-page ::-webkit-scrollbar-track{background:var(--black)}
 .khndzoresk-page ::-webkit-scrollbar-thumb{background:var(--gold-dk);border-radius:3px}

@@ -62,28 +62,30 @@ export function MapSiteListPanel({
 
       <label className="relative mb-3 block px-3">
         <span className="sr-only">Search heritage sites</span>
-        <Search
-          size={15}
-          aria-hidden
-          className="pointer-events-none absolute left-6 top-1/2 -translate-y-1/2 text-heritage-teal/70"
-        />
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search sites…"
-          className="w-full rounded-xl border border-white/10 bg-slate-900/80 py-2.5 pl-10 pr-10 font-display text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-heritage-gold/45 focus:ring-2 focus:ring-heritage-gold/20"
-        />
-        {searchQuery ? (
-          <button
-            type="button"
-            aria-label="Clear search"
-            onClick={() => onSearchChange('')}
-            className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-heritage-gold"
-          >
-            <X size={14} aria-hidden />
-          </button>
-        ) : null}
+        <div className="relative">
+          <Search
+            size={15}
+            aria-hidden
+            className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-heritage-teal/70"
+          />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder="Search sites…"
+            className="w-full rounded-xl border border-white/10 bg-slate-900/80 py-2.5 pl-10 pr-10 font-display text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-heritage-gold/45 focus:ring-2 focus:ring-heritage-gold/20"
+          />
+          {searchQuery ? (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => onSearchChange('')}
+              className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-slate-400 transition hover:text-heritage-gold"
+            >
+              <X size={14} aria-hidden />
+            </button>
+          ) : null}
+        </div>
       </label>
 
       <ul className="scrollbar-none relative flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto px-3 pb-3">

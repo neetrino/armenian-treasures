@@ -6,14 +6,12 @@ import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCata
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { CultureCatalogSubcategoryGrid } from '@/components/culture-catalog/CultureCatalogSubcategoryGrid';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
-import { HERITAGE_MAP_LEGEND } from '@/lib/constants/heritage-map-section';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { MenuNode } from '@/lib/culture-menu';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
-  buildCultureCatalogMapPins,
-  countMappableItems,
+  filterMappableItems,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -50,8 +48,7 @@ export function CultureCategoryPageView({
     items.length,
     { entries: content.statLabels.entries, regions: 'Total Entries' },
   );
-  const pins = buildCultureCatalogMapPins(items);
-  const mapCount = countMappableItems(items);
+  const mapItems = filterMappableItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
 
   return (
@@ -78,22 +75,12 @@ export function CultureCategoryPageView({
         {visibility.entries && items.length > 0 ? (
           <CultureCatalogItemGrid items={items} content={content.items} sectionId="entries" />
         ) : null}
-        {visibility.map && pins.length > 0 ? (
+        {visibility.map ? (
           <CulturalPortalMap
             eyebrow={content.map.eyebrow}
             title={content.map.title}
             description={content.map.description}
-            ctaHref="/map"
-            placeholderTitle={content.map.placeholderTitle}
-            placeholderSubtitle={
-              mapCount > 0
-                ? `${mapCount} mapped location${mapCount === 1 ? '' : 's'} — open the full interactive map`
-                : 'Full map integration launching with the portal'
-            }
-            pins={pins}
-            legend={HERITAGE_MAP_LEGEND.filter((item) =>
-              ['Religious Sites', 'Historical Monuments'].includes(item.label),
-            )}
+            items={mapItems}
           />
         ) : null}
       </LandingSectionStack>

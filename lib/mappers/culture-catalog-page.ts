@@ -1,6 +1,5 @@
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
-import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
 
 const UNESCO_SLUGS = new Set(['geghard-monastery', 'haghpat']);
 
@@ -50,20 +49,12 @@ export function buildCultureCatalogCategoryStats(
   ];
 }
 
-export function buildCultureCatalogMapPins(items: PublicCultureItemDTO[]) {
-  const mappable = items.filter(
+export function filterMappableItems(items: PublicCultureItemDTO[]): PublicCultureItemDTO[] {
+  return items.filter(
     (item) => item.showOnMap && item.latitude != null && item.longitude != null,
   );
-  return mapItemsToHeritageMapNodes(mappable).map((node, index) => ({
-    top: `${node.y}%`,
-    left: `${node.x}%`,
-    tone: node.tone,
-    delay: `${index * 0.15}s`,
-  }));
 }
 
 export function countMappableItems(items: PublicCultureItemDTO[]): number {
-  return items.filter(
-    (item) => item.showOnMap && item.latitude != null && item.longitude != null,
-  ).length;
+  return filterMappableItems(items).length;
 }

@@ -8,8 +8,6 @@ import { KhndzoreskHero } from '@/components/khndzoresk/KhndzoreskHero';
 
 import { KhndzoreskAerial, KhndzoreskPanorama, KhndzoreskVirtualTour } from '@/components/khndzoresk/KhndzoreskMedia';
 
-import { KhndzoreskNewsletter } from '@/components/khndzoresk/KhndzoreskNewsletter';
-
 import { KhndzoreskRestoration } from '@/components/khndzoresk/KhndzoreskRestoration';
 
 import { KhndzoreskSites } from '@/components/khndzoresk/KhndzoreskSites';
@@ -75,8 +73,6 @@ export async function KhndzoreskPage() {
         {isSectionEnabled(visibility, 'credits') ? <KhndzoreskCredits imgBase={content.imgBase} /> : null}
 
         {isSectionEnabled(visibility, 'related') ? <KhndzoreskRelated related={content.related} /> : null}
-
-        {isSectionEnabled(visibility, 'newsletter') ? <KhndzoreskNewsletter /> : null}
 
       </LandingSectionStack>
 
