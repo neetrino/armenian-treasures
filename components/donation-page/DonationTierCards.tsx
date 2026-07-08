@@ -5,7 +5,7 @@ import {
   type DonationTierId,
 } from '@/lib/constants/donation-page';
 import { TierIcon } from '@/components/donation-page/TierIcon';
-import { formatAmd } from '@/components/donation-page/donation-utils';
+import { formatAmd, getTierAmountAmd } from '@/components/donation-page/donation-utils';
 
 type DonationTierCardsProps = {
   tiers: DonationTier[];
@@ -32,7 +32,7 @@ export function DonationTierCards({
     <div className="donation-tiers reveal" role="radiogroup" aria-label="Patronage tiers">
       {tiers.map((tier) => {
         const paymentDisabled = !checkoutEnabled;
-        const amount = tier.amountAmd;
+        const amount = getTierAmountAmd(tier);
 
         return (
           <article

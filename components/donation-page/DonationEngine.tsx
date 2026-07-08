@@ -13,7 +13,11 @@ import type { DonationPageContent } from '@/lib/queries/page-content';
 import { DonationPatronSlider } from '@/components/donation-page/DonationPatronSlider';
 import { DonationTierCards } from '@/components/donation-page/DonationTierCards';
 import { DonationCertificateBlock } from '@/components/donation-page/DonationCertificateBlock';
-import { PATRON_DEFAULT, clampPatronAmount } from '@/components/donation-page/donation-utils';
+import {
+  PATRON_DEFAULT,
+  clampPatronAmount,
+  getTierAmountAmd,
+} from '@/components/donation-page/donation-utils';
 
 type DonationEngineProps = {
   engine: DonationPageContent['page']['engine'];
@@ -44,19 +48,32 @@ export function DonationEngine({
   function handleTierSelect(tierId: DonationTierId) {
     setSelectedId(tierId);
     const tier = tiers.find((item) => item.id === tierId);
-    if (tier) setSliderVal(clampPatronAmount(tier.amountAmd));
+    if (tier) setSliderVal(getTierAmountAmd(tier));
   }
 
   function handleSliderChange(value: number) {
     const clamped = clampPatronAmount(value);
     setSliderVal(clamped);
-    const matchingTier = tiers.find((tier) => tier.amountAmd === clamped);
+    const matchingTier = tiers.find((tier) => getTierAmountAmd(tier) === clamped);
     setSelectedId(matchingTier?.id ?? null);
   }
 
   function handleCustomBlur(value: string) {
-    const parsed = parseInt(value, 10);
-    if (!Number.isNaN(parsed) && parsed > 0 && parsed < 1000) {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      handleSliderChange(PATRON_DEFAULT);
+      return;
+    }
+
+    const parsed = parseInt(trimmed, 10);
+    if (Number.isNaN(parsed)) {
+      handleSliderChange(PATRON_DEFAULT);
+      return;
+    }
+
+    handleSliderChange(parsed);
+
+    if (parsed > 0 && parsed < 1000) {
       setInputNudge(true);
       window.setTimeout(() => setInputNudge(false), 2000);
     }

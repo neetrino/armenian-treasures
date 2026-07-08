@@ -3,7 +3,14 @@ import {
   DONATION_CHECKOUT_UNAVAILABLE,
   type DonationImpactRange,
 } from '@/lib/constants/donation-page';
-import { PATRON_MAX, PATRON_MIN, formatAmd, getImpactText, logFill } from '@/components/donation-page/donation-utils';
+import {
+  PATRON_MAX,
+  PATRON_MIN,
+  clampPatronAmount,
+  formatAmd,
+  getImpactText,
+  logFill,
+} from '@/components/donation-page/donation-utils';
 
 const TICK_LABELS = ['500', '1K', '1.5K', '5K', '10K', '25K', '50K'] as const;
 
@@ -32,7 +39,8 @@ export function DonationPatronSlider({
   onSliderChange,
   onCustomBlur,
 }: DonationPatronSliderProps) {
-  const sliderFill = logFill(sliderVal);
+  const amount = clampPatronAmount(sliderVal);
+  const sliderFill = logFill(amount);
   const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
   return (
@@ -44,9 +52,9 @@ export function DonationPatronSlider({
         </div>
         <div className="impact-block" aria-live="polite" aria-label="Your contribution impact">
           <div className="impact-amd">
-            {formatAmd(sliderVal)} <small>AMD</small>
+            {formatAmd(amount)} <small>AMD</small>
           </div>
-          <div className="impact-what">{getImpactText(sliderVal, impactRanges)}</div>
+          <div className="impact-what">{getImpactText(amount, impactRanges)}</div>
         </div>
       </div>
 
@@ -57,12 +65,12 @@ export function DonationPatronSlider({
           min={PATRON_MIN}
           max={PATRON_MAX}
           step={100}
-          value={sliderVal}
+          value={amount}
           aria-label="Monthly contribution amount in AMD"
           aria-valuemin={PATRON_MIN}
           aria-valuemax={PATRON_MAX}
-          aria-valuenow={sliderVal}
-          aria-valuetext={`${formatAmd(sliderVal)} AMD per month`}
+          aria-valuenow={amount}
+          aria-valuetext={`${formatAmd(amount)} AMD per month`}
           style={{
             background: `linear-gradient(90deg, var(--teal) ${sliderFill}, rgba(255,255,255,.07) ${sliderFill})`,
           }}
@@ -70,8 +78,8 @@ export function DonationPatronSlider({
         />
         <div className="tick-row" aria-hidden>
           {patronSliderTicks.map((tick, index) => {
-            const passed = tick < sliderVal;
-            const lit = Math.abs(tick - sliderVal) < 120;
+            const passed = tick < amount;
+            const lit = Math.abs(tick - amount) < 120;
             return (
               <span
                 key={tick}
@@ -89,7 +97,7 @@ export function DonationPatronSlider({
           <button
             key={chip}
             type="button"
-            className={`chip${sliderVal === chip ? ' on' : ''}`}
+            className={`chip${amount === chip ? ' on' : ''}`}
             aria-label={`Select ${formatAmd(chip)} AMD`}
             onClick={() => onSliderChange(chip)}
           >
@@ -110,7 +118,7 @@ export function DonationPatronSlider({
             placeholder="Type a custom amount"
             min={PATRON_MIN}
             step={100}
-            value={sliderVal}
+            value={amount}
             aria-label="Enter a custom monthly amount in AMD"
             style={inputNudge ? { borderColor: 'rgba(42,191,191,.5)' } : undefined}
             onChange={(event) => {
@@ -133,7 +141,7 @@ export function DonationPatronSlider({
           aria-disabled={!checkoutEnabled}
         >
           {checkoutEnabled
-            ? `Confirm ֏${formatAmd(sliderVal)} / month`
+            ? `Confirm ֏${formatAmd(amount)} / month`
             : unavailable.patronCtaLabel}
         </button>
         <div className="patron-cta-note">
