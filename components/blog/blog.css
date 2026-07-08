@@ -42,10 +42,31 @@
   color: var(--surface-muted, rgba(245, 240, 230, 0.72));
 }
 
+.blog-layout {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 5vw, 4rem);
+}
+
+.blog-highlighted .blog-section-eyebrow,
+.blog-chronological .blog-section-eyebrow {
+  margin-bottom: 1rem;
+}
+
 .blog-grid {
   display: grid;
   gap: clamp(1.25rem, 2.5vw, 1.75rem);
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.blog-grid--highlighted {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 960px) {
+  .blog-grid--highlighted {
+    grid-template-columns: 1fr;
+  }
 }
 
 .blog-card {

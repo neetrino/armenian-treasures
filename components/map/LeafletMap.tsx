@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -144,6 +144,7 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
+  const [wheelZoomActive, setWheelZoomActive] = useState(false);
   const markerIcons = useMemo(() => {
     const icons = new Map<string, L.DivIcon>();
     for (const item of mappableItems(items)) {
@@ -166,31 +167,48 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
       zoom: 7,
       scrollWheelZoom: false,
       touchZoom: true,
+      zoomControl: false,
       attributionControl: false,
     });
 
     L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION }).addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
     markersLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
 
-    const enableWheelZoom = (): void => {
+    const activateWheelZoom = (): void => {
       map.scrollWheelZoom.enable();
+      setWheelZoomActive(true);
     };
 
-    const disableWheelZoom = (): void => {
+    const deactivateWheelZoom = (): void => {
       map.scrollWheelZoom.disable();
+      setWheelZoomActive(false);
     };
 
-    container.addEventListener('mouseenter', enableWheelZoom);
-    container.addEventListener('mouseleave', disableWheelZoom);
-    container.addEventListener('focusin', enableWheelZoom);
-    container.addEventListener('focusout', disableWheelZoom);
+    const handleMapClick = (): void => {
+      activateWheelZoom();
+    };
+
+    const handleDocumentClick = (event: MouseEvent): void => {
+      if (container.contains(event.target as Node)) return;
+      deactivateWheelZoom();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key !== 'Escape') return;
+      deactivateWheelZoom();
+      container.blur();
+    };
+
+    container.addEventListener('click', handleMapClick);
+    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      container.removeEventListener('mouseenter', enableWheelZoom);
-      container.removeEventListener('mouseleave', disableWheelZoom);
-      container.removeEventListener('focusin', enableWheelZoom);
-      container.removeEventListener('focusout', disableWheelZoom);
+      container.removeEventListener('click', handleMapClick);
+      document.removeEventListener('click', handleDocumentClick);
+      document.removeEventListener('keydown', handleKeyDown);
       map.remove();
       mapRef.current = null;
       markersLayerRef.current = null;
@@ -226,13 +244,30 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
   }, [selectedId, items]);
 
   return (
-    <div
-      ref={containerRef}
-      className="z-0 h-full w-full"
-      role="application"
-      aria-label="Interactive heritage map"
-      tabIndex={0}
-    />
+    <div className="relative h-full w-full">
+      <div
+        ref={containerRef}
+        className="z-0 h-full w-full"
+        role="application"
+        aria-label="Interactive heritage map"
+        tabIndex={0}
+      />
+      {!wheelZoomActive ? (
+        <div
+          className="pointer-events-none absolute bottom-4 left-1/2 z-[500] max-w-[min(calc(100%-2rem),20rem)] -translate-x-1/2 rounded-full border border-white/15 bg-slate-950/75 px-4 py-2 text-center text-[11px] uppercase tracking-[0.18em] text-slate-200 shadow-lg backdrop-blur-sm"
+          aria-hidden
+        >
+          Click map to zoom · Scroll page normally
+        </div>
+      ) : (
+        <div
+          className="pointer-events-none absolute bottom-4 left-1/2 z-[500] -translate-x-1/2 rounded-full border border-heritage-teal/35 bg-slate-950/80 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-heritage-teal shadow-lg backdrop-blur-sm"
+          aria-hidden
+        >
+          Scroll to zoom · Esc to exit
+        </div>
+      )}
+    </div>
   );
 }
 

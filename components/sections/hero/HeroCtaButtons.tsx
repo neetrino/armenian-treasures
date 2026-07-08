@@ -7,6 +7,7 @@ interface HeroCtaButtonsProps {
   secondaryText: string;
   secondaryHref: string;
   className?: string;
+  hideSecondary?: boolean;
 }
 
 export function HeroCtaButtons({
@@ -15,6 +16,7 @@ export function HeroCtaButtons({
   secondaryText,
   secondaryHref,
   className,
+  hideSecondary = false,
 }: HeroCtaButtonsProps) {
   return (
     <div
@@ -24,7 +26,9 @@ export function HeroCtaButtons({
       )}
     >
       <HeritageCtaButton href={primaryHref} label={primaryText} variant="gold" />
-      <HeritageCtaButton href={secondaryHref} label={secondaryText} variant="teal" />
+      {!hideSecondary ? (
+        <HeritageCtaButton href={secondaryHref} label={secondaryText} variant="teal" />
+      ) : null}
     </div>
   );
 }

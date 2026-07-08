@@ -13,34 +13,40 @@ function PlaceholderIcon() {
   );
 }
 
-function PartnerMedallion({ logo }: { logo: PartnerLogo }) {
+function PartnerShortcard({
+  name,
+  sector,
+  href,
+  logo,
+}: {
+  name: string;
+  sector: string;
+  href: string;
+  logo: PartnerLogo;
+}) {
   return (
-    <div className="medallion">
-      <div className="medallion-outer">
-        <div className="medallion-ring1" />
-        <div className="medallion-ring2" />
-        <div className="medallion-face">
-          {logo.type === 'image' ? (
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              width={180}
-              height={180}
-              className={`medallion-img${logo.cover ? ' cover' : ''}`}
-            />
-          ) : (
-            <div className="medallion-placeholder">
-              <PlaceholderIcon />
-              <span>{logo.label}</span>
-            </div>
-          )}
-        </div>
-        <span className="medallion-dot tl" />
-        <span className="medallion-dot tr" />
-        <span className="medallion-dot bl" />
-        <span className="medallion-dot br" />
+    <Link href={href} className="partner-shortcard reveal">
+      <div className="partner-shortcard__media">
+        {logo.type === 'image' ? (
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={160}
+            height={160}
+            className="partner-shortcard__img"
+          />
+        ) : (
+          <div className="partner-shortcard__placeholder">
+            <PlaceholderIcon />
+            <span>{logo.label}</span>
+          </div>
+        )}
       </div>
-    </div>
+      <div className="partner-shortcard__body">
+        <p className="partner-shortcard__sector">{sector}</p>
+        <h3 className="partner-shortcard__name">{name}</h3>
+      </div>
+    </Link>
   );
 }
 
@@ -50,6 +56,8 @@ export async function PartnershipShowcase() {
   if (!hasPartnershipCategories(categories)) {
     return null;
   }
+
+  const partners = categories.flatMap((category) => category.partners);
 
   return (
     <div className="partners-outer" id="partners">
@@ -63,35 +71,20 @@ export async function PartnershipShowcase() {
             Our Partners
           </div>
           <p className="sec-desc" style={{ margin: '0 auto', textAlign: 'center' }}>
-            These institutions stand with Armenian Treasures in the conviction that civilisation-level culture demands
-            civilisation-level stewardship.
+            Partner shortcards in a consistent layout — logos and names only.
           </p>
         </div>
-        {categories.map((category) => (
-          <div key={category.label} className="partner-category">
-            <div className="partner-cat-label">
-              <span className="pcat-text">{category.label}</span>
-              <span className="pcat-rule" />
-            </div>
-            <div className={`partner-row ${category.row}`}>
-              {category.partners.map((partner) => (
-                <Link
-                  key={partner.name}
-                  href={partner.href}
-                  className={`p-card reveal${partner.wide ? ' wide' : ''}${partner.future ? ' future' : ''}`}
-                >
-                  <PartnerMedallion logo={partner.logo} />
-                  <div className="p-body">
-                    <div className="p-sector">{partner.sector}</div>
-                    <div className="p-name">{partner.name}</div>
-                    <div className="p-desc">{partner.desc}</div>
-                    <span className="p-arrow">{partner.arrow}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
+        <div className="partner-shortcard-grid">
+          {partners.map((partner) => (
+            <PartnerShortcard
+              key={`${partner.name}-${partner.sector}`}
+              name={partner.name}
+              sector={partner.sector}
+              href={partner.href}
+              logo={partner.logo}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

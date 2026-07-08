@@ -5,7 +5,7 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --site-header-logo-height: 5.75rem;
+    --site-header-logo-height: 6.75rem;
     --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
@@ -78,9 +78,9 @@
     --header-border: rgba(201, 168, 76, 0.14);
     --header-shadow: 0 4px 40px rgba(0, 0, 0, 0.75);
     --footer-bg: #030504;
-    --nav-text: #e8d5a3;
-    --nav-text-active: #27c6c8;
-    --nav-text-shadow: 0 0 14px rgba(39, 198, 200, 0.18);
+    --nav-text: #d6b85a;
+    --nav-text-active: #9ca3af;
+    --nav-text-shadow: 0 0 12px rgba(214, 184, 90, 0.28);
     --dropdown-bg: rgba(10, 10, 10, 0.98);
     --dropdown-text: #d4c89a;
     --dropdown-text-hover: #c9a84c;
@@ -130,14 +130,14 @@
 
   @media (min-width: 768px) {
     :root {
-      --site-header-logo-height: 5.75rem;
+      --site-header-logo-height: 7rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-logo-height: 6.25rem;
+      --site-header-logo-height: 7.5rem;
       --site-header-height: calc(var(--site-header-logo-height) + 1rem);
     }
   }

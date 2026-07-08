@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { HeroHome } from '@/components/sections/HeroHome';
 import { HomeHeritageSections } from '@/components/sections/HomeHeritageSections';
+import { getHeaderAccountSummary } from '@/lib/auth/header-session';
 import { getHomeContent } from '@/lib/queries/home';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
@@ -16,8 +17,14 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
+function isLoginLikeHref(href: string): boolean {
+  const path = href.split('?')[0]?.toLowerCase() ?? '';
+  return path === '/login' || path === '/register' || path.endsWith('/login') || path.endsWith('/register');
+}
+
 async function HomePage() {
-  const home = await getHomeContent();
+  const [home, account] = await Promise.all([getHomeContent(), getHeaderAccountSummary()]);
+  const hideLoginCta = Boolean(account) && isLoginLikeHref(home.secondaryCtaUrl);
 
   return (
     <>
@@ -35,6 +42,7 @@ async function HomePage() {
         stats={home.stats}
         heroImage={home.heroImage}
         heroMobileImage={home.heroMobileImage}
+        hideSecondaryCta={hideLoginCta}
       />
 
       <HomeHeritageSections />

@@ -6,7 +6,6 @@ export interface MembershipTier {
   monthlyAmd: number | null;
   annualAmd: number | null;
   featureLabels: readonly string[];
-  /** Entitlements to gate once checkout and auth are linked. */
   entitlements: readonly string[];
 }
 
@@ -24,11 +23,11 @@ export const MEMBERSHIP_TIERS: MembershipTier[] = DONATION_TIERS.map((tier) => (
   annualAmd: tier.annualAmd,
   featureLabels: includedFeatureLabels(tier.id),
   entitlements:
-    tier.id === '1000' || tier.id === 'custom'
-      ? ['archive_full', 'map_full', 'virtual_tours', 'offline_guides', 'ai_historian']
-      : tier.id === '500'
-        ? ['archive_basic', 'map_basic']
-        : ['archive_basic', 'patron_wall'],
+    tier.id === '10000'
+      ? ['archive_full', 'map_full', 'virtual_tours', 'offline_guides', 'ai_historian', 'certificate']
+      : tier.id === '5000'
+        ? ['archive_full', 'map_full', 'virtual_tours', 'certificate']
+        : ['archive_basic', 'map_basic', 'certificate'],
 }));
 
 export const MEMBERSHIP_CHECKOUT_ENV_KEYS = [

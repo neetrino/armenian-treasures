@@ -1,19 +1,12 @@
-import { SimpleDropdown } from '@/components/navigation/SimpleDropdown';
-import { isProjectsNavActive } from '@/components/navigation/nav-styles';
+import { NavLink } from '@/components/navigation/NavLink';
 import type { NavDropdownLink } from '@/components/navigation/primary-links';
 
 interface ProjectsDropdownProps {
   items: NavDropdownLink[];
 }
 
-export function ProjectsDropdown({ items }: ProjectsDropdownProps) {
+export function ProjectsDropdown({ items: _items }: ProjectsDropdownProps) {
   return (
-    <SimpleDropdown
-      label="Upcoming Projects"
-      items={items}
-      isActive={isProjectsNavActive}
-      menuId="projects-menu"
-      fallbackHref="/projects"
-    />
+    <NavLink href="/projects">Upcoming Projects</NavLink>
   );
 }

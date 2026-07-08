@@ -13,10 +13,7 @@ import {
 } from '@/lib/constants/donation-page';
 import {
   PARTNERSHIP_CATEGORIES,
-  PARTNERSHIP_IMPACT,
   PARTNERSHIP_STATS,
-  PARTNERSHIP_TIMELINE,
-  PARTNERSHIP_VALUES,
 } from '@/lib/constants/partnership-page';
 import {
   CULTURAL_PORTAL_PAGE,
@@ -84,10 +81,7 @@ export type PartnershipPageContent = {
   heroImage?: string;
   sectionVisibility?: PartnershipSectionVisibility;
   stats: typeof PARTNERSHIP_STATS;
-  impact: typeof PARTNERSHIP_IMPACT;
   categories: typeof PARTNERSHIP_CATEGORIES;
-  timeline: typeof PARTNERSHIP_TIMELINE;
-  values: typeof PARTNERSHIP_VALUES;
 };
 
 export type CulturalPortalPageContent = typeof CULTURAL_PORTAL_PAGE & {
@@ -176,10 +170,7 @@ export function buildDefaultDonationPageContent(): DonationPageContent {
 export function buildDefaultPartnershipPageContent(): PartnershipPageContent {
   return {
     stats: [...PARTNERSHIP_STATS],
-    impact: [...PARTNERSHIP_IMPACT],
     categories: structuredClone(PARTNERSHIP_CATEGORIES),
-    timeline: [...PARTNERSHIP_TIMELINE],
-    values: [...PARTNERSHIP_VALUES],
   };
 }
 

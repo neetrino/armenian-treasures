@@ -29,10 +29,7 @@ const donationPageContentSchema = z.object({
 const partnershipPageContentSchema = z.object({
   heroImage: optionalHeroImage,
   stats: z.array(z.unknown()),
-  impact: z.array(z.unknown()),
   categories: z.array(z.unknown()),
-  timeline: z.array(z.unknown()),
-  values: z.array(z.unknown()),
 });
 
 const culturalPortalPageContentSchema = z

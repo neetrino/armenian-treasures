@@ -58,9 +58,6 @@ export type CulturalPortalSectionVisibility = {
 export type PartnershipSectionVisibility = {
   hero?: boolean;
   stats?: boolean;
-  impact?: boolean;
-  values?: boolean;
-  timeline?: boolean;
   showcase?: boolean;
   inquiry?: boolean;
   newsletter?: boolean;
@@ -141,9 +138,6 @@ export const CULTURAL_PORTAL_SECTION_TOGGLES: SectionToggleOption[] = [
 export const PARTNERSHIP_SECTION_TOGGLES: SectionToggleOption[] = [
   { id: 'hero', label: 'Hero banner' },
   { id: 'stats', label: 'Statistics bar' },
-  { id: 'impact', label: 'Impact section' },
-  { id: 'values', label: 'Partnership values' },
-  { id: 'timeline', label: 'Process timeline' },
   { id: 'showcase', label: 'Partner showcase' },
   { id: 'inquiry', label: 'Inquiry form' },
   { id: 'newsletter', label: 'Newsletter signup' },

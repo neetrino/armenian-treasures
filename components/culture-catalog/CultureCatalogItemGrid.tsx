@@ -9,7 +9,6 @@ import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { filterCatalogItemsBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
-import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
 interface CultureCatalogItemGridProps {
@@ -97,14 +96,6 @@ export function CultureCatalogItemGrid({
           })}
         </div>
       )}
-      {hasTrimmedText(content.submitPrompt) ? (
-        <div className="catalog-submit-cta reveal">
-          <p>{content.submitPrompt}</p>
-          <Link href="/culture/submit" className="btn-outline">
-            Suggest an Entry
-          </Link>
-        </div>
-      ) : null}
     </section>
   );
 }

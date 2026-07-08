@@ -80,6 +80,34 @@
   margin-top: 48px;
 }
 
+.khndzoresk-page .catalog-subcategory-hub {
+  padding-top: calc(var(--site-header-height) + clamp(2rem, 5vw, 3.5rem));
+}
+
+.khndzoresk-page .cat-grid--hub {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.khndzoresk-page .cat-card--hub {
+  min-height: clamp(280px, 32vw, 380px);
+}
+
+.khndzoresk-page .cat-card--hub .cat-media {
+  flex-basis: 78%;
+}
+
+.khndzoresk-page .cat-card--hub .cat-content--catalog {
+  padding: 18px 16px 22px;
+  justify-content: center;
+}
+
+.khndzoresk-page .cat-card--hub .cat-card-title {
+  font-size: clamp(18px, 2vw, 24px);
+  text-align: center;
+}
+
 /* Keep /culture subcategory cards image-first, but allow full text visibility. */
 .khndzoresk-page .cat-card--catalog {
   min-height: clamp(270px, 29vw, 360px);
