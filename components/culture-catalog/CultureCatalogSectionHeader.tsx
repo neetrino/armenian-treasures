@@ -5,7 +5,7 @@ import { Search, X } from 'lucide-react';
 interface CultureCatalogSectionHeaderProps {
   label: string;
   title: string;
-  description: string;
+  description?: string;
   searchQuery: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
@@ -24,7 +24,7 @@ export function CultureCatalogSectionHeader({
       <div className="catalog-section-intro__copy">
         <p className="sec-label">{label}</p>
         <h2 className="sec-title">{title}</h2>
-        <p className="sec-desc">{description}</p>
+        {description ? <p className="sec-desc">{description}</p> : null}
       </div>
       <label className="catalog-section-intro__search">
         <span className="sr-only">Search catalog entries</span>

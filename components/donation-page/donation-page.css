@@ -1148,3 +1148,104 @@
     grid-template-columns: 1fr;
   }
 }
+
+.khndzoresk-page .tier-card--amount-only {
+  min-height: auto;
+  padding-bottom: 28px;
+}
+
+.khndzoresk-page .tier-card--amount-only .tier-price {
+  margin-bottom: 18px;
+}
+
+.khndzoresk-page .donation-certificates {
+  margin-top: 16px;
+}
+
+.khndzoresk-page .donation-certificate-slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.khndzoresk-page .donation-certificate-slot {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 16px;
+  transition: border-color .25s;
+}
+
+.khndzoresk-page .donation-certificate-slot.is-active {
+  border-color: rgba(201, 168, 76, 0.55);
+}
+
+.khndzoresk-page .donation-certificate-slot__preview {
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(201, 168, 76, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--muted);
+  font-family: var(--font-cinzel), serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 12px;
+}
+
+.khndzoresk-page .donation-certificate-slot__label {
+  margin: 12px 0 0;
+  text-align: center;
+  font-family: var(--font-cinzel), serif;
+  font-size: 13px;
+  color: var(--gold);
+}
+
+.khndzoresk-page .donation-certificate-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.khndzoresk-page .donation-certificate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.khndzoresk-page .donation-certificate-field--full {
+  grid-column: 1 / -1;
+}
+
+.khndzoresk-page .donation-certificate-field input,
+.khndzoresk-page .donation-certificate-field textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--gold-lt);
+  padding: 12px 14px;
+  font-family: var(--font-cormorant), serif;
+  font-size: 16px;
+  outline: none;
+}
+
+.khndzoresk-page .donation-certificate-field input:focus,
+.khndzoresk-page .donation-certificate-field textarea:focus {
+  border-color: var(--teal);
+}
+
+@media (max-width: 900px) {
+  .khndzoresk-page .donation-certificate-slots,
+  .khndzoresk-page .donation-certificate-form {
+    grid-template-columns: 1fr;
+  }
+}

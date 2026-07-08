@@ -9,7 +9,6 @@ import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import {
   ABOUT_MENU,
   PRIMARY_LINKS,
-  navDropdownLinkKey,
   type NavDropdownLink,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
@@ -48,13 +47,12 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabledLocales, account }: MobileMenuProps) {
+export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projectsMenu, enabledLocales, account }: MobileMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const reduced = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [cultureOpen, setCultureOpen] = useState(false);
-  const [projectsOpen, setProjectsOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [openColumn, setOpenColumn] = useState<string | null>(null);
 
@@ -68,7 +66,6 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabled
   useEffect(() => {
     setOpen(false);
     setCultureOpen(false);
-    setProjectsOpen(false);
     setAboutOpen(false);
     setOpenColumn(null);
   }, [pathname]);
@@ -76,7 +73,6 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabled
   const close = (): void => {
     setOpen(false);
     setCultureOpen(false);
-    setProjectsOpen(false);
     setAboutOpen(false);
     setOpenColumn(null);
   };
@@ -192,26 +188,17 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabled
                   ))}
                 </MobileAccordion>
 
-                <MobileAccordion
-                  label="Upcoming Projects"
-                  open={projectsOpen}
-                  onToggle={() => setProjectsOpen((v) => !v)}
-                  onLabelClick={() => {
-                    close();
-                    router.push('/projects');
-                  }}
-                  active={isProjectsNavActive(pathname)}
+                <Link
+                  href="/projects"
+                  onClick={close}
+                  className={cn(
+                    MOBILE_SECTION,
+                    'py-3',
+                    isProjectsNavActive(pathname) && 'text-[var(--nav-text-active)]',
+                  )}
                 >
-                  <ul>
-                    {projectsMenu.map((item) => (
-                      <li key={navDropdownLinkKey(item)}>
-                        <Link href={item.href} onClick={close} className={mobileLinkClass(pathname, item.href)}>
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </MobileAccordion>
+                  Upcoming Projects
+                </Link>
 
                 {PRIMARY_LINKS.map((link) => (
                   <MobileSectionLink
@@ -222,7 +209,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu, enabled
                     className={cn(
                       MOBILE_SECTION,
                       'py-3',
-                      isNavActive(pathname, link.href) && 'text-heritage-teal',
+                      isNavActive(pathname, link.href) && 'text-[var(--nav-text-active)]',
                     )}
                   >
                     {link.label}

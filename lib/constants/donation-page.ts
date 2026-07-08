@@ -1,4 +1,4 @@
-export type DonationTierId = '500' | '1000' | 'custom';
+export type DonationTierId = '1000' | '5000' | '10000';
 
 export interface DonationTierFeature {
   text: string;
@@ -9,6 +9,8 @@ export interface DonationTierFeature {
 export interface DonationTier {
   id: DonationTierId;
   label: string;
+  /** One-time contribution amount shown on the shortcard. */
+  amountAmd: number;
   monthlyAmd: number | null;
   annualAmd: number | null;
   primary?: boolean;
@@ -88,10 +90,26 @@ export const DONATION_PAGE = {
       ],
       closing: "Together, we can keep Armenia's legacy alive.",
     },
-    label: 'Monthly Patronage',
-    title: 'Become a Heritage Guardian',
+    label: 'Patronage Levels',
+    title: 'Choose Your Contribution',
     description:
-      "Every tier unlocks immersive 3D cities, offline cultural guides, and the knowledge that another fragment of Armenia's history will outlast this century.",
+      'Select a level below. Shortcards show the amount only — certificate details are completed under the tiers.',
+  },
+  certificates: {
+    label: 'Certificates',
+    title: 'Certificate Details',
+    description:
+      'Upload certificate templates in admin later. Provide recipient details so we can issue and send the certificate.',
+    slots: [
+      { id: 'guardian', label: 'Guardian certificate' },
+      { id: 'ambassador', label: 'Ambassador certificate' },
+      { id: 'magistr', label: 'Magistr certificate' },
+    ],
+    fields: {
+      fullName: 'Full name',
+      email: 'Email',
+      note: 'Dedication / note (optional)',
+    },
   },
   ledger: {
     label: 'Where Patronage Goes',
@@ -151,69 +169,39 @@ export const DONATION_PILLARS: DonationPillar[] = [
 
 export const DONATION_TIERS: DonationTier[] = [
   {
-    id: '500',
-    label: 'Custodian',
-    monthlyAmd: 500,
-    annualAmd: 5000,
-    ctaLabel: 'Activate Custodian',
-    ctaVariant: 'ghost',
-    ctaPost: 'Pause or cancel any time',
-    features: [
-      { text: 'Interactive heritage map — all 2,400+ sites', included: true },
-      { text: 'Cultural portal — standard archive access', included: true },
-      { text: 'Monthly discovery digest', included: true },
-      {
-        text: 'Immersive 3D city walkthroughs',
-        included: false,
-        lockedLabel: 'Not included: Immersive 3D city walkthroughs',
-      },
-      {
-        text: 'Offline heritage guides',
-        included: false,
-        lockedLabel: 'Not included: Offline downloadable guides',
-      },
-      {
-        text: 'AI Historian — unlimited queries',
-        included: false,
-        lockedLabel: 'Not included: AI Historian unlimited',
-      },
-    ],
-  },
-  {
     id: '1000',
     label: 'Guardian',
+    amountAmd: 1000,
     monthlyAmd: 1000,
-    annualAmd: 10000,
-    primary: true,
-    recommended: true,
-    ctaLabel: 'Become a Guardian',
-    ctaVariant: 'teal',
-    ctaPost: 'Locks in today · Adjustable any time',
-    features: [
-      { text: 'Everything in Custodian', included: true },
-      { text: 'Immersive 3D city walkthroughs', included: true },
-      { text: 'Offline guides — all heritage routes', included: true },
-      { text: 'AI Historian — unlimited queries', included: true },
-      { text: 'Exclusive archival early-access releases', included: true },
-      { text: 'Guardian name in annual patron credits', included: true },
-    ],
+    annualAmd: null,
+    ctaLabel: 'Select Guardian',
+    ctaVariant: 'ghost',
+    ctaPost: '',
+    features: [],
   },
   {
-    id: 'custom',
-    label: 'Patron',
-    monthlyAmd: null,
+    id: '5000',
+    label: 'Ambassador',
+    amountAmd: 5000,
+    monthlyAmd: 5000,
     annualAmd: null,
-    customPrice: true,
-    ctaLabel: 'Set My Contribution',
+    primary: true,
+    recommended: true,
+    ctaLabel: 'Select Ambassador',
+    ctaVariant: 'teal',
+    ctaPost: '',
+    features: [],
+  },
+  {
+    id: '10000',
+    label: 'Magistr',
+    amountAmd: 10000,
+    monthlyAmd: 10000,
+    annualAmd: null,
+    ctaLabel: 'Select Magistr',
     ctaVariant: 'ghost',
-    ctaPost: 'No ceiling · Pure legacy',
-    features: [
-      { text: 'All Guardian benefits', included: true },
-      { text: 'Permanent Patron Wall listing', included: true },
-      { text: 'Direct digitization allocation', included: true },
-      { text: 'Private research access', included: true },
-      { text: 'Personal annual impact letter', included: true },
-    ],
+    ctaPost: '',
+    features: [],
   },
 ];
 

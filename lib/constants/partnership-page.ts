@@ -6,51 +6,6 @@ export const PARTNERSHIP_STATS = [
   { num: 'Since 2020', label: 'In Operation' },
 ] as const;
 
-export const PARTNERSHIP_IMPACT = [
-  {
-    ghost: 'I',
-    tag: 'Pillar I',
-    title: 'Cultural Preservation',
-    desc: 'High-fidelity 3D asset mapping of sites, artefacts, manuscripts, and oral traditions — captured before irreversible degradation erases them from the physical record.',
-    icon: 'shield' as const,
-  },
-  {
-    ghost: 'II',
-    tag: 'Pillar II',
-    title: 'Educational Outreach',
-    desc: 'Structured Armenian history curricula deployed across diaspora schools, universities, and UNESCO-aligned programmes — reaching classrooms on five continents.',
-    icon: 'layers' as const,
-  },
-  {
-    ghost: 'III',
-    tag: 'Pillar III',
-    title: 'Digital Transformation',
-    desc: 'Immersive spatial architecture, VR museum environments, and AI-driven heritage telemetry — making four thousand years of history experienceable from any device on Earth.',
-    icon: 'spark' as const,
-  },
-  {
-    ghost: 'IV',
-    tag: 'Pillar IV',
-    title: 'Heritage Accessibility',
-    desc: 'Democratising the full depth of Armenian civilisation for universal audiences — removing the linguistic, geographic, and economic barriers that have long confined cultural knowledge within borders.',
-    icon: 'globe' as const,
-  },
-  {
-    ghost: 'V',
-    tag: 'Pillar V',
-    title: 'Global Diaspora Engagement',
-    desc: 'Connecting over 10 million Armenians worldwide through shared digital heritage portals, personalised ancestry mapping, and community-led cultural stewardship programmes.',
-    icon: 'people' as const,
-  },
-  {
-    ghost: 'VI',
-    tag: 'Pillar VI',
-    title: 'Community Impact',
-    desc: 'Generating sustainable economic and preservation loops in rural Armenian regions — channelling international attention and resources toward communities that hold living heritage.',
-    icon: 'home' as const,
-  },
-] as const;
-
 export type PartnerLogo =
   | { type: 'image'; src: string; cover?: boolean; alt: string }
   | { type: 'placeholder'; label: string };
@@ -217,62 +172,6 @@ export const PARTNERSHIP_CATEGORIES: PartnerCategory[] = [
     ],
   },
 ];
-
-export const PARTNERSHIP_TIMELINE = [
-  {
-    num: 'I',
-    name: 'Discovery',
-    desc: 'Mutual alignment of mission, scope, and heritage assets to be preserved or activated together.',
-  },
-  {
-    num: 'II',
-    name: 'Documentation',
-    desc: 'Cataloguing of physical and archival holdings with provenance, condition, and access records.',
-  },
-  {
-    num: 'III',
-    name: 'Digitisation',
-    desc: 'High-resolution scanning, photogrammetry, 3D modelling, and format-agnostic archiving for long-term integrity.',
-  },
-  {
-    num: 'IV',
-    name: 'Preservation',
-    desc: 'Multi-redundant secure storage, metadata enrichment, and sovereignty-compliant data governance frameworks.',
-  },
-  {
-    num: 'V',
-    name: 'Education',
-    desc: 'Integration into learning modules, virtual exhibitions, and AI-guided cultural discovery experiences.',
-  },
-  {
-    num: 'VI',
-    name: 'Global Promotion',
-    desc: 'Your institution and collection elevated to international audiences through our platform, media, and network.',
-  },
-] as const;
-
-export const PARTNERSHIP_VALUES = [
-  {
-    title: 'Uncompromising Data Integrity',
-    desc: 'Every artefact is processed according to international archival standards. Chain of custody is unbroken, provenance is verified, and partner institutions retain full intellectual property sovereignty over their own heritage assets.',
-    icon: 'shield-check' as const,
-  },
-  {
-    title: 'Global Footprint, Local Depth',
-    desc: 'Our platform reaches diaspora communities, researchers, educators, and cultural tourists across more than 40 countries — while our on-the-ground teams operate with the specificity and sensitivity that Armenian heritage demands.',
-    icon: 'globe' as const,
-  },
-  {
-    title: 'Advanced Spatial Frameworks',
-    desc: 'AR-ready 3D models, photogrammetry, LiDAR-grade site captures, and AI-enriched metadata systems built to evolve alongside emerging technologies — ensuring what we preserve today remains accessible for generations to come.',
-    icon: 'monitor' as const,
-  },
-  {
-    title: 'Sovereign Social ROI',
-    desc: 'Partnership generates measurable and reportable cultural impact — audience reach, educational engagement, and preservation outcomes — giving institutions the accountability metrics demanded by boards, funders, and international cultural bodies.',
-    icon: 'star' as const,
-  },
-] as const;
 
 export const PARTNERSHIP_SECTORS = [
   'Government & Public Institution',

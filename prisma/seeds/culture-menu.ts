@@ -40,13 +40,6 @@ const TREE: TopNode[] = [
         order: 2,
         routeType: 'SUBCATEGORY',
       },
-      {
-        slug: 'new',
-        title: 'Add a new sub-catalog',
-        description: 'Propose a new Architecture sub-catalog to expand the open archive.',
-        order: 99,
-        routeType: 'SUBCATEGORY_FORM',
-      },
     ],
   },
   {
@@ -68,6 +61,13 @@ const TREE: TopNode[] = [
         title: 'Legendaries & Heroes',
         description: 'Epic cycles, folk heroes and oral traditions.',
         order: 2,
+        routeType: 'SUBCATEGORY',
+      },
+      {
+        slug: 'epic',
+        title: 'Epic',
+        description: 'National epics and heroic cycles across Armenian literature.',
+        order: 3,
         routeType: 'SUBCATEGORY',
       },
     ],
@@ -187,13 +187,6 @@ const TREE: TopNode[] = [
       { slug: 'publications', title: 'Publications', order: 11, routeType: 'SUBCATEGORY' },
     ],
   },
-  {
-    slug: 'submit',
-    title: 'Add your project',
-    description: 'Submit a culture project or material for review.',
-    order: 7,
-    routeType: 'PROJECT_SUBMIT_FORM',
-  },
 ];
 
 export type MenuMap = Map<string, string>;
@@ -241,6 +234,11 @@ export async function seedCultureMenu(): Promise<MenuMap> {
       map.set(`${top.slug}/${child.slug}`, childRow.id);
     }
   }
+  await prisma.cultureMenuItem.updateMany({
+    where: { routeType: { in: ['SUBCATEGORY_FORM', 'PROJECT_SUBMIT_FORM'] } },
+    data: { isActive: false },
+  });
+
   console.log(`✓ Culture menu ready (${map.size} nodes)`);
   return map;
 }

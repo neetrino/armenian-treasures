@@ -8,6 +8,20 @@ interface FeaturedTreasuresGridProps {
   treasures?: FeaturedTreasure[];
 }
 
+function shuffleTreasures(items: FeaturedTreasure[]): FeaturedTreasure[] {
+  const next = [...items];
+  for (let index = next.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const current = next[index]!;
+    next[index] = next[swapIndex]!;
+    next[swapIndex] = current;
+  }
+  return next.map((treasure, index) => ({
+    ...treasure,
+    number: String(index + 1).padStart(2, '0'),
+  }));
+}
+
 export async function FeaturedTreasuresGrid(props: FeaturedTreasuresGridProps = {}) {
   const resolvedTreasures =
     props.treasures ??
@@ -17,10 +31,12 @@ export async function FeaturedTreasuresGrid(props: FeaturedTreasuresGridProps = 
     return null;
   }
 
+  const treasures = props.treasures ? resolvedTreasures : shuffleTreasures(resolvedTreasures);
+
   return (
     <Stagger className="featured-treasures-grid">
-      {resolvedTreasures.map((treasure) => (
-        <StaggerItem key={treasure.number} className="h-full">
+      {treasures.map((treasure) => (
+        <StaggerItem key={`${treasure.number}-${treasure.title}`} className="h-full">
           <FeaturedTreasureCard treasure={treasure} />
         </StaggerItem>
       ))}

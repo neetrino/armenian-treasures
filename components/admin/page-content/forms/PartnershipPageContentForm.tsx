@@ -39,9 +39,6 @@ export function PartnershipPageContentForm({ initial, locale }: Props) {
   };
 
   const stats = readArray<{ num: string; label: string }>(content.stats);
-  const impact = readArray<{ ghost: string; tag: string; title: string; desc: string }>(content.impact);
-  const timeline = readArray<{ num: string; name: string; desc: string }>(content.timeline);
-  const values = readArray<{ title: string; desc: string }>(content.values);
   const categories = readArray<{
     label: string;
     row: string;
@@ -74,119 +71,6 @@ export function PartnershipPageContentForm({ initial, locale }: Props) {
           showSuffix={false}
           onChange={(nextStats) => update({ stats: nextStats })}
         />
-      </PageContentSection>
-
-      <PageContentSection title="Impact pillars">
-        {impact.map((item, index) => (
-          <div key={`impact-${index}`} className="rounded-xl border border-stone-100 bg-white p-4 shadow-sm">
-            <p className="mb-3 text-sm font-medium text-ink">Pillar {index + 1}</p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <TextField
-                label="Roman numeral"
-                value={item.ghost}
-                onChange={(e) => {
-                  const next = [...impact];
-                  next[index] = { ...item, ghost: e.target.value };
-                  update({ impact: next });
-                }}
-              />
-              <TextField
-                label="Tag"
-                value={item.tag}
-                onChange={(e) => {
-                  const next = [...impact];
-                  next[index] = { ...item, tag: e.target.value };
-                  update({ impact: next });
-                }}
-              />
-              <TextField
-                label="Title"
-                value={item.title}
-                onChange={(e) => {
-                  const next = [...impact];
-                  next[index] = { ...item, title: e.target.value };
-                  update({ impact: next });
-                }}
-                className="sm:col-span-2"
-              />
-              <TextareaField
-                label="Description"
-                rows={3}
-                value={item.desc}
-                onChange={(e) => {
-                  const next = [...impact];
-                  next[index] = { ...item, desc: e.target.value };
-                  update({ impact: next });
-                }}
-                className="sm:col-span-2"
-              />
-            </div>
-          </div>
-        ))}
-      </PageContentSection>
-
-      <PageContentSection title="Partnership process">
-        {timeline.map((step, index) => (
-          <div key={`timeline-${index}`} className="grid gap-3 rounded-xl border border-stone-100 bg-white p-4 sm:grid-cols-[auto_1fr]">
-            <TextField
-              label="#"
-              value={step.num}
-              onChange={(e) => {
-                const next = [...timeline];
-                next[index] = { ...step, num: e.target.value };
-                update({ timeline: next });
-              }}
-            />
-            <TextField
-              label="Step name"
-              value={step.name}
-              onChange={(e) => {
-                const next = [...timeline];
-                next[index] = { ...step, name: e.target.value };
-                update({ timeline: next });
-              }}
-            />
-            <TextareaField
-              label="Description"
-              rows={2}
-              value={step.desc}
-              onChange={(e) => {
-                const next = [...timeline];
-                next[index] = { ...step, desc: e.target.value };
-                update({ timeline: next });
-              }}
-              className="sm:col-span-2"
-            />
-          </div>
-        ))}
-      </PageContentSection>
-
-      <PageContentSection title="Core values">
-        {values.map((value, index) => (
-          <div key={`value-${index}`} className="rounded-xl border border-stone-100 bg-white p-4">
-            <TextField
-              label="Title"
-              value={value.title}
-              onChange={(e) => {
-                const next = [...values];
-                next[index] = { ...value, title: e.target.value };
-                update({ values: next });
-              }}
-            />
-            <div className="mt-3">
-              <TextareaField
-                label="Description"
-                rows={3}
-                value={value.desc}
-                onChange={(e) => {
-                  const next = [...values];
-                  next[index] = { ...value, desc: e.target.value };
-                  update({ values: next });
-                }}
-              />
-            </div>
-          </div>
-        ))}
       </PageContentSection>
 
       <PageContentSection

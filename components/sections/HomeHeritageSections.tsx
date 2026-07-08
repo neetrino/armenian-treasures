@@ -1,14 +1,15 @@
 import { Suspense } from 'react';
 import { getHomeContent } from '@/lib/queries/home';
-import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection';
 import { CulturalPortalSection } from '@/components/sections/CulturalPortalSection';
 import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasuresSection';
 import { HeritageMapSection } from '@/components/sections/HeritageMapSection';
 import { HomeNewsFeedSection } from '@/components/sections/HomeNewsFeedSection';
 import { UpcomingProjectsSection } from '@/components/sections/UpcomingProjectsSection';
-import { PartnershipSection } from '@/components/sections/PartnershipSection';
-import { DonationsSection } from '@/components/sections/DonationsSection';
 import { AboutUsSection } from '@/components/sections/AboutUsSection';
+import {
+  HERITAGE_DOWNLOADS_HOME_VISIBLE,
+  HeritageDownloadSection,
+} from '@/components/sections/HeritageDownloadSection';
 import { HomeNewsletterSection } from '@/components/sections/HomeNewsletterSection';
 import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
 
@@ -34,15 +35,13 @@ export async function HomeHeritageSections() {
         aria-hidden
       />
 
-      {/* Feedback order: Features explorer → Map → Culture → News → Projects → Partnership */}
-      <VirtualMuseumSection embedded home={home} />
+      {/* Feedback order: Cultural Portal → Map → Featured Treasures → News → Projects */}
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
+        <CulturalPortalSection home={home} />
+      </Suspense>
       <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
         <HeritageMapSection home={home} />
-      </Suspense>
-      <div className="heritage-section-divider my-2" aria-hidden />
-      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
-        <CulturalPortalSection home={home} />
       </Suspense>
       <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[20rem]" />}>
@@ -56,12 +55,12 @@ export async function HomeHeritageSections() {
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <UpcomingProjectsSection home={home} />
       </Suspense>
-      <div className="heritage-section-divider my-2" aria-hidden />
-      <PartnershipSection home={home} />
-      <div className="heritage-section-divider my-2" aria-hidden />
-      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[14rem]" />}>
-        <DonationsSection home={home} />
-      </Suspense>
+      {HERITAGE_DOWNLOADS_HOME_VISIBLE ? (
+        <>
+          <div className="heritage-section-divider my-2" aria-hidden />
+          <HeritageDownloadSection />
+        </>
+      ) : null}
       <div className="heritage-section-divider my-2" aria-hidden />
       <AboutUsSection home={home} />
       <div className="heritage-section-divider my-2" aria-hidden />

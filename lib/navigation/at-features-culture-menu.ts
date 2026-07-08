@@ -35,12 +35,6 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'architecture/castles',
         fallbackHref: '/culture/architecture/castles',
       },
-      {
-        label: 'Museums',
-        icon: 'museums',
-        menuPath: 'museums',
-        fallbackHref: '/culture/museums',
-      },
     ],
   },
   {
@@ -59,6 +53,12 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         icon: 'legends',
         menuPath: 'legends/legends-and-heroes',
         fallbackHref: '/culture/legends/legends-and-heroes',
+      },
+      {
+        label: 'Epic',
+        icon: 'legends',
+        menuPath: 'legends/epic',
+        fallbackHref: '/culture/legends/epic',
       },
     ],
   },
@@ -122,13 +122,12 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'heritage/carpets',
         fallbackHref: '/culture/heritage/carpets',
       },
-    ],
-  },
-  {
-    heading: 'More Culture',
-    headingMenuPath: 'heritage',
-    fallbackHeadingHref: '/culture/heritage',
-    items: [
+      {
+        label: 'Museums',
+        icon: 'museums',
+        menuPath: 'museums',
+        fallbackHref: '/culture/museums',
+      },
       {
         label: 'Sculptors',
         icon: 'sculptors',

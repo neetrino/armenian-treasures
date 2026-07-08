@@ -1,7 +1,7 @@
 import type { DonationTierId } from '@/lib/constants/donation-page';
 
 export function TierIcon({ tierId }: { tierId: DonationTierId }) {
-  if (tierId === '1000') {
+  if (tierId === '5000') {
     return (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
         <polygon points="9,1.5 16.5,5.5 16.5,12.5 9,16.5 1.5,12.5 1.5,5.5" stroke="#2ABFBF" strokeWidth="1.1" />
@@ -10,7 +10,7 @@ export function TierIcon({ tierId }: { tierId: DonationTierId }) {
       </svg>
     );
   }
-  if (tierId === 'custom') {
+  if (tierId === '10000') {
     return (
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden>
         <path d="M9 2c-3 2.5-6 5-6 8.5a6 6 0 0 0 12 0C15 7 12 4.5 9 2z" stroke="#C9A84C" strokeWidth="1.1" />

@@ -21,6 +21,7 @@ interface HeroHomeProps {
   stats: HomeStat[];
   heroImage?: string | null;
   heroMobileImage?: string | null;
+  hideSecondaryCta?: boolean;
 }
 
 export function HeroHome(props: HeroHomeProps) {
@@ -60,6 +61,7 @@ export function HeroHome(props: HeroHomeProps) {
               primaryHref={props.primaryCtaUrl}
               secondaryText={props.secondaryCtaText}
               secondaryHref={props.secondaryCtaUrl}
+              hideSecondary={props.hideSecondaryCta}
             />
             <HeroScrollIndicator className="mt-12" />
           </motion.div>

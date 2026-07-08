@@ -7,8 +7,8 @@ import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalog
 import { CultureCatalogSubcategoryGrid } from '@/components/culture-catalog/CultureCatalogSubcategoryGrid';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { HERITAGE_MAP_LEGEND } from '@/lib/constants/heritage-map-section';
-import { resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import type { MenuNode } from '@/lib/culture-menu';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
@@ -20,30 +20,39 @@ import type { PublicCultureItemDTO } from '@/lib/dto';
 interface CultureCategoryPageViewProps {
   category: MenuNode;
   subcategories: MenuNode[];
-  formChild?: MenuNode;
   items: PublicCultureItemDTO[];
-  totalChildItems?: number;
 }
 
 export function CultureCategoryPageView({
   category,
   subcategories,
-  formChild,
   items,
-  totalChildItems = 0,
 }: CultureCategoryPageViewProps) {
   const hasChildren = subcategories.length > 0;
   const content = resolveCultureCatalogContent(category, undefined, { hasSubcategories: hasChildren });
   const visibility = content.sectionVisibility;
+
+  if (hasChildren) {
+    return (
+      <CultureCatalogShell>
+        <CultureCatalogSubcategoryGrid
+          parent={category}
+          nodes={subcategories}
+          content={content.items}
+          variant="hub"
+        />
+      </CultureCatalogShell>
+    );
+  }
+
   const stats = buildCultureCatalogCategoryStats(
     subcategories.length,
-    hasChildren ? totalChildItems : items.length,
-    { entries: hasChildren ? 'Sub-catalogs' : content.statLabels.entries, regions: 'Total Entries' },
+    items.length,
+    { entries: content.statLabels.entries, regions: 'Total Entries' },
   );
   const pins = buildCultureCatalogMapPins(items);
   const mapCount = countMappableItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
-  const formHref = formChild ? resolveMenuHref(formChild, category) : null;
 
   return (
     <CultureCatalogShell>
@@ -56,40 +65,18 @@ export function CultureCategoryPageView({
           description={category.description ?? content.about.description}
           heroImage={content.heroImage}
           breadcrumb={buildCultureCatalogBreadcrumb(category)}
-          ctas={[
-            ...(visibility.entries
-              ? [
-                  {
-                    label: hasChildren ? 'Browse Sub-catalogs' : 'Explore Entries',
-                    href: '#entries',
-                    variant: 'gold' as const,
-                  },
-                ]
-              : []),
-            { label: 'Add your project', href: '/culture/submit', variant: 'teal' as const },
-            ...(formHref
-              ? [{ label: 'Add sub-catalog', href: formHref, variant: 'outline' as const }]
-              : []),
-          ]}
+          ctas={
+            visibility.entries
+              ? [{ label: 'Explore Entries', href: '#entries', variant: 'gold' as const }]
+              : []
+          }
         />
       ) : null}
       {visibility.stats ? <CulturalPortalStatsBar stats={stats} /> : null}
       {visibility.about ? <CultureCatalogAbout content={aboutContent} /> : null}
       <LandingSectionStack>
-        {visibility.entries && hasChildren ? (
-          <CultureCatalogSubcategoryGrid
-            parent={category}
-            nodes={subcategories}
-            formChild={formChild}
-            content={content.items}
-          />
-        ) : null}
         {visibility.entries && items.length > 0 ? (
-          <CultureCatalogItemGrid
-            items={items}
-            content={content.items}
-            sectionId={hasChildren ? 'catalog-entries' : 'entries'}
-          />
+          <CultureCatalogItemGrid items={items} content={content.items} sectionId="entries" />
         ) : null}
         {visibility.map && pins.length > 0 ? (
           <CulturalPortalMap
