@@ -32,8 +32,6 @@ import { buildCulturePortalCategories } from '@/lib/mappers/culture-portal-categ
 
 import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-portal-projects';
 
-import { mapItemsToHeritageMapNodes } from '@/lib/mappers/heritage-map-preview';
-
 import { groupDonatorsForHomeSection } from '@/lib/mappers/donations-patrons';
 
 import { getMapItems } from '@/lib/queries/culture-items';
@@ -142,8 +140,6 @@ async function CulturalPortalDeferredSections({
 
 
 
-  const mapNodes = mapItemsToHeritageMapNodes(mapItems);
-
   const donorGroups = groupDonatorsForHomeSection(donators);
 
   const portalProjects = mapProjectsToCulturalPortalProjects(projects);
@@ -164,38 +160,13 @@ async function CulturalPortalDeferredSections({
 
       {isSectionEnabled(visibility, 'highlights') ? <CulturalPortalHighlights /> : null}
 
-      {isSectionEnabled(visibility, 'map') && mapNodes.length > 0 ? (
-
+      {isSectionEnabled(visibility, 'map') ? (
         <CulturalPortalMap
-
           eyebrow={mapSection.eyebrow}
-
           title={mapSection.title}
-
           description={mapSection.description}
-
-          ctaHref={mapSection.ctaHref}
-
-          placeholderTitle={mapSection.placeholderTitle}
-
-          placeholderSubtitle={`${mapItems.length} mapped locations`}
-
-          pins={mapNodes.map((node, index) => ({
-
-            top: `${node.y}%`,
-
-            left: `${node.x}%`,
-
-            tone: node.tone,
-
-            delay: `${index * 0.15}s`,
-
-          }))}
-
-          legend={[...mapSection.legend]}
-
+          items={mapItems}
         />
-
       ) : null}
 
       {isSectionEnabled(visibility, 'projects') && portalProjects.length > 0 ? (
