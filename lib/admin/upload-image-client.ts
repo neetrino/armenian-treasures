@@ -122,27 +122,19 @@ export async function uploadAdminImage(
     };
   }
 
-  const uploadUrl = presign.uploadUrl.startsWith('http')
-    ? presign.uploadUrl
-    : new URL(presign.uploadUrl, window.location.origin).toString();
-  const isDirectR2Upload = uploadUrl.startsWith('http');
+  const uploadUrl = new URL(presign.uploadUrl, window.location.origin).toString();
 
   let uploadResponse: Response;
   try {
     uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'image/webp' },
       body: webpBlob,
-      ...(isDirectR2Upload ? {} : { credentials: 'same-origin' }),
     });
   } catch (error) {
     console.error('[admin-upload] direct upload failed', error);
-    return {
-      ok: false,
-      error: isDirectR2Upload
-        ? 'Image upload to storage failed. Check R2 bucket CORS allows PUT from this site.'
-        : 'Image upload failed. Please try again.',
-    };
+    return { ok: false, error: 'Image upload failed. Please try again.' };
   }
 
   if (!uploadResponse.ok) {
@@ -150,11 +142,7 @@ export async function uploadAdminImage(
     console.error('[admin-upload] storage rejected upload', uploadResponse.status, serverError);
     return {
       ok: false,
-      error:
-        serverError ??
-        (isDirectR2Upload
-          ? 'Image upload to storage failed. Check R2 bucket CORS and credentials.'
-          : 'Image upload to storage failed. Please try again.'),
+      error: serverError ?? 'Image upload to storage failed. Please try again.',
     };
   }
 
