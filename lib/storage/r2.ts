@@ -94,23 +94,11 @@ export function getR2EnvConfig(): R2EnvConfig {
 }
 
 async function loadS3(): Promise<LazyS3> {
-  const moduleName = '@aws-sdk/client-s3';
-  const dynamicImport: (name: string) => Promise<unknown> = new Function(
-    'name',
-    'return import(name)',
-  ) as (name: string) => Promise<unknown>;
-  const mod = (await dynamicImport(moduleName)) as LazyS3;
-  return mod;
+  return (await import('@aws-sdk/client-s3')) as unknown as LazyS3;
 }
 
 async function loadPresigner(): Promise<LazyPresigner> {
-  const moduleName = '@aws-sdk/s3-request-presigner';
-  const dynamicImport: (name: string) => Promise<unknown> = new Function(
-    'name',
-    'return import(name)',
-  ) as (name: string) => Promise<unknown>;
-  const mod = (await dynamicImport(moduleName)) as LazyPresigner;
-  return mod;
+  return (await import('@aws-sdk/s3-request-presigner')) as unknown as LazyPresigner;
 }
 
 function createS3Client(

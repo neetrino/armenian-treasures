@@ -12,11 +12,8 @@ import {
   CONFIRM_TOKEN_TTL_MS,
   createImageUploadConfirmToken,
 } from '@/lib/admin/image-upload-confirm-token';
-import {
-  createImageUploadPutToken,
-  PUT_TOKEN_TTL_MS,
-} from '@/lib/admin/image-upload-put-token';
 import { getStorageKeyPublicUrl, isR2Configured } from '@/lib/storage/raster-public-url';
+import { createR2PresignedPutUrl } from '@/lib/storage/r2';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
 
 export interface AdminImagePresignRequest {
@@ -114,18 +111,24 @@ export async function createAdminImagePresign(
 
   const publicUrl = getStorageKeyPublicUrl(storageKey);
 
-  const putExp = Date.now() + PUT_TOKEN_TTL_MS;
-  const putToken = createImageUploadPutToken({
-    storageKey,
-    mimeType,
-    maxSize,
-    ownerId,
-    exp: putExp,
-  });
+  let uploadUrl: string;
+  try {
+    const presigned = await createR2PresignedPutUrl({
+      key: storageKey,
+      contentType: 'image/webp',
+      contentLength: input.size,
+    });
+    uploadUrl = presigned.uploadUrl;
+  } catch (error) {
+    console.error('[admin-upload] failed to create R2 presigned upload URL', storageKey, error);
+    const message =
+      error instanceof Error ? error.message : 'Failed to prepare direct storage upload.';
+    return { ok: false, error: message };
+  }
 
   return {
     ok: true,
-    uploadUrl: `/api/admin/uploads/put?token=${encodeURIComponent(putToken)}`,
+    uploadUrl,
     storageKey,
     publicUrl,
     confirmToken,

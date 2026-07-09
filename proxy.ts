@@ -4,7 +4,7 @@ import { authConfig } from '@/lib/auth/config';
 export const { auth: proxy } = NextAuth(authConfig);
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/admin/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/((?!uploads/put).*)'],
 };
 
 export default proxy;

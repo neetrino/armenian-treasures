@@ -12,6 +12,16 @@ function sanitizeKey(key: string): string {
 }
 
 export async function PUT(request: Request): Promise<Response> {
+  try {
+    return await handleAdminUploadPut(request);
+  } catch (error) {
+    console.error('[admin-upload] PUT failed unexpectedly', error);
+    const message = error instanceof Error ? error.message : 'Unexpected upload failure.';
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  }
+}
+
+async function handleAdminUploadPut(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const token = url.searchParams.get('token')?.trim();
   if (!token) {
