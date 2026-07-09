@@ -1,6 +1,6 @@
 import { getR2ManifestPublicBaseUrl, getR2ManifestUrl } from '@/lib/assets/r2-manifest';
 import { isRasterPublicPath, isSvgPublicPath } from '@/lib/assets/public-asset-path';
-import { getRasterPublicBaseUrl } from '@/lib/storage/raster-r2';
+import { getRasterPublicBaseUrl } from '@/lib/storage/raster-public-url';
 
 function normalizePublicPath(path: string): string {
   if (!path.startsWith('/')) return `/${path}`;

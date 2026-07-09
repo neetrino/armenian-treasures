@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/db';
 import { verifyImageUploadConfirmToken } from '@/lib/admin/image-upload-confirm-token';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
-import { getStorageKeyPublicUrl } from '@/lib/storage/raster-r2';
+import { getStorageKeyPublicUrl } from '@/lib/storage/raster-public-url';
 import { headR2Object } from '@/lib/storage/r2';
 
 export interface AdminImageConfirmRequest {

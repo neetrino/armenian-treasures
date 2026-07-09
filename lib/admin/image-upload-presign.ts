@@ -16,7 +16,7 @@ import {
   createImageUploadPutToken,
   PUT_TOKEN_TTL_MS,
 } from '@/lib/admin/image-upload-put-token';
-import { getStorageKeyPublicUrl } from '@/lib/storage/raster-r2';
+import { getStorageKeyPublicUrl, isR2Configured } from '@/lib/storage/raster-public-url';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
 
 export interface AdminImagePresignRequest {
@@ -85,6 +85,14 @@ export async function createAdminImagePresign(
   const validated = validatePresignRequest(input);
   if (!validated.ok) {
     return { ok: false, error: validated.error };
+  }
+
+  if (!isR2Configured()) {
+    return {
+      ok: false,
+      error:
+        'Image storage is not configured. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, and R2_PUBLIC_URL on the server.',
+    };
   }
 
   const { folder, mimeType, variant } = validated;

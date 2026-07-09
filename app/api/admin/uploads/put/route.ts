@@ -5,6 +5,7 @@ import { uploadRasterImage } from '@/lib/storage/raster-r2';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
 
 export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 function sanitizeKey(key: string): string {
   return key.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\.\./g, '');
