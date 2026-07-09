@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { verifyImageUploadPutToken } from '@/lib/admin/image-upload-put-token';
-import { convertRasterToWebp, isConvertibleRasterMime } from '@/lib/images/convert-raster-to-webp';
-import { uploadRasterImage } from '@/lib/storage/raster-r2';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
+import { isR2Configured } from '@/lib/storage/raster-public-url';
+import { uploadBufferToR2 } from '@/lib/storage/r2';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
+
+const WEBP_MIME = 'image/webp';
 
 function sanitizeKey(key: string): string {
   return key.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\.\./g, '');
@@ -38,33 +40,38 @@ async function handleAdminUploadPut(request: Request): Promise<Response> {
     return NextResponse.json({ ok: false, error: 'Invalid storage key.' }, { status: 400 });
   }
 
+  if (payload.mimeType !== WEBP_MIME) {
+    return NextResponse.json({ ok: false, error: 'Upload must be prepared as WebP.' }, { status: 400 });
+  }
+
   const contentType = request.headers.get('content-type')?.toLowerCase() ?? '';
-  if (contentType !== payload.mimeType) {
-    return NextResponse.json({ ok: false, error: 'Content-Type does not match prepared upload.' }, { status: 400 });
+  if (contentType !== WEBP_MIME) {
+    return NextResponse.json({ ok: false, error: 'Content-Type must be image/webp.' }, { status: 400 });
   }
 
-  const sourceBuffer = Buffer.from(await request.arrayBuffer());
-  if (sourceBuffer.length <= 0 || sourceBuffer.length > payload.maxSize) {
+  if (!isR2Configured()) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          'Image storage is not configured. Set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, and R2_PUBLIC_URL.',
+      },
+      { status: 503 },
+    );
+  }
+
+  const buffer = Buffer.from(await request.arrayBuffer());
+  if (buffer.length <= 0 || buffer.length > payload.maxSize) {
     return NextResponse.json({ ok: false, error: 'File size is invalid or exceeds the allowed limit.' }, { status: 400 });
-  }
-
-  let buffer: Buffer = sourceBuffer;
-  if (isConvertibleRasterMime(payload.mimeType)) {
-    try {
-      buffer = Buffer.from(await convertRasterToWebp(sourceBuffer));
-    } catch (error) {
-      console.error('[admin-upload] failed to convert image to WebP', error);
-      return NextResponse.json({ ok: false, error: 'Failed to process uploaded image.' }, { status: 400 });
-    }
   }
 
   const safeKey = sanitizeKey(payload.storageKey);
 
   try {
-    await uploadRasterImage({
+    await uploadBufferToR2({
       key: safeKey,
       buffer,
-      contentType: 'image/webp',
+      contentType: WEBP_MIME,
     });
   } catch (error) {
     console.error('[admin-upload] failed to store upload', safeKey, error);

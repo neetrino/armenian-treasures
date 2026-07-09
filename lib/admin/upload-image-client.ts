@@ -45,18 +45,19 @@ async function readJson<T>(response: Response): Promise<T | null> {
 
 async function readUploadError(response: Response): Promise<string | null> {
   const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
-  if (contentType.includes('application/json')) {
-    try {
-      const body = (await response.json()) as { error?: string };
-      return body.error?.trim() || null;
-    } catch {
-      return null;
-    }
-  }
 
   try {
+    if (contentType.includes('application/json')) {
+      const body = (await response.json()) as { error?: string };
+      return body.error?.trim() || null;
+    }
+
     const text = (await response.text()).trim();
-    return text || null;
+    if (!text) return null;
+    if (text.startsWith('<!DOCTYPE') || text.startsWith('<html')) {
+      return `Server error (${response.status}). Check Vercel logs and R2 environment variables.`;
+    }
+    return text.slice(0, 240);
   } catch {
     return null;
   }
