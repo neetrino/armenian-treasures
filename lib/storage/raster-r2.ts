@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { isR2Configured } from '@/lib/storage/raster-public-url';
 
 export { getRasterPublicBaseUrl, getStorageKeyPublicUrl, isR2Configured } from '@/lib/storage/raster-public-url';
