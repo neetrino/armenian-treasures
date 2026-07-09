@@ -1,6 +1,6 @@
-import { readdir, stat } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { extname, join, parse, relative, resolve } from 'node:path';
-import sharp from 'sharp';
+import { convertRasterToWebp } from '@/lib/images/convert-raster-to-webp';
 
 const PUBLIC_ROOT = resolve(process.cwd(), 'public');
 const CONVERT_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg']);
@@ -27,9 +27,9 @@ async function convertToWebp(sourcePath: string): Promise<string> {
   const { dir, name } = parse(sourcePath);
   const targetPath = join(dir, `${name}.webp`);
 
-  await sharp(sourcePath)
-    .webp({ quality: 82, effort: 4 })
-    .toFile(targetPath);
+  const input = await readFile(sourcePath);
+  const webp = await convertRasterToWebp(input);
+  await writeFile(targetPath, webp);
 
   return targetPath;
 }

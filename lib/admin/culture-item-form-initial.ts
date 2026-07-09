@@ -13,6 +13,8 @@ export interface CultureItemFormInitial {
   century: string;
   yearLabel: string;
   image: string;
+  cardBackgroundColor: string;
+  cardBackgroundImage: string;
   galleryImages: string[];
   tourUrl: string;
   videoUrl: string;
@@ -38,6 +40,8 @@ export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInit
     century: item.century !== null ? String(item.century) : '',
     yearLabel: getAdminLocaleValue(item.yearLabel),
     image: item.image ?? '',
+    cardBackgroundColor: item.cardBackgroundColor ?? '',
+    cardBackgroundImage: item.cardBackgroundImage ?? '',
     galleryImages: item.galleryImages ?? [],
     tourUrl: item.tourUrl ?? '',
     videoUrl: item.videoUrl ?? '',

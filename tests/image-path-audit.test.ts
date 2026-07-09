@@ -25,8 +25,10 @@ describe('auditImagePath', () => {
   });
 
   it('marks migrated upload paths as ok via manifest resolution', () => {
-    const result = auditImagePath('/uploads/images/culture/culture-9f44566d18e7.png');
+    const result = auditImagePath('/uploads/images/culture/culture-9f44566d18e7.webp');
     expect(result.status).toBe('ok');
-    expect(result.resolvedUrl).toContain('r2.dev/uploads/images/culture/culture-9f44566d18e7.png');
+    expect(result.resolvedUrl).toContain(
+      'r2.dev/uploads/images/culture/culture-9f44566d18e7.webp',
+    );
   });
 });

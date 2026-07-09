@@ -136,6 +136,8 @@ model CultureItem {
   century          Int?
   yearLabel        String?
   image            String?
+  cardBackgroundColor String?
+  cardBackgroundImage String?
   galleryImages    String[]        @default([])
   tourUrl          String?
   videoUrl         String?

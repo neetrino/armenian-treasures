@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import type { FeaturedTreasure } from '@/lib/constants/featured-treasures';
 import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
+import {
+  getFeaturedTreasureCardStyle,
+  hasFeaturedTreasureCardBackground,
+} from '@/lib/featured-treasure-card-background';
 import { cn } from '@/lib/utils';
 
 interface FeaturedTreasureCardProps {
@@ -15,12 +19,22 @@ const LAYOUT_CLASS: Record<FeaturedTreasure['layout'], string> = {
 };
 
 export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
-  const { number, icon, categories, title, description, href, layout } = treasure;
+  const { number, icon, categories, title, description, href, layout, cardBackgroundColor, cardBackgroundImage } =
+    treasure;
+  const hasCustomBackground = hasFeaturedTreasureCardBackground(
+    cardBackgroundColor,
+    cardBackgroundImage,
+  );
 
   return (
     <Link
       href={href}
-      className={cn('featured-treasure-card group block h-full outline-none', LAYOUT_CLASS[layout])}
+      style={getFeaturedTreasureCardStyle(cardBackgroundColor, cardBackgroundImage)}
+      className={cn(
+        'featured-treasure-card group block h-full outline-none',
+        LAYOUT_CLASS[layout],
+        hasCustomBackground && 'featured-treasure-card--has-bg',
+      )}
     >
       <div className="relative z-[2] flex h-full flex-col items-start text-left">
         <CulturalCategoryIcon type={icon} />

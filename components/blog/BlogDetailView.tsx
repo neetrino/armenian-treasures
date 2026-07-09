@@ -20,7 +20,8 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
 
   return (
     <HeritageLandingShell>
-      <section className="blog-detail-hero blog-detail-page">
+      <div className="blog-detail-page">
+      <section className="blog-detail-hero">
         <div className="blog-detail-hero__image">
           <Image
             src={resolvedImageUrl}
@@ -48,8 +49,14 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
       <KhndzoreskDivider />
 
       <article className="blog-detail-article">
+        <div className="blog-detail-article__intro" aria-hidden>
+          <span className="blog-detail-article__intro-line" />
+          <span className="blog-detail-article__intro-mark">◆</span>
+          <span className="blog-detail-article__intro-line" />
+        </div>
         <div className="blog-detail-prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
       </article>
+      </div>
     </HeritageLandingShell>
   );
 }

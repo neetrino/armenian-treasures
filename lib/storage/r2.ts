@@ -174,6 +174,18 @@ export async function headR2Object(key: string): Promise<R2ObjectHeadResult | nu
   }
 }
 
+export async function deleteR2Object(key: string): Promise<void> {
+  const config = getR2EnvConfig();
+  const sdk = await loadS3();
+  const client = createS3Client(sdk, config);
+  await client.send(
+    new sdk.DeleteObjectCommand({
+      Bucket: config.bucket,
+      Key: normalizeObjectKey(key),
+    }),
+  );
+}
+
 export async function uploadBufferToR2(
   input: R2BufferUploadInput,
 ): Promise<R2BufferUploadResult> {
@@ -218,14 +230,7 @@ export class R2Driver implements StorageDriver {
   }
 
   async delete(key: string): Promise<void> {
-    const sdk = await loadS3();
-    const client = createS3Client(sdk, this.config);
-    await client.send(
-      new sdk.DeleteObjectCommand({
-        Bucket: this.config.bucket,
-        Key: normalizeObjectKey(key),
-      }),
-    );
+    await deleteR2Object(key);
   }
 
   publicUrl(key: string): string {

@@ -1,9 +1,10 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import { extname, join, relative, resolve } from 'node:path';
 import { getR2EnvConfig, getR2EnvPresence, uploadBufferToR2 } from '@/lib/storage/r2';
 
 const PUBLIC_ROOT = resolve(process.cwd(), 'public');
 const MANIFEST_PATH = resolve(process.cwd(), 'data', 'r2-public-manifest.json');
+const SKIP_EXT = new Set(['.svg']);
 
 const CONTENT_TYPE_BY_EXT: Record<string, string> = {
   '.png': 'image/png',
@@ -32,7 +33,10 @@ async function collectPublicFiles(dir: string): Promise<string[]> {
       continue;
     }
     if (entry.isFile()) {
-      files.push(absolute);
+      const ext = extname(entry.name).toLowerCase();
+      if (!SKIP_EXT.has(ext)) {
+        files.push(absolute);
+      }
     }
   }
 
@@ -61,23 +65,44 @@ function logEnvPresence(): void {
   }
 }
 
+async function loadExistingManifest(): Promise<ManifestFile | null> {
+  try {
+    const raw = await readFile(MANIFEST_PATH, 'utf8');
+    return JSON.parse(raw) as ManifestFile;
+  } catch {
+    return null;
+  }
+}
+
+function stripSvgEntries(files: Record<string, string>): Record<string, string> {
+  const next: Record<string, string> = {};
+  for (const [path, url] of Object.entries(files)) {
+    if (!path.endsWith('.svg')) {
+      next[path] = url;
+    }
+  }
+  return next;
+}
+
 async function main(): Promise<void> {
   logEnvPresence();
 
   const config = getR2EnvConfig();
+  const deleteLocal = process.argv.includes('--delete-local');
   const absoluteFiles = await collectPublicFiles(PUBLIC_ROOT);
+  const existing = await loadExistingManifest();
 
   if (absoluteFiles.length === 0) {
-    console.log('No files found under /public.');
+    console.log('No raster files found under /public (SVG files are kept local).');
     return;
   }
 
-  console.log(`Uploading ${absoluteFiles.length} file(s) from /public to R2...`);
+  console.log(`Uploading ${absoluteFiles.length} raster file(s) from /public to R2...`);
 
   const manifest: ManifestFile = {
     generatedAt: new Date().toISOString(),
     publicBaseUrl: config.publicBaseUrl,
-    files: {},
+    files: stripSvgEntries(existing?.files ?? {}),
   };
 
   let uploaded = 0;
@@ -94,6 +119,10 @@ async function main(): Promise<void> {
       manifest.files[webPath] = result.url;
       uploaded += 1;
       console.log(`  uploaded ${webPath}`);
+      if (deleteLocal) {
+        await unlink(absolutePath);
+        console.log(`  removed local ${webPath}`);
+      }
     } catch (error) {
       skipped += 1;
       const message = error instanceof Error ? error.message : 'Unknown error';
@@ -109,10 +138,12 @@ async function main(): Promise<void> {
   console.log('');
   console.log('Next steps:');
   console.log('  1. Verify a few manifest URLs in the browser.');
-  console.log('  2. Set USE_R2_PUBLIC_ASSETS=true and NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS=true');
-  console.log('  3. Set NEXT_PUBLIC_R2_PUBLIC_URL to the same value as R2_PUBLIC_URL');
-  console.log('  4. Restart the app and confirm images load from R2.');
-  console.log('  Local /public files were not modified or deleted.');
+  console.log('  2. Set NEXT_PUBLIC_R2_PUBLIC_URL to the same value as R2_PUBLIC_URL.');
+  console.log('  3. Restart the app and confirm raster images load from R2.');
+  console.log('  SVG files remain in /public and are served locally.');
+  if (!deleteLocal) {
+    console.log('  Re-run with --delete-local to remove uploaded raster files from /public.');
+  }
 }
 
 main().catch((error) => {

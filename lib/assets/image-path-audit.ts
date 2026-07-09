@@ -1,5 +1,6 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { isSvgPublicPath } from '@/lib/assets/public-asset-path';
 import { getR2ManifestUrl } from '@/lib/assets/r2-manifest';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
@@ -28,31 +29,21 @@ export function auditImagePath(path: string | null | undefined): ImagePathAuditR
     return { status: 'ok', resolvedUrl: resolved, reason: 'resolved-to-r2' };
   }
 
-  if (normalized.startsWith('/uploads/')) {
-    const localPath = join(process.cwd(), 'public', normalized);
+  if (isSvgPublicPath(normalized)) {
+    const localPath = join(process.cwd(), 'public', resolved.replace(/^\//, ''));
     if (existsSync(localPath)) {
-      return { status: 'ok', resolvedUrl: resolved, reason: 'local-upload-only' };
+      return { status: 'ok', resolvedUrl: resolved, reason: 'local-svg' };
     }
-
-    return {
-      status: 'broken',
-      resolvedUrl: resolved,
-      reason: 'upload-missing-from-r2-and-local',
-    };
+    return { status: 'broken', resolvedUrl: resolved, reason: 'missing-local-svg' };
   }
 
-  const resolvedPublicFile = join(process.cwd(), 'public', resolved.replace(/^\//, ''));
-  if (existsSync(resolvedPublicFile)) {
-    return { status: 'ok', resolvedUrl: resolved, reason: 'public-file' };
-  }
-
-  if (getR2ManifestUrl(resolved)) {
+  if (getR2ManifestUrl(normalized)) {
     return { status: 'ok', resolvedUrl: resolved, reason: 'r2-manifest' };
   }
 
   return {
     status: 'broken',
     resolvedUrl: resolved,
-    reason: 'missing-from-public-and-manifest',
+    reason: 'missing-from-r2-manifest',
   };
 }

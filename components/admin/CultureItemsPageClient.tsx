@@ -1,12 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback, useMemo, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus, ExternalLink } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
-import { AdminModal } from '@/components/admin/AdminModal';
+import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { CultureItemForm } from '@/components/admin/CultureItemForm';
 import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
@@ -78,18 +78,12 @@ function CultureItemThumb({ src, alt }: CultureItemThumbProps) {
   );
 }
 
-function rowSearchText(row: Row): string {
-  return [
-    row.title,
-    row.slug,
-    row.region,
-    row.periodLabel,
-    row.status,
-    row.menuPath,
-  ]
-    .filter((part): part is string => Boolean(part))
-    .join(' ')
-    .toLowerCase();
+function buildCultureItemsHref(query?: string, page?: number): string {
+  const params = new URLSearchParams();
+  if (query?.trim()) params.set('q', query.trim());
+  if (page && page > 1) params.set('page', String(page));
+  const qs = params.toString();
+  return qs ? `/admin/culture-items?${qs}` : '/admin/culture-items';
 }
 
 export function CultureItemsPageClient({
@@ -99,35 +93,44 @@ export function CultureItemsPageClient({
   pagination,
 }: CultureItemsPageClientProps) {
   const router = useRouter();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreateSheetOpen, setIsCreateSheetOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<Row | null>(null);
-  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState(pagination.query ?? '');
   const [categoryFilter, setCategoryFilter] = useState('');
 
-  const categories = useMemo(() => {
-    const paths = new Set<string>();
-    for (const row of rows) {
-      if (row.menuPath !== '—') paths.add(row.menuPath);
-    }
-    return Array.from(paths).sort((a, b) => a.localeCompare(b));
-  }, [rows]);
+  useEffect(() => {
+    setSearchInput(pagination.query ?? '');
+  }, [pagination.query]);
+
+  useEffect(() => {
+    const trimmed = searchInput.trim();
+    const current = pagination.query ?? '';
+    if (trimmed === current) return;
+
+    const timer = window.setTimeout(() => {
+      router.push(buildCultureItemsHref(trimmed));
+    }, 300);
+
+    return () => window.clearTimeout(timer);
+  }, [searchInput, pagination.query, router]);
+
+  const categories = useMemo(
+    () => menuOptions.map((option) => option.title).sort((a, b) => a.localeCompare(b)),
+    [menuOptions],
+  );
 
   const filteredRows = useMemo(() => {
-    const query = search.trim().toLowerCase();
-    return rows.filter((row) => {
-      if (categoryFilter && row.menuPath !== categoryFilter) return false;
-      if (!query) return true;
-      return rowSearchText(row).includes(query);
-    });
-  }, [rows, search, categoryFilter]);
+    if (!categoryFilter) return rows;
+    return rows.filter((row) => row.menuPath === categoryFilter);
+  }, [rows, categoryFilter]);
 
-  const openCreateModal = useCallback(() => setIsCreateModalOpen(true), []);
-  const closeCreateModal = useCallback(() => setIsCreateModalOpen(false), []);
-  const openEditModal = useCallback((row: Row) => setEditingRow(row), []);
-  const closeEditModal = useCallback(() => setEditingRow(null), []);
+  const openCreateSheet = useCallback(() => setIsCreateSheetOpen(true), []);
+  const closeCreateSheet = useCallback(() => setIsCreateSheetOpen(false), []);
+  const openEditSheet = useCallback((row: Row) => setEditingRow(row), []);
+  const closeEditSheet = useCallback(() => setEditingRow(null), []);
 
-  const handleModalSuccess = useCallback(() => {
-    setIsCreateModalOpen(false);
+  const handleSheetSuccess = useCallback(() => {
+    setIsCreateSheetOpen(false);
     setEditingRow(null);
     router.refresh();
   }, [router]);
@@ -146,9 +149,9 @@ export function CultureItemsPageClient({
   const handleEditClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>, row: Row) => {
       event.stopPropagation();
-      openEditModal(row);
+      openEditSheet(row);
     },
-    [openEditModal],
+    [openEditSheet],
   );
 
   const columns: AdminTableColumn<Row>[] = [
@@ -198,7 +201,12 @@ export function CultureItemsPageClient({
       header: 'Actions',
       align: 'right',
       cell: (row) => (
-        <div className="flex items-center justify-end gap-1">
+        <div
+          className="flex items-center justify-end gap-1"
+          data-admin-row-action
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
           {row.status === 'PUBLISHED' ? (
             <a
               href={resolveCultureItemHref(row.slug)}
@@ -230,9 +238,13 @@ export function CultureItemsPageClient({
   ];
 
   const tableEmpty =
-    rows.length === 0
-      ? 'No culture items yet. Click Add item to start.'
-      : 'No culture items match your search or category filter.';
+    pagination.total === 0
+      ? pagination.query
+        ? `No culture items match “${pagination.query}”.`
+        : 'No culture items yet. Click Add item to start.'
+      : filteredRows.length === 0
+        ? 'No culture items match your category filter.'
+        : 'No culture items match your search or category filter.';
 
   return (
     <>
@@ -243,7 +255,7 @@ export function CultureItemsPageClient({
         description="Curate the entries shown inside the Culture Portal. Items are grouped by their menu path."
         size="wide"
         actions={
-          <Button type="button" variant="primary" onClick={openCreateModal}>
+          <Button type="button" variant="primary" onClick={openCreateSheet}>
             <Plus size={14} aria-hidden /> Add item
           </Button>
         }
@@ -257,9 +269,9 @@ export function CultureItemsPageClient({
               <Input
                 id="culture-items-search"
                 type="search"
-                placeholder="Title, slug, region, period, status, category…"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Title, slug, region, period, category…"
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
               />
             </div>
             <div className="flex w-full flex-col gap-1.5 sm:w-72">
@@ -286,7 +298,7 @@ export function CultureItemsPageClient({
           rows={filteredRows}
           getRowId={(row) => row.id}
           empty={tableEmpty}
-          onRowClick={openEditModal}
+          onRowClick={openEditSheet}
         />
         <div className="px-6 pb-6">
           <AdminPagination
@@ -299,40 +311,41 @@ export function CultureItemsPageClient({
           />
         </div>
       </AdminPageShell>
-      {isCreateModalOpen ? (
-        <AdminModal
-          eyebrow="Culture items"
-          title="Create culture item"
-          onClose={closeCreateModal}
-          maxWidthClass="max-w-4xl"
-        >
-          <CultureItemForm
-            mode="create"
-            menuOptions={menuOptions}
-            onSuccess={handleModalSuccess}
-            onCancel={closeCreateModal}
-          />
-        </AdminModal>
-      ) : null}
-      {editingRow ? (
-        <AdminModal
-          eyebrow="Culture items"
-          title="Edit culture item"
-          description={editingRow.title}
-          onClose={closeEditModal}
-          maxWidthClass="max-w-4xl"
-        >
+      <AdminSheet
+        open={isCreateSheetOpen}
+        onClose={closeCreateSheet}
+        eyebrow="Culture items"
+        title="Create culture item"
+        description="Fill in the basics first, then add images and map coordinates."
+        size="2xl"
+      >
+        <CultureItemForm
+          mode="create"
+          menuOptions={menuOptions}
+          onSuccess={handleSheetSuccess}
+          onCancel={closeCreateSheet}
+        />
+      </AdminSheet>
+      <AdminSheet
+        open={editingRow !== null}
+        onClose={closeEditSheet}
+        eyebrow="Culture items"
+        title="Edit culture item"
+        description={editingRow?.title}
+        size="2xl"
+      >
+        {editingRow ? (
           <CultureItemForm
             key={editingRow.id}
             mode="edit"
             itemId={editingRow.id}
             menuOptions={menuOptions}
             initial={editingRow.editInitial}
-            onSuccess={handleModalSuccess}
-            onCancel={closeEditModal}
+            onSuccess={handleSheetSuccess}
+            onCancel={closeEditSheet}
           />
-        </AdminModal>
-      ) : null}
+        ) : null}
+      </AdminSheet>
     </>
   );
 }

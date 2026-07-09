@@ -1,6 +1,6 @@
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-export const UNIVERSAL_PAGE_HERO_IMAGE = '/images/hero/universal-page-hero.png';
+export const UNIVERSAL_PAGE_HERO_IMAGE = '/images/hero/universal-page-hero.webp';
 
 export function resolveLandingImg(base: string, filename: string): string {
   const normalizedBase = base.trim().replace(/\/$/, '');

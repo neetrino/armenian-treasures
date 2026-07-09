@@ -16,7 +16,7 @@ import {
   createImageUploadPutToken,
   PUT_TOKEN_TTL_MS,
 } from '@/lib/admin/image-upload-put-token';
-import { getStorage } from '@/lib/storage';
+import { getStorageKeyPublicUrl } from '@/lib/storage/raster-r2';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
 
 export interface AdminImagePresignRequest {
@@ -98,14 +98,13 @@ export async function createAdminImagePresign(
   const exp = Date.now() + CONFIRM_TOKEN_TTL_MS;
   const confirmToken = createImageUploadConfirmToken({
     storageKey,
-    mimeType,
+    mimeType: 'image/webp',
     maxSize,
     ownerId,
     exp,
   });
 
-  const storage = getStorage();
-  const publicUrl = storage.publicUrl(storageKey);
+  const publicUrl = getStorageKeyPublicUrl(storageKey);
 
   const putExp = Date.now() + PUT_TOKEN_TTL_MS;
   const putToken = createImageUploadPutToken({

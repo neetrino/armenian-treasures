@@ -29,6 +29,12 @@ async function AdminCultureItemsPage(props: PageProps) {
           { slug: { contains: listQuery.query, mode: 'insensitive' } },
           { region: { contains: listQuery.query, mode: 'insensitive' } },
           { periodLabel: { contains: listQuery.query, mode: 'insensitive' } },
+          { menuItem: { title: { contains: listQuery.query, mode: 'insensitive' } } },
+          {
+            menuItem: {
+              parent: { title: { contains: listQuery.query, mode: 'insensitive' } },
+            },
+          },
         ],
       }
     : {};

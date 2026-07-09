@@ -31,6 +31,8 @@ export function mapCultureItemToFeaturedTreasure(
     description: item.shortDescription ?? item.description ?? '',
     href: resolveCultureItemHref(item.slug),
     layout: LAYOUTS[index % LAYOUTS.length]!,
+    cardBackgroundColor: item.cardBackgroundColor,
+    cardBackgroundImage: item.cardBackgroundImage,
   };
 }
 

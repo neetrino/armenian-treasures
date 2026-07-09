@@ -30,6 +30,7 @@
     "images:set-global-hero": "tsx scripts/set-global-hero-banner.ts",
     "images:webp": "tsx scripts/convert-images-to-webp.ts",
     "images:webp:keep-sources": "tsx scripts/convert-public-to-webp.ts",
+    "images:purge-local": "tsx scripts/purge-local-raster-assets.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "postinstall": "prisma generate"

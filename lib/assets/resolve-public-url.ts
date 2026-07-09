@@ -1,4 +1,6 @@
 import { getR2ManifestPublicBaseUrl, getR2ManifestUrl } from '@/lib/assets/r2-manifest';
+import { isRasterPublicPath, isSvgPublicPath } from '@/lib/assets/public-asset-path';
+import { getRasterPublicBaseUrl } from '@/lib/storage/raster-r2';
 
 function normalizePublicPath(path: string): string {
   if (!path.startsWith('/')) return `/${path}`;
@@ -12,16 +14,6 @@ function normalizeLegacyCultureSvgPath(path: string): string {
   return path;
 }
 
-function getPublicR2BaseUrl(): string | null {
-  const base = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim() || null;
-  return base ? base.replace(/\/$/, '') : null;
-}
-
-function shouldUseR2PublicAssets(): boolean {
-  if (getPublicR2BaseUrl()) return true;
-  return process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS === 'true';
-}
-
 function isAdminUploadPublicPath(path: string): boolean {
   return path.startsWith('/uploads/');
 }
@@ -30,26 +22,25 @@ function isR2OnlyCulturalPortalIconPath(path: string): boolean {
   return /^\/icons\/cultural-portal\/[^/]+\.(png|webp)$/i.test(path);
 }
 
-/**
- * Admin uploads under `public/uploads/` are gitignored and never deployed to Vercel.
- * Always resolve them to durable storage (R2) via env base URL or the committed manifest.
- */
-function resolveAdminUploadPath(path: string): string {
-  const base = getPublicR2BaseUrl() ?? getR2ManifestPublicBaseUrl();
-  if (base) {
-    return `${base}${path}`;
-  }
+function resolveRasterPathFromR2(path: string): string {
+  const envBase =
+    process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim().replace(/\/$/, '') ||
+    process.env.R2_PUBLIC_URL?.trim().replace(/\/$/, '');
+  if (envBase) return `${envBase}${path}`;
 
   const fromManifest = getR2ManifestUrl(path);
   if (fromManifest) return fromManifest;
+
+  const base = getRasterPublicBaseUrl();
+  if (base) return `${base}${path}`;
 
   return path;
 }
 
 /**
- * Resolves a site-root public asset path (e.g. `/images/hero/home-hero.png`)
- * to an R2 URL when migration is enabled, otherwise returns the local path.
- * Absolute URLs are returned unchanged. Local `/public` files remain the fallback.
+ * Resolves a site-root public asset path (e.g. `/images/hero/home-hero.webp`).
+ * SVG assets stay on the local `/public` tree. Raster images resolve to R2.
+ * Absolute URLs are returned unchanged.
  */
 export function resolvePublicAssetUrl(path: string): string {
   const trimmed = path.trim();
@@ -59,31 +50,22 @@ export function resolvePublicAssetUrl(path: string): string {
   const normalized = normalizePublicPath(trimmed);
   const normalizedLegacySafe = normalizeLegacyCultureSvgPath(normalized);
 
-  if (isAdminUploadPublicPath(normalizedLegacySafe)) {
-    return resolveAdminUploadPath(normalizedLegacySafe);
-  }
-
-  // Cultural portal card images (png/webp) are stored in R2 only.
-  if (isR2OnlyCulturalPortalIconPath(normalizedLegacySafe)) {
-    const base = getPublicR2BaseUrl() ?? getR2ManifestPublicBaseUrl();
-    if (base) {
-      return `${base}${normalizedLegacySafe}`;
-    }
-    const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
-    if (fromManifest) return fromManifest;
-  }
-
-  if (!shouldUseR2PublicAssets()) {
+  if (isSvgPublicPath(normalizedLegacySafe)) {
     return normalizedLegacySafe;
   }
 
-  const base = getPublicR2BaseUrl();
+  if (
+    isAdminUploadPublicPath(normalizedLegacySafe) ||
+    isRasterPublicPath(normalizedLegacySafe) ||
+    isR2OnlyCulturalPortalIconPath(normalizedLegacySafe)
+  ) {
+    return resolveRasterPathFromR2(normalizedLegacySafe);
+  }
+
+  const base = getRasterPublicBaseUrl() ?? getR2ManifestPublicBaseUrl();
   if (base) {
     return `${base}${normalizedLegacySafe}`;
   }
-
-  const fromManifest = getR2ManifestUrl(normalizedLegacySafe);
-  if (fromManifest) return fromManifest;
 
   return normalizedLegacySafe;
 }

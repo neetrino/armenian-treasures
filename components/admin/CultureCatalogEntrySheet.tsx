@@ -111,6 +111,8 @@ function EntrySheetForm({
                   tourUrl: entry.tourUrl,
                   status: entry.status,
                   description: entry.description,
+                  cardBackgroundColor: entry.cardBackgroundColor,
+                  cardBackgroundImage: entry.cardBackgroundImage,
                 }
               : { status: 'PUBLISHED' }
           }

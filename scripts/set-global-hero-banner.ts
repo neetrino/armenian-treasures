@@ -1,4 +1,4 @@
-import { copyFile, readFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
@@ -9,11 +9,11 @@ import {
 } from '@/lib/i18n/translatable-json-content';
 import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { parseMenuCatalogContent } from '@/lib/types/culture-catalog-content';
-import { getStorage } from '@/lib/storage';
+import { uploadRasterImage } from '@/lib/storage/raster-r2';
 
 const DEFAULT_SOURCE = resolve(
   process.cwd(),
-  'public/images/hero/universal-page-hero.png',
+  'public/images/hero/universal-page-hero.webp',
 );
 
 function isJsonObject(value: unknown): value is Record<string, unknown> {
@@ -61,22 +61,14 @@ function setHeroOnCatalogContent(
 }
 
 async function publishHeroAsset(sourcePath: string, heroPath: string): Promise<void> {
-  await copyFile(sourcePath, resolve(process.cwd(), 'public', heroPath.replace(/^\//, '')));
-
-  if ((process.env.STORAGE_DRIVER ?? 'local') !== 'r2') {
-    return;
-  }
-
   const key = heroPath.replace(/^\//, '');
   const buffer = await readFile(sourcePath);
-  const storage = getStorage();
-  await storage.upload({
+  await uploadRasterImage({
     key,
-    body: buffer,
-    contentType: 'image/png',
-    visibility: 'public',
+    buffer,
+    contentType: 'image/webp',
   });
-  console.log(`✓ Uploaded ${key} to storage`);
+  console.log(`✓ Uploaded ${key} to R2`);
 }
 
 async function main(): Promise<void> {

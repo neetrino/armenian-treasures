@@ -94,6 +94,8 @@ function parseForm(formData: FormData):
     century: numberOrNull(formData.get('century')),
     yearLabel: formData.get('yearLabel')?.toString() ?? '',
     image: formData.get('image')?.toString() ?? '',
+    cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
+    cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
     galleryImages: formData
       .getAll('galleryImages')
       .map((value) => value.toString().trim())
@@ -152,6 +154,8 @@ function toData(
     century: input.century ?? null,
     yearLabel: input.yearLabel?.trim() ? input.yearLabel : null,
     image: input.image?.trim() ? input.image : null,
+    cardBackgroundColor: input.cardBackgroundColor?.trim() ? input.cardBackgroundColor : null,
+    cardBackgroundImage: input.cardBackgroundImage?.trim() ? input.cardBackgroundImage : null,
     galleryImages: input.galleryImages,
     tourUrl: input.tourUrl?.trim() ? input.tourUrl : null,
     videoUrl: input.videoUrl?.trim() ? input.videoUrl : null,
@@ -203,7 +207,7 @@ export async function updateCultureItemAction(
   }
   const current = await prisma.cultureItem.findUnique({
     where: { id },
-    select: { slug: true, menuItemId: true, image: true, galleryImages: true },
+    select: { slug: true, menuItemId: true, image: true, galleryImages: true, cardBackgroundImage: true },
   });
   const existing = await prisma.cultureItem.findUnique({ where: { slug: parsed.data.slug } });
   if (existing && existing.id !== id) {
@@ -216,6 +220,7 @@ export async function updateCultureItemAction(
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
 
   await deleteReplacedManagedImage(current?.image, parsed.data.image);
+  await deleteReplacedManagedImage(current?.cardBackgroundImage, parsed.data.cardBackgroundImage);
   await cleanupReplacedGalleryImages(current?.galleryImages ?? [], parsed.data.galleryImages);
 
   const slugs = new Set<string>([parsed.data.slug]);

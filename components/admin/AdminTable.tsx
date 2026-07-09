@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface AdminTableColumn<T> {
@@ -16,6 +16,22 @@ interface AdminTableProps<T> {
   empty?: ReactNode;
   className?: string;
   onRowClick?: (row: T) => void;
+}
+
+const ROW_CLICK_IGNORE_SELECTOR =
+  'button, a, input, select, textarea, label, [role="button"], [data-admin-row-action]';
+
+function shouldIgnoreRowClick(target: EventTarget | null): boolean {
+  return target instanceof Element && Boolean(target.closest(ROW_CLICK_IGNORE_SELECTOR));
+}
+
+function handleRowActivation<T>(
+  event: MouseEvent<HTMLTableRowElement>,
+  row: T,
+  onRowClick: ((row: T) => void) | undefined,
+): void {
+  if (!onRowClick || shouldIgnoreRowClick(event.target)) return;
+  onRowClick(row);
 }
 
 export function AdminTable<T>({
@@ -68,12 +84,13 @@ export function AdminTable<T>({
                     : 'hover:bg-parchment-50/70',
                 )}
                 style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
-                onClick={onRowClick ? () => onRowClick(row) : undefined}
+                onClick={onRowClick ? (event) => handleRowActivation(event, row, onRowClick) : undefined}
                 onKeyDown={
                   onRowClick
                     ? (event) => {
                         if (event.key === 'Enter' || event.key === ' ') {
                           event.preventDefault();
+                          if (shouldIgnoreRowClick(event.target)) return;
                           onRowClick(row);
                         }
                       }

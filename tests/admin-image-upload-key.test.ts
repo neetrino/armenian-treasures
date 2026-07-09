@@ -6,7 +6,7 @@ describe('generateAdminImageStorageKey', () => {
   it('creates admin-managed keys for culture uploads', () => {
     const key = generateAdminImageStorageKey('culture', 'image/jpeg');
     expect(isAdminManagedUploadKey(key)).toBe(true);
-    expect(key).toMatch(/^images\/culture\/culture-[a-f0-9]{12}\.jpg$/);
+    expect(key).toMatch(/^images\/culture\/culture-[a-f0-9]{12}\.webp$/);
   });
 
   it('creates hero variant keys', () => {

@@ -26,6 +26,7 @@ export function DeleteIconButton({
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     event.stopPropagation();
     setIsOpen(true);
   }, []);

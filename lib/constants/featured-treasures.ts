@@ -10,6 +10,8 @@ export interface FeaturedTreasure {
   description: string;
   href: string;
   layout: FeaturedTreasureLayout;
+  cardBackgroundColor: string | null;
+  cardBackgroundImage: string | null;
 }
 
 export const FEATURED_TREASURES_SECTION = {
@@ -28,6 +30,8 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
       'A UNESCO World Heritage site where the monastery is literally hewn from the mountainside. Founded in the 4th century, Geghard enshrines the lance said to have wounded Christ — and an acoustic beauty that stills every visitor.',
     href: '/culture/architecture/churches',
     layout: 'tall',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     number: '02',
@@ -38,6 +42,8 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
       'UNESCO-listed intangible heritage, the apricot-wood wind instrument has voiced Armenian sorrow and joy for over 1,500 years.',
     href: '/culture/heritage/music',
     layout: 'top-mid',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     number: '03',
@@ -48,6 +54,8 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
       'At its zenith, the Armenian Empire stretched from the Caspian to the Mediterranean — the largest state in the Roman era.',
     href: '/culture/people/icons-of-history',
     layout: 'top-right',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     number: '04',
@@ -58,5 +66,7 @@ export const FEATURED_TREASURES: FeaturedTreasure[] = [
       "A 6,100-year-old winery discovered in Armenia's Vayots Dzor — the earliest evidence of wine production anywhere on Earth.",
     href: '/culture/heritage/food',
     layout: 'bottom-mid',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
 ];

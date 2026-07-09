@@ -1,9 +1,9 @@
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
-export const HERO_HOME_IMAGE = resolvePublicAssetUrl('/images/hero/universal-page-hero.png');
+export const HERO_HOME_IMAGE = resolvePublicAssetUrl('/images/hero/universal-page-hero.webp');
 
 /** @deprecated Use HERO_HOME_IMAGE for home hero; kept for inner-page heroes. */
-export const HERO_WEBP_DEFAULT = resolvePublicAssetUrl('/images/hero/universal-page-hero.png');
+export const HERO_WEBP_DEFAULT = resolvePublicAssetUrl('/images/hero/universal-page-hero.webp');
 
 const HERO_SOURCE_MAP: Record<string, string> = {
   '/images/hero/home-hero.png': HERO_HOME_IMAGE,
@@ -11,6 +11,7 @@ const HERO_SOURCE_MAP: Record<string, string> = {
   '/images/hero/home.svg': HERO_HOME_IMAGE,
   '/images/hero/about.svg': HERO_WEBP_DEFAULT,
   '/images/hero/universal-page-hero.png': HERO_HOME_IMAGE,
+  '/images/hero/universal-page-hero.webp': HERO_HOME_IMAGE,
 };
 
 export function resolveHeroImageUrl(source?: string | null): string {
