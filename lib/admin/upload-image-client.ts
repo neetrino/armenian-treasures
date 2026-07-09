@@ -3,7 +3,9 @@
 import {
   type AdminImageFolder,
   type AdminImageVariant,
+  parseAdminImageMaxSize,
 } from '@/lib/admin/image-upload-constants';
+import { convertImageFileToWebp } from '@/lib/admin/convert-image-file-to-webp';
 import { validateAdminImageFile } from '@/lib/admin/validate-admin-image-file';
 
 export interface AdminImageUploadParams {
@@ -42,9 +44,19 @@ async function readJson<T>(response: Response): Promise<T | null> {
 }
 
 async function readUploadError(response: Response): Promise<string | null> {
+  const contentType = response.headers.get('content-type')?.toLowerCase() ?? '';
+  if (contentType.includes('application/json')) {
+    try {
+      const body = (await response.json()) as { error?: string };
+      return body.error?.trim() || null;
+    } catch {
+      return null;
+    }
+  }
+
   try {
-    const body = (await response.json()) as { error?: string };
-    return body.error?.trim() || null;
+    const text = (await response.text()).trim();
+    return text || null;
   } catch {
     return null;
   }
@@ -58,7 +70,24 @@ export async function uploadAdminImage(
     return { ok: false, error: validation.error ?? 'Invalid image file.' };
   }
 
-  const mimeType = params.file.type.toLowerCase();
+  let webpBlob: Blob;
+  try {
+    webpBlob = await convertImageFileToWebp(params.file);
+  } catch (error) {
+    console.error('[admin-upload] client WebP conversion failed', error);
+    return {
+      ok: false,
+      error: error instanceof Error ? error.message : 'Failed to prepare image for upload.',
+    };
+  }
+
+  const maxSize = parseAdminImageMaxSize();
+  if (webpBlob.size <= 0 || webpBlob.size > maxSize) {
+    return {
+      ok: false,
+      error: `Image exceeds ${Math.round(maxSize / (1024 * 1024))} MB after conversion.`,
+    };
+  }
 
   let presignResponse: Response;
   try {
@@ -67,9 +96,9 @@ export async function uploadAdminImage(
       credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        filename: params.file.name,
-        mimeType,
-        size: params.file.size,
+        filename: params.file.name.replace(/\.(png|jpe?g)$/i, '.webp'),
+        mimeType: 'image/webp',
+        size: webpBlob.size,
         folder: params.folder,
         ...(params.variant ? { variant: params.variant } : {}),
       }),
@@ -96,18 +125,24 @@ export async function uploadAdminImage(
   const uploadUrl = presign.uploadUrl.startsWith('http')
     ? presign.uploadUrl
     : new URL(presign.uploadUrl, window.location.origin).toString();
+  const isDirectR2Upload = uploadUrl.startsWith('http');
 
   let uploadResponse: Response;
   try {
     uploadResponse = await fetch(uploadUrl, {
       method: 'PUT',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': mimeType },
-      body: params.file,
+      headers: { 'Content-Type': 'image/webp' },
+      body: webpBlob,
+      ...(isDirectR2Upload ? {} : { credentials: 'same-origin' }),
     });
   } catch (error) {
     console.error('[admin-upload] direct upload failed', error);
-    return { ok: false, error: 'Image upload failed. Please try again.' };
+    return {
+      ok: false,
+      error: isDirectR2Upload
+        ? 'Image upload to storage failed. Check R2 bucket CORS allows PUT from this site.'
+        : 'Image upload failed. Please try again.',
+    };
   }
 
   if (!uploadResponse.ok) {
@@ -115,7 +150,11 @@ export async function uploadAdminImage(
     console.error('[admin-upload] storage rejected upload', uploadResponse.status, serverError);
     return {
       ok: false,
-      error: serverError ?? 'Image upload to storage failed. Please try again.',
+      error:
+        serverError ??
+        (isDirectR2Upload
+          ? 'Image upload to storage failed. Check R2 bucket CORS and credentials.'
+          : 'Image upload to storage failed. Please try again.'),
     };
   }
 
@@ -129,7 +168,7 @@ export async function uploadAdminImage(
         confirmToken: presign.confirmToken,
         filename: params.file.name,
         mimeType: 'image/webp',
-        size: params.file.size,
+        size: webpBlob.size,
       }),
     });
   } catch (error) {
