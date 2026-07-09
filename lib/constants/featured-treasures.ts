@@ -2,6 +2,15 @@ import type { CulturalPortalIconKey } from '@/lib/constants/cultural-portal';
 
 export type FeaturedTreasureLayout = 'tall' | 'top-mid' | 'bottom-mid' | 'top-right';
 
+export const FEATURED_TREASURE_COUNT = 4;
+
+export const FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS: Record<FeaturedTreasureLayout, string> = {
+  tall: 'featured-treasures-grid__item--tall',
+  'top-mid': 'featured-treasures-grid__item--top-mid',
+  'bottom-mid': 'featured-treasures-grid__item--bottom-mid',
+  'top-right': 'featured-treasures-grid__item--top-right',
+};
+
 export interface FeaturedTreasure {
   number: string;
   icon: CulturalPortalIconKey;

@@ -11,13 +11,6 @@ interface FeaturedTreasureCardProps {
   treasure: FeaturedTreasure;
 }
 
-const LAYOUT_CLASS: Record<FeaturedTreasure['layout'], string> = {
-  tall: 'featured-treasure-card--tall',
-  'top-mid': 'featured-treasure-card--top-mid',
-  'bottom-mid': 'featured-treasure-card--bottom-mid',
-  'top-right': 'featured-treasure-card--top-right',
-};
-
 export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
   const { number, icon, categories, title, description, href, layout, cardBackgroundColor, cardBackgroundImage } =
     treasure;
@@ -32,7 +25,7 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
       style={getFeaturedTreasureCardStyle(cardBackgroundColor, cardBackgroundImage)}
       className={cn(
         'featured-treasure-card group block h-full outline-none',
-        LAYOUT_CLASS[layout],
+        layout === 'tall' && 'featured-treasure-card--tall',
         hasCustomBackground && 'featured-treasure-card--has-bg',
       )}
     >

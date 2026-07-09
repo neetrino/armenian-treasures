@@ -7,6 +7,11 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+.featured-treasures-grid__item {
+  min-width: 0;
+  min-height: 0;
+}
+
 .featured-treasure-card {
   position: relative;
   z-index: 1;
@@ -40,7 +45,7 @@
 
 .featured-treasure-card--has-bg {
   background:
-    linear-gradient(180deg, rgba(3, 5, 4, 0.55) 0%, rgba(3, 5, 4, 0.84) 100%),
+    linear-gradient(180deg, rgba(3, 5, 4, 0.34) 0%, rgba(3, 5, 4, 0.76) 100%),
     var(--featured-card-bg-image) center/cover no-repeat,
     var(--featured-card-bg-color);
 }
@@ -117,7 +122,7 @@
 
   .featured-treasure-card--has-bg:hover {
     background:
-      linear-gradient(180deg, rgba(3, 5, 4, 0.42) 0%, rgba(3, 5, 4, 0.78) 100%),
+      linear-gradient(180deg, rgba(3, 5, 4, 0.24) 0%, rgba(3, 5, 4, 0.68) 100%),
       var(--featured-card-bg-image) center/cover no-repeat,
       var(--featured-card-bg-color);
   }
@@ -150,26 +155,29 @@
     grid-template-rows: repeat(3, minmax(11.25rem, 1fr));
   }
 
-  .featured-treasure-card--tall {
+  .featured-treasures-grid__item--tall {
     grid-column: 1;
     grid-row: 1 / 4;
-    min-height: 100%;
-    padding: 2rem 1.625rem 1.875rem;
   }
 
-  .featured-treasure-card--top-mid {
+  .featured-treasures-grid__item--top-mid {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .featured-treasure-card--top-right {
+  .featured-treasures-grid__item--top-right {
     grid-column: 2;
     grid-row: 2;
   }
 
-  .featured-treasure-card--bottom-mid {
+  .featured-treasures-grid__item--bottom-mid {
     grid-column: 2;
     grid-row: 3;
+  }
+
+  .featured-treasure-card--tall {
+    min-height: 100%;
+    padding: 2rem 1.625rem 1.875rem;
   }
 }
 
@@ -179,22 +187,22 @@
     grid-template-rows: minmax(13.75rem, 1fr) minmax(13.75rem, 1fr);
   }
 
-  .featured-treasure-card--tall {
+  .featured-treasures-grid__item--tall {
     grid-column: 1;
     grid-row: 1 / 3;
   }
 
-  .featured-treasure-card--top-mid {
+  .featured-treasures-grid__item--top-mid {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .featured-treasure-card--bottom-mid {
+  .featured-treasures-grid__item--bottom-mid {
     grid-column: 2;
     grid-row: 2;
   }
 
-  .featured-treasure-card--top-right {
+  .featured-treasures-grid__item--top-right {
     grid-column: 3;
     grid-row: 1;
   }

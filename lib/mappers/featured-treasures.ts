@@ -32,7 +32,7 @@ export function mapCultureItemToFeaturedTreasure(
     href: resolveCultureItemHref(item.slug),
     layout: LAYOUTS[index % LAYOUTS.length]!,
     cardBackgroundColor: item.cardBackgroundColor,
-    cardBackgroundImage: item.cardBackgroundImage,
+    cardBackgroundImage: item.cardBackgroundImage ?? item.image,
   };
 }
 
