@@ -57,6 +57,8 @@ export interface PublicCultureItemDTO {
   yearLabel: string | null;
   century: number | null;
   image: string | null;
+  cardBackgroundColor: string | null;
+  cardBackgroundImage: string | null;
   galleryImages: string[];
   tourUrl: string | null;
   videoUrl: string | null;
@@ -186,6 +188,8 @@ export function toPublicCultureItem(
     yearLabel: row.yearLabel,
     century: row.century,
     image: row.image,
+    cardBackgroundColor: row.cardBackgroundColor,
+    cardBackgroundImage: row.cardBackgroundImage,
     galleryImages: row.galleryImages ?? [],
     tourUrl: row.tourUrl,
     videoUrl: row.videoUrl,

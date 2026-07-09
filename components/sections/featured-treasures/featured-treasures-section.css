@@ -38,6 +38,13 @@
   will-change: transform;
 }
 
+.featured-treasure-card--has-bg {
+  background:
+    linear-gradient(180deg, rgba(3, 5, 4, 0.55) 0%, rgba(3, 5, 4, 0.84) 100%),
+    var(--featured-card-bg-image) center/cover no-repeat,
+    var(--featured-card-bg-color);
+}
+
 .featured-treasure-card__categories {
   color: #27c6c8;
 }
@@ -106,6 +113,13 @@
       inset 0 0 0 1px rgba(214, 184, 90, 0.28),
       0 14px 36px rgba(0, 0, 0, 0.24);
     transform: translate3d(0, -4px, 0);
+  }
+
+  .featured-treasure-card--has-bg:hover {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 4, 0.42) 0%, rgba(3, 5, 4, 0.78) 100%),
+      var(--featured-card-bg-image) center/cover no-repeat,
+      var(--featured-card-bg-color);
   }
 
   .featured-treasure-card:hover::after {

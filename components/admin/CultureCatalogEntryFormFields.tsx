@@ -1,5 +1,6 @@
 'use client';
 
+import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
 import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { TextField } from '@/components/forms/fields/TextField';
@@ -25,6 +26,8 @@ interface CultureCatalogEntryFormFieldsProps {
     tourUrl?: string;
     status?: string;
     description?: string;
+    cardBackgroundColor?: string;
+    cardBackgroundImage?: string;
   };
   fieldErrors?: CultureCatalogEntryFormState['fieldErrors'];
   orderHidden?: number;
@@ -97,6 +100,13 @@ export function CultureCatalogEntryFormFields({
           </div>
         )}
       </TranslatableFieldsTabs>
+
+      <CultureItemCardBackgroundFields
+        colorDefaultValue={defaultValues?.cardBackgroundColor ?? ''}
+        imageDefaultValue={defaultValues?.cardBackgroundImage ?? ''}
+        colorError={fieldErrors?.cardBackgroundColor}
+        imageError={fieldErrors?.cardBackgroundImage}
+      />
 
       <div className="grid gap-4 sm:grid-cols-2">
         {orderHidden === undefined ? (

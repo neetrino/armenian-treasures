@@ -9,6 +9,7 @@ import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import { AdminFormSection } from '@/components/admin/AdminFormSection';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
+import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
 import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { Button } from '@/components/ui/Button';
 import {
@@ -45,6 +46,8 @@ interface Initial {
   century: string;
   yearLabel: string;
   image: string;
+  cardBackgroundColor: string;
+  cardBackgroundImage: string;
   galleryImages: string[];
   tourUrl: string;
   videoUrl: string;
@@ -216,6 +219,18 @@ export function CultureItemForm({
           error={state.fieldErrors?.status}
         />
       </div>
+      </AdminFormSection>
+
+      <AdminFormSection
+        title="Featured card background"
+        description="Optional color or image for the Featured Treasures box on the homepage."
+      >
+        <CultureItemCardBackgroundFields
+          colorDefaultValue={initial?.cardBackgroundColor ?? ''}
+          imageDefaultValue={initial?.cardBackgroundImage ?? ''}
+          colorError={state.fieldErrors?.cardBackgroundColor}
+          imageError={state.fieldErrors?.cardBackgroundImage}
+        />
       </AdminFormSection>
 
       <AdminFormSection title="Photo gallery" description="Additional images shown on the detail page.">

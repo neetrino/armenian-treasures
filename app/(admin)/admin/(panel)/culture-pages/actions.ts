@@ -10,6 +10,7 @@ import {
   revalidateCultureMenuCache,
 } from '@/lib/cache/revalidation';
 import { prisma } from '@/lib/db';
+import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
   encodeTranslatableText,
@@ -31,12 +32,21 @@ export interface CultureCatalogEntryFormState {
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().or(z.literal(''));
 
+const optionalHexColor = z
+  .string()
+  .trim()
+  .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, 'Must be a hex color like #0f1419')
+  .optional()
+  .or(z.literal(''));
+
 const catalogEntrySchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(200),
   description: z.string().trim().min(1, 'Description is required').max(5000),
   region: optionalText(120),
   periodLabel: optionalText(80),
   image: optionalText(500),
+  cardBackgroundColor: optionalHexColor,
+  cardBackgroundImage: optionalText(500),
   tourUrl: optionalText(500),
   order: z.coerce.number().int().min(0),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
@@ -53,6 +63,8 @@ function readEntryFields(formData: FormData) {
     region: pickDefaultLocaleText(regionI18n),
     periodLabel: pickDefaultLocaleText(periodLabelI18n),
     image: formData.get('image')?.toString() ?? '',
+    cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
+    cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
     order: formData.get('order')?.toString() ?? '0',
     status: formData.get('status')?.toString() ?? 'PUBLISHED',
@@ -142,7 +154,7 @@ export async function saveCultureCatalogEntryAction(
 
   const existing = await prisma.cultureItem.findFirst({
     where: { id: entryId, menuItemId },
-    select: { id: true, slug: true },
+    select: { id: true, slug: true, cardBackgroundImage: true },
   });
   if (!existing) {
     return { status: 'error', message: 'Entry not found on this page.' };
@@ -157,11 +169,15 @@ export async function saveCultureCatalogEntryAction(
       region: encodeTranslatableText(fields.regionI18n) || null,
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
+      cardBackgroundColor: data.cardBackgroundColor || null,
+      cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,
     },
   });
+
+  await deleteReplacedManagedImage(existing.cardBackgroundImage, data.cardBackgroundImage || null);
 
   await revalidateCatalogEntryPaths(menuItemId, menuPath, existing.slug);
 
@@ -233,6 +249,8 @@ export async function createCultureCatalogEntryAction(
       region: encodeTranslatableText(fields.regionI18n) || null,
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
+      cardBackgroundColor: data.cardBackgroundColor || null,
+      cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,
