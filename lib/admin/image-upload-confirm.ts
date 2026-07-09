@@ -1,9 +1,7 @@
-import { access } from 'node:fs/promises';
-import { join } from 'node:path';
 import { prisma } from '@/lib/db';
 import { verifyImageUploadConfirmToken } from '@/lib/admin/image-upload-confirm-token';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
-import { getStorage } from '@/lib/storage';
+import { getStorageKeyPublicUrl } from '@/lib/storage/raster-r2';
 import { headR2Object } from '@/lib/storage/r2';
 
 export interface AdminImageConfirmRequest {
@@ -17,20 +15,6 @@ export interface AdminImageConfirmResult {
   ok: boolean;
   url?: string;
   error?: string;
-}
-
-function isR2Storage(): boolean {
-  return (process.env.STORAGE_DRIVER ?? 'local') === 'r2';
-}
-
-async function localUploadExists(storageKey: string): Promise<boolean> {
-  const absolute = join(/*turbopackIgnore: true*/ process.cwd(), 'public', 'uploads', storageKey);
-  try {
-    await access(absolute);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 export async function confirmAdminImageUpload(
@@ -64,26 +48,18 @@ export async function confirmAdminImageUpload(
     return { ok: false, error: 'File size is invalid or exceeds the allowed limit.' };
   }
 
-  if (isR2Storage()) {
-    const head = await headR2Object(payload.storageKey);
-    if (!head) {
-      return { ok: false, error: 'Uploaded image was not found in storage. Please try again.' };
-    }
-    if (head.contentLength > payload.maxSize) {
-      return { ok: false, error: 'Uploaded file exceeds the allowed size limit.' };
-    }
-    if (head.contentType && head.contentType !== payload.mimeType) {
-      return { ok: false, error: 'Uploaded file type does not match the prepared upload.' };
-    }
-  } else {
-    const exists = await localUploadExists(payload.storageKey);
-    if (!exists) {
-      return { ok: false, error: 'Uploaded image was not found in storage. Please try again.' };
-    }
+  const head = await headR2Object(payload.storageKey);
+  if (!head) {
+    return { ok: false, error: 'Uploaded image was not found in storage. Please try again.' };
+  }
+  if (head.contentLength > payload.maxSize) {
+    return { ok: false, error: 'Uploaded file exceeds the allowed size limit.' };
+  }
+  if (head.contentType && head.contentType !== payload.mimeType) {
+    return { ok: false, error: 'Uploaded file type does not match the prepared upload.' };
   }
 
-  const storage = getStorage();
-  const publicUrl = storage.publicUrl(payload.storageKey);
+  const publicUrl = getStorageKeyPublicUrl(payload.storageKey);
   const filename = input.filename?.trim() || 'image';
 
   try {

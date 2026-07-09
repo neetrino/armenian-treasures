@@ -115,7 +115,7 @@ export async function uploadAdminImage(
       body: JSON.stringify({
         confirmToken: presign.confirmToken,
         filename: params.file.name,
-        mimeType,
+        mimeType: 'image/webp',
         size: params.file.size,
       }),
     });

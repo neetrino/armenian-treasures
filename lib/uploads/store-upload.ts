@@ -1,8 +1,14 @@
 import { randomBytes } from 'node:crypto';
 import type { UploadStatus } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import {
+  convertRasterToWebp,
+  isConvertibleRasterMime,
+  toWebpFilename,
+} from '@/lib/images/convert-raster-to-webp';
 import { isPrivateStorageKey } from '@/lib/storage/key-policies';
 import { getStorage } from '@/lib/storage';
+import { uploadRasterImage } from '@/lib/storage/raster-r2';
 
 export function safeFilename(name: string): string {
   return (
@@ -41,27 +47,44 @@ export async function storeValidatedUpload(
   input: StoredUploadInput,
 ): Promise<StoredUploadResult> {
   const prefix = input.isImage ? 'submissions/incoming' : 'quarantine/incoming';
-  const storageKey = generateStorageKey(prefix, input.originalFilename);
+  let buffer = input.buffer;
+  let detectedMime = input.detectedMime;
+  let filename = input.originalFilename;
+
+  if (input.isImage && isConvertibleRasterMime(detectedMime)) {
+    buffer = await convertRasterToWebp(buffer);
+    detectedMime = 'image/webp';
+    filename = toWebpFilename(filename);
+  }
+
+  const storageKey = generateStorageKey(prefix, filename);
   const status: UploadStatus = input.isImage ? 'APPROVED' : 'PENDING_SCAN';
-  const visibility = input.isImage ? 'public' : 'private';
 
-  const uploadResult = await getStorage().upload({
-    key: storageKey,
-    body: input.buffer,
-    contentType: input.detectedMime,
-    visibility,
-  });
+  let publicUrl: string | null = null;
 
-  const publicUrl =
-    status === 'APPROVED' && !isPrivateStorageKey(storageKey) ? uploadResult.url : null;
+  if (input.isImage) {
+    const uploadResult = await uploadRasterImage({
+      key: storageKey,
+      buffer,
+      contentType: detectedMime,
+    });
+    publicUrl = !isPrivateStorageKey(storageKey) ? uploadResult.url : null;
+  } else {
+    await getStorage().upload({
+      key: storageKey,
+      body: buffer,
+      contentType: detectedMime,
+      visibility: 'private',
+    });
+  }
 
   const record = await prisma.uploadMetadata.create({
     data: {
       ownerType: input.ownerType,
       ownerId: input.ownerId,
       originalFilename: input.originalFilename,
-      detectedMime: input.detectedMime,
-      fileSize: input.buffer.length,
+      detectedMime,
+      fileSize: buffer.length,
       storageKey,
       status,
       publicUrl,

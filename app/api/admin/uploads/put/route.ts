@@ -1,19 +1,10 @@
-import { mkdir, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
 import { NextResponse } from 'next/server';
 import { verifyImageUploadPutToken } from '@/lib/admin/image-upload-put-token';
-import { uploadBufferToR2 } from '@/lib/storage/r2';
+import { convertRasterToWebp, isConvertibleRasterMime } from '@/lib/images/convert-raster-to-webp';
+import { uploadRasterImage } from '@/lib/storage/raster-r2';
 import { isAdminManagedUploadKey } from '@/lib/storage/key-policies';
 
 export const runtime = 'nodejs';
-
-function isR2Storage(): boolean {
-  return (process.env.STORAGE_DRIVER ?? 'local') === 'r2';
-}
-
-function getUploadRoot(): string {
-  return join(/*turbopackIgnore: true*/ process.cwd(), 'public', 'uploads');
-}
 
 function sanitizeKey(key: string): string {
   return key.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\.\./g, '');
@@ -41,28 +32,33 @@ export async function PUT(request: Request): Promise<Response> {
     return NextResponse.json({ ok: false, error: 'Content-Type does not match prepared upload.' }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await request.arrayBuffer());
-  if (buffer.length <= 0 || buffer.length > payload.maxSize) {
+  const sourceBuffer = Buffer.from(await request.arrayBuffer());
+  if (sourceBuffer.length <= 0 || sourceBuffer.length > payload.maxSize) {
     return NextResponse.json({ ok: false, error: 'File size is invalid or exceeds the allowed limit.' }, { status: 400 });
+  }
+
+  let buffer: Buffer = sourceBuffer;
+  if (isConvertibleRasterMime(payload.mimeType)) {
+    try {
+      buffer = Buffer.from(await convertRasterToWebp(sourceBuffer));
+    } catch (error) {
+      console.error('[admin-upload] failed to convert image to WebP', error);
+      return NextResponse.json({ ok: false, error: 'Failed to process uploaded image.' }, { status: 400 });
+    }
   }
 
   const safeKey = sanitizeKey(payload.storageKey);
 
   try {
-    if (isR2Storage()) {
-      await uploadBufferToR2({
-        key: safeKey,
-        buffer,
-        contentType: payload.mimeType,
-      });
-    } else {
-      const absolute = join(getUploadRoot(), safeKey);
-      await mkdir(dirname(absolute), { recursive: true });
-      await writeFile(absolute, buffer);
-    }
+    await uploadRasterImage({
+      key: safeKey,
+      buffer,
+      contentType: 'image/webp',
+    });
   } catch (error) {
     console.error('[admin-upload] failed to store upload', safeKey, error);
-    return NextResponse.json({ ok: false, error: 'Failed to store uploaded image.' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Failed to store uploaded image.';
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
   }
 
   return new NextResponse(null, { status: 200 });

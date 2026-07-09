@@ -5,8 +5,6 @@ describe('resolvePublicAssetUrl', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    process.env.USE_R2_PUBLIC_ASSETS = 'false';
-    process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS = 'false';
     delete process.env.NEXT_PUBLIC_R2_PUBLIC_URL;
     delete process.env.R2_PUBLIC_URL;
   });
@@ -15,9 +13,16 @@ describe('resolvePublicAssetUrl', () => {
     process.env = { ...originalEnv };
   });
 
-  it('returns local paths when R2 is disabled', () => {
-    expect(resolvePublicAssetUrl('/images/hero/home-hero.png')).toBe(
-      '/images/hero/home-hero.png',
+  it('keeps svg assets on local paths', () => {
+    expect(resolvePublicAssetUrl('/favicon.svg')).toBe('/favicon.svg');
+    expect(resolvePublicAssetUrl('/icons/cultural-portal/churches.svg')).toBe(
+      '/icons/cultural-portal/churches.svg',
+    );
+  });
+
+  it('resolves raster assets from the committed manifest without env flags', () => {
+    expect(resolvePublicAssetUrl('/images/hero/home-hero.webp')).toBe(
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/images/hero/home-hero.webp',
     );
   });
 
@@ -26,50 +31,33 @@ describe('resolvePublicAssetUrl', () => {
     expect(resolvePublicAssetUrl(url)).toBe(url);
   });
 
-  it('maps to R2 when enabled and base URL is configured', () => {
-    process.env.NEXT_PUBLIC_USE_R2_PUBLIC_ASSETS = 'true';
+  it('prefers configured R2 base URL for raster assets', () => {
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://assets.example.com';
 
-    expect(resolvePublicAssetUrl('/images/hero/home-hero.png')).toBe(
-      'https://assets.example.com/images/hero/home-hero.png',
-    );
-  });
-
-  it('maps to R2 when base URL exists even without explicit flags', () => {
-    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://assets.example.com';
-
-    expect(resolvePublicAssetUrl('/images/hero/home-hero.png')).toBe(
-      'https://assets.example.com/images/hero/home-hero.png',
+    expect(resolvePublicAssetUrl('/images/hero/home-hero.webp')).toBe(
+      'https://assets.example.com/images/hero/home-hero.webp',
     );
   });
 
   it('rewrites legacy culture svg paths to the supported fallback image', () => {
     expect(resolvePublicAssetUrl('/images/culture/haghpat.svg')).toBe(
-      '/images/culture/card-heritage.webp',
-    );
-  });
-
-  it('rewrites legacy culture svg paths before resolving to R2', () => {
-    process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://assets.example.com';
-
-    expect(resolvePublicAssetUrl('/images/culture/haghpat.svg')).toBe(
-      'https://assets.example.com/images/culture/card-heritage.webp',
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/images/culture/card-heritage.webp',
     );
   });
 
   it('resolves admin upload paths via manifest without R2 env flags', () => {
     expect(
-      resolvePublicAssetUrl('/uploads/images/culture/culture-9f44566d18e7.png'),
+      resolvePublicAssetUrl('/uploads/images/culture/culture-9f44566d18e7.webp'),
     ).toBe(
-      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/uploads/images/culture/culture-9f44566d18e7.png',
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/uploads/images/culture/culture-9f44566d18e7.webp',
     );
   });
 
   it('prefers configured R2 base URL for admin upload paths', () => {
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL = 'https://cdn.example.com';
 
-    expect(resolvePublicAssetUrl('/uploads/images/culture/culture-abc123def456.jpg')).toBe(
-      'https://cdn.example.com/uploads/images/culture/culture-abc123def456.jpg',
+    expect(resolvePublicAssetUrl('/uploads/images/culture/culture-abc123def456.webp')).toBe(
+      'https://cdn.example.com/uploads/images/culture/culture-abc123def456.webp',
     );
   });
 

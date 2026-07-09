@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   icons: {
     icon: '/favicon.svg',
-    apple: '/apple-icon.png',
+    apple: '/apple-icon.webp',
   },
   openGraph: {
     title: 'Armenian Treasures — Cultural Heritage Foundation',
