@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/db';
 import { resolveAdminManagedStorageKey } from '@/lib/storage/key-policies';
-import { deleteRasterImage, isR2Configured } from '@/lib/storage/raster-r2';
-import { getStorage } from '@/lib/storage';
+import { deleteRasterImage } from '@/lib/storage/raster-r2';
 
 export async function deleteReplacedManagedImage(
   previousUrl: string | null | undefined,
@@ -13,11 +12,7 @@ export async function deleteReplacedManagedImage(
   if (!key) return;
 
   try {
-    if (isR2Configured()) {
-      await deleteRasterImage(key);
-    } else {
-      await getStorage().delete(key);
-    }
+    await deleteRasterImage(key);
     await prisma.uploadMetadata.deleteMany({ where: { storageKey: key } });
   } catch (error) {
     console.error('[storage] failed to delete replaced managed image', key, error);

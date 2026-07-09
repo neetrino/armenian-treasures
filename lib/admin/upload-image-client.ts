@@ -41,6 +41,15 @@ async function readJson<T>(response: Response): Promise<T | null> {
   }
 }
 
+async function readUploadError(response: Response): Promise<string | null> {
+  try {
+    const body = (await response.json()) as { error?: string };
+    return body.error?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
 export async function uploadAdminImage(
   params: AdminImageUploadParams,
 ): Promise<AdminImageUploadResult> {
@@ -102,8 +111,12 @@ export async function uploadAdminImage(
   }
 
   if (!uploadResponse.ok) {
-    console.error('[admin-upload] storage rejected upload', uploadResponse.status);
-    return { ok: false, error: 'Image upload to storage failed. Please try again.' };
+    const serverError = await readUploadError(uploadResponse);
+    console.error('[admin-upload] storage rejected upload', uploadResponse.status, serverError);
+    return {
+      ok: false,
+      error: serverError ?? 'Image upload to storage failed. Please try again.',
+    };
   }
 
   let confirmResponse: Response;
