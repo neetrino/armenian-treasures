@@ -6,6 +6,7 @@ export interface CultureCatalogEntryAdmin {
   region: string;
   periodLabel: string;
   image: string;
+  galleryImages: string[];
   cardBackgroundColor: string;
   cardBackgroundImage: string;
   tourUrl: string;
