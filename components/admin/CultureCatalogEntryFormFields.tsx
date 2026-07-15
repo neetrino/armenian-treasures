@@ -1,6 +1,7 @@
 'use client';
 
 import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
+import { GalleryImagesField } from '@/components/forms/fields/GalleryImagesField';
 import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { TextField } from '@/components/forms/fields/TextField';
@@ -26,6 +27,7 @@ interface CultureCatalogEntryFormFieldsProps {
     tourUrl?: string;
     status?: string;
     description?: string;
+    galleryImages?: string[];
     cardBackgroundColor?: string;
     cardBackgroundImage?: string;
   };
@@ -106,6 +108,12 @@ export function CultureCatalogEntryFormFields({
         imageDefaultValue={defaultValues?.cardBackgroundImage ?? ''}
         colorError={fieldErrors?.cardBackgroundColor}
         imageError={fieldErrors?.cardBackgroundImage}
+      />
+
+      <GalleryImagesField
+        label="Gallery images"
+        defaultValue={defaultValues?.galleryImages ?? []}
+        error={fieldErrors?.galleryImages}
       />
 
       <div className="grid gap-4 sm:grid-cols-2">

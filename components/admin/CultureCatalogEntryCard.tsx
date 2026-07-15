@@ -28,11 +28,18 @@ export function CultureCatalogEntryCard({
   const isDraft = entry.status !== 'PUBLISHED';
 
   return (
-    <button
-      type="button"
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onEdit}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onEdit();
+        }
+      }}
       className={cn(
-        'group relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-stone-800/80 bg-[#0f1419] text-left shadow-lg transition duration-300 hover:-translate-y-1 hover:border-bronze-500/50 hover:shadow-xl',
+        'group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-stone-800/80 bg-[#0f1419] text-left shadow-lg transition duration-300 hover:-translate-y-1 hover:border-bronze-500/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1419]',
         isDraft && 'opacity-80 ring-1 ring-amber-400/40',
       )}
     >
@@ -83,7 +90,7 @@ export function CultureCatalogEntryCard({
           ) : null}
           {entry.periodLabel ? <span>{entry.periodLabel}</span> : null}
         </div>
-        <h3 className="mt-2 font-display text-lg uppercase leading-tight text-bronze-200">{entry.title}</h3>
+        <h3 className="mt-2 font-display text-lg uppercase leading-tight text-bronze-400">{entry.title}</h3>
         {entry.description ? (
           <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-stone-400">{entry.description}</p>
         ) : null}
@@ -91,6 +98,6 @@ export function CultureCatalogEntryCard({
           <p className="mt-3 text-[11px] font-medium uppercase tracking-wide text-amber-400">Draft — not public</p>
         ) : null}
       </div>
-    </button>
+    </div>
   );
 }

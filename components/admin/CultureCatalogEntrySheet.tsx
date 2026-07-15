@@ -111,6 +111,7 @@ function EntrySheetForm({
                   tourUrl: entry.tourUrl,
                   status: entry.status,
                   description: entry.description,
+                  galleryImages: entry.galleryImages,
                   cardBackgroundColor: entry.cardBackgroundColor,
                   cardBackgroundImage: entry.cardBackgroundImage,
                 }

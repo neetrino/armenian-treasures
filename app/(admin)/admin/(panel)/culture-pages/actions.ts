@@ -50,6 +50,7 @@ const catalogEntrySchema = z.object({
   region: optionalText(120),
   periodLabel: optionalText(80),
   image: optionalText(500),
+  galleryImages: z.array(z.string().trim().max(500)).max(20).default([]),
   cardBackgroundColor: optionalHexColor,
   cardBackgroundImage: optionalText(500),
   tourUrl: optionalText(500),
@@ -68,6 +69,10 @@ function readEntryFields(formData: FormData) {
     region: pickDefaultLocaleText(regionI18n),
     periodLabel: pickDefaultLocaleText(periodLabelI18n),
     image: formData.get('image')?.toString() ?? '',
+    galleryImages: formData
+      .getAll('galleryImages')
+      .map((value) => value.toString().trim())
+      .filter((value) => value.length > 0),
     cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
@@ -159,7 +164,7 @@ export async function saveCultureCatalogEntryAction(
 
   const existing = await prisma.cultureItem.findFirst({
     where: { id: entryId, menuItemId },
-    select: { id: true, slug: true, cardBackgroundImage: true },
+    select: { id: true, slug: true, cardBackgroundImage: true, galleryImages: true },
   });
   if (!existing) {
     return { status: 'error', message: 'Entry not found on this page.' };
@@ -174,6 +179,7 @@ export async function saveCultureCatalogEntryAction(
       region: encodeTranslatableText(fields.regionI18n) || null,
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
+      galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
@@ -183,6 +189,7 @@ export async function saveCultureCatalogEntryAction(
   });
 
   await deleteReplacedManagedImage(existing.cardBackgroundImage, data.cardBackgroundImage || null);
+  await cleanupReplacedGalleryImages(existing.galleryImages ?? [], data.galleryImages);
 
   await revalidateCatalogEntryPaths(menuItemId, menuPath, existing.slug);
 
@@ -254,6 +261,7 @@ export async function createCultureCatalogEntryAction(
       region: encodeTranslatableText(fields.regionI18n) || null,
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
+      galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
