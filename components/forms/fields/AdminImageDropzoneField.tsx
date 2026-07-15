@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Loader2, Upload, X } from 'lucide-react';
 import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
 import { uploadAdminImage } from '@/lib/admin/upload-image-client';
@@ -16,12 +16,14 @@ import {
 
 interface AdminImageDropzoneFieldProps {
   label: string;
-  name: string;
+  name?: string;
   folder: 'hero' | 'culture';
   variant?: 'desktop' | 'mobile';
   /** `card` = catalog card (16:10). `banner` = public page hero. `home-hero` = homepage hero. */
   layout?: AdminImagePreviewLayout;
   defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
   hint?: string;
   error?: string;
 }
@@ -35,6 +37,8 @@ export function AdminImageDropzoneField({
   variant,
   layout = 'banner',
   defaultValue = '',
+  value,
+  onValueChange,
   hint,
   error,
 }: AdminImageDropzoneFieldProps) {
@@ -44,6 +48,24 @@ export function AdminImageDropzoneField({
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const isControlled = typeof value === 'string';
+  const currentUrl = isControlled ? value : url;
+
+  useEffect(() => {
+    if (!isControlled) {
+      setUrl(defaultValue);
+    }
+  }, [defaultValue, isControlled]);
+
+  const setUrlValue = useCallback(
+    (nextValue: string) => {
+      if (!isControlled) {
+        setUrl(nextValue);
+      }
+      onValueChange?.(nextValue);
+    },
+    [isControlled, onValueChange],
+  );
 
   const uploadFile = useCallback(
     async (file: File) => {
@@ -58,9 +80,9 @@ export function AdminImageDropzoneField({
         return;
       }
 
-      setUrl(result.url);
+      setUrlValue(result.url);
     },
-    [folder, variant],
+    [folder, setUrlValue, variant],
   );
 
   const handleFiles = useCallback(
@@ -81,20 +103,20 @@ export function AdminImageDropzoneField({
     [handleFiles],
   );
 
-  const previewSrc = url.trim() || null;
+  const previewSrc = currentUrl.trim() || null;
   const previewStyle = getAdminImagePreviewStyle(layout);
 
   return (
     <div className="flex flex-col gap-2">
       <Label htmlFor={inputId}>{label}</Label>
-      <input type="hidden" name={name} value={url} />
+      {name ? <input type="hidden" name={name} value={currentUrl} /> : null}
 
       {previewSrc ? (
         <div className={getAdminImagePreviewContainerClass(layout, previewStyle)}>
           <AdminManagedImagePreview src={previewSrc} previewStyle={previewStyle} />
           <button
             type="button"
-            onClick={() => setUrl('')}
+            onClick={() => setUrlValue('')}
             className="absolute right-2 top-2 z-10 rounded-full bg-midnight-900/70 p-1.5 text-white transition hover:bg-midnight-900"
             aria-label="Remove image"
           >

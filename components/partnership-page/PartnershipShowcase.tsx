@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { PartnerLogo } from '@/lib/constants/partnership-page';
 import { hasPartnershipCategories } from '@/lib/landing/landing-section-utils';
 import { getPartnershipPageContent } from '@/lib/queries/page-content';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 function PlaceholderIcon() {
   return (
@@ -29,7 +30,7 @@ function PartnerShortcard({
       <div className="partner-shortcard__media">
         {logo.type === 'image' ? (
           <Image
-            src={logo.src}
+            src={resolvePublicAssetUrl(logo.src)}
             alt={logo.alt}
             width={160}
             height={160}
