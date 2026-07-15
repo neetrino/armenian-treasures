@@ -11,7 +11,6 @@ interface CandidateResult {
 
 const ICON_KEYS = [
   'churches',
-  'castles',
   'legends',
   'mythology',
   'museums',

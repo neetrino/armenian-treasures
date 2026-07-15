@@ -117,6 +117,18 @@
   flex-basis: 72%;
 }
 
+.khndzoresk-page .cat-card--catalog[data-category-icon='castles'] .cat-media img {
+  object-fit: contain;
+  object-position: center;
+  transform: scale(0.9);
+}
+
+.khndzoresk-page .cat-card--catalog[data-category-icon='castles']:hover .cat-media img {
+  object-fit: contain;
+  object-position: center;
+  transform: scale(0.94);
+}
+
 .khndzoresk-page .cat-card--catalog .cat-content--catalog {
   padding: 12px 14px 16px;
   gap: 6px;

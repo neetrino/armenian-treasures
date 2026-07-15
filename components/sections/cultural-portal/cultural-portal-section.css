@@ -11,6 +11,7 @@
   --cultural-portal-image-scale: 1;
   --cultural-portal-image-hover-scale: 1.035;
   --cultural-portal-image-extra-size: 0px;
+  --cultural-portal-image-offset-y: 0px;
   position: relative;
   z-index: 1;
   display: flex;
@@ -44,7 +45,8 @@
   margin-top: calc(var(--cultural-portal-image-extra-size) / -2);
   border-radius: 0;
   object-fit: cover;
-  transform: scale(var(--cultural-portal-image-scale));
+  transform: translateY(var(--cultural-portal-image-offset-y))
+    scale(var(--cultural-portal-image-scale));
   transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -53,6 +55,17 @@
   --cultural-portal-image-extra-size: 18px;
   --cultural-portal-image-scale: 1.18;
   --cultural-portal-image-hover-scale: 1.22;
+}
+
+.cultural-portal-card[data-category-icon='castles'] {
+  --cultural-portal-image-extra-size: 0px;
+  --cultural-portal-image-scale: 1;
+  --cultural-portal-image-hover-scale: 1.03;
+  --cultural-portal-image-offset-y: 0px;
+}
+
+.cultural-portal-card[data-category-icon='castles'] .cultural-portal-card__image {
+  object-fit: contain;
 }
 
 .cultural-portal-card[data-category-icon='museums'] {
@@ -132,7 +145,8 @@
   }
 
   .cultural-portal-card:hover .cultural-portal-card__image {
-    transform: scale(var(--cultural-portal-image-hover-scale));
+    transform: translateY(var(--cultural-portal-image-offset-y))
+      scale(var(--cultural-portal-image-hover-scale));
   }
 
   .cultural-portal-card:hover .cultural-portal-card__title {

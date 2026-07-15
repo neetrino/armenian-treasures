@@ -5,6 +5,7 @@ import { AdminFormSection } from '@/components/admin/AdminFormSection';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { Button } from '@/components/ui/Button';
 import type { HomeSections } from '@/lib/types/home-sections';
 
@@ -536,6 +537,28 @@ function AboutSectionEditor({
                 cards[index] = { ...card, description: e.target.value };
                 onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
               }}
+            />
+            <TextField
+              label="Background color (optional)"
+              value={card.cardBackgroundColor ?? ''}
+              onChange={(e) => {
+                const cards = [...aboutUs.cards];
+                cards[index] = { ...card, cardBackgroundColor: e.target.value || null };
+                onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
+              }}
+            />
+            <AdminImageDropzoneField
+              label="Background image (optional)"
+              folder="hero"
+              variant="desktop"
+              layout="card"
+              value={card.cardBackgroundImage ?? ''}
+              onValueChange={(value) => {
+                const cards = [...aboutUs.cards];
+                cards[index] = { ...card, cardBackgroundImage: value || null };
+                onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
+              }}
+              hint="Upload an image for this card background."
             />
           </div>
         ))}

@@ -14,7 +14,6 @@ const MANIFEST_PATH = resolve(process.cwd(), 'data', 'r2-public-manifest.json');
 
 const ICON_KEYS = [
   'churches',
-  'castles',
   'legends',
   'mythology',
   'museums',

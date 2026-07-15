@@ -142,6 +142,7 @@ export interface CulturalPortalProject {
   href: string;
   goalUsd?: number;
   raisedUsd?: number;
+  cardBackgroundImage?: string | null;
 }
 
 export const CULTURAL_PORTAL_PROJECTS_SECTION = {

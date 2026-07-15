@@ -63,6 +63,7 @@ export function CultureCatalogSubcategoryGrid({
                   'cat-card cat-card--catalog reveal group',
                   isHub && 'cat-card--hub',
                 )}
+                data-category-icon={iconKey}
               >
                 <div className="cat-media">
                   <CulturalCategoryIcon

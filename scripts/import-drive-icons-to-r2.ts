@@ -13,7 +13,6 @@ const MANIFEST_PATH = resolve(process.cwd(), 'data', 'r2-public-manifest.json');
 
 const ICON_FILE_MAPPING = {
   churches: 'church.png',
-  castles: 'castle.png',
   legends: 'Legendaries & Heroes.png',
   mythology: 'Mythology.png',
   museums: 'museum.png',

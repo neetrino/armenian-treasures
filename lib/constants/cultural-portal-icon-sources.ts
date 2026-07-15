@@ -15,10 +15,9 @@ export const CULTURAL_PORTAL_ICON_SOURCES = {
     lucideIcon: 'church',
   },
   castles: {
-    iconSrc: '/icons/cultural-portal/castles.webp',
-    sourceHref: 'https://lucide.dev/icons/castle',
-    library: 'lucide',
-    lucideIcon: 'castle',
+    iconSrc: '/icons/cultural-portal/castles-v2.webp',
+    sourceHref: 'https://drive.google.com/drive/folders/19474lLrGhneA_kzqRc7NP9WeqxhpdXRQ',
+    library: 'drive',
   },
   legends: {
     iconSrc: '/icons/cultural-portal/legends.webp',
