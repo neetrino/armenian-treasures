@@ -34,11 +34,6 @@ const DRIVE_ASSETS: DriveAsset[] = [
     targetSlug: 'carpets-and-textile-arts',
     equivalentExistingR2Key: 'icons/cultural-portal/carpets.webp',
   },
-  {
-    fileName: 'castle.png',
-    targetSlug: 'castle',
-    equivalentExistingR2Key: 'icons/cultural-portal/castles.webp',
-  },
   { fileName: 'ChatGPT Image 1 July 2026 09_51_10 (6).png', targetSlug: 'chatgpt-image-1-july-2026' },
   { fileName: 'Christian Heritage.png', targetSlug: 'christian-heritage' },
   { fileName: 'Chronicles & Manuscripts.png', targetSlug: 'chronicles-and-manuscripts' },

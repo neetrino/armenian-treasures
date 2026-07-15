@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { LayoutGrid, List, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { LayoutGrid, List, Plus, Trash2 } from 'lucide-react';
 import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { CultureCatalogEntryCard } from '@/components/admin/CultureCatalogEntryCard';
 import { CultureCatalogEntrySheet } from '@/components/admin/CultureCatalogEntrySheet';
 import { Button } from '@/components/ui/Button';
+import { deleteCultureCatalogEntryAction } from '@/app/(admin)/admin/(panel)/culture-pages/actions';
 import { cultureCatalogPageAdminHref } from '@/lib/admin/culture-catalog-pages';
 import type {
   CultureCatalogEntryAdmin,
@@ -34,9 +36,29 @@ export function CultureCatalogEntriesPanel({
   subpageLinks,
   managesGridCards,
 }: CultureCatalogEntriesPanelProps) {
+  const router = useRouter();
   const [sheetMode, setSheetMode] = useState<SheetMode | null>(null);
   const [viewMode, setViewMode] = useState<'board' | 'list'>('board');
+  const [isDeleting, startDeleteTransition] = useTransition();
   const nextOrder = entries.reduce((max, entry) => Math.max(max, entry.order), -1) + 1;
+
+  function handleDeleteEntry(entry: CultureCatalogEntryAdmin): void {
+    if (typeof window === 'undefined') return;
+    const label = entry.title.trim() || `Card #${entry.order}`;
+    if (!window.confirm(`Delete "${label}"?`)) return;
+    startDeleteTransition(() => {
+      void deleteCultureCatalogEntryAction(entry.id, menuItemId, menuPath).then((result) => {
+        if (!result.ok) {
+          window.alert(result.message);
+          return;
+        }
+        if (sheetMode?.type === 'edit' && sheetMode.entry.id === entry.id) {
+          setSheetMode(null);
+        }
+        router.refresh();
+      });
+    });
+  }
 
   if (!managesGridCards) {
     return (
@@ -131,9 +153,26 @@ export function CultureCatalogEntriesPanel({
                       <span className="line-clamp-2">{entry.description || 'No description yet.'}</span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Button type="button" variant="ghost" onClick={() => setSheetMode({ type: 'edit', entry, index })}>
-                        Edit
-                      </Button>
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setSheetMode({ type: 'edit', entry, index })}
+                          disabled={isDeleting}
+                        >
+                          Edit
+                        </Button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteEntry(entry)}
+                          disabled={isDeleting}
+                          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-pomegranate hover:bg-pomegranate/10 disabled:opacity-50"
+                          title="Delete card"
+                        >
+                          <Trash2 size={12} aria-hidden />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -148,6 +187,8 @@ export function CultureCatalogEntriesPanel({
                 entry={entry}
                 index={index}
                 onEdit={() => setSheetMode({ type: 'edit', entry, index })}
+                onDelete={() => handleDeleteEntry(entry)}
+                deleteDisabled={isDeleting}
               />
             ))}
             <button

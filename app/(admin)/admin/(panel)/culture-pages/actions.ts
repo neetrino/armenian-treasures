@@ -4,13 +4,18 @@ import { revalidatePath } from 'next/cache';
 import slugify from 'slugify';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import type { AdminDeleteResult } from '@/lib/admin/action-result';
+import { runAdminDelete } from '@/lib/admin/action-result';
 import {
   revalidateCultureCatalogPathForMenuItem,
   revalidateCultureItemCache,
   revalidateCultureMenuCache,
 } from '@/lib/cache/revalidation';
 import { prisma } from '@/lib/db';
-import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
+import {
+  cleanupReplacedGalleryImages,
+  deleteReplacedManagedImage,
+} from '@/lib/uploads/cleanup-replaced-image';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
   encodeTranslatableText,
@@ -261,4 +266,34 @@ export async function createCultureCatalogEntryAction(
   await revalidateCatalogEntryPaths(menuItemId, menuPath, slug);
 
   return { status: 'success', message: `“${data.title}” added to the grid.` };
+}
+
+export async function deleteCultureCatalogEntryAction(
+  entryId: string,
+  menuItemId: string,
+  menuPath: string,
+): Promise<AdminDeleteResult> {
+  await requireAdmin();
+
+  return runAdminDelete(async () => {
+    const entry = await prisma.cultureItem.findFirst({
+      where: { id: entryId, menuItemId },
+      select: {
+        id: true,
+        slug: true,
+        image: true,
+        cardBackgroundImage: true,
+        galleryImages: true,
+      },
+    });
+    if (!entry) {
+      throw new Error('Entry not found.');
+    }
+
+    await prisma.cultureItem.delete({ where: { id: entry.id } });
+    await deleteReplacedManagedImage(entry.image, null);
+    await deleteReplacedManagedImage(entry.cardBackgroundImage, null);
+    await cleanupReplacedGalleryImages(entry.galleryImages ?? [], []);
+    await revalidateCatalogEntryPaths(menuItemId, menuPath, entry.slug);
+  });
 }

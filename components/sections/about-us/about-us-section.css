@@ -23,6 +23,13 @@
     box-shadow 240ms ease;
 }
 
+.about-us-card--has-bg {
+  background:
+    linear-gradient(180deg, rgba(3, 5, 4, 0.34) 0%, rgba(3, 5, 4, 0.76) 100%),
+    var(--about-card-bg-image) center/cover no-repeat,
+    var(--about-card-bg-color);
+}
+
 .about-us-card:focus-visible {
   outline: 1px solid rgba(39, 198, 200, 0.7);
   outline-offset: 4px;
@@ -36,6 +43,13 @@
     border-color: var(--surface-card-hover-border);
     box-shadow: var(--surface-card-hover-shadow);
     transform: translateY(-2px);
+  }
+
+  .about-us-card--has-bg:hover {
+    background:
+      linear-gradient(180deg, rgba(3, 5, 4, 0.24) 0%, rgba(3, 5, 4, 0.68) 100%),
+      var(--about-card-bg-image) center/cover no-repeat,
+      var(--about-card-bg-color);
   }
 }
 

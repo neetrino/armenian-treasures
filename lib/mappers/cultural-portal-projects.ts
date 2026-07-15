@@ -48,6 +48,7 @@ export function mapProjectToCulturalPortalProject(
     href: '/projects',
     goalUsd: project.goalAmount,
     raisedUsd: project.raisedAmount,
+    cardBackgroundImage: project.image,
   };
 }
 

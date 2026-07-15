@@ -5,6 +5,8 @@ export interface HomeAboutCard {
   description: string;
   href: string;
   icon: HomeAboutCardIconKey;
+  cardBackgroundColor: string | null;
+  cardBackgroundImage: string | null;
 }
 
 export const HOME_ABOUT_SECTION = {
@@ -21,6 +23,8 @@ export const HOME_ABOUT_CARDS: HomeAboutCard[] = [
       'To document, preserve, and celebrate the full breadth of Armenian civilisation — making it accessible to every Armenian and every curious mind on Earth, forever.',
     href: '/about/mission',
     icon: 'mission',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     title: 'THE TEAM',
@@ -28,6 +32,8 @@ export const HOME_ABOUT_CARDS: HomeAboutCard[] = [
       'Historians, archivists, filmmakers, engineers, and cultural ambassadors from Armenia, the diaspora, and beyond — bound by shared purpose.',
     href: '/about/team',
     icon: 'team',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     title: 'CAREER',
@@ -35,6 +41,8 @@ export const HOME_ABOUT_CARDS: HomeAboutCard[] = [
       'Join us in building something that will outlast us all. We are always seeking passionate researchers, writers, designers, and technologists.',
     href: '/about/career',
     icon: 'career',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
   {
     title: 'CONTACT US',
@@ -42,5 +50,7 @@ export const HOME_ABOUT_CARDS: HomeAboutCard[] = [
       'Reach out for partnerships, research enquiries, media requests, or simply to share your family\u2019s Armenian story with the world.',
     href: '/contacts',
     icon: 'contact',
+    cardBackgroundColor: null,
+    cardBackgroundImage: null,
   },
 ];

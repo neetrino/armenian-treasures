@@ -41,6 +41,8 @@ const homeAboutCardSchema = z.object({
   description: z.string().trim().min(1).max(500),
   href: z.string().trim().min(1).max(200),
   icon: z.enum(['mission', 'team', 'career', 'contact']),
+  cardBackgroundColor: z.string().trim().max(40).nullable().optional().default(null),
+  cardBackgroundImage: z.string().trim().max(500).nullable().optional().default(null),
 });
 
 const partnershipCategorySchema = z.object({

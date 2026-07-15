@@ -537,6 +537,24 @@ function AboutSectionEditor({
                 onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
               }}
             />
+            <TextField
+              label="Background color (optional)"
+              value={card.cardBackgroundColor ?? ''}
+              onChange={(e) => {
+                const cards = [...aboutUs.cards];
+                cards[index] = { ...card, cardBackgroundColor: e.target.value || null };
+                onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
+              }}
+            />
+            <TextField
+              label="Background image URL (optional)"
+              value={card.cardBackgroundImage ?? ''}
+              onChange={(e) => {
+                const cards = [...aboutUs.cards];
+                cards[index] = { ...card, cardBackgroundImage: e.target.value || null };
+                onChange({ ...sections, aboutUs: { ...aboutUs, cards } });
+              }}
+            />
           </div>
         ))}
       </div>

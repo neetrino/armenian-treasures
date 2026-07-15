@@ -1,25 +1,20 @@
 import type { CSSProperties } from 'react';
-import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { getCardBackgroundStyle, hasCardBackground } from '@/lib/card-background-style';
 
 export function hasFeaturedTreasureCardBackground(
   color?: string | null,
   image?: string | null,
 ): boolean {
-  return Boolean(color?.trim() || image?.trim());
+  return hasCardBackground(color, image);
 }
 
 export function getFeaturedTreasureCardStyle(
   color?: string | null,
   image?: string | null,
 ): CSSProperties | undefined {
-  const normalizedColor = color?.trim() || null;
-  const normalizedImage = image?.trim() || null;
-  if (!normalizedColor && !normalizedImage) return undefined;
-
-  return {
-    '--featured-card-bg-color': normalizedColor ?? 'var(--surface-panel-bg)',
-    '--featured-card-bg-image': normalizedImage
-      ? `url(${resolvePublicAssetUrl(normalizedImage)})`
-      : 'none',
-  } as CSSProperties;
+  return getCardBackgroundStyle(color, image, {
+    colorVarName: '--featured-card-bg-color',
+    imageVarName: '--featured-card-bg-image',
+    fallbackColor: 'var(--surface-panel-bg)',
+  });
 }

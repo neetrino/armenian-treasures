@@ -30,8 +30,22 @@
   overflow: hidden;
 }
 
+.project-portal .proj-card--has-bg {
+  background:
+    linear-gradient(180deg, rgba(3, 5, 4, 0.34) 0%, rgba(3, 5, 4, 0.76) 100%),
+    var(--project-card-bg-image) center/cover no-repeat,
+    var(--project-card-bg-color);
+}
+
 .project-portal .proj-card:hover {
   border-color: var(--pp-gold);
+}
+
+.project-portal .proj-card--has-bg:hover {
+  background:
+    linear-gradient(180deg, rgba(3, 5, 4, 0.24) 0%, rgba(3, 5, 4, 0.68) 100%),
+    var(--project-card-bg-image) center/cover no-repeat,
+    var(--project-card-bg-color);
 }
 
 .project-portal .proj-card::before {

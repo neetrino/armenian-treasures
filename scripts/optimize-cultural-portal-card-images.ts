@@ -6,7 +6,6 @@ import { getR2ManifestPublicBaseUrl, getR2ManifestUrl } from '@/lib/assets/r2-ma
 
 const ICON_KEYS = [
   'churches',
-  'castles',
   'legends',
   'mythology',
   'museums',
