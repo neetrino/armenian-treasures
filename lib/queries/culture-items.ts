@@ -116,6 +116,31 @@ export async function getMapItems(): Promise<PublicCultureItemDTO[]> {
   return getMapItemsCached(locale);
 }
 
+async function fetchPublishedCultureItems(
+  locale: SiteLocaleCode,
+): Promise<PublicCultureItemDTO[]> {
+  try {
+    const rows = await prisma.cultureItem.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: [{ order: 'asc' }, { title: 'asc' }],
+    });
+    return rows.map((row) => toPublicCultureItem(row, locale));
+  } catch {
+    return [];
+  }
+}
+
+const getPublishedCultureItemsCached = unstable_cache(
+  fetchPublishedCultureItems,
+  ['culture-items-published'],
+  { tags: ['culture-items'], revalidate: 60 },
+);
+
+export async function getPublishedCultureItems(): Promise<PublicCultureItemDTO[]> {
+  const locale = await getCurrentSiteLocale();
+  return getPublishedCultureItemsCached(locale);
+}
+
 async function fetchFeaturedCultureItems(
   locale: SiteLocaleCode,
   limit = 4,

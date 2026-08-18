@@ -4,13 +4,13 @@
 
 Աուդիտ՝ 2026-08-18։ Յուրաքանչյուր ֆայլում՝ ինչ է պահանջվում, ինչպես իրականացնել, արդյոք արված է, և քանի %-ով։
 
-**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~26%**  
+**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~36%**  
 Քարտեզի կետը blocked է (քննարկում Վլադի հետ) և միջինում չի մտնում։
 
 | # | Բաժին | Առաջադրանք | Կարգավիճակ | % | Ֆայլ |
 |---|--------|------------|------------|---|------|
 | 01 | Home | Support the mission → `/donate` | Done | 100% | [01](./01-home-support-the-mission.md) |
-| 02 | Home | Որոնում + ֆիլտր (մարզ / ժամանակաշրջան / տեսակ) | Missing | 5% | [02](./02-home-search-filters.md) |
+| 02 | Home | Որոնում + ֆիլտր (մարզ / ժամանակաշրջան / տեսակ) | Done | 100% | [02](./02-home-search-filters.md) |
 | 03 | Home | Map — քննարկում Վլադի հետ | Blocked | — | [03](./03-home-map-discussion.md) |
 | 04 | Home | STORIES WORTH DISCOVERING — top 5, Admin թարմացում | Partial | 40% | [04](./04-stories-worth-discovering-top-5.md) |
 | 05 | Home | Discover more highlight → 30 highlight էջ | Missing | 10% | [05](./05-discover-more-highlights.md) |

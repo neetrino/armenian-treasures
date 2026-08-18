@@ -8,6 +8,7 @@ import type { PageContentSlug } from '@/lib/types/page-content';
 export const PUBLIC_LAYOUT_PATHS = [
   '/',
   '/culture',
+  '/search',
   '/culture/submit',
   '/projects',
   '/donate',

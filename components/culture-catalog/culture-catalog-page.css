@@ -525,6 +525,23 @@
   margin-top: 16px;
 }
 
+.khndzoresk-page .catalog-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 1.5rem 0 0;
+}
+
+.khndzoresk-page .catalog-search-field {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--text);
+}
+
+.khndzoresk-page .catalog-search-form__submit {
+  align-self: flex-start;
+}
+
 @media (max-width: 900px) {
   .khndzoresk-page .catalog-section-intro {
     flex-direction: column;

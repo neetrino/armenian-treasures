@@ -12,6 +12,7 @@ const STATIC_PATHS = [
   '/about/team',
   '/about/career',
   '/culture',
+  '/search',
   '/culture/submit',
   '/projects',
   '/partnership',

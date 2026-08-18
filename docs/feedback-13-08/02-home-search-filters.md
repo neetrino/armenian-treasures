@@ -1,29 +1,29 @@
 # 02 — Home որոնում + ֆիլտր
 
-**Բաժին:** Home page  
-**Կարգավիճակ:** Missing  
-**Առաջընթաց:** 5%
+**Բաժին:** Home page
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
-Այս հատվածում (sheet screenshot-ը header-ի EN / profile կոճակների մոտ է) ավելացնել որոնում, որը ֆիլտրում է ըստ **մարզի**, **ժամանակաշրջանի** և **տեսակի**։
+Header-ում՝ EN / profile կոճակների մոտ, ավելացնել որոնում, որը ֆիլտրում է ըստ մարզի, ժամանակաշրջանի և տեսակի։
 
 ## Ինչպես իրականացնել
 
-1. Որոշել տեղը՝ header (լեզվի/profile կողքին) թե Cultural Portal սեկցիայի վերևում։ Sheet-ի նկարը մատնանշում է header-ը։
-2. Չստեղծել նոր search engine. վերօգտագործել `lib/culture-catalog/filter-catalog-entries.ts` և `lib/constants/heritage-map-filters.ts`։
-3. Ֆիլտրերի աղբյուր՝ `CultureItem.region`, `periodLabel` / `century`, `itemType`։
-4. UI՝ որոնման դաշտ + 3 dropdown (Region, Period, Type)։ Արդյունքները՝ `/culture` կամ dedicated results, query params-ով (`?region=&period=&type=&q=`)։
-5. Header-ում տեղադրելիս չխախտել `LanguageSelector` և account CTA layout-ը։
+1. Header-ում search icon՝ LanguageSelector-ի կողքին, առանց խախտելու profile CTA-ն։
+2. Վերօգտագործել `filter-catalog-entries` և `heritage-map-filters` text search-ը։
+3. Ֆիլտրեր՝ `CultureItem.region`, `periodLabel` / `century`, `itemType`։
+4. Արդյունքները `/search?q=&region=&period=&type=` query params-ով։
 
 ## Իրականացված է հիմա
 
-- Catalog էջերում կա միայն տեքստային search (`CultureCatalogSectionHeader`)։
-- Item-ներն ունեն `region` / `periodLabel` / `itemType` դաշտեր։
-- Header-ում որոնում չկա։
+- Header search icon + panel (region / period / type + keyword)։
+- `/search` արդյունքների էջ՝ նույն ֆիլտրերով և catalog card grid-ով։
+- Filter logic՝ `filterCatalogItems`։
+- Locales/profile layout-ը չի փոխվել։
 
 ## Մնացած
 
-- [ ] Header (կամ home section) search UI
-- [ ] Region / Period / Type ֆիլտրեր
-- [ ] Արդյունքների էջ կամ in-place ցանկ
+- [x] Header search UI
+- [x] Region / Period / Type ֆիլտրեր
+- [x] Արդյունքների էջ query params-ով

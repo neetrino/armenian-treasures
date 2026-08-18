@@ -1,10 +1,12 @@
 'use client';
 
+import { Suspense } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Logo } from '@/components/brand/Logo';
 import { DesktopNav } from '@/components/navigation/DesktopNav';
 import { MobileMenu } from '@/components/navigation/MobileMenu';
 import { LanguageSelector } from '@/components/navigation/LanguageSelector';
+import { HeaderSearch } from '@/components/search/HeaderSearch';
 import { HeaderProfileButton } from '@/components/navigation/HeaderProfileButton';
 import { HEADER_EASE } from '@/components/layout/header-motion';
 import { useHeaderScrolled } from '@/components/layout/use-header-scrolled';
@@ -78,6 +80,9 @@ export function HeaderBar({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
         >
+          <Suspense fallback={null}>
+            <HeaderSearch />
+          </Suspense>
           <LanguageSelector className="hidden lg:inline-flex" enabledLocales={enabledLocales} />
           <HeaderProfileButton account={account} />
           <MobileMenu
