@@ -15,6 +15,7 @@ import {
   mapCultureItemsToHighlightTreasures,
 } from '@/lib/mappers/featured-treasures';
 import type { PublicBlogPostDTO, PublicCultureItemDetailDTO } from '@/lib/dto';
+import { emptyMediaContent } from '@/lib/culture-item-media';
 
 function item(index: number): PublicCultureItemDetailDTO {
   return {
@@ -30,11 +31,13 @@ function item(index: number): PublicCultureItemDetailDTO {
     yearLabel: null,
     century: 9,
     image: null,
+    coverImage: null,
     cardBackgroundColor: null,
     cardBackgroundImage: null,
     galleryImages: [],
     tourUrl: null,
     videoUrl: null,
+    media: emptyMediaContent(),
     latitude: null,
     longitude: null,
     mapType: 'MONASTERY',

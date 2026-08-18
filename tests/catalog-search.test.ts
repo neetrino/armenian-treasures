@@ -6,6 +6,7 @@ import {
   parseCatalogSearchParams,
 } from '@/lib/culture-catalog/catalog-search-params';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import { emptyMediaContent } from '@/lib/culture-item-media';
 
 function item(partial: Partial<PublicCultureItemDTO>): PublicCultureItemDTO {
   return {
@@ -21,11 +22,13 @@ function item(partial: Partial<PublicCultureItemDTO>): PublicCultureItemDTO {
     yearLabel: null,
     century: partial.century ?? 9,
     image: null,
+    coverImage: null,
     cardBackgroundColor: null,
     cardBackgroundImage: null,
     galleryImages: [],
     tourUrl: null,
     videoUrl: null,
+    media: emptyMediaContent(),
     latitude: null,
     longitude: null,
     mapType: 'MONASTERY',

@@ -1,14 +1,12 @@
 import type { ReactNode } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Play } from 'lucide-react';
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
 import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
-import { isMatterportUrl } from '@/lib/matterport';
-import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
-import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
+import { CultureItemMediaSections } from '@/components/culture-catalog/CultureItemMediaSections';
+import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
 
@@ -35,9 +33,9 @@ function DetailFact({ label, value }: { label: string; value: ReactNode }) {
 export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
   const menu = item.menuItem;
   const parent = menu?.parent ?? null;
-  const gallery = item.galleryImages.filter((src) => src.trim().length > 0);
   const hasCoords = item.latitude !== null && item.longitude !== null;
   const description = item.shortDescription ?? item.description ?? '';
+  const heroImage = item.coverImage?.trim() || item.image?.trim() || undefined;
 
   const breadcrumb = parent && menu
     ? [
@@ -81,7 +79,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
             : 'Armenian cultural archive'
         }
         description={heroDescription}
-        heroImage={item.image?.trim() || undefined}
+        heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         ctas={[
           { label: 'View Details', href: '#detail', variant: 'gold' },
@@ -96,69 +94,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
           <h2 className="sec-title">{item.title}</h2>
           <div className="catalog-detail-grid">
             <div className="catalog-detail-main">
-              <div className="catalog-detail-card reveal">
-                <div className="catalog-detail-card__media">
-                  <Image
-                    src={
-                      item.image
-                        ? resolvePublicAssetUrl(item.image)
-                        : resolvePublicAssetUrl('/images/placeholder.svg')
-                    }
-                    alt={item.title}
-                    width={1200}
-                    height={750}
-                    priority
-                  />
-                </div>
-                {item.description ? (
-                  <div className="catalog-detail-card__body">
-                    <p>{item.description}</p>
-                  </div>
-                ) : null}
-              </div>
-
-              {item.tourUrl ? (
-                <div id="tour" className="catalog-detail-card reveal">
-                  <div className="catalog-detail-card__body">
-                    <h2>{isMatterportUrl(item.tourUrl) ? 'Matterport 3D Tour' : '3D Tour'}</h2>
-                    {isMatterportUrl(item.tourUrl) ? (
-                      <iframe
-                        src={item.tourUrl}
-                        title={`${item.title} 3D Tour`}
-                        className="catalog-tour-embed"
-                        allow="fullscreen; xr-spatial-tracking"
-                        allowFullScreen
-                        referrerPolicy="no-referrer-when-downgrade"
-                      />
-                    ) : null}
-                    <div className="catalog-detail-actions">
-                      <a href={item.tourUrl} className="btn-teal" target="_blank" rel="noopener noreferrer">
-                        Open 3D Tour
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
-              {hasNonEmptyArray(gallery) ? (
-                <div className="catalog-detail-card reveal">
-                  <div className="catalog-detail-card__body">
-                    <h2>Gallery</h2>
-                    <div className="catalog-gallery-grid">
-                      {gallery.map((src, index) => (
-                        <div key={src} className="catalog-gallery-item">
-                          <Image
-                            src={resolvePublicAssetUrl(src)}
-                            alt={`${item.title} — gallery image ${index + 1}`}
-                            width={600}
-                            height={450}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
+              <CultureItemMediaSections title={item.title} media={item.media} />
             </div>
 
             <aside className="catalog-detail-aside">

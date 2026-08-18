@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 import { AdminFormTabs } from '@/components/admin/AdminFormTabs';
-import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { SITE_LOCALE_DEFINITIONS, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cn } from '@/lib/utils';
 
 interface TranslatableFieldsTabsProps {
@@ -22,10 +22,10 @@ export function TranslatableFieldsTabs({
 
   const tabs = useMemo(
     () =>
-      SITE_LOCALE_CODES.map((locale) => ({
-        id: locale,
-        label: locale,
-        hint: tabErrors?.[locale] ? 'Needs review' : undefined,
+      SITE_LOCALE_DEFINITIONS.map((locale) => ({
+        id: locale.code,
+        label: locale.tabLabel,
+        hint: tabErrors?.[locale.code] ? 'Needs review' : undefined,
       })),
     [tabErrors],
   );

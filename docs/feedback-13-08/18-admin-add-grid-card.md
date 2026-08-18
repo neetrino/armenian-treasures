@@ -1,8 +1,8 @@
 # 18 — Add grid card — նույն կառուցվածքը
 
 **Բաժին:** Admin panel
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 35%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -36,14 +36,21 @@ Mockup: https://drive.google.com/file/d/1hhW254MMl8U0QwamqoZw-Tg9of_X7SMK/view?u
 
 ## Իրականացված է հիմա
 
-- Կա մեկ հարթ form՝ title, descriptions, region/period, one image, gallery, one tour, one video, lat/lng, type, status, card background։
-- Չկան dual card/cover, unlimited description/tour/video blocks, featured toggles, drag map, Before/After, per-image alt/caption, Save draft/Preview/Publish bar։
+- `CultureItemForm`-ը mockup section 1–6 է + Save draft / Preview / Publish toolbar։
+- Լեզուները՝ ARM (E), ARM (W), EN, RU, FR, PT (`HY` + նոր `HYW`)։
+- Featured Catalog (`featuredOnCatalog`) և Featured Highlight (`featuredOnHome`)։
+- Card photo + Cover image. Upload limit 10MB։
+- Unlimited description / tour / video / gallery blocks՝ `mediaContent` JSON, dual-write `description` / `tourUrl` / `videoUrl` / `galleryImages`։
+- Leaflet drag-pin map, default Yerevan 40.1792, 44.4991։
+- Gallery Image և Before/After + caption/alt։
+- Add grid card sheet-ը նույն `CultureItemForm`-ն է օգտագործում։
+- Public article page-ը render է անում blocks / tours / videos / gallery։
 
 ## Մնացած
 
-- [ ] Form-ը բաժանել mockup section 1-6
-- [ ] Featured Catalog / Highlight toggle-ներ
-- [ ] Card photo + Cover image
-- [ ] Unlimited description / tour / video blocks (schema որոշում)
-- [ ] Drag-pin map
-- [ ] Gallery caption/alt + Before/After
+- [x] Form-ը բաժանել mockup section 1-6
+- [x] Featured Catalog / Highlight toggle-ներ
+- [x] Card photo + Cover image
+- [x] Unlimited description / tour / video blocks (schema որոշում)
+- [x] Drag-pin map
+- [x] Gallery caption/alt + Before/After

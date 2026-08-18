@@ -14,16 +14,19 @@ export interface CultureItemFormInitial {
   century: string;
   yearLabel: string;
   image: string;
+  coverImage: string;
   cardBackgroundColor: string;
   cardBackgroundImage: string;
   galleryImages: string[];
   tourUrl: string;
   videoUrl: string;
+  mediaContent: unknown;
   latitude: string;
   longitude: string;
   mapType: string;
   showOnMap: boolean;
   featuredOnHome: boolean;
+  featuredOnCatalog: boolean;
   featuredOrder: number | null;
   itemType: string;
   status: string;
@@ -46,8 +49,10 @@ export function toCultureItemFormInitial(
     century: item.century !== null ? String(item.century) : '',
     yearLabel: getAdminLocaleValue(item.yearLabel),
     image: item.image ?? '',
+    coverImage: item.coverImage ?? '',
     cardBackgroundColor: item.cardBackgroundColor ?? '',
     cardBackgroundImage: item.cardBackgroundImage ?? '',
+    mediaContent: item.mediaContent,
     galleryImages: item.galleryImages ?? [],
     tourUrl: item.tourUrl ?? '',
     videoUrl: item.videoUrl ?? '',
@@ -56,6 +61,7 @@ export function toCultureItemFormInitial(
     mapType: item.mapType ?? '',
     showOnMap: item.showOnMap,
     featuredOnHome: featured?.featuredOnHome ?? false,
+    featuredOnCatalog: item.featuredOnCatalog,
     featuredOrder: featured?.featuredOrder ?? null,
     itemType: item.itemType,
     status: item.status,

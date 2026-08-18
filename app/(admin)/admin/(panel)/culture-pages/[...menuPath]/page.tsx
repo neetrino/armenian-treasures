@@ -6,6 +6,7 @@ import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CultureCatalogPageForm } from '@/components/admin/CultureCatalogPageForm';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import type { CultureCatalogEntryAdmin } from '@/lib/admin/culture-catalog-entry';
+import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import {
   findCultureCatalogNavItem,
   isCultureCatalogPagePath,
@@ -70,21 +71,6 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
     ? await prisma.cultureItem.findMany({
         where: { menuItemId: match.node.id },
         orderBy: [{ order: 'asc' }, { title: 'asc' }],
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          description: true,
-          region: true,
-          periodLabel: true,
-          image: true,
-          galleryImages: true,
-          cardBackgroundColor: true,
-          cardBackgroundImage: true,
-          tourUrl: true,
-          order: true,
-          status: true,
-        },
       })
     : [];
   const featuredById = await fetchFeaturedHomeByIds(entryRows.map((row) => row.id));
@@ -105,6 +91,7 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
     tourUrl: row.tourUrl ?? '',
     order: row.order,
     status: row.status,
+    formInitial: toCultureItemFormInitial(row, featuredById.get(row.id)),
   }));
 
   const subpageLinks = subcategoryRows.map((row) => ({

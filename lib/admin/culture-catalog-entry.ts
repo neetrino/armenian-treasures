@@ -1,3 +1,5 @@
+import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+
 export interface CultureCatalogEntryAdmin {
   id: string;
   slug: string;
@@ -14,6 +16,7 @@ export interface CultureCatalogEntryAdmin {
   tourUrl: string;
   order: number;
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  formInitial: CultureItemFormInitial;
 }
 
 export interface CultureCatalogSubpageLink {

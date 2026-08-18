@@ -10,6 +10,7 @@ const FEATURED_ORDER_OPTIONS = [
 
 interface CultureItemFeaturedFieldsProps {
   featuredOnHome?: boolean;
+  featuredOnCatalog?: boolean;
   featuredOrder?: number | null;
   featuredOrderError?: string;
   label?: string;
@@ -17,12 +18,22 @@ interface CultureItemFeaturedFieldsProps {
 
 export function CultureItemFeaturedFields({
   featuredOnHome = false,
+  featuredOnCatalog = false,
   featuredOrder = 5,
   featuredOrderError,
-  label = 'Show in STORIES WORTH DISCOVERING',
+  label = 'Featured Highlight',
 }: CultureItemFeaturedFieldsProps) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
+      <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
+        <input
+          type="checkbox"
+          name="featuredOnCatalog"
+          defaultChecked={featuredOnCatalog}
+          className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+        />
+        Featured Catalog
+      </label>
       <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
         <input
           type="checkbox"

@@ -15,6 +15,7 @@ import {
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
+import { hydrateCultureItemMedia, type CultureItemMediaContent } from '@/lib/culture-item-media';
 import type {
   Career,
   BlogPost,
@@ -57,11 +58,13 @@ export interface PublicCultureItemDTO {
   yearLabel: string | null;
   century: number | null;
   image: string | null;
+  coverImage: string | null;
   cardBackgroundColor: string | null;
   cardBackgroundImage: string | null;
   galleryImages: string[];
   tourUrl: string | null;
   videoUrl: string | null;
+  media: CultureItemMediaContent;
   latitude: number | null;
   longitude: number | null;
   mapType: CultureItem['mapType'];
@@ -188,11 +191,19 @@ export function toPublicCultureItem(
     yearLabel: resolveLocalizedText(row.yearLabel, locale) || null,
     century: row.century,
     image: row.image,
+    coverImage: row.coverImage,
     cardBackgroundColor: row.cardBackgroundColor,
     cardBackgroundImage: row.cardBackgroundImage,
     galleryImages: row.galleryImages ?? [],
     tourUrl: row.tourUrl,
     videoUrl: row.videoUrl,
+    media: hydrateCultureItemMedia({
+      mediaContent: row.mediaContent,
+      description: resolveLocalizedText(row.description, locale) || row.description,
+      tourUrl: row.tourUrl,
+      videoUrl: row.videoUrl,
+      galleryImages: row.galleryImages,
+    }),
     latitude: row.latitude,
     longitude: row.longitude,
     mapType: row.mapType,

@@ -18,7 +18,7 @@ async function fetchPublishedItemsByMenu(
   try {
     const rows = await prisma.cultureItem.findMany({
       where: { menuItemId, status: 'PUBLISHED' },
-      orderBy: [{ order: 'asc' }, { title: 'asc' }],
+      orderBy: [{ featuredOnCatalog: 'desc' }, { order: 'asc' }, { title: 'asc' }],
     });
     return rows.map((row) => toPublicCultureItem(row, locale));
   } catch {
