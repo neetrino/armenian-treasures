@@ -12,6 +12,7 @@ import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
   filterMappableItems,
+  resolveCultureCatalogHubDescription,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -19,6 +20,35 @@ interface CultureCategoryPageViewProps {
   category: MenuNode;
   subcategories: MenuNode[];
   items: PublicCultureItemDTO[];
+}
+
+function CultureCategoryHubPage({
+  category,
+  subcategories,
+  content,
+}: {
+  category: MenuNode;
+  subcategories: MenuNode[];
+  content: ReturnType<typeof resolveCultureCatalogContent>;
+}) {
+  return (
+    <CultureCatalogShell>
+      <CultureCatalogSubcategoryGrid
+        parent={category}
+        nodes={subcategories}
+        content={{
+          ...content.items,
+          label: content.about.label,
+          description: resolveCultureCatalogHubDescription(
+            category.description,
+            content.about.description,
+            content.items.description,
+          ),
+        }}
+        variant="hub"
+      />
+    </CultureCatalogShell>
+  );
 }
 
 export function CultureCategoryPageView({
@@ -32,14 +62,11 @@ export function CultureCategoryPageView({
 
   if (hasChildren) {
     return (
-      <CultureCatalogShell>
-        <CultureCatalogSubcategoryGrid
-          parent={category}
-          nodes={subcategories}
-          content={content.items}
-          variant="hub"
-        />
-      </CultureCatalogShell>
+      <CultureCategoryHubPage
+        category={category}
+        subcategories={subcategories}
+        content={content}
+      />
     );
   }
 

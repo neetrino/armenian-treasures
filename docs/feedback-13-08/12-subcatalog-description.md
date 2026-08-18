@@ -1,8 +1,8 @@
 # 12 — Sub-catalog նկարագրություն, հետո բաժիններ
 
 **Բաժին:** Catalogs
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 30%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -18,11 +18,13 @@
 ## Իրականացված է հիմա
 
 - Description դաշտը DB/Admin-ում կա։
-- Leaf category (առանց children) ունի about block։
-- Hub (Architecture, Legends, …) նկարագրությունը չի ցույց տալիս։
+- Hub էջը (`/culture/legends`, `/culture/architecture`, …) վերևում ցույց է տալիս վերնագիր + նկարագրություն։
+- Նկարագրության աղբյուրը՝ Admin `CultureMenuItem.description`, հետո catalog about, հետո items copy։
+- Հետո միայն subcategory shortcut-երը։ Stats, facts, hero, map hub-ում չեն երևում։
+- Leaf category (առանց children) ունի about block ինչպես առաջ։
 
 ## Մնացած
 
-- [ ] Hub էջում description վերևում
-- [ ] Հետո միայն subcategory shortcuts
-- [ ] Չթողնել stats/facts, եթե sheet-ը դրանք չի խնդրում
+- [x] Hub էջում description վերևում
+- [x] Հետո միայն subcategory shortcuts
+- [x] Չթողնել stats/facts, եթե sheet-ը դրանք չի խնդրում

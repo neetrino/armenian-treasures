@@ -84,6 +84,14 @@
   padding-top: calc(var(--site-header-height) + clamp(2rem, 5vw, 3.5rem));
 }
 
+.khndzoresk-page .catalog-hub-intro {
+  max-width: 46rem;
+}
+
+.khndzoresk-page .catalog-hub-intro .sec-desc {
+  margin-top: 1rem;
+}
+
 .khndzoresk-page .cat-grid--hub {
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 12px;

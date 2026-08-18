@@ -58,3 +58,19 @@ export function filterMappableItems(items: PublicCultureItemDTO[]): PublicCultur
 export function countMappableItems(items: PublicCultureItemDTO[]): number {
   return filterMappableItems(items).length;
 }
+
+export function resolveCultureCatalogHubDescription(
+  categoryDescription: string | null | undefined,
+  aboutDescription: string,
+  itemsDescription: string,
+): string {
+  const categoryText = categoryDescription?.trim() ?? '';
+  if (categoryText) {
+    return categoryText;
+  }
+  const aboutText = aboutDescription.trim();
+  if (aboutText) {
+    return aboutText;
+  }
+  return itemsDescription.trim();
+}
