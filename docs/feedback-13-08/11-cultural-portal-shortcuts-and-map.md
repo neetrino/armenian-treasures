@@ -1,8 +1,8 @@
 # 11 — Cultural Portal — միայն shortcut-ներ + map
 
-**Բաժին:** Catalogs  
-**Կարգավիճակ:** Partial  
-**Առաջընթաց:** 35%
+**Բաժին:** Catalogs
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -11,17 +11,19 @@ Cultural Portal-ում (`/culture`) պահպանել **միայն բաժիննե
 ## Ինչպես իրականացնել
 
 1. `CulturalPortalPage` հիմա ունի hero, stats, categories, highlights, map, projects, partnership, donors, about։
-2. Default visibility-ն փոխել՝ միացված միայն `categories` + `map`։ Ֆայլ՝ `lib/landing/landing-section-visibility.ts`, `CulturalPortalPage.tsx`։
-3. Admin toggle-ները (`CULTURAL_PORTAL_SECTION_TOGGLES`) կարելի է թողնել, բայց public default-ը պետք է համապատասխանի sheet-ին։ Staging/prod `sectionVisibility` JSON-ը նույնպես թարմացնել։
-4. Hero-ն sheet-ը չի հիշատակում. հանել, եթե «մնացած բոլոր բաժիններ» նշանակում է ամեն ինչ shortcuts/map-ից բացի։
+2. Default visibility-ն փոխել՝ միացված միայն `categories` + `map`։
+3. Admin toggle-ները թողնել, բայց public default-ը պետք է համապատասխանի sheet-ին։ DB `sectionVisibility`-ը նույնպես թարմացնել։
+4. Hero-ն հանել default-ից, որովհետև sheet-ը միայն shortcut + map է խնդրում։
 
 ## Իրականացված է հիմա
 
-- Categories grid և map կան։
-- Section visibility CMS-ով կա, բայց default-ը բոլոր սեկցիաներն է ցույց տալիս։
+- Default-ը միայն `categories` + `map` է։
+- Hero, stats, highlights, projects, partnership, donors, about default-ով անջատված են։
+- Admin toggle-ները մնում են, եթե պետք է նորից միացնել։
+- `PageContent` cultural-portal visibility-ն թարմացված է DB-ում։
 
 ## Մնացած
 
-- [ ] Default-ը դարձնել միայն categories + map
-- [ ] Հանել/ջնջել highlights, projects, partnership, donors, about, (և հավանաբար hero/stats)
-- [ ] DB-ում պահված visibility թարմացնել
+- [x] Default-ը դարձնել միայն categories + map
+- [x] Հանել highlights, projects, partnership, donors, about, hero/stats default-ից
+- [x] DB-ում պահված visibility թարմացնել

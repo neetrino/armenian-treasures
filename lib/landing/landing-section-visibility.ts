@@ -51,6 +51,19 @@ export type CulturalPortalSectionVisibility = {
   about?: boolean;
 };
 
+export const DEFAULT_CULTURAL_PORTAL_SECTION_VISIBILITY: Required<CulturalPortalSectionVisibility> =
+  {
+    hero: false,
+    stats: false,
+    categories: true,
+    highlights: false,
+    map: true,
+    projects: false,
+    partnership: false,
+    donors: false,
+    about: false,
+  };
+
 export type PartnershipSectionVisibility = {
   hero?: boolean;
   stats?: boolean;
