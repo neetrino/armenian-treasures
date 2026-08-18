@@ -151,40 +151,8 @@
 
 @media (min-width: 768px) {
   .featured-treasures-grid {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    grid-template-rows: repeat(3, minmax(11.25rem, 1fr));
-  }
-
-  .featured-treasures-grid__item--tall {
-    grid-column: 1;
-    grid-row: 1 / 4;
-  }
-
-  .featured-treasures-grid__item--top-mid {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .featured-treasures-grid__item--top-right {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
-  .featured-treasures-grid__item--bottom-mid {
-    grid-column: 2;
-    grid-row: 3;
-  }
-
-  .featured-treasure-card--tall {
-    min-height: 100%;
-    padding: 2rem 1.625rem 1.875rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .featured-treasures-grid {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: minmax(13.75rem, 1fr) minmax(13.75rem, 1fr);
+    grid-template-rows: minmax(12.5rem, 1fr) minmax(12.5rem, 1fr);
   }
 
   .featured-treasures-grid__item--tall {
@@ -205,6 +173,16 @@
   .featured-treasures-grid__item--top-right {
     grid-column: 3;
     grid-row: 1;
+  }
+
+  .featured-treasures-grid__item--bottom-right {
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .featured-treasure-card--tall {
+    min-height: 100%;
+    padding: 2rem 1.625rem 1.875rem;
   }
 }
 

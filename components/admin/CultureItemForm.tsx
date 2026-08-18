@@ -10,6 +10,7 @@ import { SelectField } from '@/components/forms/fields/SelectField';
 import { AdminFormSection } from '@/components/admin/AdminFormSection';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
+import { CultureItemFeaturedFields } from '@/components/admin/CultureItemFeaturedFields';
 import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
 import { Button } from '@/components/ui/Button';
 import {
@@ -28,43 +29,18 @@ import {
   type LocaleTextMap,
 } from '@/lib/i18n/translatable-content';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 
 interface MenuOption {
   id: string;
   title: string;
 }
 
-interface Initial {
-  title: string;
-  slug: string;
-  description: string;
-  shortDescription: string;
-  menuItemId: string;
-  region: string;
-  locationName: string;
-  periodLabel: string;
-  century: string;
-  yearLabel: string;
-  image: string;
-  cardBackgroundColor: string;
-  cardBackgroundImage: string;
-  galleryImages: string[];
-  tourUrl: string;
-  videoUrl: string;
-  latitude: string;
-  longitude: string;
-  mapType: string;
-  showOnMap: boolean;
-  itemType: string;
-  status: string;
-  order: number;
-}
-
 interface CultureItemFormProps {
   mode: 'create' | 'edit';
   itemId?: string;
   menuOptions: MenuOption[];
-  initial?: Initial;
+  initial?: CultureItemFormInitial;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -222,9 +198,14 @@ export function CultureItemForm({
       </AdminFormSection>
 
       <AdminFormSection
-        title="Featured card background"
-        description="Optional color or image for the Featured Treasures box on the homepage."
+        title="Homepage featured story"
+        description="Pick up to five published entries for STORIES WORTH DISCOVERING. Slot 1 is the tall card."
       >
+        <CultureItemFeaturedFields
+          featuredOnHome={initial?.featuredOnHome ?? false}
+          featuredOrder={initial?.featuredOrder}
+          featuredOrderError={state.fieldErrors?.featuredOrder}
+        />
         <CultureItemCardBackgroundFields
           colorDefaultValue={initial?.cardBackgroundColor ?? ''}
           imageDefaultValue={initial?.cardBackgroundImage ?? ''}

@@ -10,6 +10,7 @@ import {
 } from '@/lib/uploads/cleanup-replaced-image';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { cultureItemSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
@@ -106,6 +107,7 @@ function parseForm(formData: FormData):
     longitude: numberOrNull(formData.get('longitude')),
     mapType: asMapType(formData.get('mapType')?.toString() ?? ''),
     showOnMap: formData.get('showOnMap') === 'on',
+    ...parseFeaturedHomeFields(formData),
     itemType: asItemType(formData.get('itemType')?.toString() ?? 'OTHER'),
     status: asStatus(formData.get('status')?.toString() ?? 'PUBLISHED'),
     order: intOrZero(formData.get('order')),
@@ -163,6 +165,8 @@ function toData(
     longitude: input.longitude ?? null,
     mapType: input.mapType ?? null,
     showOnMap: input.showOnMap,
+    featuredOnHome: input.featuredOnHome,
+    featuredOrder: input.featuredOnHome ? (input.featuredOrder ?? 5) : null,
     itemType: input.itemType,
     status: input.status,
     order: input.order,

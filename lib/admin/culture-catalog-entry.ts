@@ -9,6 +9,8 @@ export interface CultureCatalogEntryAdmin {
   galleryImages: string[];
   cardBackgroundColor: string;
   cardBackgroundImage: string;
+  featuredOnHome: boolean;
+  featuredOrder: number | null;
   tourUrl: string;
   order: number;
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';

@@ -8,6 +8,7 @@ const LAYOUTS: FeaturedTreasureLayout[] = [
   'top-mid',
   'top-right',
   'bottom-mid',
+  'bottom-right',
 ];
 
 export function mapCultureItemToFeaturedTreasure(

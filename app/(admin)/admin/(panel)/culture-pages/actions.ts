@@ -16,6 +16,7 @@ import {
   cleanupReplacedGalleryImages,
   deleteReplacedManagedImage,
 } from '@/lib/uploads/cleanup-replaced-image';
+import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
   encodeTranslatableText,
@@ -53,6 +54,8 @@ const catalogEntrySchema = z.object({
   galleryImages: z.array(z.string().trim().max(500)).max(20).default([]),
   cardBackgroundColor: optionalHexColor,
   cardBackgroundImage: optionalText(500),
+  featuredOnHome: z.boolean().default(false),
+  featuredOrder: z.number().int().min(1).max(5).optional().nullable(),
   tourUrl: optionalText(500),
   order: z.coerce.number().int().min(0),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
@@ -75,6 +78,7 @@ function readEntryFields(formData: FormData) {
       .filter((value) => value.length > 0),
     cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
+    ...parseFeaturedHomeFields(formData),
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
     order: formData.get('order')?.toString() ?? '0',
     status: formData.get('status')?.toString() ?? 'PUBLISHED',
@@ -182,6 +186,8 @@ export async function saveCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
+      featuredOnHome: data.featuredOnHome,
+      featuredOrder: data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,
@@ -264,6 +270,8 @@ export async function createCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
+      featuredOnHome: data.featuredOnHome,
+      featuredOrder: data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,

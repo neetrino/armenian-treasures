@@ -143,19 +143,29 @@ export async function getPublishedCultureItems(): Promise<PublicCultureItemDTO[]
 
 async function fetchFeaturedCultureItems(
   locale: SiteLocaleCode,
-  limit = 4,
+  limit = 5,
 ): Promise<PublicCultureItemDetailDTO[]> {
   try {
-    const rows = await prisma.cultureItem.findMany({
-      where: { status: 'PUBLISHED' },
-      include: {
-        menuItem: {
-          include: { parent: true },
-        },
+    const include = {
+      menuItem: {
+        include: { parent: true },
       },
-      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+    } as const;
+    const featured = await prisma.cultureItem.findMany({
+      where: { status: 'PUBLISHED', featuredOnHome: true },
+      include,
+      orderBy: [{ featuredOrder: 'asc' }, { order: 'asc' }, { createdAt: 'desc' }],
       take: limit,
     });
+    const rows =
+      featured.length > 0
+        ? featured
+        : await prisma.cultureItem.findMany({
+            where: { status: 'PUBLISHED' },
+            include,
+            orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+            take: limit,
+          });
     return rows.map((row) => toPublicCultureItemDetail(row, locale));
   } catch {
     return [];
@@ -168,7 +178,7 @@ const getFeaturedCultureItemsCached = unstable_cache(
   { tags: ['culture-items'], revalidate: 60 },
 );
 
-export async function getFeaturedCultureItems(limit = 4): Promise<PublicCultureItemDetailDTO[]> {
+export async function getFeaturedCultureItems(limit = 5): Promise<PublicCultureItemDetailDTO[]> {
   const locale = await getCurrentSiteLocale();
   return getFeaturedCultureItemsCached(locale, limit);
 }

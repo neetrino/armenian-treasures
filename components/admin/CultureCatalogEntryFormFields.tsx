@@ -1,6 +1,7 @@
 'use client';
 
 import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
+import { CultureItemFeaturedFields } from '@/components/admin/CultureItemFeaturedFields';
 import { GalleryImagesField } from '@/components/forms/fields/GalleryImagesField';
 import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
@@ -30,6 +31,8 @@ interface CultureCatalogEntryFormFieldsProps {
     galleryImages?: string[];
     cardBackgroundColor?: string;
     cardBackgroundImage?: string;
+    featuredOnHome?: boolean;
+    featuredOrder?: number | null;
   };
   fieldErrors?: CultureCatalogEntryFormState['fieldErrors'];
   orderHidden?: number;
@@ -103,6 +106,11 @@ export function CultureCatalogEntryFormFields({
         )}
       </TranslatableFieldsTabs>
 
+      <CultureItemFeaturedFields
+        featuredOnHome={defaultValues?.featuredOnHome ?? false}
+        featuredOrder={defaultValues?.featuredOrder}
+        featuredOrderError={fieldErrors?.featuredOrder}
+      />
       <CultureItemCardBackgroundFields
         colorDefaultValue={defaultValues?.cardBackgroundColor ?? ''}
         imageDefaultValue={defaultValues?.cardBackgroundImage ?? ''}

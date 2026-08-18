@@ -117,6 +117,8 @@ export const cultureItemSchema = z.object({
   longitude: z.number().min(-180).max(180).optional().nullable(),
   mapType: mapTypeEnum.optional().nullable(),
   showOnMap: z.boolean().default(false),
+  featuredOnHome: z.boolean().default(false),
+  featuredOrder: z.number().int().min(1).max(5).optional().nullable(),
   itemType: cultureItemTypeEnum.default('OTHER'),
   status: contentStatusEnum.default('PUBLISHED'),
   order: z.number().int().min(0).default(0),

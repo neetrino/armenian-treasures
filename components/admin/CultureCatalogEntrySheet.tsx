@@ -114,6 +114,8 @@ function EntrySheetForm({
                   galleryImages: entry.galleryImages,
                   cardBackgroundColor: entry.cardBackgroundColor,
                   cardBackgroundImage: entry.cardBackgroundImage,
+                  featuredOnHome: entry.featuredOnHome,
+                  featuredOrder: entry.featuredOrder,
                 }
               : { status: 'PUBLISHED' }
           }

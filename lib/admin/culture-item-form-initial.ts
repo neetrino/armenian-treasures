@@ -22,6 +22,8 @@ export interface CultureItemFormInitial {
   longitude: string;
   mapType: string;
   showOnMap: boolean;
+  featuredOnHome: boolean;
+  featuredOrder: number | null;
   itemType: string;
   status: string;
   order: number;
@@ -49,6 +51,8 @@ export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInit
     longitude: item.longitude !== null ? String(item.longitude) : '',
     mapType: item.mapType ?? '',
     showOnMap: item.showOnMap,
+    featuredOnHome: item.featuredOnHome,
+    featuredOrder: item.featuredOrder,
     itemType: item.itemType,
     status: item.status,
     order: item.order,
