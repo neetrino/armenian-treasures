@@ -4,7 +4,7 @@
 
 Աուդիտ՝ 2026-08-18։ Յուրաքանչյուր ֆայլում՝ ինչ է պահանջվում, ինչպես իրականացնել, արդյոք արված է, և քանի %-ով։
 
-**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~76%**  
+**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~82%**  
 Քարտեզի կետը blocked է (քննարկում Վլադի հետ) և միջինում չի մտնում։
 
 | # | Բաժին | Առաջադրանք | Կարգավիճակ | % | Ֆայլ |
@@ -21,7 +21,7 @@
 | 10 | Home | Ներքևում Partners լոգոներ (highlighted) | Done | 100% | [10](./10-home-partners-logos.md) |
 | 11 | Catalogs | Cultural Portal — միայն shortcut-ներ + map | Done | 100% | [11](./11-cultural-portal-shortcuts-and-map.md) |
 | 12 | Catalogs | Sub-catalog նկարագրություն, հետո բաժիններ | Done | 100% | [12](./12-subcatalog-description.md) |
-| 13 | Catalogs | Shortcut հետնանկար 40% թափանցիկությամբ | Partial | 20% | [13](./13-subcatalog-shortcut-background.md) |
+| 13 | Catalogs | Shortcut հետնանկար 40% թափանցիկությամբ | Done | 100% | [13](./13-subcatalog-shortcut-background.md) |
 | 14 | Catalogs | Sub-catalog որոնում + ֆիլտր | Partial | 25% | [14](./14-subcatalog-search-filters.md) |
 | 15 | Catalogs | Sub-page — map առաջ, հետո հոդվածներ | Partial | 25% | [15](./15-subpage-map-then-articles.md) |
 | 16 | Catalogs | Հոդվածի էջ — նեղ layout, առանց 3D Tour meta | Partial | 40% | [16](./16-article-page-layout.md) |

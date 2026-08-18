@@ -8,7 +8,14 @@ import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
 import { filterCatalogSubcategoriesBySearch } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
+import { getCardBackgroundStyle } from '@/lib/card-background-style';
 import { cn } from '@/lib/utils';
+
+const HUB_CARD_BACKGROUND = {
+  colorVarName: '--hub-card-bg-color',
+  imageVarName: '--hub-card-bg-image',
+  fallbackColor: 'var(--card)',
+} as const;
 
 interface CultureCatalogSubcategoryGridProps {
   parent: MenuNode;
@@ -29,20 +36,33 @@ function SubcategoryCatalogCard({
 }) {
   const iconKey = resolveMenuIconKey(node.slug, parent.slug);
   const href = resolveMenuHref(node, parent);
+  const photoStyle = isHub
+    ? getCardBackgroundStyle(null, node.image, HUB_CARD_BACKGROUND)
+    : undefined;
+  const hasPhoto = Boolean(photoStyle);
 
   return (
     <Link
       href={href}
-      className={cn('cat-card cat-card--catalog reveal group', isHub && 'cat-card--hub')}
+      style={photoStyle}
+      className={cn(
+        'cat-card cat-card--catalog reveal group',
+        isHub && 'cat-card--hub',
+        hasPhoto && 'cat-card--hub-photo',
+      )}
       data-category-icon={iconKey}
     >
-      <div className="cat-media">
-        <CulturalCategoryIcon
-          type={iconKey}
-          withBadge={false}
-          iconClassName="h-full w-full rounded-none object-cover"
-        />
-      </div>
+      {hasPhoto ? (
+        <span className="cat-card__hub-photo" aria-hidden />
+      ) : (
+        <div className="cat-media">
+          <CulturalCategoryIcon
+            type={iconKey}
+            withBadge={false}
+            iconClassName="h-full w-full rounded-none object-cover"
+          />
+        </div>
+      )}
       <div className="cat-content cat-content--catalog">
         <div className="cat-card-title">{node.title}</div>
         {!isHub ? (

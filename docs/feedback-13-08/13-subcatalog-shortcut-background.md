@@ -1,8 +1,8 @@
-﻿# 13 — Sub-catalog shortcut հետնանկար 40%
+# 13 — Sub-catalog shortcut հետնանկար 40%
 
 **Բաժին:** Catalogs
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 20%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -18,11 +18,13 @@ Sub-catalog-ում բաժինների shortcut-երը ունենան հետնա�
 
 ## Իրականացված է հիմա
 
-- Menu item-ը ունի `image` դաշտ։
-- Hub քարտերը icon-ային են, հետնանկար չեն կիրառում։
+- Hub shortcut-ը `CultureMenuItem.image`-ը դնում է ամբողջ քարտի հետնանկար՝ 40% opacity։
+- Title-ը gold է և մնում է ընթեռնելի dark card-ի վրա։
+- Նկար չլինելու դեպքում մնում է icon fallback-ը։
+- Admin → Culture menu image hint-ը նշում է shortcut background-ը։
 
 ## Մնացած
 
-- [ ] Hub card-ին միացնել `node.image` որպես background
-- [ ] 40% թափանցիկության overlay
-- [ ] Icon fallback երբ նկար չկա
+- [x] Hub card-ին միացնել `node.image` որպես background
+- [x] 40% թափանցիկության overlay
+- [x] Icon fallback երբ նկար չկա
