@@ -4,7 +4,7 @@
 
 Աուդիտ՝ 2026-08-18։ Յուրաքանչյուր ֆայլում՝ ինչ է պահանջվում, ինչպես իրականացնել, արդյոք արված է, և քանի %-ով։
 
-**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~62%**  
+**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~66%**  
 Քարտեզի կետը blocked է (քննարկում Վլադի հետ) և միջինում չի մտնում։
 
 | # | Բաժին | Առաջադրանք | Կարգավիճակ | % | Ֆայլ |
@@ -18,7 +18,7 @@
 | 07 | Home | WHAT WE ARE BUILDING → Active Fundraisings | Done | 100% | [07](./07-active-fundraisings-title.md) |
 | 08 | Home | Fundraisings shortcut — հետնանկար | Done | 100% | [08](./08-active-fundraisings-background.md) |
 | 09 | Home | Հեռացնել WHO WE ARE | Done | 100% | [09](./09-remove-who-we-are.md) |
-| 10 | Home | Ներքևում Partners լոգոներ (highlighted) | Partial | 25% | [10](./10-home-partners-logos.md) |
+| 10 | Home | Ներքևում Partners լոգոներ (highlighted) | Done | 100% | [10](./10-home-partners-logos.md) |
 | 11 | Catalogs | Cultural Portal — միայն shortcut-ներ + map | Partial | 35% | [11](./11-cultural-portal-shortcuts-and-map.md) |
 | 12 | Catalogs | Sub-catalog նկարագրություն, հետո բաժիններ | Partial | 30% | [12](./12-subcatalog-description.md) |
 | 13 | Catalogs | Shortcut հետնանկար 40% թափանցիկությամբ | Partial | 20% | [13](./13-subcatalog-shortcut-background.md) |

@@ -1,0 +1,60 @@
+.home-partners-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.home-partners-logos__item {
+  display: flex;
+  height: 6.5rem;
+  width: 9.5rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(214, 184, 90, 0.22);
+  background: rgba(10, 10, 10, 0.72);
+  padding: 0.85rem 1rem;
+  transition:
+    border-color 240ms ease,
+    box-shadow 240ms ease,
+    transform 240ms ease,
+    background 240ms ease;
+}
+
+.home-partners-logos__item img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  filter: brightness(0.92) saturate(0.85);
+  transition:
+    filter 240ms ease,
+    transform 240ms ease;
+}
+
+.home-partners-logos__item:hover,
+.home-partners-logos__item:focus-visible {
+  border-color: rgba(214, 184, 90, 0.62);
+  background: rgba(18, 16, 10, 0.92);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(214, 184, 90, 0.18);
+  transform: translateY(-3px);
+}
+
+.home-partners-logos__item:hover img,
+.home-partners-logos__item:focus-visible img {
+  filter: brightness(1.06) saturate(1);
+  transform: scale(1.04);
+}
+
+.home-partners-logos__item:focus-visible {
+  outline: 1px solid rgba(39, 198, 200, 0.7);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-partners-logos__item,
+  .home-partners-logos__item img {
+    transition: none;
+    transform: none;
+  }
+}

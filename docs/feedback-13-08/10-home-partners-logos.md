@@ -1,8 +1,8 @@
 # 10 — Home ներքևում Partners լոգոներ
 
 **Բաժին:** Home page
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 25%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -18,12 +18,13 @@ Home page-ի ամենաներքևում երևան Partners-ի լոգոները 
 
 ## Իրականացված է հիմա
 
-- Partnership landing-ում logo showcase կա։
-- `PartnershipSection` կա, բայց home-ում չի միացված։
-- Home-ի partnership block-ը category cards է, ոչ logo row։
+- Home-ի վերջում logo row է (`HomePartnersLogosSection`), `id="partners"`։
+- Լոգոները գալիս են partnership page content-ից (նույն աղբյուրը, ինչ `PartnershipShowcase`)։
+- Highlighted = իրական նկար ունեցող գործընկերներ, առանց placeholder / future slot-երի։
+- Category grid և ամբողջ partnership landing-ը home չեն բերվել։
 
 ## Մնացած
 
-- [ ] Home-ի վերջում logo row կամ marquee
-- [ ] Highlighted/featured ընտրություն, եթե պետք չեն բոլոր լոգոները
-- [ ] Չբերել ամբողջ partnership սեկցիան home
+- [x] Home-ի վերջում logo row
+- [x] Highlighted/featured ընտրություն
+- [x] Չբերել ամբողջ partnership սեկցիան home
