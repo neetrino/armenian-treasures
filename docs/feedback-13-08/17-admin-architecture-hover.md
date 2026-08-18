@@ -1,8 +1,8 @@
 # 17 — Architecture hover-ում չի երևում Ornaments
 
 **Բաժին:** Admin panel
-**Կարգավիճակ:** Missing
-**Առաջընթաց:** 10%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -22,11 +22,14 @@ Sheet screenshot-ը Admin tree է՝ Architecture, հետո Churches, Castles, Or
 
 ## Իրականացված է հիմա
 
-- Admin tree-ում և catalog էջում Ornaments-ը ճիշտ կարգով է։
-- Hover-ով Architecture children reveal չկա։ Mega menu-ն per-heading չի աշխատում։
+- Խնդիրը mega menu-ում էր. Architecture սյունը AT Features-ից hardcoded էր (միայն Churches & Monasteries + Castles) և չէր վերցնում Admin-ում ավելացված children-ը։
+- `resolveCultureMegaMenu`-ը հիմա live tree-ից append է անում բացակա, ակտիվ, ոչ-form children-ը. Ornaments հայտնվում է Castles-ից հետո։
+- Form route-ը (`Add a new sub-catalog`) public hover list-ում չի երևում։
+- Ornaments-ի `order`-ը չի փոխվել։ Admin tree-ն մնում է click-expand։
+- Icon fallback՝ `ornaments` → `monumentsAndLandmarks` / Sparkles։
 
 ## Մնացած
 
-- [ ] Վերարտադրել hover-ը public vs admin
-- [ ] Ուղղել այն surface-ը, որտեղ Architecture-ի children-ը չեն երևում
-- [ ] Համոզվել, որ Ornaments-ը հայտնվում է hover list-ում
+- [x] Վերարտադրել hover-ը public vs admin
+- [x] Ուղղել այն surface-ը, որտեղ Architecture-ի children-ը չեն երևում
+- [x] Համոզվել, որ Ornaments-ը հայտնվում է hover list-ում
