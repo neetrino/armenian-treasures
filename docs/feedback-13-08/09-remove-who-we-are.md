@@ -1,8 +1,8 @@
 # 09 — Հեռացնել WHO WE ARE
 
-**Բաժին:** Home page  
-**Կարգավիճակ:** Missing  
-**Առաջընթաց:** 10%
+**Բաժին:** Home page
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -17,10 +17,12 @@ Home page-ից հեռացնել `WHO WE ARE` (`AboutUs`) բաժինը։
 
 ## Իրականացված է հիմա
 
-- Սեկցիան դեռ render է արվում home-ի վերջում։
-- About էջերը առանձին են և պետք է մնան։
+- `AboutUsSection`-ը այլևս չի render արվում homepage-ում։
+- `/about/mission`, `/about/team`, `/about/career` մնում են։
+- `aboutUs` hash-ը տանում է `/about/mission`։
+- Admin Home Content `aboutUs` block-ը մնում է, բայց public home-ում չի երևում։
 
 ## Մնացած
 
-- [ ] Հանել `AboutUsSection` home-ից
-- [ ] Ստուգել `/#about` հղումները
+- [x] Հանել `AboutUsSection` home-ից
+- [x] Ստուգել `/#about` հղումները

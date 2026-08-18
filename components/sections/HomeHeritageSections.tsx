@@ -5,7 +5,6 @@ import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasure
 import { HeritageMapSection } from '@/components/sections/HeritageMapSection';
 import { HomeNewsFeedSection } from '@/components/sections/HomeNewsFeedSection';
 import { UpcomingProjectsSection } from '@/components/sections/UpcomingProjectsSection';
-import { AboutUsSection } from '@/components/sections/AboutUsSection';
 import {
   HERITAGE_DOWNLOADS_HOME_VISIBLE,
   HeritageDownloadSection,
@@ -60,8 +59,6 @@ export async function HomeHeritageSections() {
           <HeritageDownloadSection />
         </>
       ) : null}
-      <div className="heritage-section-divider my-2" aria-hidden />
-      <AboutUsSection home={home} />
     </div>
   );
 }
