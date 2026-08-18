@@ -80,7 +80,7 @@ export async function seedProjects(): Promise<void> {
       goalAmount: project.goalAmount,
       status: project.status,
       description: project.description,
-      image: `/images/projects/${project.slug}.svg`,
+      image: '/images/culture/card-heritage.webp',
       isPublished: true,
       order: index,
     };

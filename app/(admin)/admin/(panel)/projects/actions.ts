@@ -4,6 +4,7 @@ import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { revalidateProjectsCache } from '@/lib/cache/revalidation';
+import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
 import { projectSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
@@ -107,7 +108,9 @@ export async function updateProjectAction(
   if (existing && existing.id !== id) {
     return { status: 'error', fieldErrors: { slug: 'Slug already exists' }, message: 'Duplicate slug.' };
   }
+  const current = await prisma.project.findUnique({ where: { id }, select: { image: true } });
   await prisma.project.update({ where: { id }, data: parsed.data });
+  await deleteReplacedManagedImage(current?.image, parsed.data.image);
   revalidate();
   return { status: 'success' };
 }
@@ -135,7 +138,9 @@ export async function updateProjectRaisedAmountAction(
 
 export async function deleteProjectAction(id: string): Promise<void> {
   await requireAdmin();
+  const row = await prisma.project.findUnique({ where: { id }, select: { image: true } });
   await prisma.project.delete({ where: { id } });
+  await deleteReplacedManagedImage(row?.image, null);
   revalidate();
 }
 

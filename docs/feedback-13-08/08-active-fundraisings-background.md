@@ -1,8 +1,8 @@
 # 08 — Active Fundraisings shortcut հետնանկար
 
-**Բաժին:** Home page  
-**Կարգավիճակ:** Partial  
-**Առաջընթաց:** 45%
+**Բաժին:** Home page
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -19,10 +19,12 @@ Active Fundraisings shortcut-ում լինի **հետնամասի նկար ավ�
 
 ## Իրականացված է հիմա
 
-- Project-ը ունի `image`, Admin-ում upload կա։
-- `ProjectCard`-ը նկարը ցույց է տալիս վերևի 4:3 բլոկում, տեքստը առանձին panel-ի վրա է։
+- Homepage `ProjectPortalCard`-ը `Project.image`-ը դնում է ամբողջ քարտի ֆոն + dark overlay։
+- Admin → Projects form-ում կա **Card background** dropzone (ոչ միայն URL դաշտ)։
+- Առանձին schema դաշտ չի ավելացվել։
+- Նկարը փոխելիս/ջնջելիս managed file-ը մաքրվում է։
 
 ## Մնացած
 
-- [ ] Հաստատել՝ top photo vs full-card background
-- [ ] Եթե full-card՝ overlay + typography contrast (ինչպես featured cards)
+- [x] Հաստատել՝ top photo vs full-card background — homepage-ում full-card
+- [x] Overlay + typography contrast (նույն card-background helper-ով)

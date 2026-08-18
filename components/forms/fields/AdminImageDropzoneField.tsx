@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Loader2, Upload, X } from 'lucide-react';
 import { ADMIN_IMAGE_ACCEPT } from '@/lib/admin/image-upload-constants';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { uploadAdminImage } from '@/lib/admin/upload-image-client';
 import { Label } from '@/components/ui/Label';
 import { AdminManagedImagePreview } from '@/components/admin/AdminManagedImagePreview';
@@ -103,7 +104,7 @@ export function AdminImageDropzoneField({
     [handleFiles],
   );
 
-  const previewSrc = currentUrl.trim() || null;
+  const previewSrc = currentUrl.trim() ? resolvePublicAssetUrl(currentUrl) : null;
   const previewStyle = getAdminImagePreviewStyle(layout);
 
   return (
