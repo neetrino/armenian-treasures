@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Box, MapPin, Play } from 'lucide-react';
+import { MapPin, Play } from 'lucide-react';
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
 import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
@@ -53,7 +53,6 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
     item.region ? { value: item.region, label: 'Region' } : null,
     item.periodLabel ? { value: item.periodLabel, label: 'Period' } : null,
     { value: formatEnumLabel(item.itemType), label: 'Type' },
-    item.tourUrl ? { value: 'Yes', label: '3D Tour' } : null,
   ].filter((stat): stat is { value: string; label: string } => stat !== null);
 
   const backHref = parent && menu
@@ -92,7 +91,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
       />
       {stats.length > 0 ? <CulturalPortalStatsBar stats={stats} /> : null}
       <LandingSectionStack>
-        <section id="detail">
+        <section id="detail" className="catalog-detail-section">
           <p className="sec-label">Entry Detail</p>
           <h2 className="sec-title">{item.title}</h2>
           <div className="catalog-detail-grid">
@@ -110,11 +109,6 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
                     height={750}
                     priority
                   />
-                  {item.tourUrl ? (
-                    <span className="catalog-item-card__badge" style={{ top: 16, left: 16 }}>
-                      <Box size={11} aria-hidden /> 3D Tour
-                    </span>
-                  ) : null}
                 </div>
                 {item.description ? (
                   <div className="catalog-detail-card__body">
@@ -203,10 +197,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
             </aside>
           </div>
         </section>
-        <div
-          className="catalog-submit-cta reveal"
-          style={{ maxWidth: 1300, margin: '0 auto var(--section-padding-y-lg)', padding: '0 48px' }}
-        >
+        <div className="catalog-submit-cta reveal">
           <p>Explore more entries in this catalog.</p>
           <Link href={backHref} className="btn-outline">
             Back to {menu?.title ?? 'Culture Portal'}

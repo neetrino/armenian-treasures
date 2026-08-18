@@ -1,8 +1,8 @@
 ﻿# 16 — Հոդվածի էջ — նեղ layout, առանց 3D Tour meta
 
 **Բաժին:** Catalogs
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 40%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -19,12 +19,13 @@ Sheet screenshot-ը մեկ տող է՝ Սյունիքի մարզ, 9-րդ դար,
 
 ## Իրականացված է հիմա
 
-- Meta տողը կա՝ Region, Period, Type, և 3D Tour։
-- Layout-ը լայն catalog shell է։
-- 3D tour սեկցիան և badge-ը դեռ կան էջում։
+- Meta տողը միայն Region, Period, Type է։ 3D Tour YES-ը հանված է։
+- Detail column-ը սահմանափակված է `54rem`՝ նույն `CultureItemDetailView`-ով բոլոր item էջերում։
+- `#tour` սեկցիան մնում է էջի ներսում։ Hero-ի 3D Tour CTA-ն տանում է այնտեղ։
+- Նկարի վրայի 3D Tour badge-ը հանված է, որ meta-ի հետ չկրկնվի։
 
 ## Մնացած
 
-- [ ] Հանել 3D Tour-ը stats-ից
-- [ ] Նեղացնել detail column-ը
-- [ ] Հաստատել՝ `#tour` սեկցիան մնում է, թե ամբողջությամբ է հանվում
+- [x] Հանել 3D Tour-ը stats-ից
+- [x] Նեղացնել detail column-ը
+- [x] Հաստատել՝ `#tour` սեկցիան մնում է, թե ամբողջությամբ է հանվում
