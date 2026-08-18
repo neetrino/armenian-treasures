@@ -39,7 +39,7 @@ const PAYLOAD = {
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'SUPPORT THE MISSION',
-  secondaryCtaUrl: '/partnership',
+  secondaryCtaUrl: '/donate',
   stats: STATS,
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',

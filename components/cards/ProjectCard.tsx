@@ -82,7 +82,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
           <div className="pt-3">
             <ButtonLink
-              href="/partnership"
+              href="/donate"
               variant={isFunded ? 'ghost' : 'secondary'}
               size="sm"
               withArrow={!isFunded}

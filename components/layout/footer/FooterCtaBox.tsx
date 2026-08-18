@@ -41,7 +41,7 @@ export function FooterCtaBox({ className }: FooterCtaBoxProps) {
           Your support helps safeguard Armenia&apos;s cultural legacy for generations to come.
         </p>
         <Link
-          href="/partnership"
+          href="/donate"
           className="group mt-6 inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-hero-gold-btn text-sm font-medium uppercase tracking-wide text-midnight-900 shadow-[0_8px_24px_-8px_rgba(200,132,61,0.55)] transition hover:-translate-y-0.5 hover:brightness-105 motion-reduce:hover:translate-y-0"
         >
           Donate now
