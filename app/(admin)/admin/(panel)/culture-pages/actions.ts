@@ -17,6 +17,7 @@ import {
   deleteReplacedManagedImage,
 } from '@/lib/uploads/cleanup-replaced-image';
 import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
+import { persistCultureItemFeaturedHome } from '@/lib/queries/featured-home-sql';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
   encodeTranslatableText,
@@ -186,13 +187,16 @@ export async function saveCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
-      featuredOnHome: data.featuredOnHome,
-      featuredOrder: data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,
     },
   });
+  await persistCultureItemFeaturedHome(
+    entryId,
+    data.featuredOnHome,
+    data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
+  );
 
   await deleteReplacedManagedImage(existing.cardBackgroundImage, data.cardBackgroundImage || null);
   await cleanupReplacedGalleryImages(existing.galleryImages ?? [], data.galleryImages);
@@ -257,7 +261,7 @@ export async function createCultureCatalogEntryAction(
     suffix += 1;
   }
 
-  await prisma.cultureItem.create({
+  const created = await prisma.cultureItem.create({
     data: {
       title: encodeTranslatableText(fields.titleI18n),
       slug,
@@ -270,14 +274,17 @@ export async function createCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
-      featuredOnHome: data.featuredOnHome,
-      featuredOrder: data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
       tourUrl: data.tourUrl || null,
       order: data.order,
       status: data.status as ContentStatus,
       itemType: 'MONUMENT',
     },
   });
+  await persistCultureItemFeaturedHome(
+    created.id,
+    data.featuredOnHome,
+    data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
+  );
 
   await revalidateCatalogEntryPaths(menuItemId, menuPath, slug);
 

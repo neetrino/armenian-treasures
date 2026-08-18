@@ -13,6 +13,7 @@ export const PUBLIC_LAYOUT_PATHS = [
   '/projects',
   '/donate',
   '/blog',
+  '/highlights',
   '/partnership',
   '/contacts',
   '/about/mission',
@@ -144,7 +145,7 @@ export async function revalidateCultureItemCache(
   menuItemIds: string[] = [],
 ): Promise<void> {
   revalidateTag('culture-items', 'max');
-  revalidatePublicPages(['/culture', '/']);
+  revalidatePublicPages(['/culture', '/', '/highlights']);
   revalidatePath('/admin/culture-items');
   for (const slug of slugs) {
     const trimmed = slug.trim();

@@ -11,6 +11,22 @@ const LAYOUTS: FeaturedTreasureLayout[] = [
   'bottom-right',
 ];
 
+export const FEATURED_TREASURE_EXCERPT_LENGTH = 160;
+export const HIGHLIGHT_TREASURE_EXCERPT_LENGTH = 92;
+
+export function excerptFeaturedTreasureText(
+  text: string,
+  maxLength = FEATURED_TREASURE_EXCERPT_LENGTH,
+): string {
+  const normalized = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!normalized) return '';
+  if (normalized.length <= maxLength) return normalized;
+  const slice = normalized.slice(0, maxLength);
+  const lastSpace = slice.lastIndexOf(' ');
+  const trimmed = (lastSpace > maxLength * 0.6 ? slice.slice(0, lastSpace) : slice).trimEnd();
+  return `${trimmed}…`;
+}
+
 export function mapCultureItemToFeaturedTreasure(
   item: PublicCultureItemDetailDTO,
   index: number,
@@ -29,7 +45,7 @@ export function mapCultureItemToFeaturedTreasure(
     icon: resolveMenuIconKey(slug, parentSlug),
     categories,
     title: item.title.toUpperCase(),
-    description: item.shortDescription ?? item.description ?? '',
+    description: excerptFeaturedTreasureText(item.shortDescription || item.description || ''),
     href: resolveCultureItemHref(item.slug),
     layout: LAYOUTS[index % LAYOUTS.length]!,
     cardBackgroundColor: item.cardBackgroundColor,
@@ -41,4 +57,17 @@ export function mapCultureItemsToFeaturedTreasures(
   items: PublicCultureItemDetailDTO[],
 ): FeaturedTreasure[] {
   return items.map(mapCultureItemToFeaturedTreasure);
+}
+
+export function mapCultureItemsToHighlightTreasures(
+  items: PublicCultureItemDetailDTO[],
+): FeaturedTreasure[] {
+  return items.map((item, index) => ({
+    ...mapCultureItemToFeaturedTreasure(item, index),
+    layout: 'tile',
+    description: excerptFeaturedTreasureText(
+      item.shortDescription || item.description || '',
+      HIGHLIGHT_TREASURE_EXCERPT_LENGTH,
+    ),
+  }));
 }

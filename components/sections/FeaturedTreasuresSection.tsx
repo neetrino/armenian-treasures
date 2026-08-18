@@ -27,7 +27,7 @@ export async function FeaturedTreasuresSection({ home }: HomeSectionContentProps
           title={featuredTreasures.title}
         />
 
-        <FeaturedTreasuresGrid treasures={treasures} />
+        <FeaturedTreasuresGrid treasures={treasures} showDiscoverMore />
       </div>
     </section>
   );

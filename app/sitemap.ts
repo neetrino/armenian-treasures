@@ -18,6 +18,7 @@ const STATIC_PATHS = [
   '/partnership',
   '/donate',
   '/blog',
+  '/highlights',
   '/contacts',
   '/khndzoresk',
   '/khachaturian-museum',

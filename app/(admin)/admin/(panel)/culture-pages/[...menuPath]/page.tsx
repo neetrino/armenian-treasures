@@ -15,6 +15,7 @@ import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-co
 import { resolveMenuHref } from '@/lib/culture-menu';
 import { prisma } from '@/lib/db';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
+import { fetchFeaturedHomeByIds } from '@/lib/queries/featured-home-sql';
 
 export const dynamic = 'force-dynamic';
 
@@ -80,14 +81,13 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
           galleryImages: true,
           cardBackgroundColor: true,
           cardBackgroundImage: true,
-          featuredOnHome: true,
-          featuredOrder: true,
           tourUrl: true,
           order: true,
           status: true,
         },
       })
     : [];
+  const featuredById = await fetchFeaturedHomeByIds(entryRows.map((row) => row.id));
 
   const entries: CultureCatalogEntryAdmin[] = entryRows.map((row) => ({
     id: row.id,
@@ -100,8 +100,8 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
     galleryImages: row.galleryImages ?? [],
     cardBackgroundColor: row.cardBackgroundColor ?? '',
     cardBackgroundImage: row.cardBackgroundImage ?? '',
-    featuredOnHome: row.featuredOnHome,
-    featuredOrder: row.featuredOrder,
+    featuredOnHome: featuredById.get(row.id)?.featuredOnHome ?? false,
+    featuredOrder: featuredById.get(row.id)?.featuredOrder ?? null,
     tourUrl: row.tourUrl ?? '',
     order: row.order,
     status: row.status,

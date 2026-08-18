@@ -5,9 +5,13 @@ export type FeaturedTreasureLayout =
   | 'top-mid'
   | 'bottom-mid'
   | 'top-right'
-  | 'bottom-right';
+  | 'bottom-right'
+  | 'more'
+  | 'tile';
 
 export const FEATURED_TREASURE_COUNT = 5;
+export const HIGHLIGHT_TREASURE_COUNT = 30;
+export const HIGHLIGHTS_PAGE_PATH = '/highlights';
 
 export const FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS: Record<FeaturedTreasureLayout, string> = {
   tall: 'featured-treasures-grid__item--tall',
@@ -15,6 +19,8 @@ export const FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS: Record<FeaturedTreasureLa
   'bottom-mid': 'featured-treasures-grid__item--bottom-mid',
   'top-right': 'featured-treasures-grid__item--top-right',
   'bottom-right': 'featured-treasures-grid__item--bottom-right',
+  more: 'featured-treasures-grid__item--more',
+  tile: 'featured-treasures-grid__item--tile',
 };
 
 export interface FeaturedTreasure {
@@ -32,6 +38,27 @@ export interface FeaturedTreasure {
 export const FEATURED_TREASURES_SECTION = {
   eyebrow: 'FEATURED TREASURES',
   title: 'STORIES WORTH DISCOVERING',
+} as const;
+
+export const DISCOVER_MORE_HIGHLIGHTS_TREASURE: FeaturedTreasure = {
+  number: '30',
+  icon: 'monumentsAndLandmarks',
+  categories: ['HIGHLIGHTS', 'ARCHIVE'],
+  title: 'DISCOVER MORE HIGHLIGHTS',
+  description:
+    'Open thirty more stories from the archive — monasteries, music, people, and living heritage beyond the homepage five.',
+  href: HIGHLIGHTS_PAGE_PATH,
+  layout: 'more',
+  cardBackgroundColor: null,
+  cardBackgroundImage: null,
+};
+
+export const HIGHLIGHTS_PAGE = {
+  eyebrow: 'HIGHLIGHTS',
+  title: 'STORIES WORTH',
+  accent: 'DISCOVERING',
+  subtitle:
+    'Thirty more heritage stories beyond the homepage featured set — the next chapter of the living archive.',
 } as const;
 
 /** Canonical homepage featured stories — matches Figma landing spec. */

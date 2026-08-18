@@ -8,6 +8,8 @@ import {
   type PublicCultureItemDTO,
   type PublicCultureItemDetailDTO,
 } from '@/lib/dto';
+import { FEATURED_TREASURE_COUNT, HIGHLIGHT_TREASURE_COUNT } from '@/lib/constants/featured-treasures';
+import { fetchHomepageFeaturedIds } from '@/lib/queries/featured-home-sql';
 
 async function fetchPublishedItemsByMenu(
   locale: SiteLocaleCode,
@@ -141,32 +143,31 @@ export async function getPublishedCultureItems(): Promise<PublicCultureItemDTO[]
   return getPublishedCultureItemsCached(locale);
 }
 
+const cultureItemDetailInclude = {
+  menuItem: {
+    include: { parent: true },
+  },
+} as const;
+
+function sortCultureItemsByIds<T extends { id: string }>(rows: T[], ids: string[]): T[] {
+  const order = new Map(ids.map((id, index) => [id, index]));
+  return [...rows].sort((left, right) => (order.get(left.id) ?? 0) - (order.get(right.id) ?? 0));
+}
+
 async function fetchFeaturedCultureItems(
   locale: SiteLocaleCode,
-  limit = 5,
+  limit = FEATURED_TREASURE_COUNT,
 ): Promise<PublicCultureItemDetailDTO[]> {
   try {
-    const include = {
-      menuItem: {
-        include: { parent: true },
-      },
-    } as const;
-    const featured = await prisma.cultureItem.findMany({
-      where: { status: 'PUBLISHED', featuredOnHome: true },
-      include,
-      orderBy: [{ featuredOrder: 'asc' }, { order: 'asc' }, { createdAt: 'desc' }],
-      take: limit,
+    const ids = await fetchHomepageFeaturedIds(limit);
+    if (ids.length === 0) {
+      return [];
+    }
+    const rows = await prisma.cultureItem.findMany({
+      where: { id: { in: ids } },
+      include: cultureItemDetailInclude,
     });
-    const rows =
-      featured.length > 0
-        ? featured
-        : await prisma.cultureItem.findMany({
-            where: { status: 'PUBLISHED' },
-            include,
-            orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
-            take: limit,
-          });
-    return rows.map((row) => toPublicCultureItemDetail(row, locale));
+    return sortCultureItemsByIds(rows, ids).map((row) => toPublicCultureItemDetail(row, locale));
   } catch {
     return [];
   }
@@ -174,13 +175,49 @@ async function fetchFeaturedCultureItems(
 
 const getFeaturedCultureItemsCached = unstable_cache(
   fetchFeaturedCultureItems,
-  ['culture-items-featured'],
+  ['culture-items-featured-v2'],
   { tags: ['culture-items'], revalidate: 60 },
 );
 
-export async function getFeaturedCultureItems(limit = 5): Promise<PublicCultureItemDetailDTO[]> {
+export async function getFeaturedCultureItems(
+  limit = FEATURED_TREASURE_COUNT,
+): Promise<PublicCultureItemDetailDTO[]> {
   const locale = await getCurrentSiteLocale();
   return getFeaturedCultureItemsCached(locale, limit);
+}
+
+async function fetchHighlightCultureItems(
+  locale: SiteLocaleCode,
+  limit = HIGHLIGHT_TREASURE_COUNT,
+): Promise<PublicCultureItemDetailDTO[]> {
+  try {
+    const excludeIds = await fetchHomepageFeaturedIds(FEATURED_TREASURE_COUNT);
+    const rows = await prisma.cultureItem.findMany({
+      where: {
+        status: 'PUBLISHED',
+        ...(excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {}),
+      },
+      include: cultureItemDetailInclude,
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+      take: limit,
+    });
+    return rows.map((row) => toPublicCultureItemDetail(row, locale));
+  } catch {
+    return [];
+  }
+}
+
+const getHighlightCultureItemsCached = unstable_cache(
+  fetchHighlightCultureItems,
+  ['culture-items-highlights-v2'],
+  { tags: ['culture-items'], revalidate: 60 },
+);
+
+export async function getHighlightCultureItems(
+  limit = HIGHLIGHT_TREASURE_COUNT,
+): Promise<PublicCultureItemDetailDTO[]> {
+  const locale = await getCurrentSiteLocale();
+  return getHighlightCultureItemsCached(locale, limit);
 }
 
 export async function getPublishedCultureItemSlugs(): Promise<

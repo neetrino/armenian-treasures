@@ -11,6 +11,7 @@ import {
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
+import { persistCultureItemFeaturedHome } from '@/lib/queries/featured-home-sql';
 import { cultureItemSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
@@ -74,7 +75,12 @@ export interface CultureItemFormState {
 }
 
 function parseForm(formData: FormData):
-  | { ok: true; data: ReturnType<typeof toData> }
+  | {
+      ok: true;
+      data: ReturnType<typeof toData>;
+      featuredOnHome: boolean;
+      featuredOrder: number | null;
+    }
   | { ok: false; errors: Record<string, string> } {
   const titleI18n = readLocalizedTextFromFormData(formData, 'title');
   const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
@@ -133,6 +139,8 @@ function parseForm(formData: FormData):
       descriptionI18n,
       shortDescriptionI18n,
     }),
+    featuredOnHome: parsed.data.featuredOnHome,
+    featuredOrder: parsed.data.featuredOnHome ? (parsed.data.featuredOrder ?? 5) : null,
   };
 }
 
@@ -165,8 +173,6 @@ function toData(
     longitude: input.longitude ?? null,
     mapType: input.mapType ?? null,
     showOnMap: input.showOnMap,
-    featuredOnHome: input.featuredOnHome,
-    featuredOrder: input.featuredOnHome ? (input.featuredOrder ?? 5) : null,
     itemType: input.itemType,
     status: input.status,
     order: input.order,
@@ -194,7 +200,8 @@ export async function createCultureItemAction(
       message: 'Slug must be unique.',
     };
   }
-  await prisma.cultureItem.create({ data: parsed.data });
+  const created = await prisma.cultureItem.create({ data: parsed.data });
+  await persistCultureItemFeaturedHome(created.id, parsed.featuredOnHome, parsed.featuredOrder);
   await revalidateCultureItem([parsed.data.slug], [parsed.data.menuItemId]);
   return { status: 'success' };
 }
@@ -222,6 +229,7 @@ export async function updateCultureItemAction(
     };
   }
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
+  await persistCultureItemFeaturedHome(id, parsed.featuredOnHome, parsed.featuredOrder);
 
   await deleteReplacedManagedImage(current?.image, parsed.data.image);
   await deleteReplacedManagedImage(current?.cardBackgroundImage, parsed.data.cardBackgroundImage);

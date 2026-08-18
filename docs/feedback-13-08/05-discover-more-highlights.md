@@ -1,9 +1,8 @@
 # 05 — Discover more highlight
 
-**Բաժին:** Home page  
-**Կարգավիճակ:** Missing  
-**Առաջընթաց:** 10%  
-**Նշում:** Sheet-ում՝ քննարկել Neetrino-ի հետ
+**Բաժին:** Home page
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -20,11 +19,13 @@ Sheet screenshot-ը mosaic քարտերն են (Tatev / Geghard / Khor Virap / N
 
 ## Իրականացված է հիմա
 
-- 4-քարտանոց mosaic grid կա։
-- Ազատ 5-րդ slot և `/highlights` էջ չկան։
+- Homepage mosaic-ը պահում է #04-ի top 5-ը։
+- Վերջին slot՝ `Discover more highlights` քարտ, href `/highlights`։
+- `/highlights` էջը ցույց է տալիս հաջորդ 30 published item (homepage featured 5-ը բացառված)։
+- Քարտերը նույն mosaic pattern-ով են, 5-ական խմբերով։
 
 ## Մնացած
 
-- [ ] Քննարկում Neetrino-ի հետ
-- [ ] 5-րդ shortcut քարտ
-- [ ] 30-item highlights էջ
+- [x] 5-րդ/վերջին shortcut քարտ
+- [x] 30-item highlights էջ
+- [x] Չկրկնել homepage top 5-ը

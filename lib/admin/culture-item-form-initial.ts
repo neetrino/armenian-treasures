@@ -1,5 +1,6 @@
 import type { CultureItem } from '@prisma/client';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
+import type { FeaturedHomeState } from '@/lib/queries/featured-home-sql';
 
 export interface CultureItemFormInitial {
   title: string;
@@ -29,7 +30,10 @@ export interface CultureItemFormInitial {
   order: number;
 }
 
-export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInitial {
+export function toCultureItemFormInitial(
+  item: CultureItem,
+  featured?: FeaturedHomeState,
+): CultureItemFormInitial {
   return {
     title: item.title,
     slug: item.slug,
@@ -51,8 +55,8 @@ export function toCultureItemFormInitial(item: CultureItem): CultureItemFormInit
     longitude: item.longitude !== null ? String(item.longitude) : '',
     mapType: item.mapType ?? '',
     showOnMap: item.showOnMap,
-    featuredOnHome: item.featuredOnHome,
-    featuredOrder: item.featuredOrder,
+    featuredOnHome: featured?.featuredOnHome ?? false,
+    featuredOrder: featured?.featuredOrder ?? null,
     itemType: item.itemType,
     status: item.status,
     order: item.order,
