@@ -4,7 +4,7 @@
 
 Աուդիտ՝ 2026-08-18։ Յուրաքանչյուր ֆայլում՝ ինչ է պահանջվում, ինչպես իրականացնել, արդյոք արված է, և քանի %-ով։
 
-**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~48%**  
+**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~53%**  
 Քարտեզի կետը blocked է (քննարկում Վլադի հետ) և միջինում չի մտնում։
 
 | # | Բաժին | Առաջադրանք | Կարգավիճակ | % | Ֆայլ |
@@ -15,7 +15,7 @@
 | 04 | Home | STORIES WORTH DISCOVERING — top 5, Admin թարմացում | Done | 100% | [04](./04-stories-worth-discovering-top-5.md) |
 | 05 | Home | Discover more highlight → 30 highlight էջ | Done | 100% | [05](./05-discover-more-highlights.md) |
 | 06 | Home | Heritage Community + Discover more updates → Blog | Done | 100% | [06](./06-heritage-community-discover-more.md) |
-| 07 | Home | WHAT WE ARE BUILDING → Active Fundraisings | Partial | 15% | [07](./07-active-fundraisings-title.md) |
+| 07 | Home | WHAT WE ARE BUILDING → Active Fundraisings | Done | 100% | [07](./07-active-fundraisings-title.md) |
 | 08 | Home | Fundraisings shortcut — հետնանկար | Partial | 45% | [08](./08-active-fundraisings-background.md) |
 | 09 | Home | Հեռացնել WHO WE ARE | Missing | 10% | [09](./09-remove-who-we-are.md) |
 | 10 | Home | Ներքևում Partners լոգոներ (highlighted) | Partial | 25% | [10](./10-home-partners-logos.md) |

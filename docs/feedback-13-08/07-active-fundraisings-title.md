@@ -1,8 +1,8 @@
 # 07 — WHAT WE ARE BUILDING → Active Fundraisings
 
-**Բաժին:** Home page  
-**Կարգավիճակ:** Partial  
-**Առաջընթաց:** 15%
+**Բաժին:** Home page
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -10,18 +10,21 @@
 
 ## Ինչպես իրականացնել
 
-1. Default copy — `lib/constants/upcoming-projects.ts` (`title: 'WHAT WE ARE BUILDING'`)։
-2. Home Sections editor արդեն ունի title field (`HomeSectionsEditor`)։ Seed / fallback և DB արժեքը երկուսն էլ փոխել։
-3. Eyebrow-ը (`UPCOMING PROJECTS`) համաձայնեցնել. sheet-ը միայն title է նշում։
-4. Նույն copy-ն Cultural Portal-ի projects սեկցիայում (`lib/constants/cultural-portal-page.ts`) միայն եթե այդ սեկցիան մնում է (#11-ը այն հանում է)։
+1. Default copy — `lib/constants/upcoming-projects.ts`.
+2. Home Sections editor already has a title field. Update seed / fallback and the stored DB value.
+3. Keep eyebrow `UPCOMING PROJECTS` unless the sheet asks to change it.
+4. Do not change Cultural Portal projects copy; #11 removes that section.
 
 ## Իրականացված է հիմա
 
-- Սեկցիան և project քարտերը կան։
-- Title-ը CMS-ով փոխելի է, բայց default-ը հին է։
+- Default title-ը `ACTIVE FUNDRAISINGS` է (`HomeSectionHeader`-ը uppercase է ցույց տալիս)։
+- Seed / fallback-ը գալիս է նույն constant-ից։
+- Եղած `HomeContent.sections.upcomingProjects.title`-ը թարմացված է DB-ում։
+- Eyebrow-ը մնում է `UPCOMING PROJECTS` (sheet-ը միայն title է խնդրում)։
+- Cultural Portal projects copy-ն չի փոխվել (#11-ը այդ սեկցիան հանում է)։
 
 ## Մնացած
 
-- [ ] Default title → Active Fundraisings
-- [ ] DB / seed թարմացում
-- [ ] Eyebrow-ի որոշում
+- [x] Default title → Active Fundraisings
+- [x] DB / seed թարմացում
+- [x] Eyebrow-ի որոշում — պահել `UPCOMING PROJECTS`
