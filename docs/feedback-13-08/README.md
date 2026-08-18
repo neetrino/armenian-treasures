@@ -4,7 +4,7 @@
 
 Աուդիտ՝ 2026-08-18։ Յուրաքանչյուր ֆայլում՝ ինչ է պահանջվում, ինչպես իրականացնել, արդյոք արված է, և քանի %-ով։
 
-**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~88%**  
+**Ընդհանուր առաջընթաց (իրականացվող 17 կետ)՝ ~94%**  
 Քարտեզի կետը blocked է (քննարկում Վլադի հետ) և միջինում չի մտնում։
 
 | # | Բաժին | Առաջադրանք | Կարգավիճակ | % | Ֆայլ |
@@ -23,7 +23,7 @@
 | 12 | Catalogs | Sub-catalog նկարագրություն, հետո բաժիններ | Done | 100% | [12](./12-subcatalog-description.md) |
 | 13 | Catalogs | Shortcut հետնանկար 40% թափանցիկությամբ | Done | 100% | [13](./13-subcatalog-shortcut-background.md) |
 | 14 | Catalogs | Sub-catalog որոնում + ֆիլտր | Done | 100% | [14](./14-subcatalog-search-filters.md) |
-| 15 | Catalogs | Sub-page — map առաջ, հետո հոդվածներ | Partial | 25% | [15](./15-subpage-map-then-articles.md) |
+| 15 | Catalogs | Sub-page — map առաջ, հետո հոդվածներ | Done | 100% | [15](./15-subpage-map-then-articles.md) |
 | 16 | Catalogs | Հոդվածի էջ — նեղ layout, առանց 3D Tour meta | Partial | 40% | [16](./16-article-page-layout.md) |
 | 17 | Admin | Architecture hover-ում չի երևում (Ornaments) | Missing | 10% | [17](./17-admin-architecture-hover.md) |
 | 18 | Admin | Add grid card — նույն կառուցվածքը ինչ mockup-ում | Partial | 35% | [18](./18-admin-add-grid-card.md) |

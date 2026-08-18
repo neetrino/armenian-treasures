@@ -1,8 +1,8 @@
 # 15 — Sub-page — map առաջ, հետո հոդվածներ
 
-**Բաժին:** Catalogs  
-**Կարգավիճակ:** Partial  
-**Առաջընթաց:** 25%
+**Բաժին:** Catalogs
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -20,11 +20,12 @@ Sheet screenshot-ը `FAITH CARVED IN STONE` տիպի էջ է՝ վերնագիր,
 
 ## Իրականացված է հիմա
 
-- Map և item grid երկուսն էլ կան։
-- Կարգը հակառակ է, description/about դեռ կա։
+- Subcategory էջը compact hero է՝ `about.title` (օր. Faith Carved in Stone), առանց description/about/stats։
+- Հաջորդը map-ն է, հետո item shortcuts + search/filters։
+- View on Map CTA-ն տանում է `#map`։
 
 ## Մնացած
 
-- [ ] Հանել description/about
-- [ ] Map-ը դնել items-ից առաջ
-- [ ] Պահել title + item shortcuts + search
+- [x] Հանել description/about
+- [x] Map-ը դնել items-ից առաջ
+- [x] Պահել title + item shortcuts + search

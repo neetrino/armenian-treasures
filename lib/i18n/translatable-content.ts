@@ -38,9 +38,11 @@ function parsePayload(raw: string): LocaleTextMap | null {
     const parsed: unknown = JSON.parse(raw);
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
     const maybePayload = parsed as Record<string, unknown>;
-    if (maybePayload[TRANSLATABLE_MARKER] !== true) return null;
-    if (!isLocaleTextMap(maybePayload.values)) return null;
-    return toCleanMap(maybePayload.values);
+    const marker = maybePayload[TRANSLATABLE_MARKER] ?? maybePayload.__AT_I18N_V1;
+    if (marker !== true) return null;
+    const values = maybePayload.values ?? maybePayload.VALUES;
+    if (!isLocaleTextMap(values)) return null;
+    return toCleanMap(values);
   } catch {
     return null;
   }

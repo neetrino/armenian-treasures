@@ -11,7 +11,7 @@ interface CultureCatalogLandingHeroProps {
   eyebrow: string;
   accent: string;
   slogan?: string;
-  description: string;
+  description?: string;
   breadcrumb: LandingBreadcrumbSegment[];
   heroImage?: string;
   ctas?: CultureCatalogLandingHeroCta[];
@@ -37,7 +37,7 @@ export function CultureCatalogLandingHero({
       title={title}
       accent={accent}
       slogan={slogan}
-      subtitle={description}
+      subtitle={description ?? ''}
       heroImage={imageUrl}
       ctas={ctas}
       heroClassName="culture-catalog-hero"
