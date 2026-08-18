@@ -39,12 +39,15 @@ export function hasCatalogSearchFilters(filters: CatalogSearchFilters): boolean 
   return Boolean(filters.q || filters.region || filters.period || filters.type);
 }
 
-export function catalogSearchHref(filters: CatalogSearchFilters): string {
+export function catalogSearchHref(
+  filters: CatalogSearchFilters,
+  path = CATALOG_SEARCH_PATH,
+): string {
   const params = new URLSearchParams();
   if (filters.q) params.set('q', filters.q);
   if (filters.region) params.set('region', filters.region);
   if (filters.period) params.set('period', filters.period);
   if (filters.type) params.set('type', filters.type);
   const query = params.toString();
-  return query ? `${CATALOG_SEARCH_PATH}?${query}` : CATALOG_SEARCH_PATH;
+  return query ? `${path}?${query}` : path;
 }

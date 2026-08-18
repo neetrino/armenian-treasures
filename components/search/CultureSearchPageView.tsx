@@ -2,11 +2,10 @@ import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCata
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { LandingHero } from '@/components/landing/LandingHero';
-import { CatalogSearchFields } from '@/components/search/CatalogSearchFields';
+import { CatalogSearchForm } from '@/components/search/CatalogSearchForm';
 import type { CatalogFilterOption } from '@/lib/culture-catalog/catalog-filter-options';
 import {
   CATALOG_SEARCH_PATH,
-  catalogSearchHref,
   type CatalogSearchFilters,
 } from '@/lib/culture-catalog/catalog-search-params';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -47,22 +46,13 @@ export function CultureSearchPageView({
       <section id="results">
         <p className="sec-label">Filters</p>
         <h2 className="sec-title">Region, period, type</h2>
-        <form
-          key={catalogSearchHref(filters)}
+        <CatalogSearchForm
           action={CATALOG_SEARCH_PATH}
-          method="get"
-          className="catalog-search-form"
-        >
-          <CatalogSearchFields
-            defaults={filters}
-            regions={regions}
-            periods={periods}
-            types={types}
-          />
-          <button type="submit" className="btn-gold catalog-search-form__submit">
-            Apply filters
-          </button>
-        </form>
+          filters={filters}
+          regions={regions}
+          periods={periods}
+          types={types}
+        />
         {items.length > 0 ? (
           <CultureCatalogItemGrid items={items} content={RESULTS_CONTENT} sectionId="matches" />
         ) : (

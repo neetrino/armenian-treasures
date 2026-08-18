@@ -1,4 +1,5 @@
 import { CULTURE_ITEM_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
+import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
 export interface CatalogFilterOption {
@@ -60,5 +61,25 @@ export function collectCatalogFilterOptions(items: PublicCultureItemDTO[]): {
     regions: mergeUniqueOptions(CATALOG_REGION_OPTIONS, regions),
     periods: mergeUniqueOptions(CATALOG_PERIOD_OPTIONS, periods),
     types: CATALOG_TYPE_OPTIONS,
+  };
+}
+
+export interface CatalogSearchFormModel {
+  action: string;
+  filters: CatalogSearchFilters;
+  regions: CatalogFilterOption[];
+  periods: CatalogFilterOption[];
+  types: CatalogFilterOption[];
+}
+
+export function buildCatalogSearchForm(
+  items: PublicCultureItemDTO[],
+  filters: CatalogSearchFilters,
+  action: string,
+): CatalogSearchFormModel {
+  return {
+    action,
+    filters,
+    ...collectCatalogFilterOptions(items),
   };
 }

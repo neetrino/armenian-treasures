@@ -53,6 +53,9 @@ describe('catalog search params', () => {
     expect(catalogSearchHref(filters)).toBe(
       '/search?q=tatev&region=Syunik&type=MONUMENT',
     );
+    expect(catalogSearchHref(filters, '/culture/architecture/churches')).toBe(
+      '/culture/architecture/churches?q=tatev&region=Syunik&type=MONUMENT',
+    );
   });
 });
 

@@ -1,3 +1,4 @@
+import { Search } from 'lucide-react';
 import type { CatalogFilterOption } from '@/lib/culture-catalog/catalog-filter-options';
 import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,14 @@ const FIELD_BY_VARIANT = {
   page: 'catalog-search-field',
 } as const;
 
+function FieldLabel({ children }: { children: string }) {
+  return (
+    <span className="catalog-search-field-label font-cinzel text-[9px] font-bold uppercase tracking-[0.16em] text-heritage-teal">
+      {children}
+    </span>
+  );
+}
+
 function FilterSelect({
   name,
   label,
@@ -35,10 +44,8 @@ function FilterSelect({
   fieldClassName: string;
 }) {
   return (
-    <label className="flex min-w-0 flex-col gap-1">
-      <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.16em] text-heritage-teal">
-        {label}
-      </span>
+    <label className="catalog-search-control flex min-w-0 flex-col gap-1.5">
+      <FieldLabel>{label}</FieldLabel>
       <select name={name} defaultValue={value} className={cn(fieldClassName, 'cursor-pointer')}>
         <option value="">{allLabel}</option>
         {options.map((option) => (
@@ -62,18 +69,26 @@ export function CatalogSearchFields({
   const fieldClassName = cn(FIELD_BASE, FIELD_BY_VARIANT[variant]);
 
   return (
-    <div className={cn('grid gap-3', isHeader ? 'grid-cols-1' : 'sm:grid-cols-2 lg:grid-cols-4')}>
-      <label className="flex min-w-0 flex-col gap-1 sm:col-span-2 lg:col-span-1">
-        <span className="font-cinzel text-[9px] font-bold uppercase tracking-[0.16em] text-heritage-teal">
-          Search
+    <div
+      className={cn(
+        'catalog-search-fields',
+        isHeader ? 'grid grid-cols-1 gap-3' : 'catalog-search-fields--page',
+      )}
+    >
+      <label className="catalog-search-control catalog-search-control--query flex min-w-0 flex-col gap-1.5">
+        <FieldLabel>Search</FieldLabel>
+        <span className={cn(!isHeader && 'catalog-search-field-shell')}>
+          {!isHeader ? (
+            <Search size={15} aria-hidden className="catalog-search-field-icon" />
+          ) : null}
+          <input
+            type="search"
+            name="q"
+            defaultValue={defaults.q}
+            placeholder="Site, region, period…"
+            className={cn(fieldClassName, !isHeader && 'catalog-search-field--query')}
+          />
         </span>
-        <input
-          type="search"
-          name="q"
-          defaultValue={defaults.q}
-          placeholder="Site, region, period…"
-          className={fieldClassName}
-        />
       </label>
       <FilterSelect
         name="region"

@@ -1,8 +1,8 @@
 # 14 — Sub-catalog որոնում + ֆիլտր
 
 **Բաժին:** Catalogs
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 25%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -19,11 +19,13 @@ Sub-catalog որոնման բաժինը ունենա ֆիլտր ըստ մարզ�
 
 ## Իրականացված է հիմա
 
-- Search input կա (categories և sites)։
-- Region / Period / Type dropdown չկան։
+- Subcategory և leaf category item grid-ը օգտագործում են նույն `CatalogSearchFields` control-ը, ինչ header / `/search`։
+- Region / Period / Type + keyword ֆիլտրերը գալիս են query params-ով (`?q=&region=&period=&type=`)։
+- Ֆիլտրը կիրառվում է `filterCatalogItems`-ով։ Map և stats մնում են ամբողջ ցուցակի վրա։
+- Hub էջում (`/culture/legends`) region/period/type չեն ավելացվել, որովհետև shortcut-ները menu item են, ոչ monument։
 
 ## Մնացած
 
-- [ ] Երեք ֆիլտր dropdown
-- [ ] Կիրառել item grid-ում (պարտադիր) և hub-ում (եթե իմաստ ունի)
-- [ ] Կիսել control-ը home search-ի հետ
+- [x] Երեք ֆիլտր dropdown
+- [x] Կիրառել item grid-ում (պարտադիր) և hub-ում (եթե իմաստ ունի)
+- [x] Կիսել control-ը home search-ի հետ

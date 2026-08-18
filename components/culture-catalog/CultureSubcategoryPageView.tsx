@@ -8,6 +8,9 @@ import type { MenuNode } from '@/lib/culture-menu';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
+import { buildCatalogSearchForm } from '@/lib/culture-catalog/catalog-filter-options';
+import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries';
+import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import {
   buildCultureCatalogStats,
   filterMappableItems,
@@ -18,18 +21,25 @@ interface CultureSubcategoryPageViewProps {
   parent: MenuNode;
   subcategory: MenuNode;
   items: PublicCultureItemDTO[];
+  filters: CatalogSearchFilters;
 }
 
 export function CultureSubcategoryPageView({
   parent,
   subcategory,
   items,
+  filters,
 }: CultureSubcategoryPageViewProps) {
   const content = resolveCultureCatalogContent(subcategory, parent);
   const visibility = content.sectionVisibility;
   const stats = buildCultureCatalogStats(items, content.statLabels);
   const mapItems = filterMappableItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
+  const visibleItems = filterCatalogItems(items, filters);
+  const searchForm =
+    items.length > 0
+      ? buildCatalogSearchForm(items, filters, `/culture/${parent.slug}/${subcategory.slug}`)
+      : undefined;
 
   return (
     <CultureCatalogShell>
@@ -57,7 +67,11 @@ export function CultureSubcategoryPageView({
       {visibility.about ? <CultureCatalogAbout content={aboutContent} /> : null}
       <LandingSectionStack>
         {visibility.entries ? (
-          <CultureCatalogItemGrid items={items} content={content.items} />
+          <CultureCatalogItemGrid
+            items={visibleItems}
+            content={content.items}
+            searchForm={searchForm}
+          />
         ) : null}
         {visibility.map ? (
           <CulturalPortalMap
