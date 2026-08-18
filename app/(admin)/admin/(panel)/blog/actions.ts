@@ -5,7 +5,9 @@ import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
+import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
+import { persistBlogPostFeaturedHome } from '@/lib/queries/featured-blog-sql';
 import { blogPostSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
@@ -47,6 +49,7 @@ function parseForm(formData: FormData, existingSlug?: string) {
     return { ok: false as const, errors };
   }
 
+  const featured = parseFeaturedHomeFields(formData);
   return {
     ok: true as const,
     data: {
@@ -58,6 +61,7 @@ function parseForm(formData: FormData, existingSlug?: string) {
       order: parsed.data.order,
       isPublished: parsed.data.isPublished,
     },
+    featured,
   };
 }
 
@@ -79,7 +83,8 @@ export async function createBlogPostAction(_p: BlogFormState, formData: FormData
     };
   }
 
-  await prisma.blogPost.create({ data: parsed.data });
+  const created = await prisma.blogPost.create({ data: parsed.data });
+  await persistBlogPostFeaturedHome(created.id, parsed.featured.featuredOnHome, parsed.featured.featuredOrder);
   revalidate(parsed.data.slug);
   return { status: 'success' };
 }
@@ -100,6 +105,7 @@ export async function updateBlogPostAction(
 
   const { slug: _slug, order: _order, ...updateData } = parsed.data;
   await prisma.blogPost.update({ where: { id }, data: updateData });
+  await persistBlogPostFeaturedHome(id, parsed.featured.featuredOnHome, parsed.featured.featuredOrder);
   revalidate(current.slug);
   return { status: 'success' };
 }

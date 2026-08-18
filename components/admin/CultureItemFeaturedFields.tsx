@@ -12,12 +12,14 @@ interface CultureItemFeaturedFieldsProps {
   featuredOnHome?: boolean;
   featuredOrder?: number | null;
   featuredOrderError?: string;
+  label?: string;
 }
 
 export function CultureItemFeaturedFields({
   featuredOnHome = false,
   featuredOrder = 5,
   featuredOrderError,
+  label = 'Show in STORIES WORTH DISCOVERING',
 }: CultureItemFeaturedFieldsProps) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
@@ -28,7 +30,7 @@ export function CultureItemFeaturedFields({
           defaultChecked={featuredOnHome}
           className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
         />
-        Show in STORIES WORTH DISCOVERING
+        {label}
       </label>
       <SelectField
         label="Home slot (1–5)"

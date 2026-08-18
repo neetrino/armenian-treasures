@@ -1,7 +1,12 @@
-import '@/components/blog/blog.css';
-import { BlogCard } from '@/components/blog/BlogCard';
+import '@/components/sections/featured-treasures/featured-treasures-section.css';
+import { FeaturedTreasuresGrid } from '@/components/sections/featured-treasures/FeaturedTreasuresGrid';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
-import { getPublishedBlogPosts } from '@/lib/queries/blogs';
+import {
+  DISCOVER_MORE_UPDATES,
+  FEATURED_BLOG_COUNT,
+} from '@/lib/constants/featured-treasures';
+import { mapBlogPostsToFeaturedTreasures } from '@/lib/mappers/featured-treasures';
+import { getFeaturedBlogPosts } from '@/lib/queries/blogs';
 import Link from 'next/link';
 
 const SECTION = {
@@ -9,11 +14,11 @@ const SECTION = {
   title: 'Stories from the Heritage Community',
   description:
     'Impact stories, donor updates, and field notes from the Armenian Treasures network — curated from our news archive.',
-  viewAllLabel: 'View all news',
 } as const;
 
 export async function HomeNewsFeedSection() {
-  const posts = (await getPublishedBlogPosts()).slice(0, 3);
+  const posts = await getFeaturedBlogPosts(FEATURED_BLOG_COUNT);
+  const treasures = mapBlogPostsToFeaturedTreasures(posts);
 
   return (
     <section
@@ -32,18 +37,14 @@ export async function HomeNewsFeedSection() {
           title={SECTION.title}
           description={SECTION.description}
           action={
-            <Link href="/blog" className="btn-outline inline-flex h-11 items-center px-5">
-              {SECTION.viewAllLabel}
+            <Link href={DISCOVER_MORE_UPDATES.href} className="btn-gold">
+              {DISCOVER_MORE_UPDATES.label}
             </Link>
           }
         />
 
-        {posts.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
+        {treasures.length > 0 ? (
+          <FeaturedTreasuresGrid treasures={treasures} />
         ) : (
           <div className="heritage-card-surface rounded-sm px-6 py-10 text-center">
             <p className="font-cinzel text-sm font-semibold uppercase tracking-[0.14em] text-heritage-gold">

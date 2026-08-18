@@ -1,8 +1,8 @@
 # 06 — Heritage Community + Discover more updates
 
 **Բաժին:** Home page
-**Կարգավիճակ:** Partial
-**Առաջընթաց:** 55%
+**Կարգավիճակ:** Done
+**Առաջընթաց:** 100%
 
 ## Ինչ է պահանջվում
 
@@ -17,14 +17,14 @@
 
 ## Իրականացված է հիմա
 
-- Սեկցիան կա, published blog-ից է կարդում։
-- CTA կա և տանում է `/blog`։
-- Label-ը սխալ է (`View all news`)։
-- Layout-ը սովորական 3-column grid է, ոչ featured mosaic։
-- Featured picker չկա։
+- Homepage-ը ցույց է տալիս admin-ի top 5 blog post՝ նույն featured mosaic-ով։
+- CTA-ն `Discover more updates` է և տանում է `/blog`։
+- Admin → Blog form-ում կա «Show in Stories from the Heritage Community» + slot 1–5։
+- Եթե featured չկա՝ fallback վերջին 5 published post։
+- `/blog` էջը մնում է ամբողջ արխիվը (`BlogCard`)։
 
 ## Մնացած
 
-- [ ] CTA copy դարձնել Discover more updates
-- [ ] Հաստատել՝ արդյոք պետք է նույն mosaic / top-N Admin ընտրություն
-- [ ] Եթե այո՝ featured blog posts + layout
+- [x] CTA copy դարձնել Discover more updates
+- [x] Նույն mosaic / top-N Admin ընտրություն
+- [x] Featured blog posts + layout

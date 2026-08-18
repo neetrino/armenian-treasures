@@ -10,8 +10,10 @@ export type FeaturedTreasureLayout =
   | 'tile';
 
 export const FEATURED_TREASURE_COUNT = 5;
+export const FEATURED_BLOG_COUNT = 5;
 export const HIGHLIGHT_TREASURE_COUNT = 30;
 export const HIGHLIGHTS_PAGE_PATH = '/highlights';
+export const BLOG_PAGE_PATH = '/blog';
 
 export const FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS: Record<FeaturedTreasureLayout, string> = {
   tall: 'featured-treasures-grid__item--tall',
@@ -52,6 +54,11 @@ export const DISCOVER_MORE_HIGHLIGHTS_TREASURE: FeaturedTreasure = {
   cardBackgroundColor: null,
   cardBackgroundImage: null,
 };
+
+export const DISCOVER_MORE_UPDATES = {
+  label: 'Discover more updates',
+  href: BLOG_PAGE_PATH,
+} as const;
 
 export const HIGHLIGHTS_PAGE = {
   eyebrow: 'HIGHLIGHTS',

@@ -174,7 +174,7 @@ export function revalidateCareersCache(): void {
 
 export function revalidateBlogPostsCache(slugs: string[] = []): void {
   revalidateTag('blog-posts', 'max');
-  revalidatePublicPages(['/blog']);
+  revalidatePublicPages(['/blog', '/']);
   revalidatePath('/admin/blog');
   for (const slug of slugs) {
     const trimmed = slug.trim();
