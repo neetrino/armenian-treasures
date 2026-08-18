@@ -4,7 +4,7 @@ export type AdminImageMimeType = (typeof ADMIN_IMAGE_MIME_TYPES)[number];
 
 export const ADMIN_IMAGE_ACCEPT = ADMIN_IMAGE_MIME_TYPES.join(',');
 
-export const ADMIN_IMAGE_MAX_SIZE_BYTES = 5 * 1024 * 1024;
+export const ADMIN_IMAGE_MAX_SIZE_BYTES = 10 * 1024 * 1024;
 
 export const ADMIN_IMAGE_FOLDERS = ['hero', 'culture'] as const;
 

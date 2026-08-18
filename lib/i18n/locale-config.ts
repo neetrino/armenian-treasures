@@ -1,5 +1,5 @@
 /** Supported public site locales per AT Features / stakeholder feedback. */
-export const SITE_LOCALE_CODES = ['HY', 'RU', 'EN', 'FR', 'PT'] as const;
+export const SITE_LOCALE_CODES = ['HY', 'HYW', 'EN', 'RU', 'FR', 'PT'] as const;
 
 export type SiteLocaleCode = (typeof SITE_LOCALE_CODES)[number];
 
@@ -7,16 +7,18 @@ export interface SiteLocaleDefinition {
   code: SiteLocaleCode;
   flag: string;
   name: string;
+  tabLabel: string;
   /** True when full UI translations ship; English is the only live locale today. */
   hasTranslations: boolean;
 }
 
 export const SITE_LOCALE_DEFINITIONS: SiteLocaleDefinition[] = [
-  { code: 'HY', flag: '🇦🇲', name: 'Armenian', hasTranslations: false },
-  { code: 'RU', flag: '🇷🇺', name: 'Russian', hasTranslations: false },
-  { code: 'EN', flag: '🇬🇧', name: 'English', hasTranslations: true },
-  { code: 'FR', flag: '🇫🇷', name: 'French', hasTranslations: false },
-  { code: 'PT', flag: '🇵🇹', name: 'Portuguese', hasTranslations: false },
+  { code: 'HY', flag: '🇦🇲', name: 'Armenian (Eastern)', tabLabel: 'ARM (E)', hasTranslations: false },
+  { code: 'HYW', flag: '🇦🇲', name: 'Armenian (Western)', tabLabel: 'ARM (W)', hasTranslations: false },
+  { code: 'EN', flag: '🇬🇧', name: 'English', tabLabel: 'EN', hasTranslations: true },
+  { code: 'RU', flag: '🇷🇺', name: 'Russian', tabLabel: 'RU', hasTranslations: false },
+  { code: 'FR', flag: '🇫🇷', name: 'French', tabLabel: 'FR', hasTranslations: false },
+  { code: 'PT', flag: '🇵🇹', name: 'Portuguese', tabLabel: 'PT', hasTranslations: false },
 ];
 
 export const DEFAULT_ENABLED_LOCALES: SiteLocaleCode[] = ['EN'];

@@ -45,6 +45,12 @@ describe('resolvePublicAssetUrl', () => {
     );
   });
 
+  it('rewrites missing project svg paths to the supported fallback image', () => {
+    expect(resolvePublicAssetUrl('/images/projects/tatev-monastery-full-3d-capture.svg')).toBe(
+      'https://pub-81a5f477bfce448aa07a1fbbb9abfceb.r2.dev/images/culture/card-heritage.webp',
+    );
+  });
+
   it('resolves admin upload paths via manifest without R2 env flags', () => {
     expect(
       resolvePublicAssetUrl('/uploads/images/culture/culture-9f44566d18e7.webp'),

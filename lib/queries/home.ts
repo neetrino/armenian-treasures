@@ -26,7 +26,7 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   primaryCtaText: 'EXPLORE ARMENIAN HERITAGE',
   primaryCtaUrl: '/culture',
   secondaryCtaText: 'SUPPORT THE MISSION',
-  secondaryCtaUrl: '/partnership',
+  secondaryCtaUrl: '/donate',
   stats: [...HOME_HERO_STATS],
   missionTitle: "A nation's memory, made",
   missionHighlight: 'eternal.',

@@ -1,6 +1,7 @@
 'use client';
 
 import { useActionState, useEffect } from 'react';
+import { CultureItemFeaturedFields } from '@/components/admin/CultureItemFeaturedFields';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { RichTextField } from '@/components/forms/fields/RichTextField';
@@ -27,6 +28,8 @@ interface Initial {
   image: string;
   publishedAt: string;
   isPublished: boolean;
+  featuredOnHome?: boolean;
+  featuredOrder?: number | null;
 }
 
 interface BlogFormProps {
@@ -109,6 +112,14 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
           />
           Published on the public blog
         </label>
+        <div className="sm:col-span-2">
+          <CultureItemFeaturedFields
+            featuredOnHome={initial?.featuredOnHome ?? false}
+            featuredOrder={initial?.featuredOrder}
+            featuredOrderError={state.fieldErrors?.featuredOrder}
+            label="Show in Stories from the Heritage Community"
+          />
+        </div>
       </div>
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>

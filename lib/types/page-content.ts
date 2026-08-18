@@ -28,13 +28,14 @@ import {
 import * as khndzoresk from '@/lib/constants/khndzoresk';
 import * as khachaturian from '@/lib/constants/khachaturian-museum';
 import * as nga from '@/lib/constants/national-gallery-armenia';
-import type {
-  CulturalPortalSectionVisibility,
-  DonationSectionVisibility,
-  KhachaturianSectionVisibility,
-  KhndzoreskSectionVisibility,
-  NationalGallerySectionVisibility,
-  PartnershipSectionVisibility,
+import {
+  DEFAULT_CULTURAL_PORTAL_SECTION_VISIBILITY,
+  type CulturalPortalSectionVisibility,
+  type DonationSectionVisibility,
+  type KhachaturianSectionVisibility,
+  type KhndzoreskSectionVisibility,
+  type NationalGallerySectionVisibility,
+  type PartnershipSectionVisibility,
 } from '@/lib/landing/landing-section-visibility';
 
 export const PAGE_CONTENT_SLUGS = [
@@ -175,6 +176,7 @@ export function buildDefaultPartnershipPageContent(): PartnershipPageContent {
 export function buildDefaultCulturalPortalPageContent(): CulturalPortalPageContent {
   return {
     ...structuredClone(CULTURAL_PORTAL_PAGE),
+    sectionVisibility: { ...DEFAULT_CULTURAL_PORTAL_SECTION_VISIBILITY },
     CULTURAL_PORTAL_SECTION: structuredClone(CULTURAL_PORTAL_SECTION),
     CULTURAL_PORTAL_MAP: structuredClone(CULTURAL_PORTAL_MAP),
     CULTURAL_PORTAL_PROJECTS_SECTION: structuredClone(CULTURAL_PORTAL_PROJECTS_SECTION),
@@ -294,7 +296,15 @@ export function parsePartnershipPageContent(value: unknown): PartnershipPageCont
 export function parseCulturalPortalPageContent(value: unknown): CulturalPortalPageContent {
   const defaults = buildDefaultCulturalPortalPageContent();
   if (typeof value === 'object' && value !== null) {
-    return { ...defaults, ...(value as Partial<CulturalPortalPageContent>) };
+    const stored = value as Partial<CulturalPortalPageContent>;
+    return {
+      ...defaults,
+      ...stored,
+      sectionVisibility: {
+        ...DEFAULT_CULTURAL_PORTAL_SECTION_VISIBILITY,
+        ...stored.sectionVisibility,
+      },
+    };
   }
   return defaults;
 }

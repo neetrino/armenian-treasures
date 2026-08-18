@@ -32,7 +32,7 @@ async function ProjectsPage() {
         heroImage={heroImage}
         ctas={[
           { label: 'Explore Projects', href: '#projects', variant: 'gold' },
-          { label: 'Support The Mission', href: '/partnership', variant: 'teal' },
+          { label: 'Support The Mission', href: '/donate', variant: 'teal' },
         ]}
       />
 

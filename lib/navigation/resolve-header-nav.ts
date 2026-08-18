@@ -6,6 +6,7 @@ import {
   type MegaMenuColumn,
 } from '@/lib/navigation/culture-mega-menu';
 import { buildMenuHrefMap, resolveMenuHrefFromMap } from '@/lib/navigation/menu-href-map';
+import { mergeLiveChildrenIntoMegaMenu } from '@/lib/navigation/merge-live-mega-menu';
 
 function applyMenuHrefMap(columns: MegaMenuColumn[], tree: MenuNode[]): MegaMenuColumn[] {
   const hrefMap = buildMenuHrefMap(tree);
@@ -24,9 +25,9 @@ function applyMenuHrefMap(columns: MegaMenuColumn[], tree: MenuNode[]): MegaMenu
   }));
 }
 
-/** AT Features sheet — 6-column Cultural Portal mega menu (26 items). */
+/** AT Features columns plus any extra children from the live admin menu tree. */
 export function resolveCultureMegaMenu(tree: MenuNode[]): MegaMenuColumn[] {
-  return applyMenuHrefMap(CULTURE_MEGA_MENU, tree);
+  return mergeLiveChildrenIntoMegaMenu(applyMenuHrefMap(CULTURE_MEGA_MENU, tree), tree);
 }
 
 export function resolveProjectsNavItems(): NavDropdownLink[] {

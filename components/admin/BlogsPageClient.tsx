@@ -26,6 +26,8 @@ interface Row {
   image: string | null;
   publishedAt: string;
   isPublished: boolean;
+  featuredOnHome: boolean;
+  featuredOrder: number | null;
 }
 
 interface BlogsPageClientProps {
@@ -166,6 +168,8 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
               image: editingRow.image ?? '',
               publishedAt: editingRow.publishedAt,
               isPublished: editingRow.isPublished,
+              featuredOnHome: editingRow.featuredOnHome,
+              featuredOrder: editingRow.featuredOrder,
             }}
             onSuccess={handleSheetSuccess}
             onCancel={closeEditSheet}

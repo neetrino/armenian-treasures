@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ADMIN_IMAGE_MAX_SIZE_BYTES } from '@/lib/admin/image-upload-constants';
 import { validateAdminImageFile } from '@/lib/admin/validate-admin-image-file';
 
 function makeFile(name: string, type: string, size: number): File {
@@ -18,7 +19,7 @@ describe('validateAdminImageFile', () => {
   });
 
   it('rejects oversized files', () => {
-    const file = makeFile('large.png', 'image/png', 6 * 1024 * 1024);
+    const file = makeFile('large.png', 'image/png', ADMIN_IMAGE_MAX_SIZE_BYTES + 1);
     expect(validateAdminImageFile(file).ok).toBe(false);
   });
 });

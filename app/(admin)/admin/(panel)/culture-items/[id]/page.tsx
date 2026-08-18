@@ -7,6 +7,7 @@ import { CultureItemForm } from '@/components/admin/CultureItemForm';
 import { ButtonLink } from '@/components/ui/Button';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import { fetchFeaturedHomeByIds } from '@/lib/queries/featured-home-sql';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { prisma } from '@/lib/db';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
@@ -27,6 +28,7 @@ async function EditCultureItemPage(props: PageProps) {
     }),
   ]);
   if (!item) notFound();
+  const featured = (await fetchFeaturedHomeByIds([item.id])).get(item.id);
   const options = menu.map((m) => ({
     id: m.id,
     title: m.parent
@@ -53,7 +55,7 @@ async function EditCultureItemPage(props: PageProps) {
           mode="edit"
           itemId={item.id}
           menuOptions={options}
-          initial={toCultureItemFormInitial(item)}
+          initial={toCultureItemFormInitial(item, featured)}
         />
       </AdminPanelCard>
     </AdminPageShell>

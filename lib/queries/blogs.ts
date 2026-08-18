@@ -8,6 +8,8 @@ import {
   type PublicBlogPostDTO,
   type PublicBlogPostDetailDTO,
 } from '@/lib/dto';
+import { FEATURED_BLOG_COUNT } from '@/lib/constants/featured-treasures';
+import { fetchHomepageFeaturedBlogIds } from '@/lib/queries/featured-blog-sql';
 
 async function fetchPublishedBlogPosts(locale: SiteLocaleCode): Promise<PublicBlogPostDTO[]> {
   try {
@@ -72,3 +74,39 @@ export const getPublishedBlogSlugs = unstable_cache(
   ['blog-post-slugs'],
   { tags: ['blog-posts'], revalidate: 60 },
 );
+
+function sortBlogPostsByIds<T extends { id: string }>(rows: T[], ids: string[]): T[] {
+  const order = new Map(ids.map((id, index) => [id, index]));
+  return [...rows].sort((left, right) => (order.get(left.id) ?? 0) - (order.get(right.id) ?? 0));
+}
+
+async function fetchFeaturedBlogPosts(
+  locale: SiteLocaleCode,
+  limit = FEATURED_BLOG_COUNT,
+): Promise<PublicBlogPostDTO[]> {
+  try {
+    const ids = await fetchHomepageFeaturedBlogIds(limit);
+    if (ids.length === 0) {
+      return [];
+    }
+    const rows = await prisma.blogPost.findMany({
+      where: { id: { in: ids }, isPublished: true },
+    });
+    return sortBlogPostsByIds(rows, ids).map((row) => toPublicBlogPost(row, locale));
+  } catch {
+    return [];
+  }
+}
+
+const getFeaturedBlogPostsCached = unstable_cache(
+  fetchFeaturedBlogPosts,
+  ['blog-posts-featured-v1'],
+  { tags: ['blog-posts'], revalidate: 60 },
+);
+
+export async function getFeaturedBlogPosts(
+  limit = FEATURED_BLOG_COUNT,
+): Promise<PublicBlogPostDTO[]> {
+  const locale = await getCurrentSiteLocale();
+  return getFeaturedBlogPostsCached(locale, limit);
+}

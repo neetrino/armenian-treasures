@@ -7,11 +7,15 @@ import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalog
 import { CultureCatalogSubcategoryGrid } from '@/components/culture-catalog/CultureCatalogSubcategoryGrid';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { buildCatalogSearchForm } from '@/lib/culture-catalog/catalog-filter-options';
+import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries';
+import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import type { MenuNode } from '@/lib/culture-menu';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
   filterMappableItems,
+  resolveCultureCatalogHubDescription,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -19,37 +23,60 @@ interface CultureCategoryPageViewProps {
   category: MenuNode;
   subcategories: MenuNode[];
   items: PublicCultureItemDTO[];
+  filters: CatalogSearchFilters;
 }
 
-export function CultureCategoryPageView({
+function CultureCategoryHubPage({
   category,
   subcategories,
-  items,
-}: CultureCategoryPageViewProps) {
-  const hasChildren = subcategories.length > 0;
-  const content = resolveCultureCatalogContent(category, undefined, { hasSubcategories: hasChildren });
-  const visibility = content.sectionVisibility;
-
-  if (hasChildren) {
-    return (
-      <CultureCatalogShell>
-        <CultureCatalogSubcategoryGrid
-          parent={category}
-          nodes={subcategories}
-          content={content.items}
-          variant="hub"
-        />
-      </CultureCatalogShell>
-    );
-  }
-
-  const stats = buildCultureCatalogCategoryStats(
-    subcategories.length,
-    items.length,
-    { entries: content.statLabels.entries, regions: 'Total Entries' },
+  content,
+}: {
+  category: MenuNode;
+  subcategories: MenuNode[];
+  content: ReturnType<typeof resolveCultureCatalogContent>;
+}) {
+  return (
+    <CultureCatalogShell>
+      <CultureCatalogSubcategoryGrid
+        parent={category}
+        nodes={subcategories}
+        content={{
+          ...content.items,
+          label: content.about.label,
+          description: resolveCultureCatalogHubDescription(
+            category.description,
+            content.about.description,
+            content.items.description,
+          ),
+        }}
+        variant="hub"
+      />
+    </CultureCatalogShell>
   );
+}
+
+function CultureCategoryLeafPage({
+  category,
+  items,
+  filters,
+  content,
+}: {
+  category: MenuNode;
+  items: PublicCultureItemDTO[];
+  filters: CatalogSearchFilters;
+  content: ReturnType<typeof resolveCultureCatalogContent>;
+}) {
+  const visibility = content.sectionVisibility;
+  const stats = buildCultureCatalogCategoryStats(0, items.length, {
+    entries: content.statLabels.entries,
+    regions: 'Total Entries',
+  });
   const mapItems = filterMappableItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
+  const searchForm =
+    items.length > 0
+      ? buildCatalogSearchForm(items, filters, `/culture/${category.slug}`)
+      : undefined;
 
   return (
     <CultureCatalogShell>
@@ -73,7 +100,12 @@ export function CultureCategoryPageView({
       {visibility.about ? <CultureCatalogAbout content={aboutContent} /> : null}
       <LandingSectionStack>
         {visibility.entries && items.length > 0 ? (
-          <CultureCatalogItemGrid items={items} content={content.items} sectionId="entries" />
+          <CultureCatalogItemGrid
+            items={filterCatalogItems(items, filters)}
+            content={content.items}
+            sectionId="entries"
+            searchForm={searchForm}
+          />
         ) : null}
         {visibility.map ? (
           <CulturalPortalMap
@@ -85,5 +117,34 @@ export function CultureCategoryPageView({
         ) : null}
       </LandingSectionStack>
     </CultureCatalogShell>
+  );
+}
+
+export function CultureCategoryPageView({
+  category,
+  subcategories,
+  items,
+  filters,
+}: CultureCategoryPageViewProps) {
+  const hasChildren = subcategories.length > 0;
+  const content = resolveCultureCatalogContent(category, undefined, { hasSubcategories: hasChildren });
+
+  if (hasChildren) {
+    return (
+      <CultureCategoryHubPage
+        category={category}
+        subcategories={subcategories}
+        content={content}
+      />
+    );
+  }
+
+  return (
+    <CultureCategoryLeafPage
+      category={category}
+      items={items}
+      filters={filters}
+      content={content}
+    />
   );
 }

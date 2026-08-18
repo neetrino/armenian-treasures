@@ -16,6 +16,8 @@ import {
   cleanupReplacedGalleryImages,
   deleteReplacedManagedImage,
 } from '@/lib/uploads/cleanup-replaced-image';
+import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
+import { persistCultureItemFeaturedHome } from '@/lib/queries/featured-home-sql';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
   encodeTranslatableText,
@@ -53,6 +55,8 @@ const catalogEntrySchema = z.object({
   galleryImages: z.array(z.string().trim().max(500)).max(20).default([]),
   cardBackgroundColor: optionalHexColor,
   cardBackgroundImage: optionalText(500),
+  featuredOnHome: z.boolean().default(false),
+  featuredOrder: z.number().int().min(1).max(5).optional().nullable(),
   tourUrl: optionalText(500),
   order: z.coerce.number().int().min(0),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
@@ -75,6 +79,7 @@ function readEntryFields(formData: FormData) {
       .filter((value) => value.length > 0),
     cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
+    ...parseFeaturedHomeFields(formData),
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
     order: formData.get('order')?.toString() ?? '0',
     status: formData.get('status')?.toString() ?? 'PUBLISHED',
@@ -187,6 +192,11 @@ export async function saveCultureCatalogEntryAction(
       status: data.status as ContentStatus,
     },
   });
+  await persistCultureItemFeaturedHome(
+    entryId,
+    data.featuredOnHome,
+    data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
+  );
 
   await deleteReplacedManagedImage(existing.cardBackgroundImage, data.cardBackgroundImage || null);
   await cleanupReplacedGalleryImages(existing.galleryImages ?? [], data.galleryImages);
@@ -251,7 +261,7 @@ export async function createCultureCatalogEntryAction(
     suffix += 1;
   }
 
-  await prisma.cultureItem.create({
+  const created = await prisma.cultureItem.create({
     data: {
       title: encodeTranslatableText(fields.titleI18n),
       slug,
@@ -270,6 +280,11 @@ export async function createCultureCatalogEntryAction(
       itemType: 'MONUMENT',
     },
   });
+  await persistCultureItemFeaturedHome(
+    created.id,
+    data.featuredOnHome,
+    data.featuredOnHome ? (data.featuredOrder ?? 5) : null,
+  );
 
   await revalidateCatalogEntryPaths(menuItemId, menuPath, slug);
 

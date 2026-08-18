@@ -151,7 +151,7 @@ export function CultureMenuForm({
           folder="culture"
           layout="card"
           defaultValue={initial?.image ?? ''}
-          hint="Used on category cards and as hero fallback when no custom hero banner is set."
+          hint="Fills subcategory shortcuts at 40% opacity. Also used as hero fallback when no custom banner is set."
           error={state.fieldErrors?.image}
         />
         <TextField

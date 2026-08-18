@@ -56,6 +56,7 @@ const SLUG_ICON_MAP: Record<string, CulturalPortalIconKey> = {
   publications: 'publications',
   heritage: 'history',
   architecture: 'churches',
+  ornaments: 'monumentsAndLandmarks',
 };
 
 const ICON_KEY_LUCIDE_MAP: Record<string, LucideIcon> = {
@@ -92,6 +93,7 @@ const SLUG_LUCIDE_MAP: Record<string, LucideIcon> = {
   traditions: PersonStanding,
   kingsAndDynasties: Crown,
   scientists: FlaskConical,
+  ornaments: Sparkles,
 };
 
 export function resolveMenuIconKey(slug: string, parentSlug?: string): CulturalPortalIconKey {

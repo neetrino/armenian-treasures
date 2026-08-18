@@ -114,7 +114,7 @@ export function CultureCatalogEntriesPanel({
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <AdminHelpCallout title="Public grid cards" className="flex-1">
-            Click any card to edit photo and text in a side panel — styled like the live public page.
+            Click any card to open the full grid-card editor — draft, preview, publish, and media blocks.
           </AdminHelpCallout>
           <Button
             type="button"
@@ -210,7 +210,7 @@ export function CultureCatalogEntriesPanel({
         onClose={() => setSheetMode(null)}
         mode={sheetMode}
         menuItemId={menuItemId}
-        menuPath={menuPath}
+        pageLabel={pageLabel}
         nextOrder={nextOrder}
       />
     </>

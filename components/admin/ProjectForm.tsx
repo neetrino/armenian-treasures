@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { SelectField } from '@/components/forms/fields/SelectField';
@@ -136,8 +137,18 @@ export function ProjectForm({ mode, itemId, initial, onSuccess, onCancel }: Prop
           error={state.fieldErrors?.status}
         />
         <TextField label="Order" name="order" type="number" min={0} defaultValue={initial?.order ?? 0} />
-        <TextField label="Image URL" name="image" defaultValue={initial?.image ?? ''} />
-        <label className="flex items-center gap-2 pt-6 text-sm text-ink-soft">
+        <div className="sm:col-span-2">
+          <AdminImageDropzoneField
+            label="Card background"
+            name="image"
+            folder="culture"
+            layout="card"
+            defaultValue={initial?.image ?? ''}
+            hint="Fills the Active Fundraisings shortcut on the homepage. Use a landscape photo; text sits on a dark overlay."
+            error={state.fieldErrors?.image}
+          />
+        </div>
+        <label className="flex items-center gap-2 pt-1 text-sm text-ink-soft sm:col-span-2">
           <input
             type="checkbox"
             name="isPublished"

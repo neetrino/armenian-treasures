@@ -8,10 +8,12 @@ import type { PageContentSlug } from '@/lib/types/page-content';
 export const PUBLIC_LAYOUT_PATHS = [
   '/',
   '/culture',
+  '/search',
   '/culture/submit',
   '/projects',
   '/donate',
   '/blog',
+  '/highlights',
   '/partnership',
   '/contacts',
   '/about/mission',
@@ -143,7 +145,7 @@ export async function revalidateCultureItemCache(
   menuItemIds: string[] = [],
 ): Promise<void> {
   revalidateTag('culture-items', 'max');
-  revalidatePublicPages(['/culture', '/']);
+  revalidatePublicPages(['/culture', '/', '/highlights']);
   revalidatePath('/admin/culture-items');
   for (const slug of slugs) {
     const trimmed = slug.trim();
@@ -172,7 +174,7 @@ export function revalidateCareersCache(): void {
 
 export function revalidateBlogPostsCache(slugs: string[] = []): void {
   revalidateTag('blog-posts', 'max');
-  revalidatePublicPages(['/blog']);
+  revalidatePublicPages(['/blog', '/']);
   revalidatePath('/admin/blog');
   for (const slug of slugs) {
     const trimmed = slug.trim();

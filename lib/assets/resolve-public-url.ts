@@ -7,8 +7,11 @@ function normalizePublicPath(path: string): string {
   return path;
 }
 
-function normalizeLegacyCultureSvgPath(path: string): string {
-  if (/^\/images\/culture\/[^/]+\.svg$/i.test(path)) {
+function normalizeLegacyMissingSvgPath(path: string): string {
+  if (
+    /^\/images\/culture\/[^/]+\.svg$/i.test(path) ||
+    /^\/images\/projects\/[^/]+\.svg$/i.test(path)
+  ) {
     return '/images/culture/card-heritage.webp';
   }
   return path;
@@ -48,7 +51,7 @@ export function resolvePublicAssetUrl(path: string): string {
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
 
   const normalized = normalizePublicPath(trimmed);
-  const normalizedLegacySafe = normalizeLegacyCultureSvgPath(normalized);
+  const normalizedLegacySafe = normalizeLegacyMissingSvgPath(normalized);
 
   if (isSvgPublicPath(normalizedLegacySafe)) {
     return normalizedLegacySafe;

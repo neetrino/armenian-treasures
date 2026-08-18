@@ -15,6 +15,7 @@ const DEDICATED_SECTION_ROUTES: Partial<Record<HomeSectionId, string>> = {
   [HOME_SECTION_IDS.virtualMuseum]: '/virtual-museum',
   [HOME_SECTION_IDS.upcomingProjects]: '/projects',
   [HOME_SECTION_IDS.partnership]: '/partnership',
+  [HOME_SECTION_IDS.aboutUs]: '/about/mission',
 };
 
 export function resolveDedicatedSectionRoute(sectionId: HomeSectionId): string | null {

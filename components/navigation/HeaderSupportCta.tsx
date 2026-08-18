@@ -31,7 +31,7 @@ export function HeaderSupportCta({
     return (
       <motion.div className="inline-flex lg:hidden" {...motionProps}>
         <Link
-          href="/partnership"
+          href="/donate"
           onClick={onNavigate}
           className={cn(
             'inline-flex h-10 w-10 items-center justify-center rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500 focus-visible:ring-offset-2',
@@ -56,7 +56,7 @@ export function HeaderSupportCta({
   return (
     <motion.div className={cn('inline-flex', className)} {...motionProps}>
       <Link
-        href="/partnership"
+        href="/donate"
         onClick={onNavigate}
         className={cn(
           'inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-medium tracking-wide transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500 focus-visible:ring-offset-2',

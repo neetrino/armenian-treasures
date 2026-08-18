@@ -1,70 +1,50 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
-import { GalleryImagesField } from '@/components/forms/fields/GalleryImagesField';
-import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
+import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import { AdminFormSection } from '@/components/admin/AdminFormSection';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { CultureItemCardBackgroundFields } from '@/components/admin/CultureItemCardBackgroundFields';
-import { AdminHelpCallout } from '@/components/admin/AdminHelpCallout';
-import { Button } from '@/components/ui/Button';
+import { CultureItemFeaturedFields } from '@/components/admin/CultureItemFeaturedFields';
+import { CultureItemFormToolbar } from '@/components/admin/culture-item-editor/CultureItemFormToolbar';
+import { CultureItemBasicsFields } from '@/components/admin/culture-item-editor/CultureItemBasicsFields';
+import { CultureItemDescriptionBlocksField } from '@/components/admin/culture-item-editor/CultureItemDescriptionBlocksField';
+import { CultureItemToursField } from '@/components/admin/culture-item-editor/CultureItemToursField';
+import { CultureItemVideosField } from '@/components/admin/culture-item-editor/CultureItemVideosField';
+import { CultureItemGalleryBlocksField } from '@/components/admin/culture-item-editor/CultureItemGalleryBlocksField';
+import { AdminLocationMapField } from '@/components/admin/culture-item-editor/AdminLocationMapField';
 import {
   createCultureItemAction,
   updateCultureItemAction,
   type CultureItemFormState,
 } from '@/app/(admin)/admin/(panel)/culture-items/actions';
-import {
-  CULTURE_ITEM_TYPE_OPTIONS,
-  CULTURE_MAP_TYPE_OPTIONS,
-  CULTURE_STATUS_OPTIONS,
-} from '@/lib/admin/enum-labels';
+import { CULTURE_STATUS_OPTIONS } from '@/lib/admin/enum-labels';
+import { hydrateCultureItemMedia } from '@/lib/culture-item-media';
 import {
   buildTabErrorMap,
   decodeTranslatableText,
   type LocaleTextMap,
 } from '@/lib/i18n/translatable-content';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import { resolveCultureItemHref } from '@/lib/culture-item-url';
 
 interface MenuOption {
   id: string;
   title: string;
 }
 
-interface Initial {
-  title: string;
-  slug: string;
-  description: string;
-  shortDescription: string;
-  menuItemId: string;
-  region: string;
-  locationName: string;
-  periodLabel: string;
-  century: string;
-  yearLabel: string;
-  image: string;
-  cardBackgroundColor: string;
-  cardBackgroundImage: string;
-  galleryImages: string[];
-  tourUrl: string;
-  videoUrl: string;
-  latitude: string;
-  longitude: string;
-  mapType: string;
-  showOnMap: boolean;
-  itemType: string;
-  status: string;
-  order: number;
-}
-
 interface CultureItemFormProps {
   mode: 'create' | 'edit';
   itemId?: string;
   menuOptions: MenuOption[];
-  initial?: Initial;
+  lockedMenuItemId?: string;
+  heading?: string;
+  initial?: CultureItemFormInitial;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -75,6 +55,8 @@ export function CultureItemForm({
   mode,
   itemId,
   menuOptions,
+  lockedMenuItemId,
+  heading,
   initial,
   onSuccess,
   onCancel,
@@ -85,31 +67,42 @@ export function CultureItemForm({
     mode === 'edit' && updateBound ? updateBound : createCultureItemAction,
     INITIAL,
   );
+  const [media, setMedia] = useState(() =>
+    hydrateCultureItemMedia({
+      mediaContent: initial?.mediaContent,
+      description: initial?.description,
+      tourUrl: initial?.tourUrl,
+      videoUrl: initial?.videoUrl,
+      galleryImages: initial?.galleryImages,
+    }),
+  );
+  const [latitude, setLatitude] = useState(initial?.latitude ?? '');
+  const [longitude, setLongitude] = useState(initial?.longitude ?? '');
 
   useEffect(() => {
     if (state.status === 'success') {
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        router.refresh();
-      }
+      if (onSuccess) onSuccess();
+      else router.refresh();
     }
   }, [state.status, onSuccess, router]);
 
   const titleValues = decodeTranslatableText(initial?.title ?? '');
   const shortDescriptionValues = decodeTranslatableText(initial?.shortDescription ?? '');
-  const descriptionValues = decodeTranslatableText(initial?.description ?? '');
   const tabErrors = buildTabErrorMap(state.fieldErrors);
   const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
+  const previewHref = initial?.slug && initial.status === 'PUBLISHED'
+    ? resolveCultureItemHref(initial.slug)
+    : undefined;
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <AdminHelpCallout title="Culture entry">
-        Fill in the basics first, then add images and map coordinates. Use <strong>Publication status</strong>{' '}
-        to control whether visitors can see this entry.
-      </AdminHelpCallout>
+      <CultureItemFormToolbar
+        heading={heading ?? (mode === 'create' ? 'Add new grid card' : 'Edit grid card')}
+        isPending={isPending}
+        previewHref={previewHref}
+        onCancel={onCancel}
+      />
 
-      <AdminFormSection title="Basics" description="Title, category, location, and main image.">
       <TranslatableFieldsTabs tabErrors={tabErrors}>
         {(locale) => (
           <div className="grid gap-5">
@@ -127,186 +120,109 @@ export function CultureItemForm({
               defaultValue={valueFor(shortDescriptionValues, locale)}
               error={state.fieldErrors?.[`shortDescription.${locale}`]}
             />
-            <TextareaField
-              label="Description"
-              name={`description.${locale}`}
-              rows={6}
-              defaultValue={valueFor(descriptionValues, locale)}
-              error={state.fieldErrors?.[`description.${locale}`]}
-            />
           </div>
         )}
       </TranslatableFieldsTabs>
+
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
-          label="Slug"
-          name="slug"
-          defaultValue={initial?.slug ?? ''}
-          hint="Lowercase, hyphenated. Leave empty to derive from title."
-          error={state.fieldErrors?.slug}
-        />
         <SelectField
-          label="Menu item"
-          name="menuItemId"
-          required
-          options={[
-            { value: '', label: 'Select a menu item…', disabled: true },
-            ...menuOptions.map((m) => ({ value: m.id, label: m.title })),
-          ]}
-          defaultValue={initial?.menuItemId ?? ''}
-          error={state.fieldErrors?.menuItemId}
-        />
-        <SelectField
-          label="Item type"
-          name="itemType"
-          options={CULTURE_ITEM_TYPE_OPTIONS}
-          defaultValue={initial?.itemType ?? 'OTHER'}
-          error={state.fieldErrors?.itemType}
-        />
-        <TextField
-          label="Region"
-          name="region"
-          defaultValue={initial?.region ?? ''}
-          error={state.fieldErrors?.region}
-        />
-        <TextField
-          label="Location name"
-          name="locationName"
-          defaultValue={initial?.locationName ?? ''}
-          error={state.fieldErrors?.locationName}
-        />
-        <TextField
-          label="Period label"
-          name="periodLabel"
-          defaultValue={initial?.periodLabel ?? ''}
-          hint='e.g. "9th c." or "782 BC"'
-          error={state.fieldErrors?.periodLabel}
-        />
-        <TextField
-          label="Century (negative for BC)"
-          name="century"
-          type="number"
-          defaultValue={initial?.century ?? ''}
-          error={state.fieldErrors?.century}
-        />
-        <TextField
-          label="Year label"
-          name="yearLabel"
-          defaultValue={initial?.yearLabel ?? ''}
-          error={state.fieldErrors?.yearLabel}
-        />
-        <TextField
-          label="Order"
-          name="order"
-          type="number"
-          min={0}
-          defaultValue={initial?.order ?? 0}
-          error={state.fieldErrors?.order}
-        />
-        <AdminImageDropzoneField
-          label="Main image"
-          name="image"
-          folder="culture"
-          layout="card"
-          defaultValue={initial?.image ?? ''}
-          error={state.fieldErrors?.image}
-        />
-        <SelectField
-          label="Publication status"
+          label="Status"
           name="status"
           options={CULTURE_STATUS_OPTIONS}
-          defaultValue={initial?.status ?? 'PUBLISHED'}
+          defaultValue={initial?.status ?? 'DRAFT'}
           error={state.fieldErrors?.status}
         />
       </div>
-      </AdminFormSection>
-
-      <AdminFormSection
-        title="Featured card background"
-        description="Optional color or image for the Featured Treasures box on the homepage."
-      >
-        <CultureItemCardBackgroundFields
-          colorDefaultValue={initial?.cardBackgroundColor ?? ''}
-          imageDefaultValue={initial?.cardBackgroundImage ?? ''}
-          colorError={state.fieldErrors?.cardBackgroundColor}
-          imageError={state.fieldErrors?.cardBackgroundImage}
-        />
-      </AdminFormSection>
-
-      <AdminFormSection title="Photo gallery" description="Additional images shown on the detail page.">
-      <GalleryImagesField
-        defaultValue={initial?.galleryImages ?? []}
-        error={state.fieldErrors?.galleryImages}
+      <CultureItemFeaturedFields
+        featuredOnHome={initial?.featuredOnHome ?? false}
+        featuredOnCatalog={initial?.featuredOnCatalog ?? false}
+        featuredOrder={initial?.featuredOrder}
+        featuredOrderError={state.fieldErrors?.featuredOrder}
       />
-      </AdminFormSection>
+      <CultureItemCardBackgroundFields
+        colorDefaultValue={initial?.cardBackgroundColor ?? ''}
+        imageDefaultValue={initial?.cardBackgroundImage ?? ''}
+        colorError={state.fieldErrors?.cardBackgroundColor}
+        imageError={state.fieldErrors?.cardBackgroundImage}
+      />
 
-      <AdminFormSection title="Map & media" description="Coordinates for the public map and optional 3D tour or video links.">
+      <AdminFormSection title="1. Card Image" description="JPG, PNG, or WEBP. Maximum 10MB." tone="white">
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField
-            label="Latitude"
-            name="latitude"
-            type="number"
-            step="any"
-            defaultValue={initial?.latitude ?? ''}
-            error={state.fieldErrors?.latitude}
+          <AdminImageDropzoneField
+            label="Card photo"
+            name="image"
+            folder="culture"
+            layout="card"
+            defaultValue={initial?.image ?? ''}
+            hint="Shown on catalog cards."
+            error={state.fieldErrors?.image}
           />
-          <TextField
-            label="Longitude"
-            name="longitude"
-            type="number"
-            step="any"
-            defaultValue={initial?.longitude ?? ''}
-            error={state.fieldErrors?.longitude}
-          />
-          <SelectField
-            label="Map pin style"
-            name="mapType"
-            options={[{ value: '', label: '— None —' }, ...CULTURE_MAP_TYPE_OPTIONS]}
-            defaultValue={initial?.mapType ?? ''}
-            error={state.fieldErrors?.mapType}
-          />
-          <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
-            <input
-              type="checkbox"
-              name="showOnMap"
-              defaultChecked={initial?.showOnMap ?? false}
-              className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
-            />
-            Show on public map
-          </label>
-          <TextField
-            label="Matterport / 3D Tour URL"
-            name="tourUrl"
-            type="url"
-            placeholder="https://my.matterport.com/show/?m=XXXX"
-            hint="Paste a Matterport show link or any external 3D tour URL."
-            defaultValue={initial?.tourUrl ?? ''}
-            error={state.fieldErrors?.tourUrl}
-          />
-          <TextField
-            label="Video URL"
-            name="videoUrl"
-            defaultValue={initial?.videoUrl ?? ''}
-            error={state.fieldErrors?.videoUrl}
+          <AdminImageDropzoneField
+            label="Cover image"
+            name="coverImage"
+            folder="culture"
+            layout="banner"
+            defaultValue={initial?.coverImage ?? ''}
+            hint="Hero / cover on the article page."
+            error={state.fieldErrors?.coverImage}
           />
         </div>
       </AdminFormSection>
 
+      <AdminFormSection title="Basics" description="Category, slug, and catalog metadata.">
+        <CultureItemBasicsFields
+          initial={initial}
+          menuOptions={menuOptions}
+          lockedMenuItemId={lockedMenuItemId}
+          fieldErrors={state.fieldErrors}
+        />
+      </AdminFormSection>
+
+      <AdminFormSection title="2. Description blocks" description="Add as many title, subtitle, text, and image blocks as you need." tone="white">
+        <CultureItemDescriptionBlocksField
+          blocks={media.blocks}
+          onChange={(blocks) => setMedia((current) => ({ ...current, blocks }))}
+        />
+      </AdminFormSection>
+
+      <AdminFormSection title="3. Map" description="Location name, address, and a draggable pin." tone="white">
+        <AdminLocationMapField
+          locationName={initial?.locationName}
+          address={media.address}
+          latitude={latitude}
+          longitude={longitude}
+          mapType={initial?.mapType}
+          showOnMap={initial?.showOnMap}
+          fieldErrors={state.fieldErrors}
+          onLatitudeChange={setLatitude}
+          onLongitudeChange={setLongitude}
+        />
+      </AdminFormSection>
+
+      <AdminFormSection title="4. Virtual Tour" description="Unlimited LiDAR, Matterport, or other 3D tour embeds." tone="white">
+        <CultureItemToursField
+          tours={media.tours}
+          onChange={(tours) => setMedia((current) => ({ ...current, tours }))}
+        />
+      </AdminFormSection>
+
+      <AdminFormSection title="5. Videos" description="Unlimited MP4, YouTube, or Vimeo links." tone="white">
+        <CultureItemVideosField
+          videos={media.videos}
+          onChange={(videos) => setMedia((current) => ({ ...current, videos }))}
+        />
+      </AdminFormSection>
+
+      <AdminFormSection title="6. Gallery" description="Images or Before/After pairs, each with caption and alt text." tone="white">
+        <CultureItemGalleryBlocksField
+          items={media.gallery}
+          onChange={(gallery) => setMedia((current) => ({ ...current, gallery }))}
+        />
+      </AdminFormSection>
+
       {state.status === 'error' && state.message ? (
-        <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">
-          {state.message}
-        </p>
+        <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
       ) : null}
-      <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" disabled={isPending} withArrow>
-          {isPending ? 'Saving…' : mode === 'create' ? 'Create item' : 'Save changes'}
-        </Button>
-        {onCancel ? (
-          <Button type="button" variant="ghost" onClick={onCancel}>
-            Cancel
-          </Button>
-        ) : null}
-      </div>
     </form>
   );
 }

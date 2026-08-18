@@ -9,7 +9,7 @@ import { LandingPageContentForm } from '@/components/admin/page-content/forms/La
 import { PartnershipPageContentForm } from '@/components/admin/page-content/forms/PartnershipPageContentForm';
 import { StaticPageHeroForm } from '@/components/admin/page-content/forms/StaticPageHeroForm';
 import { resolveLocalizedJsonContent } from '@/lib/i18n/translatable-json-content';
-import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { SITE_LOCALE_DEFINITIONS, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface Props {
   slug: PageContentSlug;
@@ -23,7 +23,7 @@ export function PageContentForm({ slug, initial }: Props) {
   const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
   const localeInitial = resolveLocalizedJsonContent(initial, activeLocale);
 
-  const tabs = SITE_LOCALE_CODES.map((locale) => ({ id: locale, label: locale }));
+  const tabs = SITE_LOCALE_DEFINITIONS.map((locale) => ({ id: locale.code, label: locale.tabLabel }));
 
   const renderForm = () => {
   if (slug === 'donation-page') {

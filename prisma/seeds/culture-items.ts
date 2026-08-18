@@ -832,6 +832,8 @@ export async function seedCultureItems(menuMap: MenuMap): Promise<void> {
       itemType: item.itemType ?? 'OTHER',
       status: 'PUBLISHED' as const,
       order: index,
+      featuredOnHome: index < 5,
+      featuredOrder: index < 5 ? index + 1 : null,
     };
     await prisma.cultureItem.upsert({
       where: { slug: item.slug },

@@ -7,7 +7,8 @@ interface SiteLocaleSettingsFieldProps {
 }
 
 const LABELS: Record<SiteLocaleCode, string> = {
-  HY: 'Armenian',
+  HY: 'Armenian (Eastern)',
+  HYW: 'Armenian (Western)',
   RU: 'Russian',
   EN: 'English',
   FR: 'French',

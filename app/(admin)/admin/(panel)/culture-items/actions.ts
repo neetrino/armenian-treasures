@@ -10,7 +10,17 @@ import {
 } from '@/lib/uploads/cleanup-replaced-image';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
+import { readCultureItemMediaFromForm } from '@/lib/admin/culture-item-media-form';
+import { persistCultureItemFeaturedHome } from '@/lib/queries/featured-home-sql';
+import {
+  firstBlockBody,
+  firstTourUrl,
+  firstVideoUrl,
+  galleryUrlsFromMedia,
+} from '@/lib/culture-item-media';
 import { cultureItemSchema } from '@/lib/validation';
+import type { Prisma } from '@prisma/client';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -52,6 +62,13 @@ function asStatus(value: string): ContentStatus {
   return STATUSES.includes(value as ContentStatus) ? (value as ContentStatus) : 'DRAFT';
 }
 
+function statusFromIntent(formData: FormData): ContentStatus {
+  const intent = formData.get('intent')?.toString();
+  if (intent === 'publish') return 'PUBLISHED';
+  if (intent === 'draft') return 'DRAFT';
+  return asStatus(formData.get('status')?.toString() ?? 'DRAFT');
+}
+
 function numberOrNull(value: FormDataEntryValue | null): number | null {
   if (value === null) return null;
   const trimmed = value.toString().trim();
@@ -73,11 +90,17 @@ export interface CultureItemFormState {
 }
 
 function parseForm(formData: FormData):
-  | { ok: true; data: ReturnType<typeof toData> }
+  | {
+      ok: true;
+      data: ReturnType<typeof toData>;
+      featuredOnHome: boolean;
+      featuredOrder: number | null;
+    }
   | { ok: false; errors: Record<string, string> } {
   const titleI18n = readLocalizedTextFromFormData(formData, 'title');
   const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const shortDescriptionI18n = readLocalizedTextFromFormData(formData, 'shortDescription');
+  const media = readCultureItemMediaFromForm(formData);
   const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const slug = (slugRaw.trim() ? slugRaw : titleRaw).trim();
@@ -85,7 +108,7 @@ function parseForm(formData: FormData):
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
-    description: pickDefaultLocaleText(descriptionI18n),
+    description: pickDefaultLocaleText(descriptionI18n) || firstBlockBody(media) || '',
     shortDescription: pickDefaultLocaleText(shortDescriptionI18n),
     menuItemId: formData.get('menuItemId')?.toString() ?? '',
     region: formData.get('region')?.toString() ?? '',
@@ -94,20 +117,20 @@ function parseForm(formData: FormData):
     century: numberOrNull(formData.get('century')),
     yearLabel: formData.get('yearLabel')?.toString() ?? '',
     image: formData.get('image')?.toString() ?? '',
+    coverImage: formData.get('coverImage')?.toString() ?? '',
     cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
-    galleryImages: formData
-      .getAll('galleryImages')
-      .map((value) => value.toString().trim())
-      .filter((value) => value.length > 0),
-    tourUrl: formData.get('tourUrl')?.toString() ?? '',
-    videoUrl: formData.get('videoUrl')?.toString() ?? '',
+    galleryImages: galleryUrlsFromMedia(media),
+    tourUrl: firstTourUrl(media) ?? '',
+    videoUrl: firstVideoUrl(media) ?? '',
     latitude: numberOrNull(formData.get('latitude')),
     longitude: numberOrNull(formData.get('longitude')),
     mapType: asMapType(formData.get('mapType')?.toString() ?? ''),
     showOnMap: formData.get('showOnMap') === 'on',
+    ...parseFeaturedHomeFields(formData),
+    featuredOnCatalog: formData.get('featuredOnCatalog') === 'on',
     itemType: asItemType(formData.get('itemType')?.toString() ?? 'OTHER'),
-    status: asStatus(formData.get('status')?.toString() ?? 'PUBLISHED'),
+    status: statusFromIntent(formData),
     order: intOrZero(formData.get('order')),
   });
   if (!parsed.success) {
@@ -130,7 +153,10 @@ function parseForm(formData: FormData):
       titleI18n,
       descriptionI18n,
       shortDescriptionI18n,
+      media,
     }),
+    featuredOnHome: parsed.data.featuredOnHome,
+    featuredOrder: parsed.data.featuredOnHome ? (parsed.data.featuredOrder ?? 5) : null,
   };
 }
 
@@ -140,12 +166,13 @@ function toData(
     titleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     descriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     shortDescriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    media: ReturnType<typeof readCultureItemMediaFromForm>;
   },
 ) {
   return {
     title: encodeTranslatableText(i18n.titleI18n),
     slug: input.slug,
-    description: encodeTranslatableText(i18n.descriptionI18n) || null,
+    description: encodeTranslatableText(i18n.descriptionI18n) || firstBlockBody(i18n.media),
     shortDescription: encodeTranslatableText(i18n.shortDescriptionI18n) || null,
     menuItemId: input.menuItemId,
     region: input.region?.trim() ? input.region : null,
@@ -154,11 +181,14 @@ function toData(
     century: input.century ?? null,
     yearLabel: input.yearLabel?.trim() ? input.yearLabel : null,
     image: input.image?.trim() ? input.image : null,
+    coverImage: input.coverImage?.trim() ? input.coverImage : null,
     cardBackgroundColor: input.cardBackgroundColor?.trim() ? input.cardBackgroundColor : null,
     cardBackgroundImage: input.cardBackgroundImage?.trim() ? input.cardBackgroundImage : null,
     galleryImages: input.galleryImages,
     tourUrl: input.tourUrl?.trim() ? input.tourUrl : null,
     videoUrl: input.videoUrl?.trim() ? input.videoUrl : null,
+    mediaContent: i18n.media as unknown as Prisma.InputJsonValue,
+    featuredOnCatalog: input.featuredOnCatalog,
     latitude: input.latitude ?? null,
     longitude: input.longitude ?? null,
     mapType: input.mapType ?? null,
@@ -190,7 +220,8 @@ export async function createCultureItemAction(
       message: 'Slug must be unique.',
     };
   }
-  await prisma.cultureItem.create({ data: parsed.data });
+  const created = await prisma.cultureItem.create({ data: parsed.data });
+  await persistCultureItemFeaturedHome(created.id, parsed.featuredOnHome, parsed.featuredOrder);
   await revalidateCultureItem([parsed.data.slug], [parsed.data.menuItemId]);
   return { status: 'success' };
 }
@@ -207,7 +238,14 @@ export async function updateCultureItemAction(
   }
   const current = await prisma.cultureItem.findUnique({
     where: { id },
-    select: { slug: true, menuItemId: true, image: true, galleryImages: true, cardBackgroundImage: true },
+    select: {
+      slug: true,
+      menuItemId: true,
+      image: true,
+      coverImage: true,
+      galleryImages: true,
+      cardBackgroundImage: true,
+    },
   });
   const existing = await prisma.cultureItem.findUnique({ where: { slug: parsed.data.slug } });
   if (existing && existing.id !== id) {
@@ -218,8 +256,10 @@ export async function updateCultureItemAction(
     };
   }
   await prisma.cultureItem.update({ where: { id }, data: parsed.data });
+  await persistCultureItemFeaturedHome(id, parsed.featuredOnHome, parsed.featuredOrder);
 
   await deleteReplacedManagedImage(current?.image, parsed.data.image);
+  await deleteReplacedManagedImage(current?.coverImage, parsed.data.coverImage);
   await deleteReplacedManagedImage(current?.cardBackgroundImage, parsed.data.cardBackgroundImage);
   await cleanupReplacedGalleryImages(current?.galleryImages ?? [], parsed.data.galleryImages);
 
