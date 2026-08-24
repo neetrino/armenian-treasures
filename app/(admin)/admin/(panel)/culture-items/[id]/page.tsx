@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
-import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
 import { AdminBackLink } from '@/components/admin/AdminBackLink';
 import { CultureItemForm } from '@/components/admin/CultureItemForm';
 import { ButtonLink } from '@/components/ui/Button';
@@ -39,8 +38,8 @@ async function EditCultureItemPage(props: PageProps) {
     <AdminPageShell
       user={user}
       topbarTitle="Edit culture item"
-      title={getAdminLocaleValue(item.title)}
-      description={`Editing item with slug “${item.slug}”.`}
+      title=""
+      size="full"
       beforeHeader={<AdminBackLink href="/admin/culture-items" label="All culture items" />}
       actions={
         item.status === 'PUBLISHED' ? (
@@ -50,14 +49,13 @@ async function EditCultureItemPage(props: PageProps) {
         ) : null
       }
     >
-      <AdminPanelCard>
-        <CultureItemForm
-          mode="edit"
-          itemId={item.id}
-          menuOptions={options}
-          initial={toCultureItemFormInitial(item, featured)}
-        />
-      </AdminPanelCard>
+      <CultureItemForm
+        mode="edit"
+        itemId={item.id}
+        heading="Edit culture item"
+        menuOptions={options}
+        initial={toCultureItemFormInitial(item, featured)}
+      />
     </AdminPageShell>
   );
 }

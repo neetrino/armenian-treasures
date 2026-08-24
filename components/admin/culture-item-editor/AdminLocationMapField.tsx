@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { ClientMounted } from '@/components/admin/ClientMounted';
 import { CULTURE_MAP_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 
 const AdminPinMap = dynamic(
@@ -88,14 +89,22 @@ export function AdminLocationMapField({
           Show on public map
         </label>
       </div>
-      <AdminPinMap
-        latitude={Number.isFinite(lat) ? lat : null}
-        longitude={Number.isFinite(lng) ? lng : null}
-        onChange={(nextLat, nextLng) => {
-          onLatitudeChange(nextLat.toFixed(6));
-          onLongitudeChange(nextLng.toFixed(6));
-        }}
-      />
+      <ClientMounted
+        fallback={
+          <div className="flex h-72 min-h-[18rem] items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-sm text-ink-muted">
+            Loading map…
+          </div>
+        }
+      >
+        <AdminPinMap
+          latitude={Number.isFinite(lat) ? lat : null}
+          longitude={Number.isFinite(lng) ? lng : null}
+          onChange={(nextLat, nextLng) => {
+            onLatitudeChange(nextLat.toFixed(6));
+            onLongitudeChange(nextLng.toFixed(6));
+          }}
+        />
+      </ClientMounted>
       <p className="text-xs text-ink-muted">
         Drag the pin or click the map. Default center is Yerevan (40.1792, 44.4991).
       </p>

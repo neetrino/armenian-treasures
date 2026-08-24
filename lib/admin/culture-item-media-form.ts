@@ -7,6 +7,7 @@ import {
   type CultureTourType,
   type CultureVideoBlock,
 } from '@/lib/culture-item-media';
+import { isCultureItemEditorSectionId, type CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 
 function readCount(formData: FormData, name: string): number {
   const raw = Number(formData.get(name)?.toString() ?? '0');
@@ -91,6 +92,15 @@ function readGallery(formData: FormData): CultureGalleryBlock[] {
   return gallery.filter((item) => item.url || item.beforeUrl || item.afterUrl);
 }
 
+function readSectionOrder(formData: FormData): CultureItemEditorSectionId[] | undefined {
+  const raw = formData.get('sectionOrder')?.toString().trim() ?? '';
+  if (!raw) return undefined;
+  const parsed = raw
+    .split(',')
+    .map((value) => value.trim())
+    .filter(isCultureItemEditorSectionId);
+  return parsed.length > 0 ? parsed : undefined;
+}
 export function readCultureItemMediaFromForm(formData: FormData): CultureItemMediaContent {
   return {
     ...emptyMediaContent(),
@@ -99,5 +109,6 @@ export function readCultureItemMediaFromForm(formData: FormData): CultureItemMed
     tours: readTours(formData),
     videos: readVideos(formData),
     gallery: readGallery(formData),
+    sectionOrder: readSectionOrder(formData),
   };
 }

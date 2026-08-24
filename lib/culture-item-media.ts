@@ -1,5 +1,8 @@
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
+import { isCultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
+import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
+
 export const CULTURE_ITEM_MEDIA_VERSION = 1 as const;
 export const DEFAULT_MAP_COORDINATES = { latitude: 40.1792, longitude: 44.4991 } as const;
 
@@ -53,6 +56,7 @@ export interface CultureItemMediaContent {
   tours: CultureTourBlock[];
   videos: CultureVideoBlock[];
   gallery: CultureGalleryBlock[];
+  sectionOrder?: CultureItemEditorSectionId[];
 }
 
 function asString(value: unknown): string {
@@ -135,6 +139,14 @@ export function emptyMediaContent(): CultureItemMediaContent {
   return { v: CULTURE_ITEM_MEDIA_VERSION, address: '', blocks: [], tours: [], videos: [], gallery: [] };
 }
 
+function parseSectionOrder(raw: unknown): CultureItemEditorSectionId[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const parsed = raw.filter(
+    (value): value is CultureItemEditorSectionId => typeof value === 'string' && isCultureItemEditorSectionId(value),
+  );
+  return parsed.length > 0 ? parsed : undefined;
+}
+
 export function parseCultureItemMedia(raw: unknown): CultureItemMediaContent {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return emptyMediaContent();
   const row = raw as Record<string, unknown>;
@@ -145,6 +157,7 @@ export function parseCultureItemMedia(raw: unknown): CultureItemMediaContent {
     tours: Array.isArray(row.tours) ? row.tours.map(parseTour) : [],
     videos: Array.isArray(row.videos) ? row.videos.map(parseVideo) : [],
     gallery: Array.isArray(row.gallery) ? row.gallery.map(parseGallery) : [],
+    sectionOrder: parseSectionOrder(row.sectionOrder),
   };
 }
 

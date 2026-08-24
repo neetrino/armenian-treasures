@@ -32,6 +32,10 @@ export function CultureItemDescriptionBlocksField({
               key={block.id}
               title={`Description block ${index + 1}`}
               onRemove={() => onChange(blocks.filter((_, current) => current !== index))}
+              onDuplicate={() => {
+                const copy = { ...block, ...emptyDescriptionBlock(), title: block.title, subtitle: block.subtitle, body: block.body, image: block.image, caption: block.caption };
+                onChange([...blocks.slice(0, index + 1), copy, ...blocks.slice(index + 1)]);
+              }}
             >
               <input type="hidden" name={`${prefix}.id`} value={block.id} />
               <TextField

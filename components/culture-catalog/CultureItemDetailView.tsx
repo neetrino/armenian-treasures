@@ -94,7 +94,14 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
           <h2 className="sec-title">{item.title}</h2>
           <div className="catalog-detail-grid">
             <div className="catalog-detail-main">
-              <CultureItemMediaSections title={item.title} media={item.media} />
+              <CultureItemMediaSections
+                title={item.title}
+                media={item.media}
+                locationName={item.locationName}
+                address={item.media.address}
+                latitude={item.latitude}
+                longitude={item.longitude}
+              />
             </div>
 
             <aside className="catalog-detail-aside">

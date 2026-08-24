@@ -6,19 +6,16 @@ import { useRouter } from 'next/navigation';
 import { Pencil, Plus, ExternalLink } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
-import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
-import { CultureItemForm } from '@/components/admin/CultureItemForm';
 import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
-import { Button } from '@/components/ui/Button';
+import { ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { AdminPagination } from '@/components/admin/AdminPagination';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { deleteCultureItemAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
-import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import type { AdminContext } from '@/lib/auth/require-admin';
 
@@ -38,7 +35,6 @@ interface Row {
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   image: string | null;
   menuPath: string;
-  editInitial: CultureItemFormInitial;
 }
 
 interface CultureItemsPageClientProps {
@@ -86,6 +82,12 @@ function buildCultureItemsHref(query?: string, page?: number): string {
   return qs ? `/admin/culture-items?${qs}` : '/admin/culture-items';
 }
 
+function cultureItemEditHref(id: string): string {
+  return `/admin/culture-items/${id}`;
+}
+
+const CULTURE_ITEM_CREATE_HREF = '/admin/culture-items/new';
+
 export function CultureItemsPageClient({
   user,
   rows,
@@ -93,8 +95,6 @@ export function CultureItemsPageClient({
   pagination,
 }: CultureItemsPageClientProps) {
   const router = useRouter();
-  const [isCreateSheetOpen, setIsCreateSheetOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState<Row | null>(null);
   const [searchInput, setSearchInput] = useState(pagination.query ?? '');
   const [categoryFilter, setCategoryFilter] = useState('');
 
@@ -124,15 +124,8 @@ export function CultureItemsPageClient({
     return rows.filter((row) => row.menuPath === categoryFilter);
   }, [rows, categoryFilter]);
 
-  const openCreateSheet = useCallback(() => setIsCreateSheetOpen(true), []);
-  const closeCreateSheet = useCallback(() => setIsCreateSheetOpen(false), []);
-  const openEditSheet = useCallback((row: Row) => setEditingRow(row), []);
-  const closeEditSheet = useCallback(() => setEditingRow(null), []);
-
-  const handleSheetSuccess = useCallback(() => {
-    setIsCreateSheetOpen(false);
-    setEditingRow(null);
-    router.refresh();
+  const openEditPage = useCallback((row: Row) => {
+    router.push(cultureItemEditHref(row.id));
   }, [router]);
 
   const handleDelete = useCallback(
@@ -149,9 +142,9 @@ export function CultureItemsPageClient({
   const handleEditClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>, row: Row) => {
       event.stopPropagation();
-      openEditSheet(row);
+      openEditPage(row);
     },
-    [openEditSheet],
+    [openEditPage],
   );
 
   const columns: AdminTableColumn<Row>[] = [
@@ -255,9 +248,9 @@ export function CultureItemsPageClient({
         description="Curate the entries shown inside the Culture Portal. Items are grouped by their menu path."
         size="wide"
         actions={
-          <Button type="button" variant="primary" onClick={openCreateSheet}>
+          <ButtonLink href={CULTURE_ITEM_CREATE_HREF} variant="primary">
             <Plus size={14} aria-hidden /> Add item
-          </Button>
+          </ButtonLink>
         }
       >
         <AdminPanelCard padding="sm">
@@ -298,7 +291,7 @@ export function CultureItemsPageClient({
           rows={filteredRows}
           getRowId={(row) => row.id}
           empty={tableEmpty}
-          onRowClick={openEditSheet}
+          onRowClick={openEditPage}
         />
         <div className="px-6 pb-6">
           <AdminPagination
@@ -311,41 +304,6 @@ export function CultureItemsPageClient({
           />
         </div>
       </AdminPageShell>
-      <AdminSheet
-        open={isCreateSheetOpen}
-        onClose={closeCreateSheet}
-        eyebrow="Culture items"
-        title="Create culture item"
-        description="Fill in the basics first, then add images and map coordinates."
-        size="2xl"
-      >
-        <CultureItemForm
-          mode="create"
-          menuOptions={menuOptions}
-          onSuccess={handleSheetSuccess}
-          onCancel={closeCreateSheet}
-        />
-      </AdminSheet>
-      <AdminSheet
-        open={editingRow !== null}
-        onClose={closeEditSheet}
-        eyebrow="Culture items"
-        title="Edit culture item"
-        description={editingRow?.title}
-        size="2xl"
-      >
-        {editingRow ? (
-          <CultureItemForm
-            key={editingRow.id}
-            mode="edit"
-            itemId={editingRow.id}
-            menuOptions={menuOptions}
-            initial={editingRow.editInitial}
-            onSuccess={handleSheetSuccess}
-            onCancel={closeEditSheet}
-          />
-        ) : null}
-      </AdminSheet>
     </>
   );
 }
