@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { CultureItemsPageClient } from '@/components/admin/CultureItemsPageClient';
 import { requireAdmin } from '@/lib/auth/require-admin';
-import { toCultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
-import { fetchFeaturedHomeByIds } from '@/lib/queries/featured-home-sql';
 import { buildAdminPageCount, parseAdminListQuery } from '@/lib/admin/list-query';
 import { prisma } from '@/lib/db';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
@@ -63,8 +61,6 @@ async function AdminCultureItemsPage(props: PageProps) {
     menuMap.set(m.id, label);
   }
 
-  const featuredById = await fetchFeaturedHomeByIds(items.map((item) => item.id));
-
   const rows = items.map((i) => ({
     id: i.id,
     title: getAdminLocaleValue(i.title),
@@ -76,7 +72,6 @@ async function AdminCultureItemsPage(props: PageProps) {
     status: i.status,
     image: i.image,
     menuPath: menuMap.get(i.menuItemId) ?? '—',
-    editInitial: toCultureItemFormInitial(i, featuredById.get(i.id)),
   }));
 
   const menuOptions = menuItems.map((m) => ({

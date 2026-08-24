@@ -87,6 +87,7 @@ export interface CultureItemFormState {
   status: 'idle' | 'error' | 'success';
   message?: string;
   fieldErrors?: Record<string, string>;
+  itemId?: string;
 }
 
 function parseForm(formData: FormData):
@@ -223,7 +224,7 @@ export async function createCultureItemAction(
   const created = await prisma.cultureItem.create({ data: parsed.data });
   await persistCultureItemFeaturedHome(created.id, parsed.featuredOnHome, parsed.featuredOrder);
   await revalidateCultureItem([parsed.data.slug], [parsed.data.menuItemId]);
-  return { status: 'success' };
+  return { status: 'success', itemId: created.id };
 }
 
 export async function updateCultureItemAction(

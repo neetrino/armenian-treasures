@@ -66,6 +66,9 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
 
     mapRef.current = map;
     markerRef.current = marker;
+    window.requestAnimationFrame(() => {
+      map.invalidateSize();
+    });
     return () => {
       map.remove();
       mapRef.current = null;
@@ -81,5 +84,5 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
     mapRef.current?.panTo([latitude, longitude]);
   }, [latitude, longitude]);
 
-  return <div ref={containerRef} className="h-72 w-full overflow-hidden rounded-xl border border-stone-200" />;
+  return <div ref={containerRef} className="h-72 min-h-[18rem] w-full overflow-hidden rounded-xl border border-stone-200" />;
 }
