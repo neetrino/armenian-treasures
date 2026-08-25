@@ -101,6 +101,10 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
                 address={item.media.address}
                 latitude={item.latitude}
                 longitude={item.longitude}
+                image={item.image}
+                coverImage={item.coverImage}
+                cardBackgroundColor={item.cardBackgroundColor}
+                cardBackgroundImage={item.cardBackgroundImage}
               />
             </div>
 

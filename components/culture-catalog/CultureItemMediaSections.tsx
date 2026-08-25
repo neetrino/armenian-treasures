@@ -9,6 +9,7 @@ import {
   hasRenderableMapLocation,
   resolveMapCoordinates,
 } from '@/lib/culture-catalog/culture-item-map';
+import { CultureItemCardAssetsSection } from '@/components/culture-catalog/CultureItemCardAssetsSection';
 import { CultureItemDetailMapLazy } from '@/components/culture-catalog/CultureItemDetailMapLazy';
 
 interface CultureItemMediaSectionsProps {
@@ -18,6 +19,10 @@ interface CultureItemMediaSectionsProps {
   address?: string | null;
   latitude?: number | null;
   longitude?: number | null;
+  image?: string | null;
+  coverImage?: string | null;
+  cardBackgroundColor?: string | null;
+  cardBackgroundImage?: string | null;
 }
 
 export function CultureItemMediaSections({
@@ -27,6 +32,10 @@ export function CultureItemMediaSections({
   address,
   latitude,
   longitude,
+  image,
+  coverImage,
+  cardBackgroundColor,
+  cardBackgroundImage,
 }: CultureItemMediaSectionsProps) {
   const sectionOrder = resolveCultureItemSectionOrder(media.sectionOrder);
 
@@ -42,6 +51,10 @@ export function CultureItemMediaSections({
           address={address}
           latitude={latitude}
           longitude={longitude}
+          image={image}
+          coverImage={coverImage}
+          cardBackgroundColor={cardBackgroundColor}
+          cardBackgroundImage={cardBackgroundImage}
         />
       ))}
     </>
@@ -56,6 +69,10 @@ interface CultureItemMediaSectionProps {
   address?: string | null;
   latitude?: number | null;
   longitude?: number | null;
+  image?: string | null;
+  coverImage?: string | null;
+  cardBackgroundColor?: string | null;
+  cardBackgroundImage?: string | null;
 }
 
 function tourTypeLabel(type: string): string {
@@ -70,10 +87,22 @@ function CultureItemMediaSection({
   address,
   latitude,
   longitude,
+  image,
+  coverImage,
+  cardBackgroundColor,
+  cardBackgroundImage,
 }: CultureItemMediaSectionProps) {
   switch (sectionId) {
     case 'card-image':
-      return null;
+      return (
+        <CultureItemCardAssetsSection
+          title={title}
+          image={image}
+          coverImage={coverImage}
+          cardBackgroundColor={cardBackgroundColor}
+          cardBackgroundImage={cardBackgroundImage}
+        />
+      );
     case 'description':
       return (
         <>
