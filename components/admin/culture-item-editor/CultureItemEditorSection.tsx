@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type HTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { SortableDragHandle } from '@/components/admin/SortableDragHandle';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ interface CultureItemEditorSectionProps {
   description?: string;
   unlimited?: boolean;
   defaultOpen?: boolean;
+  forceOpen?: boolean;
   dragHandleProps?: HTMLAttributes<HTMLButtonElement>;
   overlay?: boolean;
   children: ReactNode;
@@ -22,11 +23,17 @@ export function CultureItemEditorSection({
   description,
   unlimited = false,
   defaultOpen = true,
+  forceOpen = false,
   dragHandleProps,
   overlay = false,
   children,
 }: CultureItemEditorSectionProps) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [open, setOpen] = useState(defaultOpen || forceOpen);
+
+  useEffect(() => {
+    if (forceOpen) setOpen(true);
+  }, [forceOpen]);
+
 
   return (
     <section
@@ -75,7 +82,13 @@ export function CultureItemEditorSection({
           />
         </button>
       </div>
-      {open ? <div className="px-4 py-4 sm:px-5 sm:py-5">{children}</div> : null}
+      {/* Keep fields mounted when collapsed so FormData still includes their values. */}
+      <div
+        className={cn('px-4 py-4 sm:px-5 sm:py-5', !open && 'hidden')}
+        aria-hidden={!open}
+      >
+        {children}
+      </div>
     </section>
   );
 }

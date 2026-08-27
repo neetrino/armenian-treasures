@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { resolveCultureItemHref, resolveCultureItemPreviewHref } from '@/lib/culture-item-url';
 import {
   CULTURE_PAGE_CONTENT_INDEX_SLUGS,
   CULTURE_LANDING_ITEM_HREFS,
@@ -20,6 +20,24 @@ describe('resolveCultureItemHref', () => {
       expect(resolveCultureItemHref(slug)).toBe(href);
     },
   );
+});
+
+describe('resolveCultureItemPreviewHref', () => {
+  it('uses public href for published items', () => {
+    expect(resolveCultureItemPreviewHref('tatev-monastery', 'PUBLISHED')).toBe(
+      '/culture/item/tatev-monastery',
+    );
+  });
+
+  it('uses admin preview query for drafts', () => {
+    expect(resolveCultureItemPreviewHref('new-draft', 'DRAFT')).toBe(
+      '/culture/item/new-draft?preview=1',
+    );
+  });
+
+  it('uses admin preview query when status is omitted', () => {
+    expect(resolveCultureItemPreviewHref('new-draft')).toBe('/culture/item/new-draft?preview=1');
+  });
 });
 
 describe('page content admin index split', () => {

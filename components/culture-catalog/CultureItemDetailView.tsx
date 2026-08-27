@@ -92,56 +92,53 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
         <section id="detail" className="catalog-detail-section">
           <p className="sec-label">Entry Detail</p>
           <h2 className="sec-title">{item.title}</h2>
-          <div className="catalog-detail-grid">
-            <div className="catalog-detail-main">
-              <CultureItemMediaSections
-                title={item.title}
-                media={item.media}
-                locationName={item.locationName}
-                address={item.media.address}
-                latitude={item.latitude}
-                longitude={item.longitude}
-                image={item.image}
-                coverImage={item.coverImage}
-                cardBackgroundColor={item.cardBackgroundColor}
-                cardBackgroundImage={item.cardBackgroundImage}
+          <div className="about-aside catalog-detail-aside--facts">
+            <DetailFact label="Type" value={formatEnumLabel(item.itemType)} />
+            {item.region ? (
+              <DetailFact
+                label="Region"
+                value={
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin size={12} aria-hidden /> {item.region}
+                  </span>
+                }
               />
-            </div>
-
-            <aside className="catalog-detail-aside">
-              <DetailFact label="Type" value={formatEnumLabel(item.itemType)} />
-              {item.region ? (
-                <DetailFact
-                  label="Region"
-                  value={
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin size={12} aria-hidden /> {item.region}
-                    </span>
-                  }
-                />
-              ) : null}
-              {item.locationName ? <DetailFact label="Location" value={item.locationName} /> : null}
-              {item.periodLabel ? <DetailFact label="Period" value={item.periodLabel} /> : null}
-              {item.century !== null ? <DetailFact label="Century" value={String(item.century)} /> : null}
-              {item.yearLabel ? <DetailFact label="Year" value={item.yearLabel} /> : null}
-              {item.mapType ? <DetailFact label="Map category" value={formatEnumLabel(item.mapType)} /> : null}
-              {hasCoords ? (
-                <DetailFact
-                  label="Coordinates"
-                  value={`${item.latitude!.toFixed(4)}, ${item.longitude!.toFixed(4)}`}
-                />
-              ) : null}
-              {item.showOnMap && hasCoords ? (
-                <Link href="/map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
-                  View on heritage map
-                </Link>
-              ) : null}
-              {item.videoUrl ? (
-                <a href={item.videoUrl} className="btn-gold reveal" target="_blank" rel="noopener noreferrer">
-                  <Play size={12} aria-hidden /> Watch video
-                </a>
-              ) : null}
-            </aside>
+            ) : null}
+            {item.locationName ? <DetailFact label="Location" value={item.locationName} /> : null}
+            {item.periodLabel ? <DetailFact label="Period" value={item.periodLabel} /> : null}
+            {item.century !== null ? <DetailFact label="Century" value={String(item.century)} /> : null}
+            {item.yearLabel ? <DetailFact label="Year" value={item.yearLabel} /> : null}
+            {item.mapType ? <DetailFact label="Map category" value={formatEnumLabel(item.mapType)} /> : null}
+            {hasCoords ? (
+              <DetailFact
+                label="Coordinates"
+                value={`${item.latitude!.toFixed(4)}, ${item.longitude!.toFixed(4)}`}
+              />
+            ) : null}
+            {item.showOnMap && hasCoords ? (
+              <Link href="/map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
+                View on heritage map
+              </Link>
+            ) : null}
+            {item.videoUrl ? (
+              <a href={item.videoUrl} className="btn-gold reveal" target="_blank" rel="noopener noreferrer">
+                <Play size={12} aria-hidden /> Watch video
+              </a>
+            ) : null}
+          </div>
+          <div className="catalog-detail-main">
+            <CultureItemMediaSections
+              title={item.title}
+              media={item.media}
+              locationName={item.locationName}
+              address={item.media.address}
+              latitude={item.latitude}
+              longitude={item.longitude}
+              image={item.image}
+              coverImage={item.coverImage}
+              cardBackgroundColor={item.cardBackgroundColor}
+              cardBackgroundImage={item.cardBackgroundImage}
+            />
           </div>
         </section>
         <div className="catalog-submit-cta reveal">

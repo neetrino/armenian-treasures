@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CultureItemEditorMetaBar } from '@/components/admin/culture-item-editor/CultureItemEditorMetaBar';
 import { CultureItemEditorSectionsList } from '@/components/admin/culture-item-editor/CultureItemEditorSectionsList';
 import { CultureItemEditorToolbar } from '@/components/admin/culture-item-editor/CultureItemEditorToolbar';
+import { CultureItemMenuField } from '@/components/admin/culture-item-editor/CultureItemMenuField';
 import {
   CultureItemFormBasicsSection,
   CultureItemFormSectionContent,
@@ -19,7 +20,7 @@ import { buildTabErrorMap } from '@/lib/i18n/translatable-content';
 import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
-import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { resolveCultureItemPreviewHref } from '@/lib/culture-item-url';
 
 interface MenuOption {
   id: string;
@@ -38,6 +39,17 @@ interface CultureItemFormProps {
 }
 
 const INITIAL: CultureItemFormState = { status: 'idle' };
+
+function formatFormError(state: CultureItemFormState): string | undefined {
+  if (state.status !== 'error') return undefined;
+  if (state.fieldErrors?.menuItemId) {
+    return 'Pick a menu item before saving.';
+  }
+  if (state.fieldErrors?.['title.EN'] || state.fieldErrors?.title) {
+    return 'Add an English title (at least 2 characters).';
+  }
+  return state.message ?? 'Please correct the form.';
+}
 
 export function CultureItemForm({
   mode,
@@ -91,10 +103,20 @@ export function CultureItemForm({
   }, [state.status, state.itemId, mode, onSuccess, router]);
 
   const tabErrors = buildTabErrorMap(state.fieldErrors);
-  const previewHref = initial?.slug && initial.status === 'PUBLISHED'
-    ? resolveCultureItemHref(initial.slug)
+  const previewHref = initial?.slug
+    ? resolveCultureItemPreviewHref(initial.slug, initial.status)
     : undefined;
   const formHeading = heading ?? (mode === 'create' ? 'Add new grid card' : 'Edit grid card');
+  const errorMessage = formatFormError(state);
+  const hasBasicsErrors = Boolean(
+    state.fieldErrors?.slug ||
+      state.fieldErrors?.itemType ||
+      state.fieldErrors?.region ||
+      state.fieldErrors?.periodLabel ||
+      state.fieldErrors?.century ||
+      state.fieldErrors?.yearLabel ||
+      state.fieldErrors?.order,
+  );
 
   function patchMedia(patch: Partial<CultureItemMediaContent>): void {
     setMedia((current) => ({ ...current, ...patch }));
@@ -136,6 +158,7 @@ export function CultureItemForm({
         isPending={isPending}
         isSaved={isSaved}
         previewHref={previewHref}
+        errorMessage={errorMessage}
         onCancel={onCancel}
       />
 
@@ -152,6 +175,13 @@ export function CultureItemForm({
         tabErrors={tabErrors}
       />
 
+      <CultureItemMenuField
+        menuOptions={menuOptions}
+        lockedMenuItemId={lockedMenuItemId}
+        defaultValue={initial?.menuItemId ?? ''}
+        error={state.fieldErrors?.menuItemId}
+      />
+
       <CultureItemEditorSectionsList
         sectionOrder={sectionOrder}
         onSectionOrderChange={handleSectionOrderChange}
@@ -160,14 +190,9 @@ export function CultureItemForm({
 
       <CultureItemFormBasicsSection
         initial={initial}
-        menuOptions={menuOptions}
-        lockedMenuItemId={lockedMenuItemId}
         fieldErrors={state.fieldErrors}
+        forceOpen={hasBasicsErrors}
       />
-
-      {state.status === 'error' && state.message ? (
-        <p className="rounded-xl bg-pomegranate/10 px-4 py-3 text-sm text-pomegranate">{state.message}</p>
-      ) : null}
     </form>
   );
 }

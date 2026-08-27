@@ -14,11 +14,6 @@ import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import type { CultureItemMediaContent } from '@/lib/culture-item-media';
 
-interface MenuOption {
-  id: string;
-  title: string;
-}
-
 interface CultureItemFormSectionContentProps {
   sectionId: CultureItemEditorSectionId;
   initial?: CultureItemFormInitial;
@@ -123,29 +118,23 @@ export function CultureItemFormSectionContent({
 
 interface CultureItemFormBasicsSectionProps {
   initial?: CultureItemFormInitial;
-  menuOptions: MenuOption[];
-  lockedMenuItemId?: string;
   fieldErrors?: Record<string, string>;
+  forceOpen?: boolean;
 }
 
 export function CultureItemFormBasicsSection({
   initial,
-  menuOptions,
-  lockedMenuItemId,
   fieldErrors,
+  forceOpen = false,
 }: CultureItemFormBasicsSectionProps) {
   return (
     <CultureItemEditorSection
       title="Catalog metadata"
-      description="Slug, menu path, region, and sort order."
-      defaultOpen={false}
+      description="Slug, region, and sort order."
+      defaultOpen={forceOpen}
+      forceOpen={forceOpen}
     >
-      <CultureItemBasicsFields
-        initial={initial}
-        menuOptions={menuOptions}
-        lockedMenuItemId={lockedMenuItemId}
-        fieldErrors={fieldErrors}
-      />
+      <CultureItemBasicsFields initial={initial} fieldErrors={fieldErrors} />
     </CultureItemEditorSection>
   );
 }

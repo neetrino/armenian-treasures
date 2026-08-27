@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import { CultureItemEditorLocaleTabs } from '@/components/admin/culture-item-editor/CultureItemEditorLocaleTabs';
 import { CultureItemEditorToggle } from '@/components/admin/culture-item-editor/CultureItemEditorToggle';
@@ -35,6 +35,18 @@ function localeHasContent(title: string, shortDescription: string): boolean {
   return title.trim().length > 0 || shortDescription.trim().length > 0;
 }
 
+function valueFor(values: LocaleTextMap, locale: SiteLocaleCode): string {
+  return values[locale] ?? '';
+}
+
+function patchLocaleMap(
+  current: LocaleTextMap,
+  locale: SiteLocaleCode,
+  nextValue: string,
+): LocaleTextMap {
+  return { ...current, [locale]: nextValue };
+}
+
 export function CultureItemEditorMetaBar({
   title = '',
   shortDescription = '',
@@ -47,19 +59,27 @@ export function CultureItemEditorMetaBar({
   fieldErrors,
   tabErrors,
 }: CultureItemEditorMetaBarProps) {
-  const titleValues = decodeTranslatableText(title);
-  const shortDescriptionValues = decodeTranslatableText(shortDescription);
   const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
   const [highlightOn, setHighlightOn] = useState(featuredOnHome);
+  const [titleValues, setTitleValues] = useState<LocaleTextMap>(() => decodeTranslatableText(title));
+  const [shortDescriptionValues, setShortDescriptionValues] = useState<LocaleTextMap>(() =>
+    decodeTranslatableText(shortDescription),
+  );
+
+  useEffect(() => {
+    setTitleValues(decodeTranslatableText(title));
+  }, [title]);
+
+  useEffect(() => {
+    setShortDescriptionValues(decodeTranslatableText(shortDescription));
+  }, [shortDescription]);
 
   const completedLocales = Object.fromEntries(
     SITE_LOCALE_CODES.map((code) => [
       code,
-      localeHasContent(titleValues[code] ?? '', shortDescriptionValues[code] ?? ''),
+      localeHasContent(valueFor(titleValues, code), valueFor(shortDescriptionValues, code)),
     ]),
   ) as Partial<Record<SiteLocaleCode, boolean>>;
-
-  const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
@@ -67,11 +87,12 @@ export function CultureItemEditorMetaBar({
         if (code === activeLocale) return null;
         return (
           <div key={code} className="hidden" aria-hidden>
-            <input type="hidden" name={`title.${code}`} defaultValue={valueFor(titleValues, code)} />
+            <input type="hidden" name={`title.${code}`} value={valueFor(titleValues, code)} readOnly />
             <input
               type="hidden"
               name={`shortDescription.${code}`}
-              defaultValue={valueFor(shortDescriptionValues, code)}
+              value={valueFor(shortDescriptionValues, code)}
+              readOnly
             />
           </div>
         );
@@ -110,17 +131,27 @@ export function CultureItemEditorMetaBar({
 
       <div className="grid gap-4 border-t border-stone-100 pt-4 sm:grid-cols-2">
         <TextField
+          key={`title-${activeLocale}`}
           label="Title"
           name={`title.${activeLocale}`}
           required={activeLocale === 'EN'}
-          defaultValue={valueFor(titleValues, activeLocale)}
+          value={valueFor(titleValues, activeLocale)}
+          onChange={(event) =>
+            setTitleValues((current) => patchLocaleMap(current, activeLocale, event.target.value))
+          }
           error={fieldErrors?.[`title.${activeLocale}`]}
         />
         <TextareaField
+          key={`shortDescription-${activeLocale}`}
           label="Short description"
           name={`shortDescription.${activeLocale}`}
           rows={2}
-          defaultValue={valueFor(shortDescriptionValues, activeLocale)}
+          value={valueFor(shortDescriptionValues, activeLocale)}
+          onChange={(event) =>
+            setShortDescriptionValues((current) =>
+              patchLocaleMap(current, activeLocale, event.target.value),
+            )
+          }
           error={fieldErrors?.[`shortDescription.${activeLocale}`]}
         />
       </div>

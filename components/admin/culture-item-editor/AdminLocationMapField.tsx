@@ -106,7 +106,8 @@ export function AdminLocationMapField({
         />
       </ClientMounted>
       <p className="text-xs text-ink-muted">
-        Drag the pin or click the map. Default center is Yerevan (40.1792, 44.4991).
+        Latitude / longitude fill automatically from the pin (default: Yerevan). Drag the pin or
+        click the map to move it, then Save. Publish is required for the public /map page.
       </p>
     </div>
   );
