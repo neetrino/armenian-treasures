@@ -47,10 +47,9 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const start: L.LatLngExpression = [
-      latitude ?? DEFAULT_MAP_COORDINATES.latitude,
-      longitude ?? DEFAULT_MAP_COORDINATES.longitude,
-    ];
+    const startLat = latitude ?? DEFAULT_MAP_COORDINATES.latitude;
+    const startLng = longitude ?? DEFAULT_MAP_COORDINATES.longitude;
+    const start: L.LatLngExpression = [startLat, startLng];
     const map = L.map(containerRef.current).setView(start, 12);
     L.tileLayer(TILE_URL, { attribution: '© OpenStreetMap contributors' }).addTo(map);
     const marker = L.marker(start, { draggable: true, icon: createAdminPinIcon() }).addTo(map);
@@ -66,10 +65,29 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
 
     mapRef.current = map;
     markerRef.current = marker;
+
+    // Persist the visible pin into the form. Without this, Save stores null coords
+    // even though the admin map shows a default Yerevan pin.
+    if (latitude === null || longitude === null) {
+      onChangeRef.current(startLat, startLng);
+    }
+
     window.requestAnimationFrame(() => {
       map.invalidateSize();
     });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          map.invalidateSize();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(containerRef.current);
+
     return () => {
+      observer.disconnect();
       map.remove();
       mapRef.current = null;
       markerRef.current = null;
@@ -84,5 +102,10 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
     mapRef.current?.panTo([latitude, longitude]);
   }, [latitude, longitude]);
 
-  return <div ref={containerRef} className="h-72 min-h-[18rem] w-full overflow-hidden rounded-xl border border-stone-200" />;
+  return (
+    <div
+      ref={containerRef}
+      className="h-72 min-h-[18rem] w-full overflow-hidden rounded-xl border border-stone-200"
+    />
+  );
 }

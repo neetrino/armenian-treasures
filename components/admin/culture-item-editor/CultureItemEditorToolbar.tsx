@@ -9,6 +9,7 @@ interface CultureItemEditorToolbarProps {
   isPending: boolean;
   isSaved: boolean;
   previewHref?: string;
+  errorMessage?: string;
   onCancel?: () => void;
 }
 
@@ -23,6 +24,7 @@ export function CultureItemEditorToolbar({
   isPending,
   isSaved,
   previewHref,
+  errorMessage,
   onCancel,
 }: CultureItemEditorToolbarProps) {
   const savedLabel = formatSavedLabel(isPending, isSaved);
@@ -42,18 +44,22 @@ export function CultureItemEditorToolbar({
           <div
             className={cn(
               'flex items-center gap-2 text-sm',
-              isSaved && !isPending ? 'text-emerald-700' : 'text-ink-muted',
+              errorMessage
+                ? 'text-pomegranate'
+                : isSaved && !isPending
+                  ? 'text-emerald-700'
+                  : 'text-ink-muted',
             )}
           >
-            {isSaved && !isPending ? <Check size={16} aria-hidden /> : null}
-            <span>{savedLabel}</span>
+            {isSaved && !isPending && !errorMessage ? <Check size={16} aria-hidden /> : null}
+            <span>{errorMessage ?? savedLabel}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Button
               type="submit"
               name="intent"
               value="draft"
-              variant="secondary"
+              variant="ghost"
               size="sm"
               disabled={isPending}
               className="rounded-lg border border-stone-300 bg-white text-ink shadow-none hover:bg-stone-50"
@@ -63,7 +69,7 @@ export function CultureItemEditorToolbar({
             {previewHref ? (
               <Button
                 type="button"
-                variant="secondary"
+                variant="ghost"
                 size="sm"
                 className="rounded-lg border border-stone-300 bg-white text-ink shadow-none hover:bg-stone-50"
                 onClick={() => window.open(previewHref, '_blank')}
@@ -74,10 +80,10 @@ export function CultureItemEditorToolbar({
             ) : (
               <Button
                 type="button"
-                variant="secondary"
+                variant="ghost"
                 size="sm"
                 disabled
-                title="Publish first to preview."
+                title="Save a draft first to preview."
                 className="rounded-lg border border-stone-200 bg-stone-50 text-ink-muted shadow-none"
               >
                 <Eye size={14} aria-hidden />
@@ -97,10 +103,16 @@ export function CultureItemEditorToolbar({
             </Button>
           </div>
         </div>
-        <p className="inline-flex items-center gap-2 text-sm text-ink-muted">
-          <GripVertical size={16} aria-hidden />
-          Drag sections to set the order for this article.
-        </p>
+        {errorMessage ? (
+          <p className="rounded-lg bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate" role="alert">
+            {errorMessage}
+          </p>
+        ) : (
+          <p className="inline-flex items-center gap-2 text-sm text-ink-muted">
+            <GripVertical size={16} aria-hidden />
+            Drag sections to set the order for this article.
+          </p>
+        )}
       </div>
     </div>
   );

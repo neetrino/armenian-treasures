@@ -3,22 +3,13 @@ import { SelectField } from '@/components/forms/fields/SelectField';
 import { CULTURE_ITEM_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 
-interface MenuOption {
-  id: string;
-  title: string;
-}
-
 interface CultureItemBasicsFieldsProps {
   initial?: CultureItemFormInitial;
-  menuOptions: MenuOption[];
-  lockedMenuItemId?: string;
   fieldErrors?: Record<string, string>;
 }
 
 export function CultureItemBasicsFields({
   initial,
-  menuOptions,
-  lockedMenuItemId,
   fieldErrors,
 }: CultureItemBasicsFieldsProps) {
   return (
@@ -30,21 +21,6 @@ export function CultureItemBasicsFields({
         hint="Lowercase, hyphenated. Leave empty to derive from title."
         error={fieldErrors?.slug}
       />
-      {lockedMenuItemId ? (
-        <input type="hidden" name="menuItemId" value={lockedMenuItemId} />
-      ) : (
-        <SelectField
-          label="Menu item"
-          name="menuItemId"
-          required
-          options={[
-            { value: '', label: 'Select a menu item…', disabled: true },
-            ...menuOptions.map((item) => ({ value: item.id, label: item.title })),
-          ]}
-          defaultValue={initial?.menuItemId ?? ''}
-          error={fieldErrors?.menuItemId}
-        />
-      )}
       <SelectField
         label="Item type"
         name="itemType"

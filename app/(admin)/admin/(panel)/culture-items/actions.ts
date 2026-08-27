@@ -18,6 +18,7 @@ import {
   firstTourUrl,
   firstVideoUrl,
   galleryUrlsFromMedia,
+  DEFAULT_MAP_COORDINATES,
 } from '@/lib/culture-item-media';
 import { cultureItemSchema } from '@/lib/validation';
 import type { Prisma } from '@prisma/client';
@@ -106,6 +107,15 @@ function parseForm(formData: FormData):
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const slug = (slugRaw.trim() ? slugRaw : titleRaw).trim();
   const finalSlug = slugify(slug, { lower: true, strict: true });
+  const showOnMap = formData.get('showOnMap') === 'on';
+  let latitude = numberOrNull(formData.get('latitude'));
+  let longitude = numberOrNull(formData.get('longitude'));
+  // Admin map shows a default Yerevan pin; if "Show on public map" is on without
+  // explicit coords, persist that pin so the item can appear on /map and detail.
+  if (showOnMap && (latitude === null || longitude === null)) {
+    latitude = DEFAULT_MAP_COORDINATES.latitude;
+    longitude = DEFAULT_MAP_COORDINATES.longitude;
+  }
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
@@ -124,10 +134,10 @@ function parseForm(formData: FormData):
     galleryImages: galleryUrlsFromMedia(media),
     tourUrl: firstTourUrl(media) ?? '',
     videoUrl: firstVideoUrl(media) ?? '',
-    latitude: numberOrNull(formData.get('latitude')),
-    longitude: numberOrNull(formData.get('longitude')),
+    latitude,
+    longitude,
     mapType: asMapType(formData.get('mapType')?.toString() ?? ''),
-    showOnMap: formData.get('showOnMap') === 'on',
+    showOnMap,
     ...parseFeaturedHomeFields(formData),
     featuredOnCatalog: formData.get('featuredOnCatalog') === 'on',
     itemType: asItemType(formData.get('itemType')?.toString() ?? 'OTHER'),

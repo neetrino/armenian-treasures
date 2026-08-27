@@ -91,6 +91,27 @@ export async function getCultureItemDetailBySlug(
   return getCultureItemDetailBySlugCached(locale, slug);
 }
 
+/** Uncached detail fetch for admin preview — any status (draft / published / archived). */
+export async function getCultureItemDetailBySlugForPreview(
+  slug: string,
+): Promise<{ item: PublicCultureItemDetailDTO; status: string } | null> {
+  const locale = await getCurrentSiteLocale();
+  try {
+    const row = await prisma.cultureItem.findFirst({
+      where: { slug },
+      include: {
+        menuItem: {
+          include: { parent: true },
+        },
+      },
+    });
+    if (!row) return null;
+    return { item: toPublicCultureItemDetail(row, locale), status: row.status };
+  } catch {
+    return null;
+  }
+}
+
 async function fetchMapItems(locale: SiteLocaleCode): Promise<PublicCultureItemDTO[]> {
   try {
     const rows = await prisma.cultureItem.findMany({
