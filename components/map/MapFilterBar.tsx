@@ -13,7 +13,7 @@ const FILTER_ICONS: Record<HeritageMapFilterValue, LucideIcon> = {
   RELIGIOUS: Church,
   MONUMENTS: Castle,
   MUSEUMS: Landmark,
-  ARCHAEOLOGICAL: Mountain,
+  SETTLEMENTS: Mountain,
   OTHER: Sparkles,
 };
 

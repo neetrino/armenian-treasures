@@ -24,6 +24,9 @@ async function AdminSettingsPage() {
     copyrightText:
       settings?.copyrightText ?? '© 2026 Armenian Treasures Foundation. All rights reserved.',
     enabledLocales: parseEnabledLocales(settings?.enabledLocales),
+    certificateGuardianUrl: settings?.certificateGuardianUrl ?? '',
+    certificateAmbassadorUrl: settings?.certificateAmbassadorUrl ?? '',
+    certificateMagistrUrl: settings?.certificateMagistrUrl ?? '',
   };
   return (
     <AdminPageShell

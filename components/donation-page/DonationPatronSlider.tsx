@@ -9,7 +9,7 @@ import {
   clampPatronAmount,
   formatAmd,
   getImpactText,
-  logFill,
+  linearFill,
 } from '@/components/donation-page/donation-utils';
 
 const TICK_LABELS = ['500', '1K', '1.5K', '5K', '10K', '25K', '50K'] as const;
@@ -40,7 +40,7 @@ export function DonationPatronSlider({
   onCustomBlur,
 }: DonationPatronSliderProps) {
   const amount = clampPatronAmount(sliderVal);
-  const sliderFill = logFill(amount);
+  const sliderFill = linearFill(amount);
   const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
   return (

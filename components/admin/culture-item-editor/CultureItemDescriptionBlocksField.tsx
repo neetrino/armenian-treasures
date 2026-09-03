@@ -1,6 +1,5 @@
 'use client';
 
-import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import {
@@ -65,26 +64,6 @@ export function CultureItemDescriptionBlocksField({
                   onChange(blocks.map((item, current) => (current === index ? { ...item, body: event.target.value } : item)))
                 }
                 hint="Line breaks are kept on the public page."
-              />
-              <AdminImageDropzoneField
-                label="Block image"
-                name={`${prefix}.image`}
-                folder="culture"
-                layout="card"
-                value={block.image}
-                onValueChange={(image) =>
-                  onChange(blocks.map((item, current) => (current === index ? { ...item, image } : item)))
-                }
-              />
-              <TextField
-                label="Image caption"
-                name={`${prefix}.caption`}
-                value={block.caption}
-                onChange={(event) =>
-                  onChange(
-                    blocks.map((item, current) => (current === index ? { ...item, caption: event.target.value } : item)),
-                  )
-                }
               />
             </RepeatableFieldCard>
           );

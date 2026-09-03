@@ -1,6 +1,5 @@
 'use client';
 
-import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import {
@@ -55,14 +54,6 @@ export function CultureItemToursField({ tours, onChange }: CultureItemToursField
                 type="url"
                 value={tour.url}
                 onChange={(event) => onChange(patchTour(tours, index, { url: event.target.value }))}
-              />
-              <AdminImageDropzoneField
-                label="Preview image"
-                name={`${prefix}.previewImage`}
-                folder="culture"
-                layout="card"
-                value={tour.previewImage}
-                onValueChange={(previewImage) => onChange(patchTour(tours, index, { previewImage }))}
               />
             </RepeatableFieldCard>
           );

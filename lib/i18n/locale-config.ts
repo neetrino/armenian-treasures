@@ -27,6 +27,10 @@ export function isSiteLocaleCode(value: string): value is SiteLocaleCode {
   return (SITE_LOCALE_CODES as readonly string[]).includes(value);
 }
 
+export function isArmenianLocale(locale: SiteLocaleCode): boolean {
+  return locale === 'HY' || locale === 'HYW';
+}
+
 export function parseEnabledLocales(raw: unknown): SiteLocaleCode[] {
   if (!Array.isArray(raw)) return [...DEFAULT_ENABLED_LOCALES];
   const parsed = raw.filter((item): item is SiteLocaleCode => typeof item === 'string' && isSiteLocaleCode(item));

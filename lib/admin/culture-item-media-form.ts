@@ -20,9 +20,8 @@ function read(formData: FormData, name: string): string {
 }
 
 function readTourType(value: string): CultureTourType {
-  if (value === 'MATTERPORT' || value === 'MODEL_3D' || value === 'OTHER' || value === 'LIDAR') {
-    return value;
-  }
+  if (value === 'SCAN_3D' || value === 'MODEL_3D' || value === 'MATTERPORT') return 'SCAN_3D';
+  if (value === 'DRONE') return 'DRONE';
   return 'LIDAR';
 }
 

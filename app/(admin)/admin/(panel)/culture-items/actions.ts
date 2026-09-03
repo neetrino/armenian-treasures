@@ -18,8 +18,10 @@ import {
   firstTourUrl,
   firstVideoUrl,
   galleryUrlsFromMedia,
-  DEFAULT_MAP_COORDINATES,
 } from '@/lib/culture-item-media';
+import { parseMediaByLocale, sliceLocaleMedia } from '@/lib/culture-item-media-locale';
+import { isSiteLocaleCode } from '@/lib/i18n/locale-config';
+import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
 import { cultureItemSchema } from '@/lib/validation';
 import type { Prisma } from '@prisma/client';
 import {
@@ -48,7 +50,17 @@ const ITEM_TYPES: CultureItemType[] = [
   'OTHER',
 ];
 
-const MAP_TYPES: MapType[] = ['MONASTERY', 'FORTRESS', 'MUSEUM', 'CHURCH', 'ARCHAEOLOGICAL', 'OTHER'];
+const MAP_TYPES: MapType[] = [
+  'MONASTERY',
+  'CHURCH',
+  'CHAPEL',
+  'FORTRESS',
+  'SETTLEMENT',
+  'MUSEUM',
+  'MEMORIAL',
+  'KHACHKAR',
+  'OTHER',
+];
 const STATUSES: ContentStatus[] = ['DRAFT', 'PUBLISHED', 'ARCHIVED'];
 
 function asItemType(value: string): CultureItemType {
@@ -91,6 +103,25 @@ export interface CultureItemFormState {
   itemId?: string;
 }
 
+function withLocaleMedia(
+  formData: FormData,
+  media: ReturnType<typeof readCultureItemMediaFromForm>,
+) {
+  const rawLocale = formData.get('editorLocale')?.toString() ?? 'EN';
+  const locale = isSiteLocaleCode(rawLocale) ? rawLocale : 'EN';
+  let parsedByLocale = parseMediaByLocale({ byLocale: {} });
+  try {
+    const raw = formData.get('mediaByLocaleJson')?.toString() ?? '';
+    if (raw) parsedByLocale = parseMediaByLocale({ byLocale: JSON.parse(raw) });
+  } catch {
+    parsedByLocale = parseMediaByLocale({ byLocale: {} });
+  }
+  return {
+    ...media,
+    byLocale: { ...parsedByLocale, [locale]: sliceLocaleMedia(media) },
+  };
+}
+
 function parseForm(formData: FormData):
   | {
       ok: true;
@@ -102,19 +133,19 @@ function parseForm(formData: FormData):
   const titleI18n = readLocalizedTextFromFormData(formData, 'title');
   const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const shortDescriptionI18n = readLocalizedTextFromFormData(formData, 'shortDescription');
-  const media = readCultureItemMediaFromForm(formData);
+  const media = withLocaleMedia(formData, readCultureItemMediaFromForm(formData));
   const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
   const slug = (slugRaw.trim() ? slugRaw : titleRaw).trim();
   const finalSlug = slugify(slug, { lower: true, strict: true });
   const showOnMap = formData.get('showOnMap') === 'on';
+  const mapUrl = formData.get('mapUrl')?.toString().trim() ?? '';
+  const parsedFromLink = parseMapCoordinatesFromUrl(mapUrl);
   let latitude = numberOrNull(formData.get('latitude'));
   let longitude = numberOrNull(formData.get('longitude'));
-  // Admin map shows a default Yerevan pin; if "Show on public map" is on without
-  // explicit coords, persist that pin so the item can appear on /map and detail.
-  if (showOnMap && (latitude === null || longitude === null)) {
-    latitude = DEFAULT_MAP_COORDINATES.latitude;
-    longitude = DEFAULT_MAP_COORDINATES.longitude;
+  if (parsedFromLink) {
+    latitude = parsedFromLink.latitude;
+    longitude = parsedFromLink.longitude;
   }
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
@@ -136,6 +167,7 @@ function parseForm(formData: FormData):
     videoUrl: firstVideoUrl(media) ?? '',
     latitude,
     longitude,
+    mapUrl,
     mapType: asMapType(formData.get('mapType')?.toString() ?? ''),
     showOnMap,
     ...parseFeaturedHomeFields(formData),
@@ -202,6 +234,7 @@ function toData(
     featuredOnCatalog: input.featuredOnCatalog,
     latitude: input.latitude ?? null,
     longitude: input.longitude ?? null,
+    mapUrl: input.mapUrl?.trim() ? input.mapUrl.trim() : null,
     mapType: input.mapType ?? null,
     showOnMap: input.showOnMap,
     itemType: input.itemType,

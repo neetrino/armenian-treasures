@@ -156,6 +156,17 @@
   box-shadow: inset 0 0 18px rgba(39, 198, 200, 0.14);
 }
 
+.khndzoresk-page .about-team-avatar--photo {
+  overflow: hidden;
+  padding: 0;
+}
+
+.khndzoresk-page .about-team-avatar--photo img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 .khndzoresk-page .about-team-name {
   font-family: var(--font-cinzel), serif;
   font-size: clamp(1.08rem, 1.2vw, 1.32rem);

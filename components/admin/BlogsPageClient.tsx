@@ -24,6 +24,9 @@ interface Row {
   slug: string;
   content: string;
   image: string | null;
+  headerImage: string | null;
+  backgroundImage: string | null;
+  galleryContent: unknown;
   publishedAt: string;
   isPublished: boolean;
   featuredOnHome: boolean;
@@ -166,6 +169,9 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
               title: editingRow.title,
               content: editingRow.content,
               image: editingRow.image ?? '',
+              headerImage: editingRow.headerImage ?? '',
+              backgroundImage: editingRow.backgroundImage ?? '',
+              galleryContent: editingRow.galleryContent,
               publishedAt: editingRow.publishedAt,
               isPublished: editingRow.isPublished,
               featuredOnHome: editingRow.featuredOnHome,

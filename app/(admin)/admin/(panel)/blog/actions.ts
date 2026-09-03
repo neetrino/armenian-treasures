@@ -1,5 +1,6 @@
 'use server';
 
+import { Prisma } from '@prisma/client';
 import slugify from 'slugify';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
@@ -9,6 +10,7 @@ import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
 import { persistBlogPostFeaturedHome } from '@/lib/queries/featured-blog-sql';
 import { blogPostSchema } from '@/lib/validation';
+import { readCultureItemMediaFromForm } from '@/lib/admin/culture-item-media-form';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -33,6 +35,8 @@ function parseForm(formData: FormData, existingSlug?: string) {
     slug,
     content: pickDefaultLocaleText(contentI18n),
     image: formData.get('image')?.toString() ?? '',
+    headerImage: formData.get('headerImage')?.toString() ?? '',
+    backgroundImage: formData.get('backgroundImage')?.toString() ?? '',
     publishedAt: publishedAtRaw || new Date().toISOString().slice(0, 10),
     order: 0,
     isPublished: formData.get('isPublished') === 'on',
@@ -57,6 +61,9 @@ function parseForm(formData: FormData, existingSlug?: string) {
       slug: parsed.data.slug,
       content: encodeTranslatableText(contentI18n),
       image: parsed.data.image?.trim() ? parsed.data.image : null,
+      headerImage: parsed.data.headerImage?.trim() ? parsed.data.headerImage : null,
+      backgroundImage: parsed.data.backgroundImage?.trim() ? parsed.data.backgroundImage : null,
+      galleryContent: readCultureItemMediaFromForm(formData).gallery as unknown as Prisma.InputJsonValue,
       publishedAt: parsed.data.publishedAt,
       order: parsed.data.order,
       isPublished: parsed.data.isPublished,

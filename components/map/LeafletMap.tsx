@@ -83,9 +83,12 @@ const SPARKLES_ICON: MarkerIconNode[] = [
 const MARKER_STYLE_BY_MAP_TYPE: Record<string, MarkerStyle> = {
   MONASTERY: { color: '#27C6C8', icon: CHURCH_ICON },
   CHURCH: { color: '#27C6C8', icon: CHURCH_ICON },
+  CHAPEL: { color: '#27C6C8', icon: CHURCH_ICON },
   FORTRESS: { color: '#D6B85A', icon: CASTLE_ICON },
+  SETTLEMENT: { color: '#6BB578', icon: MOUNTAIN_ICON },
   MUSEUM: { color: '#9B7BD4', icon: LANDMARK_ICON },
-  ARCHAEOLOGICAL: { color: '#6BB578', icon: MOUNTAIN_ICON },
+  MEMORIAL: { color: '#9B7BD4', icon: LANDMARK_ICON },
+  KHACHKAR: { color: '#D6B85A', icon: SPARKLES_ICON },
   OTHER: { color: '#D6855A', icon: SPARKLES_ICON },
 };
 

@@ -315,7 +315,7 @@ export function resolveCultureCatalogContent(
   const codeOverride = OVERRIDES[key] ?? OVERRIDES[node.slug];
   const dbOverride = parseMenuCatalogContent(node.catalogContent);
   const merged = mergeCultureCatalogLayers(base, codeOverride, dbOverride);
-  const adminHeroImage = dbOverride?.heroImage?.trim();
+  const adminHeroImage = dbOverride?.heroImage?.trim() || node.image?.trim();
 
   if (adminHeroImage) {
     return { ...merged, heroImage: adminHeroImage };

@@ -24,6 +24,7 @@ interface HeaderBarProps {
   foundationName: string;
   foundationSubtitle: string;
   enabledLocales: SiteLocaleCode[];
+  locale: SiteLocaleCode;
   account: HeaderAccountSummary | null;
 }
 
@@ -34,6 +35,7 @@ export function HeaderBar({
   foundationName,
   foundationSubtitle: _foundationSubtitle,
   enabledLocales,
+  locale,
   account,
 }: HeaderBarProps) {
   const reduced = useReducedMotion();
@@ -71,11 +73,11 @@ export function HeaderBar({
             <Logo variant="on-dark" title={foundationName} compact />
           </motion.div>
 
-          <DesktopNav cultureMegaMenu={cultureMegaMenu} projectsMenu={projectsMenu} />
+          <DesktopNav cultureMegaMenu={cultureMegaMenu} projectsMenu={projectsMenu} locale={locale} />
         </div>
 
         <motion.div
-          className="ml-3 flex shrink-0 items-center gap-2 lg:ml-2"
+          className="relative z-20 ml-3 flex shrink-0 items-center gap-2 lg:ml-2"
           initial={reduced ? false : { opacity: 0, x: 18 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
@@ -90,6 +92,7 @@ export function HeaderBar({
             cultureMegaMenu={cultureMegaMenu}
             projectsMenu={projectsMenu}
             enabledLocales={enabledLocales}
+            locale={locale}
             account={account}
           />
         </motion.div>

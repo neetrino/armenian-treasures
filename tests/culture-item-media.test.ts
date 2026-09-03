@@ -56,6 +56,7 @@ describe('culture item media', () => {
 
     const media = readCultureItemMediaFromForm(formData);
     expect(media.tours).toHaveLength(2);
+    expect(media.tours[1]?.type).toBe('SCAN_3D');
     expect(media.gallery[0]).toMatchObject({
       kind: 'beforeAfter',
       beforeUrl: '/before.jpg',

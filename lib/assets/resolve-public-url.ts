@@ -25,6 +25,13 @@ function isR2OnlyCulturalPortalIconPath(path: string): boolean {
   return /^\/icons\/cultural-portal\/[^/]+\.(png|webp)$/i.test(path);
 }
 
+function culturalPortalRasterFallbackSvg(path: string): string {
+  if (path.includes('castles-v2.webp') || path.includes('castles-v2.png')) {
+    return '/icons/cultural-portal/armaments.svg';
+  }
+  return path.replace(/\.(webp|png)$/i, '.svg');
+}
+
 function resolveRasterPathFromR2(path: string): string {
   const envBase =
     process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim().replace(/\/$/, '') ||
@@ -62,7 +69,14 @@ export function resolvePublicAssetUrl(path: string): string {
     isRasterPublicPath(normalizedLegacySafe) ||
     isR2OnlyCulturalPortalIconPath(normalizedLegacySafe)
   ) {
-    return resolveRasterPathFromR2(normalizedLegacySafe);
+    const resolved = resolveRasterPathFromR2(normalizedLegacySafe);
+    if (
+      isR2OnlyCulturalPortalIconPath(normalizedLegacySafe) &&
+      (resolved === normalizedLegacySafe || !/^https?:\/\//i.test(resolved))
+    ) {
+      return culturalPortalRasterFallbackSvg(normalizedLegacySafe);
+    }
+    return resolved;
   }
 
   const base = getRasterPublicBaseUrl() ?? getR2ManifestPublicBaseUrl();

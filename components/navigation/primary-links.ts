@@ -35,6 +35,10 @@ export const PRIMARY_LINKS: PrimaryLink[] = [
     href: '/blog',
     label: 'Blog',
   },
+  {
+    href: '/highlights',
+    label: 'Highlights',
+  },
 ];
 
 export const PROJECTS_MENU: NavDropdownLink[] = [

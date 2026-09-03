@@ -7,6 +7,7 @@ import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { Button } from '@/components/ui/Button';
+import { AboutShortcutImagesFields } from '@/components/admin/AboutShortcutImagesFields';
 import { AboutPillarsEditor } from '@/components/admin/AboutPillarsEditor';
 import {
   saveAboutContentAction,
@@ -45,6 +46,10 @@ interface Initial {
   careerEyebrow: string;
   careerTitle: string;
   careerIntro: string;
+  missionShortcutImage?: string;
+  teamShortcutImage?: string;
+  careerShortcutImage?: string;
+  contactShortcutImage?: string;
 }
 
 interface Props {
@@ -265,6 +270,13 @@ export function AboutContentForm({ initial }: Props) {
           </div>
         )}
       </TranslatableFieldsTabs>
+
+      <AboutShortcutImagesFields
+        missionShortcutImage={initial.missionShortcutImage}
+        teamShortcutImage={initial.teamShortcutImage}
+        careerShortcutImage={initial.careerShortcutImage}
+        contactShortcutImage={initial.contactShortcutImage}
+      />
 
       <fieldset className="rounded-2xl border border-stone-100 bg-parchment-50 p-5">
         <legend className="px-2 font-display text-lg text-ink">Mission pillars</legend>

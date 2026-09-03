@@ -76,6 +76,10 @@ export async function saveAboutContentAction(
     careerEyebrow: pickDefaultLocaleText(careerEyebrowI18n),
     careerTitle: pickDefaultLocaleText(careerTitleI18n),
     careerIntro: pickDefaultLocaleText(careerIntroI18n),
+    missionShortcutImage: formData.get('missionShortcutImage')?.toString() ?? '',
+    teamShortcutImage: formData.get('teamShortcutImage')?.toString() ?? '',
+    careerShortcutImage: formData.get('careerShortcutImage')?.toString() ?? '',
+    contactShortcutImage: formData.get('contactShortcutImage')?.toString() ?? '',
   });
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
@@ -124,6 +128,10 @@ export async function saveAboutContentAction(
     careerTitle: encodeTranslatableText(careerTitleI18n),
     careerIntro: encodeTranslatableText(careerIntroI18n),
     heroImage: normalizeOptionalImage(parsed.data.heroImage),
+    missionShortcutImage: normalizeOptionalImage(parsed.data.missionShortcutImage),
+    teamShortcutImage: normalizeOptionalImage(parsed.data.teamShortcutImage),
+    careerShortcutImage: normalizeOptionalImage(parsed.data.careerShortcutImage),
+    contactShortcutImage: normalizeOptionalImage(parsed.data.contactShortcutImage),
   };
   await prisma.aboutContent.upsert({
     where: { id: SINGLETON_ID },

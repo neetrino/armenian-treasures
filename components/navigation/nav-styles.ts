@@ -18,9 +18,9 @@ export function isProjectsNavActive(pathname: string): boolean {
 }
 
 const NAV_ITEM_BASE =
-  'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent px-0 py-0 font-cinzel text-[9.5px] font-semibold uppercase leading-none tracking-[0.12em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none';
+  'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent px-0 py-0 font-cinzel text-[12px] font-semibold uppercase leading-none tracking-[0.14em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none';
 
-export function navItemClassName(active: boolean, open?: boolean): string {
+export function navItemClassName(active: boolean, open = false): string {
   const isHighlighted = active || open;
 
   return cn(
@@ -45,7 +45,7 @@ export const SIMPLE_DROPDOWN_ITEM =
   'block px-[22px] py-[9px] font-display text-[15px] leading-[1.25] text-[var(--dropdown-text)] no-underline transition-[color,padding-left] duration-150 ease-out hover:pl-7 hover:text-[var(--dropdown-text-hover)]';
 
 export const MEGA_MENU_HEADING =
-  'mb-2.5 border-b border-[var(--surface-border)] pb-2.5 font-cinzel text-[9px] font-bold uppercase tracking-[0.22em] text-[var(--dropdown-heading)]';
+  'mb-2.5 border-b border-[var(--surface-border)] pb-2.5 font-cinzel text-[11px] font-bold uppercase tracking-[0.2em] text-[var(--dropdown-heading)]';
 
 export const MEGA_MENU_HEADING_LINK = cn(
   MEGA_MENU_HEADING,

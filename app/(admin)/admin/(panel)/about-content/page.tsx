@@ -36,6 +36,10 @@ async function AdminAboutContentPage() {
     careerEyebrow: content?.careerEyebrow ?? fallback.careerEyebrow,
     careerTitle: content?.careerTitle ?? fallback.careerTitle,
     careerIntro: content?.careerIntro ?? fallback.careerIntro,
+    missionShortcutImage: content?.missionShortcutImage ?? '',
+    teamShortcutImage: content?.teamShortcutImage ?? '',
+    careerShortcutImage: content?.careerShortcutImage ?? '',
+    contactShortcutImage: content?.contactShortcutImage ?? '',
   };
   return (
     <AdminPageShell

@@ -43,6 +43,9 @@ export async function saveSiteSettingsAction(
     address: formData.get('address')?.toString() ?? '',
     copyrightText: formData.get('copyrightText')?.toString() ?? '',
     enabledLocales: enabledLocaleValues,
+    certificateGuardianUrl: formData.get('certificateGuardianUrl')?.toString() ?? '',
+    certificateAmbassadorUrl: formData.get('certificateAmbassadorUrl')?.toString() ?? '',
+    certificateMagistrUrl: formData.get('certificateMagistrUrl')?.toString() ?? '',
   });
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};

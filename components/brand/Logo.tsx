@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { LogoHomeLink } from '@/components/brand/LogoHomeLink';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { cn } from '@/lib/utils';
 
@@ -54,10 +54,9 @@ export function Logo({
   const isDark = variant === 'on-dark';
 
   return (
-    <Link
-      href="/"
+    <LogoHomeLink
       className={cn('group inline-flex min-w-0 items-center gap-3 text-left', className)}
-      aria-label={`${title} — home`}
+      ariaLabel={`${title} — home`}
     >
       <LogoMark isDark={isDark} compact={compact} />
       {!compact ? (
@@ -82,6 +81,6 @@ export function Logo({
           </span>
         </span>
       ) : null}
-    </Link>
+    </LogoHomeLink>
   );
 }

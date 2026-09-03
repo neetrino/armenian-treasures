@@ -31,6 +31,7 @@ function item(partial: Partial<PublicCultureItemDTO>): PublicCultureItemDTO {
     media: emptyMediaContent(),
     latitude: null,
     longitude: null,
+    mapUrl: null,
     mapType: 'MONASTERY',
     showOnMap: false,
     itemType: partial.itemType ?? 'MONUMENT',

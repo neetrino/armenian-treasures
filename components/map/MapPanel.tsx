@@ -37,9 +37,12 @@ interface MapPanelProps {
 const MAP_TYPE_ICONS: Record<string, LucideIcon> = {
   MONASTERY: Church,
   CHURCH: Church,
+  CHAPEL: Church,
   FORTRESS: Castle,
+  SETTLEMENT: Mountain,
   MUSEUM: Landmark,
-  ARCHAEOLOGICAL: Mountain,
+  MEMORIAL: Landmark,
+  KHACHKAR: Sparkles,
   OTHER: Sparkles,
 };
 

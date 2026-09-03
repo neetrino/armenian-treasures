@@ -21,8 +21,7 @@ export interface CultureItemFormInitial {
   tourUrl: string;
   videoUrl: string;
   mediaContent: unknown;
-  latitude: string;
-  longitude: string;
+  mapUrl: string;
   mapType: string;
   showOnMap: boolean;
   featuredOnHome: boolean;
@@ -56,8 +55,7 @@ export function toCultureItemFormInitial(
     galleryImages: item.galleryImages ?? [],
     tourUrl: item.tourUrl ?? '',
     videoUrl: item.videoUrl ?? '',
-    latitude: item.latitude !== null ? String(item.latitude) : '',
-    longitude: item.longitude !== null ? String(item.longitude) : '',
+    mapUrl: item.mapUrl ?? '',
     mapType: item.mapType ?? '',
     showOnMap: item.showOnMap,
     featuredOnHome: featured?.featuredOnHome ?? false,

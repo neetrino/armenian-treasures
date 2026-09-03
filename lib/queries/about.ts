@@ -52,6 +52,10 @@ export const FALLBACK_ABOUT_CONTENT: PublicAboutContentDTO = {
   careerTitle: 'Build the archive of a civilisation.',
   careerIntro:
     'We are hiring engineers, drone pilots and cultural researchers across Yerevan, the regions and remote. Send us your work — we read every application.',
+  missionShortcutImage: null,
+  teamShortcutImage: null,
+  careerShortcutImage: null,
+  contactShortcutImage: null,
 };
 
 async function fetchAboutContent(): Promise<PublicAboutContentDTO> {

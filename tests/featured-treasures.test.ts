@@ -40,6 +40,7 @@ function item(index: number): PublicCultureItemDetailDTO {
     media: emptyMediaContent(),
     latitude: null,
     longitude: null,
+    mapUrl: null,
     mapType: 'MONASTERY',
     showOnMap: false,
     itemType: 'MONUMENT',
@@ -100,6 +101,9 @@ describe('featured treasures mapping', () => {
       slug: `community-${index}`,
       content: `Update ${index} from the field.`,
       image: `/images/blog/${index}.jpg`,
+      headerImage: null,
+      backgroundImage: null,
+      gallery: [],
       publishedAt: '2026-08-18T00:00:00.000Z',
       order: index,
     }));
