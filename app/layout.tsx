@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter } from 'next/font/google';
+import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter, Noto_Serif_Armenian } from 'next/font/google';
 import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
@@ -31,6 +31,13 @@ const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-inter',
+  display: 'swap',
+});
+
+const notoSerifArmenian = Noto_Serif_Armenian({
+  subsets: ['armenian'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-serif-armenian',
   display: 'swap',
 });
 
@@ -71,7 +78,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
       lang={currentLocale.toLowerCase()}
       data-theme={DEFAULT_SITE_THEME}
       suppressHydrationWarning
-      className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable}`}
+      className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable} ${notoSerifArmenian.variable}`}
     >
       <body className="scrollbar-none min-h-screen antialiased">
         <ThemeInitScript />

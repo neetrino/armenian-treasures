@@ -10,12 +10,14 @@ import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import { isSectionEnabled } from '@/lib/landing/landing-section-utils';
 import { getPublicDonators } from '@/lib/queries/donators';
 import { getDonationPageContent } from '@/lib/queries/page-content';
+import { getSiteSettings } from '@/lib/queries/settings';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 
 export async function DonationPage() {
-  const [content, donators] = await Promise.all([
+  const [content, donators, settings] = await Promise.all([
     getDonationPageContent(),
     getPublicDonators(),
+    getSiteSettings(),
   ]);
   const visibility = content.sectionVisibility;
 
@@ -37,6 +39,11 @@ export async function DonationPage() {
             impactRanges={content.impactRanges}
             patronSliderTicks={content.patronSliderTicks}
             patronQuickChips={content.patronQuickChips}
+            certificateUrls={{
+              guardian: settings.certificateGuardianUrl,
+              ambassador: settings.certificateAmbassadorUrl,
+              magistr: settings.certificateMagistrUrl,
+            }}
           />
         ) : null}
         {isSectionEnabled(visibility, 'ledger') ? (

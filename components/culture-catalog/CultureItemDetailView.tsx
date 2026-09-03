@@ -1,6 +1,4 @@
-import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { MapPin, Play } from 'lucide-react';
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
 import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
@@ -21,21 +19,11 @@ function formatEnumLabel(value: string): string {
     .join(' ');
 }
 
-function DetailFact({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className="fact-card reveal">
-      <div className="fact-label">{label}</div>
-      <div className="fact-value">{value}</div>
-    </div>
-  );
-}
-
 export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
   const menu = item.menuItem;
   const parent = menu?.parent ?? null;
-  const hasCoords = item.latitude !== null && item.longitude !== null;
   const description = item.shortDescription ?? item.description ?? '';
-  const heroImage = item.coverImage?.trim() || item.image?.trim() || undefined;
+  const heroImage = item.coverImage?.trim() || undefined;
 
   const breadcrumb = parent && menu
     ? [
@@ -59,10 +47,6 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
       ? `/culture/${menu.slug}`
       : '/culture';
 
-  const heroDescription = hasTrimmedText(description)
-    ? description
-    : 'Curated entry from the Armenian cultural archive.';
-
   return (
     <CultureCatalogShell>
       <CultureCatalogLandingHero
@@ -78,7 +62,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
             ? `${item.region}${item.yearLabel ? ` · ${item.yearLabel}` : ''}`
             : 'Armenian cultural archive'
         }
-        description={heroDescription}
+        description={hasTrimmedText(description) ? description : 'Curated entry from the Armenian cultural archive.'}
         heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         ctas={[
@@ -90,56 +74,13 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
       {stats.length > 0 ? <CulturalPortalStatsBar stats={stats} /> : null}
       <LandingSectionStack>
         <section id="detail" className="catalog-detail-section">
-          <p className="sec-label">Entry Detail</p>
-          <h2 className="sec-title">{item.title}</h2>
-          <div className="about-aside catalog-detail-aside--facts">
-            <DetailFact label="Type" value={formatEnumLabel(item.itemType)} />
-            {item.region ? (
-              <DetailFact
-                label="Region"
-                value={
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin size={12} aria-hidden /> {item.region}
-                  </span>
-                }
-              />
-            ) : null}
-            {item.locationName ? <DetailFact label="Location" value={item.locationName} /> : null}
-            {item.periodLabel ? <DetailFact label="Period" value={item.periodLabel} /> : null}
-            {item.century !== null ? <DetailFact label="Century" value={String(item.century)} /> : null}
-            {item.yearLabel ? <DetailFact label="Year" value={item.yearLabel} /> : null}
-            {item.mapType ? <DetailFact label="Map category" value={formatEnumLabel(item.mapType)} /> : null}
-            {hasCoords ? (
-              <DetailFact
-                label="Coordinates"
-                value={`${item.latitude!.toFixed(4)}, ${item.longitude!.toFixed(4)}`}
-              />
-            ) : null}
-            {item.showOnMap && hasCoords ? (
-              <Link href="/map" className="btn-outline reveal" style={{ textAlign: 'center', marginTop: 2 }}>
-                View on heritage map
-              </Link>
-            ) : null}
-            {item.videoUrl ? (
-              <a href={item.videoUrl} className="btn-gold reveal" target="_blank" rel="noopener noreferrer">
-                <Play size={12} aria-hidden /> Watch video
-              </a>
-            ) : null}
-          </div>
-          <div className="catalog-detail-main">
-            <CultureItemMediaSections
-              title={item.title}
-              media={item.media}
-              locationName={item.locationName}
-              address={item.media.address}
-              latitude={item.latitude}
-              longitude={item.longitude}
-              image={item.image}
-              coverImage={item.coverImage}
-              cardBackgroundColor={item.cardBackgroundColor}
-              cardBackgroundImage={item.cardBackgroundImage}
-            />
-          </div>
+          <CultureItemMediaSections
+            title={item.title}
+            media={item.media}
+            locationName={item.locationName}
+            showOnMap={item.showOnMap}
+            mapUrl={item.mapUrl}
+          />
         </section>
         <div className="catalog-submit-cta reveal">
           <p>Explore more entries in this catalog.</p>

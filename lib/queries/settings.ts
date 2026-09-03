@@ -14,6 +14,9 @@ const FALLBACK: PublicSiteSettingsDTO = {
   copyrightText: '© 2026 Armenian Treasures. All rights reserved.',
   socialLinks: null,
   enabledLocales: [...DEFAULT_ENABLED_LOCALES],
+  certificateGuardianUrl: null,
+  certificateAmbassadorUrl: null,
+  certificateMagistrUrl: null,
 };
 
 async function fetchSiteSettings(): Promise<PublicSiteSettingsDTO> {

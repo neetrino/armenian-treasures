@@ -15,6 +15,7 @@ import {
 } from '@/components/navigation/nav-styles';
 import { useNavDropdown } from '@/components/navigation/useNavDropdown';
 import { navDropdownLinkKey, type NavDropdownLink } from '@/components/navigation/primary-links';
+import { cn } from '@/lib/utils';
 
 function DropdownNavLink({
   item,
@@ -111,7 +112,7 @@ export function SimpleDropdown({
       <button
         ref={triggerRef}
         type="button"
-        className={navItemClassName(active, open)}
+        className={cn(navItemClassName(active, open), 'gap-1')}
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls={panelId}

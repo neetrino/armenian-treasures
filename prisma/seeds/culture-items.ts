@@ -474,7 +474,7 @@ const ITEMS: SeedItem[] = [
     yearLabel: '17th–20th century',
     latitude: 39.486861,
     longitude: 46.422028,
-    mapType: 'ARCHAEOLOGICAL',
+    mapType: 'OTHER',
     showOnMap: true,
     itemType: 'MONUMENT',
     description:

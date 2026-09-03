@@ -7,11 +7,11 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import {
-  ABOUT_MENU,
   PRIMARY_LINKS,
   type NavDropdownLink,
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
+import { chromeLabel, primaryLinkLabel, translatedAboutMenu } from '@/lib/i18n/ui-chrome';
 import { signOutAccountAction } from '@/app/(public)/profile/actions';
 import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -32,6 +32,7 @@ interface MobileMenuProps {
   cultureMegaMenu: MegaMenuColumn[];
   projectsMenu: NavDropdownLink[];
   enabledLocales: SiteLocaleCode[];
+  locale: SiteLocaleCode;
   account: HeaderAccountSummary | null;
 }
 
@@ -47,7 +48,14 @@ function mobileLinkClass(pathname: string, href: string): string {
   return isNavActive(pathname, href) ? MOBILE_LINK_ACTIVE : MOBILE_LINK;
 }
 
-export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projectsMenu, enabledLocales, account }: MobileMenuProps) {
+export function MobileMenu({
+  tree: _tree,
+  cultureMegaMenu,
+  projectsMenu: _projectsMenu,
+  enabledLocales,
+  locale,
+  account,
+}: MobileMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -129,7 +137,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projec
 
               <nav className="flex flex-col gap-1" aria-label="Mobile primary">
                 <MobileAccordion
-                  label="Cultural Portal"
+                  label={chromeLabel(locale, 'culturalPortal')}
                   open={cultureOpen}
                   onToggle={() => setCultureOpen((v) => !v)}
                   onLabelClick={() => {
@@ -197,7 +205,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projec
                     isProjectsNavActive(pathname) && 'text-[var(--nav-text-active)]',
                   )}
                 >
-                  Upcoming Projects
+                  {chromeLabel(locale, 'upcomingProjects')}
                 </Link>
 
                 {PRIMARY_LINKS.map((link) => (
@@ -212,12 +220,12 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projec
                       isNavActive(pathname, link.href) && 'text-[var(--nav-text-active)]',
                     )}
                   >
-                    {link.label}
+                    {primaryLinkLabel(link.href, locale)}
                   </MobileSectionLink>
                 ))}
 
                 <MobileAccordion
-                  label="About Us"
+                  label={chromeLabel(locale, 'aboutUs')}
                   open={aboutOpen}
                   onToggle={() => setAboutOpen((v) => !v)}
                   onLabelClick={() => {
@@ -227,7 +235,7 @@ export function MobileMenu({ tree: _tree, cultureMegaMenu, projectsMenu: _projec
                   active={isAboutNavActive(pathname)}
                 >
                   <ul>
-                    {ABOUT_MENU.map((item) => (
+                    {translatedAboutMenu(locale).map((item) => (
                       <li key={item.href}>
                         <Link href={item.href} onClick={close} className={mobileLinkClass(pathname, item.href)}>
                           {item.label}

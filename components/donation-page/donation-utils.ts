@@ -9,14 +9,16 @@ export function formatAmd(value: number): string {
   return value >= 1000 ? value.toLocaleString('en-US') : String(value);
 }
 
-export function logFill(value: number): string {
-  const lo = Math.log(PATRON_MIN);
-  const hi = Math.log(PATRON_MAX);
-  return `${(((Math.log(value) - lo) / (hi - lo)) * 100).toFixed(1)}%`;
+export function linearFill(value: number): string {
+  const clamped = clampPatronAmount(value);
+  return `${(((clamped - PATRON_MIN) / (PATRON_MAX - PATRON_MIN)) * 100).toFixed(1)}%`;
 }
 
 export function getImpactText(value: number, impactRanges: DonationImpactRange[]): string {
-  const entry = impactRanges.find((range) => value >= range.min && value < range.max);
+  const entry = impactRanges.find((range, index) => {
+    const isLast = index === impactRanges.length - 1;
+    return isLast ? value >= range.min && value <= range.max : value >= range.min && value < range.max;
+  });
   return entry?.text ?? impactRanges[0]?.text ?? '';
 }
 

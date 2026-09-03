@@ -373,6 +373,21 @@
   }
 }
 
+html[lang='hy'] .font-cinzel,
+html[lang='hyw'] .font-cinzel,
+html[lang='hy'] [data-site-hero] h1,
+html[lang='hyw'] [data-site-hero] h1,
+html[lang='hy'] .sec-title,
+html[lang='hyw'] .sec-title {
+  font-family: var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+}
+
+html[lang='hy'] [data-site-header] nav[aria-label='Primary'] .font-cinzel,
+html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif;
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;

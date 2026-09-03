@@ -28,20 +28,20 @@ export const CULTURE_ITEM_EDITOR_SECTIONS: Record<
     id: 'description',
     number: 2,
     title: 'Description blocks',
-    description: 'Add as many title, subtitle, text, and image blocks as you need.',
+    description: 'Add as many title, subtitle, and text blocks as you need.',
     unlimited: true,
   },
   map: {
     id: 'map',
     number: 3,
     title: 'Map',
-    description: 'Location name, address, and a draggable pin.',
+    description: 'Location name, address, and a public map link.',
   },
   tours: {
     id: 'tours',
     number: 4,
     title: 'Virtual Tour',
-    description: 'Unlimited LiDAR, Matterport, or other 3D tour embeds.',
+    description: 'Unlimited LiDAR, 3D scanning, or drone photogrammetry links.',
     unlimited: true,
   },
   videos: {
@@ -55,7 +55,7 @@ export const CULTURE_ITEM_EDITOR_SECTIONS: Record<
     id: 'gallery',
     number: 6,
     title: 'Gallery',
-    description: 'Images or Before/After pairs, each with caption and alt text.',
+    description: 'Images or Before/After pairs, each with an optional caption.',
     unlimited: true,
   },
 };

@@ -107,12 +107,6 @@ function GalleryBlockCard({
         value={item.caption}
         onChange={(event) => onPatch({ caption: event.target.value })}
       />
-      <TextField
-        label="Alt text"
-        name={`${prefix}.alt`}
-        value={item.alt}
-        onChange={(event) => onPatch({ alt: event.target.value })}
-      />
     </RepeatableFieldCard>
   );
 }

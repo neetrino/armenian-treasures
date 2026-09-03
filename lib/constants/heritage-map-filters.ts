@@ -5,13 +5,12 @@ export type HeritageMapFilterValue =
   | 'RELIGIOUS'
   | 'MONUMENTS'
   | 'MUSEUMS'
-  | 'ARCHAEOLOGICAL'
+  | 'SETTLEMENTS'
   | 'OTHER';
 
 export interface HeritageMapFilterOption {
   value: HeritageMapFilterValue;
   label: string;
-  /** Matches `MapType` values on culture items; null means no filter. */
   mapTypes: PublicCultureItemDTO['mapType'][] | null;
 }
 
@@ -20,12 +19,12 @@ export const HERITAGE_MAP_FILTER_OPTIONS: HeritageMapFilterOption[] = [
   {
     value: 'RELIGIOUS',
     label: 'Religious Sites',
-    mapTypes: ['MONASTERY', 'CHURCH'],
+    mapTypes: ['MONASTERY', 'CHURCH', 'CHAPEL'],
   },
   {
     value: 'MONUMENTS',
     label: 'Historical Monuments',
-    mapTypes: ['FORTRESS', 'OTHER'],
+    mapTypes: ['FORTRESS', 'MEMORIAL', 'KHACHKAR'],
   },
   {
     value: 'MUSEUMS',
@@ -33,9 +32,9 @@ export const HERITAGE_MAP_FILTER_OPTIONS: HeritageMapFilterOption[] = [
     mapTypes: ['MUSEUM'],
   },
   {
-    value: 'ARCHAEOLOGICAL',
-    label: 'Archaeological Sites',
-    mapTypes: ['ARCHAEOLOGICAL'],
+    value: 'SETTLEMENTS',
+    label: 'Historical Settlements',
+    mapTypes: ['SETTLEMENT'],
   },
   {
     value: 'OTHER',
@@ -76,12 +75,11 @@ export function filterMapItemsBySearch(
   });
 }
 
-/** Aligns marketing legend colours with filter chips on the map page. */
 export const HERITAGE_MAP_FILTER_COLORS: Record<HeritageMapFilterValue, string> = {
   ALL: '#D6B85A',
   RELIGIOUS: '#27C6C8',
   MONUMENTS: '#D6B85A',
   MUSEUMS: '#9B7BD4',
-  ARCHAEOLOGICAL: '#6BB578',
+  SETTLEMENTS: '#6BB578',
   OTHER: '#D6855A',
 };

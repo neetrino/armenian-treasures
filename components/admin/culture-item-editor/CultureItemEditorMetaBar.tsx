@@ -21,6 +21,8 @@ interface CultureItemEditorMetaBarProps {
   featuredOrderError?: string;
   fieldErrors?: Record<string, string>;
   tabErrors?: Partial<Record<SiteLocaleCode, boolean>>;
+  activeLocale?: SiteLocaleCode;
+  onLocaleChange?: (locale: SiteLocaleCode) => void;
 }
 
 const FEATURED_ORDER_OPTIONS = [
@@ -58,8 +60,12 @@ export function CultureItemEditorMetaBar({
   featuredOrderError,
   fieldErrors,
   tabErrors,
+  activeLocale: controlledLocale,
+  onLocaleChange,
 }: CultureItemEditorMetaBarProps) {
-  const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
+  const [internalLocale, setInternalLocale] = useState<SiteLocaleCode>('EN');
+  const activeLocale = controlledLocale ?? internalLocale;
+  const setActiveLocale = onLocaleChange ?? setInternalLocale;
   const [highlightOn, setHighlightOn] = useState(featuredOnHome);
   const [titleValues, setTitleValues] = useState<LocaleTextMap>(() => decodeTranslatableText(title));
   const [shortDescriptionValues, setShortDescriptionValues] = useState<LocaleTextMap>(() =>

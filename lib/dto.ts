@@ -15,7 +15,9 @@ import {
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
-import { hydrateCultureItemMedia, type CultureItemMediaContent } from '@/lib/culture-item-media';
+import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
+import { hydrateCultureItemMedia, parseCultureItemMedia, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
+import { mediaForLocale, parseMediaByLocale } from '@/lib/culture-item-media-locale';
 import type {
   Career,
   BlogPost,
@@ -67,6 +69,7 @@ export interface PublicCultureItemDTO {
   media: CultureItemMediaContent;
   latitude: number | null;
   longitude: number | null;
+  mapUrl: string | null;
   mapType: CultureItem['mapType'];
   showOnMap: boolean;
   itemType: CultureItem['itemType'];
@@ -124,6 +127,9 @@ export interface PublicBlogPostDTO {
   slug: string;
   content: string;
   image: string | null;
+  headerImage: string | null;
+  backgroundImage: string | null;
+  gallery: CultureGalleryBlock[];
   publishedAt: string;
   order: number;
 }
@@ -197,15 +203,20 @@ export function toPublicCultureItem(
     galleryImages: row.galleryImages ?? [],
     tourUrl: row.tourUrl,
     videoUrl: row.videoUrl,
-    media: hydrateCultureItemMedia({
-      mediaContent: row.mediaContent,
-      description: resolveLocalizedText(row.description, locale) || row.description,
-      tourUrl: row.tourUrl,
-      videoUrl: row.videoUrl,
-      galleryImages: row.galleryImages,
-    }),
+    media: mediaForLocale(
+      hydrateCultureItemMedia({
+        mediaContent: row.mediaContent,
+        description: resolveLocalizedText(row.description, locale) || row.description,
+        tourUrl: row.tourUrl,
+        videoUrl: row.videoUrl,
+        galleryImages: row.galleryImages,
+      }),
+      parseMediaByLocale(row.mediaContent),
+      locale,
+    ),
     latitude: row.latitude,
     longitude: row.longitude,
+    mapUrl: resolveStoredMapUrl(row.mapUrl, row.latitude, row.longitude),
     mapType: row.mapType,
     showOnMap: row.showOnMap,
     itemType: row.itemType,
@@ -298,6 +309,9 @@ export function toPublicBlogPost(
     slug: row.slug,
     content: resolveLocalizedText(row.content, locale),
     image: row.image,
+    headerImage: row.headerImage,
+    backgroundImage: row.backgroundImage,
+    gallery: parseCultureItemMedia({ gallery: row.galleryContent }).gallery,
     publishedAt: row.publishedAt.toISOString(),
     order: row.order,
   };

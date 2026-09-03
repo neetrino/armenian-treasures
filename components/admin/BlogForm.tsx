@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { CultureItemFeaturedFields } from '@/components/admin/CultureItemFeaturedFields';
 import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
@@ -18,6 +18,8 @@ import {
   decodeTranslatableText,
   type LocaleTextMap,
 } from '@/lib/i18n/translatable-content';
+import { CultureItemGalleryBlocksField } from '@/components/admin/culture-item-editor/CultureItemGalleryBlocksField';
+import { parseCultureItemMedia } from '@/lib/culture-item-media';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: BlogFormState = { status: 'idle' };
@@ -26,6 +28,9 @@ interface Initial {
   title: string;
   content: string;
   image: string;
+  headerImage?: string;
+  backgroundImage?: string;
+  galleryContent?: unknown;
   publishedAt: string;
   isPublished: boolean;
   featuredOnHome?: boolean;
@@ -59,6 +64,9 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
   const contentValues = decodeTranslatableText(initial?.content ?? '');
   const tabErrors = buildTabErrorMap(state.fieldErrors);
   const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
+  const [gallery, setGallery] = useState(
+    () => parseCultureItemMedia({ gallery: initial?.galleryContent }).gallery,
+  );
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -100,8 +108,32 @@ export function BlogForm({ mode, itemId, initial, onSuccess, onCancel }: BlogFor
             folder="culture"
             layout="banner"
             defaultValue={initial?.image ?? ''}
-            hint="Use a wide landscape photo (16:9 or wider). The same image is used on the blog card and the full-width article hero."
+            hint="Cover visual on blog cards and listings."
           />
+        </div>
+        <div className="sm:col-span-2">
+          <AdminImageDropzoneField
+            label="Article header"
+            name="headerImage"
+            folder="culture"
+            layout="banner"
+            defaultValue={initial?.headerImage ?? ''}
+            hint="Full-width hero on the article page. Falls back to the cover if empty."
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <AdminImageDropzoneField
+            label="Article background"
+            name="backgroundImage"
+            folder="culture"
+            layout="banner"
+            defaultValue={initial?.backgroundImage ?? ''}
+            hint="Optional page background behind the article body."
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <p className="mb-2 text-sm font-medium text-ink">Gallery</p>
+          <CultureItemGalleryBlocksField items={gallery} onChange={setGallery} />
         </div>
         <label className="flex items-center gap-2 pt-1 text-sm text-ink-soft sm:col-span-2">
           <input

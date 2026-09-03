@@ -19,11 +19,9 @@ interface CultureItemFormSectionContentProps {
   initial?: CultureItemFormInitial;
   fieldErrors?: Record<string, string>;
   media: CultureItemMediaContent;
-  latitude: string;
-  longitude: string;
+  mapUrl: string;
   onMediaChange: (patch: Partial<CultureItemMediaContent>) => void;
-  onLatitudeChange: (value: string) => void;
-  onLongitudeChange: (value: string) => void;
+  onMapUrlChange: (value: string) => void;
 }
 
 export function CultureItemFormSectionContent({
@@ -31,11 +29,9 @@ export function CultureItemFormSectionContent({
   initial,
   fieldErrors,
   media,
-  latitude,
-  longitude,
+  mapUrl,
   onMediaChange,
-  onLatitudeChange,
-  onLongitudeChange,
+  onMapUrlChange,
 }: CultureItemFormSectionContentProps): ReactNode {
   switch (sectionId) {
     case 'card-image':
@@ -81,13 +77,11 @@ export function CultureItemFormSectionContent({
         <AdminLocationMapField
           locationName={initial?.locationName}
           address={media.address}
-          latitude={latitude}
-          longitude={longitude}
+          mapUrl={mapUrl}
           mapType={initial?.mapType}
           showOnMap={initial?.showOnMap}
           fieldErrors={fieldErrors}
-          onLatitudeChange={onLatitudeChange}
-          onLongitudeChange={onLongitudeChange}
+          onMapUrlChange={onMapUrlChange}
         />
       );
     case 'tours':

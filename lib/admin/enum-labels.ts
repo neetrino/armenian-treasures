@@ -1,3 +1,5 @@
+import { labelMapTypeLocalized } from '@/lib/admin/map-type-labels';
+
 const ITEM_TYPE_LABELS: Record<string, string> = {
   MONUMENT: 'Monument',
   MUSEUM: 'Museum',
@@ -13,15 +15,6 @@ const ITEM_TYPE_LABELS: Record<string, string> = {
   OTHER: 'Other',
 };
 
-const MAP_TYPE_LABELS: Record<string, string> = {
-  MONASTERY: 'Monastery',
-  FORTRESS: 'Fortress',
-  MUSEUM: 'Museum',
-  CHURCH: 'Church',
-  ARCHAEOLOGICAL: 'Archaeological site',
-  OTHER: 'Other',
-};
-
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: 'Draft — hidden from public',
   PUBLISHED: 'Published — visible on site',
@@ -33,7 +26,7 @@ export function labelItemType(value: string): string {
 }
 
 export function labelMapType(value: string): string {
-  return MAP_TYPE_LABELS[value] ?? value;
+  return labelMapTypeLocalized(value, 'EN');
 }
 
 export function labelPublishStatus(value: string): string {
@@ -45,10 +38,7 @@ export const CULTURE_ITEM_TYPE_OPTIONS = Object.entries(ITEM_TYPE_LABELS).map(([
   label,
 }));
 
-export const CULTURE_MAP_TYPE_OPTIONS = Object.entries(MAP_TYPE_LABELS).map(([value, label]) => ({
-  value,
-  label,
-}));
+export { CULTURE_MAP_TYPE_OPTIONS } from '@/lib/admin/map-type-labels';
 
 export const CULTURE_STATUS_OPTIONS = Object.entries(STATUS_LABELS).map(([value, label]) => ({
   value,

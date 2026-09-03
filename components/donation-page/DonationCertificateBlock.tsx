@@ -1,17 +1,25 @@
 'use client';
 
+import Image from 'next/image';
 import { DONATION_PAGE, type DonationTierId } from '@/lib/constants/donation-page';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 type Certificates = (typeof DONATION_PAGE)['certificates'];
 
 interface DonationCertificateBlockProps {
   certificates: Certificates;
   selectedTierId: DonationTierId | null;
+  templateUrls?: {
+    guardian: string | null;
+    ambassador: string | null;
+    magistr: string | null;
+  };
 }
 
 export function DonationCertificateBlock({
   certificates,
   selectedTierId,
+  templateUrls,
 }: DonationCertificateBlockProps) {
   return (
     <div className="donation-certificates reveal" id="certificates">
@@ -24,25 +32,38 @@ export function DonationCertificateBlock({
       <p className="sec-desc">{certificates.description}</p>
 
       <div className="donation-certificate-slots">
-        {certificates.slots.map((slot) => (
-          <div
-            key={slot.id}
-            className={[
-              'donation-certificate-slot',
-              selectedTierId ===
-              (slot.id === 'guardian' ? '1000' : slot.id === 'ambassador' ? '5000' : '10000')
-                ? 'is-active'
-                : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <div className="donation-certificate-slot__preview" aria-hidden>
-              <span>{slot.label}</span>
+        {certificates.slots.map((slot) => {
+          const previewUrl = templateUrls?.[slot.id] ?? null;
+          return (
+            <div
+              key={slot.id}
+              className={[
+                'donation-certificate-slot',
+                selectedTierId ===
+                (slot.id === 'guardian' ? '1000' : slot.id === 'ambassador' ? '5000' : '10000')
+                  ? 'is-active'
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
+              <div className="donation-certificate-slot__preview" aria-hidden>
+                {previewUrl ? (
+                  <Image
+                    src={resolvePublicAssetUrl(previewUrl)}
+                    alt=""
+                    width={480}
+                    height={320}
+                    className="donation-certificate-slot__image"
+                  />
+                ) : (
+                  <span>{slot.label}</span>
+                )}
+              </div>
+              <p className="donation-certificate-slot__label">{slot.label}</p>
             </div>
-            <p className="donation-certificate-slot__label">{slot.label}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <form

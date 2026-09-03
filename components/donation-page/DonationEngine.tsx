@@ -19,12 +19,19 @@ import {
   getTierAmountAmd,
 } from '@/components/donation-page/donation-utils';
 
+type CertificateTemplateUrls = {
+  guardian: string | null;
+  ambassador: string | null;
+  magistr: string | null;
+};
+
 type DonationEngineProps = {
   engine: DonationPageContent['page']['engine'];
   tiers: DonationTier[];
   impactRanges: DonationImpactRange[];
   patronSliderTicks: readonly number[];
   patronQuickChips: readonly number[];
+  certificateUrls?: CertificateTemplateUrls;
 };
 
 export function DonationEngine({
@@ -33,6 +40,7 @@ export function DonationEngine({
   impactRanges,
   patronSliderTicks,
   patronQuickChips,
+  certificateUrls,
 }: DonationEngineProps) {
   const patronCardRef = useRef<HTMLDivElement>(null);
   const customInputRef = useRef<HTMLInputElement>(null);
@@ -117,6 +125,7 @@ export function DonationEngine({
       <DonationCertificateBlock
         certificates={certificates}
         selectedTierId={selectedId}
+        templateUrls={certificateUrls}
       />
     </section>
   );

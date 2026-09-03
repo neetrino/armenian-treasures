@@ -16,6 +16,13 @@ import {
   type CultureItemFormState,
 } from '@/app/(admin)/admin/(panel)/culture-items/actions';
 import { hydrateCultureItemMedia, type CultureItemMediaContent } from '@/lib/culture-item-media';
+import {
+  emptyTextLocaleMedia,
+  parseMediaByLocale,
+  sliceLocaleMedia,
+  type CultureItemLocaleMedia,
+} from '@/lib/culture-item-media-locale';
+import { type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { buildTabErrorMap } from '@/lib/i18n/translatable-content';
 import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
@@ -76,8 +83,9 @@ export function CultureItemForm({
       galleryImages: initial?.galleryImages,
     }),
   );
-  const [latitude, setLatitude] = useState(initial?.latitude ?? '');
-  const [longitude, setLongitude] = useState(initial?.longitude ?? '');
+  const [mapUrl, setMapUrl] = useState(initial?.mapUrl ?? '');
+  const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
+  const [mediaByLocale, setMediaByLocale] = useState(() => parseMediaByLocale(initial?.mediaContent));
   const [isSaved, setIsSaved] = useState(mode === 'edit');
   const [sectionOrder, setSectionOrder] = useState<CultureItemEditorSectionId[]>(() =>
     resolveCultureItemSectionOrder(
@@ -119,7 +127,26 @@ export function CultureItemForm({
   );
 
   function patchMedia(patch: Partial<CultureItemMediaContent>): void {
-    setMedia((current) => ({ ...current, ...patch }));
+    setMedia((current) => {
+      const next = { ...current, ...patch };
+      setMediaByLocale((map) => ({ ...map, [activeLocale]: sliceLocaleMedia(next) }));
+      return next;
+    });
+    setIsSaved(false);
+  }
+
+  function handleLocaleChange(nextLocale: SiteLocaleCode): void {
+    setMediaByLocale((map) => {
+      const saved: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>> = {
+        ...map,
+        [activeLocale]: sliceLocaleMedia(media),
+      };
+      const nextSlice = saved[nextLocale] ?? emptyTextLocaleMedia(saved.EN ?? sliceLocaleMedia(media));
+      saved[nextLocale] = nextSlice;
+      setMedia((current) => ({ ...current, ...nextSlice }));
+      return saved;
+    });
+    setActiveLocale(nextLocale);
     setIsSaved(false);
   }
 
@@ -136,15 +163,10 @@ export function CultureItemForm({
         initial={initial}
         fieldErrors={state.fieldErrors}
         media={media}
-        latitude={latitude}
-        longitude={longitude}
+        mapUrl={mapUrl}
         onMediaChange={patchMedia}
-        onLatitudeChange={(value) => {
-          setLatitude(value);
-          setIsSaved(false);
-        }}
-        onLongitudeChange={(value) => {
-          setLongitude(value);
+        onMapUrlChange={(value) => {
+          setMapUrl(value);
           setIsSaved(false);
         }}
       />
@@ -153,6 +175,8 @@ export function CultureItemForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
+      <input type="hidden" name="editorLocale" value={activeLocale} />
+      <input type="hidden" name="mediaByLocaleJson" value={JSON.stringify(mediaByLocale)} />
       <CultureItemEditorToolbar
         heading={formHeading}
         isPending={isPending}
@@ -173,6 +197,8 @@ export function CultureItemForm({
         featuredOrderError={state.fieldErrors?.featuredOrder}
         fieldErrors={state.fieldErrors}
         tabErrors={tabErrors}
+        activeLocale={activeLocale}
+        onLocaleChange={handleLocaleChange}
       />
 
       <CultureItemMenuField

@@ -8,9 +8,8 @@ export const DEFAULT_MAP_COORDINATES = { latitude: 40.1792, longitude: 44.4991 }
 
 export const TOUR_TYPE_OPTIONS = [
   { value: 'LIDAR', label: 'LiDAR Scanning' },
-  { value: 'MATTERPORT', label: 'Matterport' },
-  { value: 'MODEL_3D', label: '3D Model' },
-  { value: 'OTHER', label: 'Other' },
+  { value: 'SCAN_3D', label: '3D Scanning' },
+  { value: 'DRONE', label: 'Drone Photogrammetry' },
 ] as const;
 
 export type CultureTourType = (typeof TOUR_TYPE_OPTIONS)[number]['value'];
@@ -57,6 +56,7 @@ export interface CultureItemMediaContent {
   videos: CultureVideoBlock[];
   gallery: CultureGalleryBlock[];
   sectionOrder?: CultureItemEditorSectionId[];
+  byLocale?: Partial<Record<string, unknown>>;
 }
 
 function asString(value: unknown): string {
@@ -64,9 +64,9 @@ function asString(value: unknown): string {
 }
 
 function asTourType(value: unknown): CultureTourType {
-  return TOUR_TYPE_OPTIONS.some((option) => option.value === value)
-    ? (value as CultureTourType)
-    : 'LIDAR';
+  if (value === 'SCAN_3D' || value === 'MODEL_3D' || value === 'MATTERPORT') return 'SCAN_3D';
+  if (value === 'DRONE') return 'DRONE';
+  return 'LIDAR';
 }
 
 function createId(): string {
@@ -150,6 +150,10 @@ function parseSectionOrder(raw: unknown): CultureItemEditorSectionId[] | undefin
 export function parseCultureItemMedia(raw: unknown): CultureItemMediaContent {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return emptyMediaContent();
   const row = raw as Record<string, unknown>;
+  const byLocale =
+    row.byLocale && typeof row.byLocale === 'object' && !Array.isArray(row.byLocale)
+      ? (row.byLocale as Partial<Record<string, unknown>>)
+      : undefined;
   return {
     v: CULTURE_ITEM_MEDIA_VERSION,
     address: asString(row.address),
@@ -158,6 +162,7 @@ export function parseCultureItemMedia(raw: unknown): CultureItemMediaContent {
     videos: Array.isArray(row.videos) ? row.videos.map(parseVideo) : [],
     gallery: Array.isArray(row.gallery) ? row.gallery.map(parseGallery) : [],
     sectionOrder: parseSectionOrder(row.sectionOrder),
+    byLocale,
   };
 }
 

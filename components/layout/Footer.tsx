@@ -2,15 +2,20 @@ import '@/components/layout/footer/footer-section.css';
 import { Container } from './Container';
 import { FooterBrand } from '@/components/layout/footer/FooterBrand';
 import { FooterBottomBar } from '@/components/layout/footer/FooterBottomBar';
-import { FOOTER_LINKS_ABOUT } from '@/components/layout/footer/footer-links';
 import { FooterNavColumn } from '@/components/layout/footer/FooterNavColumn';
 import { FooterContactsColumn } from '@/components/layout/footer/FooterContactsColumn';
 import { buildFooterCultureLinks } from '@/lib/navigation/build-footer-links';
 import { getMenuTree } from '@/lib/queries/menu';
 import { getSiteSettings } from '@/lib/queries/settings';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { chromeLabel, translatedFooterAboutLinks } from '@/lib/i18n/ui-chrome';
 
 export async function Footer() {
-  const [settings, menuTree] = await Promise.all([getSiteSettings(), getMenuTree()]);
+  const [settings, menuTree, locale] = await Promise.all([
+    getSiteSettings(),
+    getMenuTree(),
+    getCurrentSiteLocale(),
+  ]);
   const culturalPortalLinks = buildFooterCultureLinks(menuTree);
 
   return (
@@ -19,12 +24,16 @@ export async function Footer() {
         <div className="site-footer__grid">
           <FooterBrand settings={settings} />
           <FooterNavColumn
-            title="Cultural Portal"
+            title={chromeLabel(locale, 'culturalPortal')}
             links={culturalPortalLinks}
             linkVariant="category"
           />
-          <FooterNavColumn title="About" links={FOOTER_LINKS_ABOUT} linkVariant="category" />
-          <FooterContactsColumn settings={settings} />
+          <FooterNavColumn
+            title={chromeLabel(locale, 'about')}
+            links={translatedFooterAboutLinks(locale)}
+            linkVariant="category"
+          />
+          <FooterContactsColumn settings={settings} title={chromeLabel(locale, 'contact')} />
         </div>
 
         <FooterBottomBar settings={settings} />

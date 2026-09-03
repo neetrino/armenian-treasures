@@ -6,9 +6,10 @@ import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { getAboutContent } from '@/lib/queries/about';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 async function AboutLayout({ children }: { children: ReactNode }) {
-  const content = await getAboutContent();
+  const [content, locale] = await Promise.all([getAboutContent(), getCurrentSiteLocale()]);
 
   return (
     <HeritageLandingShell>
@@ -29,7 +30,15 @@ async function AboutLayout({ children }: { children: ReactNode }) {
         className="relative z-[1] mx-auto w-full max-w-[1200px] px-5 py-8 sm:px-8 lg:px-10"
       >
         <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center">
-          <AboutSidebarNav />
+        <AboutSidebarNav
+          locale={locale}
+          shortcutImages={{
+            mission: content.missionShortcutImage,
+            team: content.teamShortcutImage,
+            career: content.careerShortcutImage,
+            contact: content.contactShortcutImage,
+          }}
+        />
           <div className="mx-auto mt-8 w-full max-w-[1000px]">{children}</div>
         </div>
       </section>

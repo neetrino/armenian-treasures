@@ -36,10 +36,13 @@ export const cultureItemTypeEnum = z.enum([
 ]);
 export const mapTypeEnum = z.enum([
   'MONASTERY',
-  'FORTRESS',
-  'MUSEUM',
   'CHURCH',
-  'ARCHAEOLOGICAL',
+  'CHAPEL',
+  'FORTRESS',
+  'SETTLEMENT',
+  'MUSEUM',
+  'MEMORIAL',
+  'KHACHKAR',
   'OTHER',
 ]);
 export const menuRouteTypeEnum = z.enum([
@@ -116,6 +119,7 @@ export const cultureItemSchema = z.object({
   videoUrl: optionalUrl,
   latitude: z.number().min(-90).max(90).optional().nullable(),
   longitude: z.number().min(-180).max(180).optional().nullable(),
+  mapUrl: z.string().trim().max(2000).optional().or(z.literal('')),
   mapType: mapTypeEnum.optional().nullable(),
   showOnMap: z.boolean().default(false),
   featuredOnHome: z.boolean().default(false),
@@ -165,7 +169,9 @@ export const blogPostSchema = z.object({
   title: z.string().trim().min(2).max(160),
   slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9-]+$/),
   content: z.string().trim().min(10).max(20000),
-  image: optionalShortString,
+  image: optionalString,
+  headerImage: optionalString,
+  backgroundImage: optionalString,
   publishedAt: z.coerce.date(),
   order: z.number().int().min(0).default(0),
   isPublished: z.boolean().default(true),
@@ -200,9 +206,12 @@ export const siteSettingsSchema = z.object({
     .max(10)
     .default([]),
   enabledLocales: z
-    .array(z.enum(['HY', 'RU', 'EN', 'FR', 'PT']))
+    .array(z.enum(['HY', 'HYW', 'RU', 'EN', 'FR', 'PT']))
     .min(1)
     .default(['EN']),
+  certificateGuardianUrl: optionalString,
+  certificateAmbassadorUrl: optionalString,
+  certificateMagistrUrl: optionalString,
 });
 
 export const homeStatSchema = z.object({
@@ -275,6 +284,10 @@ export const aboutContentSchema = z.object({
   careerEyebrow: z.string().trim().min(1).max(80),
   careerTitle: z.string().trim().min(1).max(200),
   careerIntro: z.string().trim().min(10).max(2000),
+  missionShortcutImage: optionalString,
+  teamShortcutImage: optionalString,
+  careerShortcutImage: optionalString,
+  contactShortcutImage: optionalString,
 });
 
 export type CultureMenuItemInput = z.infer<typeof cultureMenuItemSchema>;

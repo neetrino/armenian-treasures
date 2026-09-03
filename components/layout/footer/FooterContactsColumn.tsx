@@ -2,16 +2,17 @@ import type { PublicSiteSettingsDTO } from '@/lib/dto';
 
 interface FooterContactsColumnProps {
   settings: PublicSiteSettingsDTO;
+  title?: string;
 }
 
 function toTelHref(phone: string): string {
   return `tel:${phone.replace(/\s+/g, '')}`;
 }
 
-export function FooterContactsColumn({ settings }: FooterContactsColumnProps) {
+export function FooterContactsColumn({ settings, title = 'Contact' }: FooterContactsColumnProps) {
   return (
-    <section aria-label="Contact" className="min-w-0">
-      <p className="site-footer__column-title">Contact</p>
+    <section aria-label={title} className="min-w-0">
+      <p className="site-footer__column-title">{title}</p>
 
       <ul className="mt-5 flex flex-col gap-2.5">
         <li>

@@ -1,48 +1,30 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
-import { ClientMounted } from '@/components/admin/ClientMounted';
 import { CULTURE_MAP_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
-
-const AdminPinMap = dynamic(
-  () => import('./AdminPinMap').then((module) => ({ default: module.AdminPinMap })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-72 items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-sm text-ink-muted">
-        Loading map…
-      </div>
-    ),
-  },
-);
+import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
 
 interface AdminLocationMapFieldProps {
   locationName?: string;
   address?: string;
-  latitude: string;
-  longitude: string;
+  mapUrl?: string;
   mapType?: string;
   showOnMap?: boolean;
   fieldErrors?: Record<string, string>;
-  onLatitudeChange: (value: string) => void;
-  onLongitudeChange: (value: string) => void;
+  onMapUrlChange: (value: string) => void;
 }
 
 export function AdminLocationMapField({
   locationName,
   address,
-  latitude,
-  longitude,
+  mapUrl = '',
   mapType,
   showOnMap,
   fieldErrors,
-  onLatitudeChange,
-  onLongitudeChange,
+  onMapUrlChange,
 }: AdminLocationMapFieldProps) {
-  const lat = latitude.trim() ? Number(latitude) : null;
-  const lng = longitude.trim() ? Number(longitude) : null;
+  const parsed = parseMapCoordinatesFromUrl(mapUrl);
 
   return (
     <div className="flex flex-col gap-5">
@@ -54,26 +36,18 @@ export function AdminLocationMapField({
           error={fieldErrors?.locationName}
         />
         <TextField label="Address" name="address" defaultValue={address ?? ''} />
-        <TextField
-          label="Latitude"
-          name="latitude"
-          type="number"
-          step="any"
-          value={latitude}
-          onChange={(event) => onLatitudeChange(event.target.value)}
-          error={fieldErrors?.latitude}
-        />
-        <TextField
-          label="Longitude"
-          name="longitude"
-          type="number"
-          step="any"
-          value={longitude}
-          onChange={(event) => onLongitudeChange(event.target.value)}
-          error={fieldErrors?.longitude}
-        />
+        <div className="sm:col-span-2">
+          <TextField
+            label="Map link"
+            name="mapUrl"
+            value={mapUrl}
+            onChange={(event) => onMapUrlChange(event.target.value)}
+            hint="Paste a Google Maps, OpenStreetMap, or geo: link. Coordinates for the heritage map are read from the URL."
+            error={fieldErrors?.mapUrl}
+          />
+        </div>
         <SelectField
-          label="Map pin style"
+          label="Map pin type"
           name="mapType"
           options={[{ value: '', label: '— None —' }, ...CULTURE_MAP_TYPE_OPTIONS]}
           defaultValue={mapType ?? ''}
@@ -86,29 +60,21 @@ export function AdminLocationMapField({
             defaultChecked={showOnMap ?? false}
             className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
           />
-          Show on public map
+          Show on public page and heritage map
         </label>
       </div>
-      <ClientMounted
-        fallback={
-          <div className="flex h-72 min-h-[18rem] items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-sm text-ink-muted">
-            Loading map…
-          </div>
-        }
-      >
-        <AdminPinMap
-          latitude={Number.isFinite(lat) ? lat : null}
-          longitude={Number.isFinite(lng) ? lng : null}
-          onChange={(nextLat, nextLng) => {
-            onLatitudeChange(nextLat.toFixed(6));
-            onLongitudeChange(nextLng.toFixed(6));
-          }}
-        />
-      </ClientMounted>
-      <p className="text-xs text-ink-muted">
-        Latitude / longitude fill automatically from the pin (default: Yerevan). Drag the pin or
-        click the map to move it, then Save. Publish is required for the public /map page.
-      </p>
+      <input type="hidden" name="latitude" value={parsed ? String(parsed.latitude) : ''} />
+      <input type="hidden" name="longitude" value={parsed ? String(parsed.longitude) : ''} />
+      {parsed ? (
+        <p className="text-xs text-ink-muted">
+          Pin coordinates: {parsed.latitude.toFixed(5)}, {parsed.longitude.toFixed(5)}
+        </p>
+      ) : (
+        <p className="text-xs text-ink-muted">
+          Use a full maps URL that includes coordinates (for example …/@39.3793,46.2502) so the
+          heritage map can place the pin.
+        </p>
+      )}
     </div>
   );
 }

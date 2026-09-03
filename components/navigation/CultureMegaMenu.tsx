@@ -17,8 +17,16 @@ import {
 } from '@/components/navigation/nav-styles';
 import { useNavDropdown } from '@/components/navigation/useNavDropdown';
 import { cn } from '@/lib/utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { headerChromeLabel } from '@/lib/i18n/ui-chrome';
 
-export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
+export function CultureMegaMenu({
+  columns,
+  locale,
+}: {
+  columns: MegaMenuColumn[];
+  locale: SiteLocaleCode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const active = isCultureNavActive(pathname);
@@ -42,14 +50,14 @@ export function CultureMegaMenu({ columns }: { columns: MegaMenuColumn[] }) {
     >
       <button
         type="button"
-        className={navItemClassName(active, open)}
+        className={cn(navItemClassName(active, open), 'gap-1')}
         aria-expanded={open}
         aria-haspopup="true"
         aria-controls={panelId}
         aria-current={active ? 'page' : undefined}
         onClick={handleTriggerClick}
       >
-        Cultural Portal
+        {headerChromeLabel(locale, 'culturalPortal')}
         <NavDropdownArrow open={open} />
       </button>
 

@@ -2,6 +2,8 @@ import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
 import { getActiveTeam } from '@/lib/queries/team';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import Image from 'next/image';
 
 export const revalidate = 60;
 
@@ -42,12 +44,20 @@ async function AboutTeamPage() {
             <StaggerItem key={member.id} className="h-full">
               <article className="about-team-card group h-full">
                 <div className="flex items-center gap-4">
-                  <span
-                    aria-hidden
-                    className="about-team-avatar"
-                  >
-                    {member.initials}
-                  </span>
+                  {member.image ? (
+                    <span className="about-team-avatar about-team-avatar--photo">
+                      <Image
+                        src={resolvePublicAssetUrl(member.image)}
+                        alt={member.name}
+                        width={72}
+                        height={72}
+                      />
+                    </span>
+                  ) : (
+                    <span aria-hidden className="about-team-avatar">
+                      {member.initials}
+                    </span>
+                  )}
                   <div>
                     <h3 className="about-team-name">
                       {member.name}
