@@ -5,22 +5,28 @@ import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
 import { submitContactMessage, type ContactActionState } from '@/app/(public)/contacts/actions';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: ContactActionState = { status: 'idle' };
 
-export function ContactForm() {
+interface ContactFormProps {
+  locale?: SiteLocaleCode;
+}
+
+export function ContactForm({ locale = 'EN' }: ContactFormProps) {
   const [state, formAction, isPending] = useActionState(submitContactMessage, INITIAL);
   const renderedAt = useMemo(() => Date.now(), []);
 
   if (state.status === 'success') {
     return (
       <div className="contact-success">
-        <p className="contact-label">Message received</p>
+        <p className="contact-label">{uiMessage(locale, 'messageReceived')}</p>
         <h2 className="mt-3 font-cinzel text-2xl font-extrabold uppercase tracking-[0.02em] text-heritage-gold">
-          {state.message ?? 'Thank you. We have received your message.'}
+          {state.message ?? uiMessage(locale, 'thankYouContact')}
         </h2>
         <p className="mt-3 font-display text-[15px] leading-[1.65] text-surface-muted">
-          A human will read your message within five working days.
+          {uiMessage(locale, 'contactFollowUp')}
         </p>
       </div>
     );
@@ -39,7 +45,7 @@ export function ContactForm() {
       />
       <div className="contact-form-row">
         <TextField
-          label="Your name"
+          label={uiMessage(locale, 'yourName')}
           name="name"
           required
           maxLength={80}
@@ -48,7 +54,7 @@ export function ContactForm() {
           inputClassName="contact-input"
         />
         <TextField
-          label="Email"
+          label={uiMessage(locale, 'email')}
           name="email"
           type="email"
           required
@@ -59,7 +65,7 @@ export function ContactForm() {
       </div>
       <div className="contact-form-message">
         <TextareaField
-          label="Message"
+          label={uiMessage(locale, 'message')}
           name="message"
           required
           rows={7}
@@ -70,11 +76,11 @@ export function ContactForm() {
       </div>
       {state.status === 'error' ? (
         <p className="rounded-md border border-[rgba(196,61,77,0.45)] bg-[rgba(196,61,77,0.1)] px-3 py-2 text-sm text-[#f0a3ad]">
-          {state.message ?? 'Something went wrong. Please try again.'}
+          {state.message ?? uiMessage(locale, 'somethingWrong')}
         </p>
       ) : null}
       <Button type="submit" disabled={isPending} withArrow className="contact-submit">
-        {isPending ? 'Sending…' : 'Send message'}
+        {isPending ? uiMessage(locale, 'sending') : uiMessage(locale, 'sendMessage')}
       </Button>
     </form>
   );

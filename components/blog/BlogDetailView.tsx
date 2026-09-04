@@ -8,13 +8,16 @@ import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { toBlogRenderHtml } from '@/lib/blog-content';
 import type { PublicBlogPostDetailDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import '@/components/blog/blog.css';
 
 interface BlogDetailViewProps {
   post: PublicBlogPostDetailDTO;
+  locale?: SiteLocaleCode;
 }
 
-export function BlogDetailView({ post }: BlogDetailViewProps) {
+export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
   const header = post.headerImage?.trim() || post.image?.trim() || '/images/culture/card-heritage.webp';
   const resolvedHeader = resolvePublicAssetUrl(header);
   const background = post.backgroundImage?.trim();
@@ -44,7 +47,7 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
             <div className="blog-detail-hero__shade" aria-hidden />
           </div>
           <Link href="/blog" className="blog-detail-back">
-            <ArrowLeft size={14} aria-hidden /> Back to blog
+            <ArrowLeft size={14} aria-hidden /> {uiMessage(locale, 'backToBlog')}
           </Link>
           <div className="blog-detail-hero__content">
             <div className="blog-detail-hero__inner">
@@ -68,7 +71,7 @@ export function BlogDetailView({ post }: BlogDetailViewProps) {
           {photos.length > 0 ? (
             <div className="mt-10">
               <CultureItemGalleryLightbox
-                title={`${post.title} gallery`}
+                title={`${post.title} — ${uiMessage(locale, 'gallery')}`}
                 items={photos.map((item) => ({
                   id: item.id,
                   url: item.url,

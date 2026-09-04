@@ -7,6 +7,8 @@ import { SelectField } from '@/components/forms/fields/SelectField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { updateProfileAction, type MemberProfileActionState } from '@/app/(public)/profile/actions';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 const INITIAL: MemberProfileActionState = { status: 'idle' };
 
@@ -14,15 +16,16 @@ const countrySelectOptions = COUNTRY_OPTIONS;
 
 interface MemberProfileFormProps {
   member: MemberContext;
+  locale?: SiteLocaleCode;
 }
 
-export function MemberProfileForm({ member }: MemberProfileFormProps) {
+export function MemberProfileForm({ member, locale = 'EN' }: MemberProfileFormProps) {
   const [state, formAction, isPending] = useActionState(updateProfileAction, INITIAL);
 
   return (
     <form action={formAction} className="auth-form auth-profile-form">
       <SelectField
-        label="Country"
+        label={uiMessage(locale, 'country')}
         name="country"
         required
         defaultValue={member.country}
@@ -31,7 +34,7 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
         className="auth-field-input rounded-md"
       />
       <TextField
-        label="Email"
+        label={uiMessage(locale, 'email')}
         name="email"
         type="email"
         required
@@ -42,7 +45,7 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
       />
       <div className="auth-form-row">
         <TextField
-          label="Name"
+          label={uiMessage(locale, 'name')}
           name="name"
           required
           autoComplete="given-name"
@@ -52,7 +55,7 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
           inputClassName="auth-field-input rounded-md"
         />
         <TextField
-          label="Surname"
+          label={uiMessage(locale, 'surname')}
           name="surname"
           required
           autoComplete="family-name"
@@ -63,7 +66,7 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
         />
       </div>
       <TextField
-        label="Phone"
+        label={uiMessage(locale, 'phone')}
         name="phone"
         type="tel"
         required
@@ -76,11 +79,11 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
       />
 
       <div className="auth-profile-password-block">
-        <p className="auth-profile-section-label">Change password</p>
-        <p className="auth-profile-section-hint">Leave blank to keep your current password.</p>
+        <p className="auth-profile-section-label">{uiMessage(locale, 'changePassword')}</p>
+        <p className="auth-profile-section-hint">{uiMessage(locale, 'leaveBlankPassword')}</p>
         <div className="auth-form-row">
           <TextField
-            label="Current password"
+            label={uiMessage(locale, 'currentPassword')}
             name="currentPassword"
             type="password"
             autoComplete="current-password"
@@ -88,11 +91,11 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
             inputClassName="auth-field-input rounded-md"
           />
           <TextField
-            label="New password"
+            label={uiMessage(locale, 'newPassword')}
             name="newPassword"
             type="password"
             autoComplete="new-password"
-            hint="At least 8 characters"
+            hint={uiMessage(locale, 'passwordHint')}
             error={state.fieldErrors?.newPassword}
             inputClassName="auth-field-input rounded-md"
           />
@@ -107,7 +110,7 @@ export function MemberProfileForm({ member }: MemberProfileFormProps) {
       ) : null}
 
       <Button type="submit" disabled={isPending} withArrow className="auth-form-submit">
-        {isPending ? 'Saving…' : 'Save changes'}
+        {uiMessage(locale, isPending ? 'saving' : 'saveChanges')}
       </Button>
     </form>
   );

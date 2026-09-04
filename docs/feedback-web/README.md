@@ -16,7 +16,7 @@ Sheet-ում բոլոր կետերը նշված են `in process`։ Այստեղ
 
 **Deploy.** Neon schema-ն 2026-09-03-ին համաժամեցված է. failed `20260709140000_add_culture_item_card_background`-ը նշվել է applied (սյուներն արդեն կային), հետո կիրառվել են բաց migration-ները՝ ներառյալ `20260903120000_feedback_web_tasks` (map URL, blog assets, about shortcuts, certificates, նոր MapType)։
 
-**Դեռ բաց.** #20 առանձին sub-page hero CMS դաշտ չկա (կա menu card image)։ #30 chrome + CMS-ը թարգմանվում են, բայց ոչ ամեն hardcoded UI տող։ #31 About վիզուալ redesign-ը sheet-ում միայն նկար է՝ առանց տեքստի։ Կարճ `maps.app.goo.gl` հղումները կոորդինատ չեն տալիս heritage քարտեզին. պետք է լրիվ `@lat,lng` URL։
+**Դեռ բաց.** #20 առանձին sub-page hero CMS դաշտ չկա (կա menu card image)։ #30-ի UI chrome catalog-ները կան բոլոր 6 locale-ների համար, իսկ CMS նյութերի թարգմանությունը դեռ կոնտենտային աշխատանք է։ #31 About վիզուալ redesign-ը sheet-ում միայն նկար է՝ առանց տեքստի։ Կարճ `maps.app.goo.gl` հղումները կոորդինատ չեն տալիս heritage քարտեզին. պետք է լրիվ `@lat,lng` URL։
 
 ---
 
@@ -49,11 +49,11 @@ Sheet-ում բոլոր կետերը նշված են `in process`։ Այստեղ
 | 23 | Gallery | Lightbox / մեծացում չի աշխատում | Done | 90% |
 | 24 | Article | Visual assets-ը չերևա public-ում | Done | 95% |
 | 25 | Virtual tour | Լայն embed, առանց կողքի Tour type / Access | Done | 90% |
-| 26 | Typography | Հայերեն վերնագրի տառատեսակ | Partial | 85% |
+| 26 | Typography | Հայերեն վերնագրի տառատեսակ | Partial | 90% |
 | 27 | Article | Description — less / more | Done | 90% |
 | 28 | Team | Նկարները կայքում չեն երևում | Done | 90% |
 | 29 | Team | Admin-ում խմբագրում | Done | 90% |
-| 30 | i18n | Ողջ կայքի թարգմանություն, ոչ միայն Contact | Partial | 60% |
+| 30 | i18n | Ողջ կայքի թարգմանություն, ոչ միայն Contact | Partial | 75% |
 | 31 | About us | Էջի փոփոխություն (sheet-ում միայն նկար) | Partial | 50% |
 | 32 | About us | Shortcut-ներին background | Done | 90% |
 | 33 | Blog | Բլոգի redesign | Partial | 80% |
@@ -659,7 +659,7 @@ Tour-ը լայն ու մեծ լինի։ Կողքի նկարագրություն�
 ## 26 — Հայերեն վերնագրի տառատեսակ
 
 **Բաժին:** Typography  
-**%:** 5%  
+**%:** 90%  
 **Screenshot:** [Drive](https://drive.google.com/file/d/1oHQqZZIrT-6gUwGna2_J6ee5IWGsunbT/view?usp=drive_link)
 
 ### Պահանջ
@@ -668,14 +668,14 @@ Tour-ը լայն ու մեծ լինի։ Կողքի նկարագրություն�
 
 ### Ինչ կա հիմա
 
-Cinzel / Cormorant / Inter — լատինական display ֆոնտեր։ Հայերենի համար նախատեսված display face չկա։
+`Noto Serif Armenian` միացված է։ Հայերեն script / `lang=hy` hero title-ները օգտագործում են այն (ոչ Cinzel 900)՝ overlapping-ը շտկելու համար։
 
 ### Մնացած
 
-- [ ] Առաջարկել 3–5 Armenian-capable ֆոնտ (Noto Serif Armenian, Arian AMU, և այլն)
-- [ ] Հաճախորդի ընտրությունից հետո միացնել `layout.tsx` / CSS-ում
+- [x] Armenian-capable display font (`Noto_Serif_Armenian`) + hero/button overrides
+- [ ] Հաճախորդի վերջնական font ընտրություն (եթե պետք է այլ face)
 
-**Ֆայլեր:** `app/layout.tsx`, `app/globals.css`
+**Ֆայլեր:** `app/layout.tsx`, `app/globals.css`, `components/landing/LandingHero.tsx`
 
 ---
 
@@ -749,7 +749,7 @@ CRUD՝ `app/(admin)/admin/(panel)/team/`, ֆորմ, լուսանկար, order, a
 ## 30 — Ողջ կայքի թարգմանություն
 
 **Բաժին:** i18n  
-**%:** 15%  
+**%:** 75%
 **Screenshot:** [Drive](https://drive.google.com/file/d/1k5pI2pJAPzEjwPeNoPZvDrj6ekGkz2lz/view?usp=drive_link)
 
 ### Պահանջ
@@ -758,15 +758,16 @@ CRUD՝ `app/(admin)/admin/(panel)/team/`, ֆորմ, լուսանկար, order, a
 
 ### Ինչ կա հիմա
 
-6 locale կոդ (HY, HYW, EN, RU, FR, PT)։ Միայն EN-ն ունի `hasTranslations: true`։ CMS դաշտերը կարող են լինել multilingual, UI chrome-ը անգլերեն է։ Message catalog / locale routing չկա։
+6 locale կոդի (HY, HYW, EN, RU, FR, PT) համար public UI chrome message catalog-ները կան և locale cookie-ով ընտրվում են։ CMS դաշտերը multilingual են, բայց դրանց բոլոր լեզուներով լրացումը դեռ առանձին կոնտենտային աշխատանք է։
 
 ### Մնացած
 
-- [ ] UI string catalogs բոլոր locale-ների համար
+- [x] UI string catalogs բոլոր 6 locale-ների համար (public chrome)
+- [x] Public forms, map/search, catalog chrome, auth, donation interaction, page heroes, microsite heroes
 - [ ] CMS բովանդակության լրացում բոլոր լեզուներով (կոնտենտային աշխատանք)
 - [ ] Locale-aware routes (եթե պահանջվի)
 
-**Ֆայլեր:** `lib/i18n/locale-config.ts`, admin locale fields, public chrome components
+**Ֆայլեր:** `lib/i18n/ui-messages.ts`, `lib/i18n/messages/*`, public chrome components
 
 ---
 

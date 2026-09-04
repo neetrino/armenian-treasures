@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { User } from 'lucide-react';
 import { signOutAccountAction } from '@/app/(public)/profile/actions';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cn } from '@/lib/utils';
 import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 
 interface HeaderProfileButtonProps {
   account: HeaderAccountSummary | null;
+  locale?: SiteLocaleCode;
 }
 
 const ICON_BUTTON =
@@ -26,7 +29,7 @@ const ICON_BUTTON_MEMBER =
 const ICON_BUTTON_ADMIN =
   'border-[rgba(201,168,76,0.45)] bg-[rgba(201,168,76,0.1)] text-heritage-gold hover:border-[rgba(201,168,76,0.65)] hover:text-heritage-champagne';
 
-export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
+export function HeaderProfileButton({ account, locale = 'EN' }: HeaderProfileButtonProps) {
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -59,8 +62,8 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
       <Link
         href="/login"
         className={cn(ICON_BUTTON, ICON_BUTTON_GUEST)}
-        aria-label="Sign in"
-        title="Sign in"
+        aria-label={uiMessage(locale, 'signIn')}
+        title={uiMessage(locale, 'signIn')}
       >
         <User size={18} strokeWidth={1.5} aria-hidden className="shrink-0" />
       </Link>
@@ -80,7 +83,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
         type="button"
         onClick={() => setOpen((value) => !value)}
         className={cn(ICON_BUTTON, isAdmin ? ICON_BUTTON_ADMIN : ICON_BUTTON_MEMBER)}
-        aria-label="Account menu"
+        aria-label={uiMessage(locale, 'accountMenu')}
         aria-expanded={open}
         aria-haspopup="menu"
         title={account.name}
@@ -98,7 +101,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
             <p className="truncate text-xs text-surface-subtle">{account.email}</p>
             {isAdmin ? (
               <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-heritage-gold">
-                Admin
+                {uiMessage(locale, 'admin')}
               </p>
             ) : null}
           </div>
@@ -109,7 +112,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
               onClick={() => setOpen(false)}
               className={MENU_ITEM}
             >
-              Admin panel
+              {uiMessage(locale, 'adminPanel')}
             </Link>
           ) : (
             <Link
@@ -118,7 +121,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
               onClick={() => setOpen(false)}
               className={MENU_ITEM}
             >
-              Profile
+              {uiMessage(locale, 'profile')}
             </Link>
           )}
           <button
@@ -128,7 +131,7 @@ export function HeaderProfileButton({ account }: HeaderProfileButtonProps) {
             onClick={() => void handleSignOut()}
             className={cn(MENU_ITEM, 'w-full text-left disabled:opacity-60')}
           >
-            {signingOut ? 'Signing out…' : 'Sign out'}
+            {signingOut ? uiMessage(locale, 'signingOut') : uiMessage(locale, 'signOut')}
           </button>
         </div>
       ) : null}

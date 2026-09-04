@@ -1,5 +1,7 @@
 import type { VirtualMuseumIconSource } from '@/lib/constants/virtual-museum-icon-sources';
 import { VIRTUAL_MUSEUM_ICON_SOURCES } from '@/lib/constants/virtual-museum-icon-sources';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, type UiMessageKey } from '@/lib/i18n/ui-messages';
 
 export type VirtualMuseumBadgeTone = 'teal' | 'gold';
 
@@ -14,6 +16,16 @@ export interface VirtualMuseumFeature {
   badgeTone: VirtualMuseumBadgeTone;
   title: string;
   description: string;
+}
+
+export interface VirtualMuseumSectionContent {
+  badge: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaUrl: string;
+  features: VirtualMuseumFeature[];
 }
 
 function withIconSource(
@@ -74,3 +86,49 @@ export const VIRTUAL_MUSEUM_SECTION = {
     }),
   ] satisfies VirtualMuseumFeature[],
 } as const;
+
+const FEATURE_MESSAGE_KEYS: Record<
+  VirtualMuseumIconKey,
+  { badge: UiMessageKey; title: UiMessageKey; description: UiMessageKey }
+> = {
+  tours: {
+    badge: 'betaAccess',
+    title: 'virtualTours360Title',
+    description: 'virtualTours360Description',
+  },
+  artefacts: {
+    badge: 'comingQ3',
+    title: 'artefactExplorer3dTitle',
+    description: 'artefactExplorer3dDescription',
+  },
+  galleries: {
+    badge: 'comingQ4',
+    title: 'immersiveGalleriesTitle',
+    description: 'immersiveGalleriesDescription',
+  },
+  events: {
+    badge: 'live',
+    title: 'liveHeritageEventsTitle',
+    description: 'liveHeritageEventsDescription',
+  },
+};
+
+export function getVirtualMuseumSection(locale: SiteLocaleCode): VirtualMuseumSectionContent {
+  return {
+    ...VIRTUAL_MUSEUM_SECTION,
+    badge: uiMessage(locale, 'virtualMuseumBadge'),
+    eyebrow: uiMessage(locale, 'virtualMuseumEyebrow'),
+    title: uiMessage(locale, 'virtualMuseumTitle'),
+    description: uiMessage(locale, 'virtualMuseumDescription'),
+    ctaText: uiMessage(locale, 'enterVirtualMuseum'),
+    features: VIRTUAL_MUSEUM_SECTION.features.map((feature) => {
+      const keys = FEATURE_MESSAGE_KEYS[feature.icon];
+      return {
+        ...feature,
+        badge: uiMessage(locale, keys.badge),
+        title: uiMessage(locale, keys.title),
+        description: uiMessage(locale, keys.description),
+      };
+    }),
+  };
+}

@@ -7,6 +7,8 @@ import { CultureBeforeAfterCard } from '@/components/culture-catalog/CultureBefo
 import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemMediaContent } from '@/lib/culture-item-media';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureItemMediaSectionsProps {
   title: string;
@@ -14,6 +16,9 @@ interface CultureItemMediaSectionsProps {
   locationName?: string | null;
   showOnMap?: boolean;
   mapUrl?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  locale?: SiteLocaleCode;
 }
 
 export function CultureItemMediaSections({
@@ -22,6 +27,9 @@ export function CultureItemMediaSections({
   locationName,
   showOnMap = false,
   mapUrl,
+  latitude,
+  longitude,
+  locale = 'EN',
 }: CultureItemMediaSectionsProps) {
   const sectionOrder = resolveCultureItemSectionOrder(media.sectionOrder);
 
@@ -36,6 +44,9 @@ export function CultureItemMediaSections({
           locationName={locationName}
           showOnMap={showOnMap}
           mapUrl={mapUrl}
+          latitude={latitude}
+          longitude={longitude}
+          locale={locale}
         />
       ))}
     </>
@@ -53,31 +64,48 @@ function CultureItemMediaSection({
   locationName,
   showOnMap,
   mapUrl,
+  latitude,
+  longitude,
+  locale = 'EN',
 }: CultureItemMediaSectionProps) {
   switch (sectionId) {
     case 'card-image':
       return null;
     case 'description':
-      return <DescriptionBlocks media={media} />;
+      return <DescriptionBlocks media={media} locale={locale} />;
     case 'map':
       return (
-        <CultureItemPublicMap showOnMap={Boolean(showOnMap)} mapUrl={mapUrl} locationName={locationName} />
+        <CultureItemPublicMap
+          showOnMap={Boolean(showOnMap)}
+          mapUrl={mapUrl}
+          locationName={locationName}
+          latitude={latitude}
+          longitude={longitude}
+          locale={locale}
+        />
       );
-    case 'tours':
+    case 'tours': {
+      const tours = media.tours.filter((tour) => Boolean(tour.url?.trim() || tour.title?.trim()));
       return (
         <>
-          {media.tours.map((tour, index) => (
-            <CultureItemPublicTour key={tour.id} tour={tour} isFirst={index === 0} />
+          {tours.map((tour, index) => (
+            <CultureItemPublicTour
+              key={tour.id}
+              tour={tour}
+              isFirst={index === 0}
+              locale={locale}
+            />
           ))}
         </>
       );
+    }
     case 'videos': {
       const videos = media.videos.filter((video) => video.url);
       if (videos.length === 0) return null;
       return (
         <div className="catalog-item-media-block">
-          <p className="sec-label">Video</p>
-          <h2 className="sec-title">Watch the Story</h2>
+          <p className="sec-label">{uiMessage(locale, 'video')}</p>
+          <h2 className="sec-title">{uiMessage(locale, 'watchStory')}</h2>
           <div className="catalog-video-grid">
             {videos.map((video) => (
               <CultureItemPublicVideo key={video.id} video={video} fallbackTitle={title} />
@@ -87,13 +115,19 @@ function CultureItemMediaSection({
       );
     }
     case 'gallery':
-      return <GalleryBlocks media={media} title={title} />;
+      return <GalleryBlocks media={media} title={title} locale={locale} />;
     default:
       return null;
   }
 }
 
-function DescriptionBlocks({ media }: { media: CultureItemMediaContent }) {
+function DescriptionBlocks({
+  media,
+  locale,
+}: {
+  media: CultureItemMediaContent;
+  locale: SiteLocaleCode;
+}) {
   return (
     <>
       {media.blocks.map((block) => {
@@ -103,7 +137,9 @@ function DescriptionBlocks({ media }: { media: CultureItemMediaContent }) {
             <div className="about-body catalog-detail-card__body">
               {block.title ? <h3>{block.title}</h3> : null}
               {block.subtitle ? <p className="sec-desc">{block.subtitle}</p> : null}
-              {block.body ? <CultureItemExpandableText text={block.body} /> : null}
+              {block.body ? (
+                <CultureItemExpandableText text={block.body} locale={locale} preserveLineBreaks />
+              ) : null}
             </div>
           </article>
         );
@@ -112,7 +148,15 @@ function DescriptionBlocks({ media }: { media: CultureItemMediaContent }) {
   );
 }
 
-function GalleryBlocks({ media, title }: { media: CultureItemMediaContent; title: string }) {
+function GalleryBlocks({
+  media,
+  title,
+  locale,
+}: {
+  media: CultureItemMediaContent;
+  title: string;
+  locale: SiteLocaleCode;
+}) {
   const photos = media.gallery.filter((item) => item.kind !== 'beforeAfter' && item.url);
   const comparisons = media.gallery.filter(
     (item) => item.kind === 'beforeAfter' && (item.beforeUrl || item.afterUrl),
@@ -123,10 +167,10 @@ function GalleryBlocks({ media, title }: { media: CultureItemMediaContent; title
     <>
       {photos.length > 0 ? (
         <div className="catalog-item-media-block">
-          <p className="sec-label">Photography Archive</p>
-          <h2 className="sec-title">Gallery</h2>
+          <p className="sec-label">{uiMessage(locale, 'photographyArchive')}</p>
+          <h2 className="sec-title">{uiMessage(locale, 'gallery')}</h2>
           <CultureItemGalleryLightbox
-            title={`${title} gallery`}
+            title={`${title} — ${uiMessage(locale, 'gallery')}`}
             items={photos.map((item) => ({
               id: item.id,
               url: item.url,
@@ -138,8 +182,8 @@ function GalleryBlocks({ media, title }: { media: CultureItemMediaContent; title
       ) : null}
       {comparisons.length > 0 ? (
         <div className="catalog-item-media-block">
-          <p className="sec-label">Visual Restoration</p>
-          <h2 className="sec-title">Before &amp; After</h2>
+          <p className="sec-label">{uiMessage(locale, 'visualRestoration')}</p>
+          <h2 className="sec-title">{uiMessage(locale, 'beforeAfter')}</h2>
           <div className="restoration-grid">
             {comparisons.map((item) => (
               <CultureBeforeAfterCard
@@ -148,6 +192,7 @@ function GalleryBlocks({ media, title }: { media: CultureItemMediaContent; title
                 afterUrl={item.afterUrl}
                 caption={item.caption || undefined}
                 alt={item.caption || title}
+                locale={locale}
               />
             ))}
           </div>

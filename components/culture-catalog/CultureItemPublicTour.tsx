@@ -1,40 +1,58 @@
 import { isMatterportUrl } from '@/lib/matterport';
-import { TOUR_TYPE_OPTIONS } from '@/lib/culture-item-media';
-import type { CultureTourBlock } from '@/lib/culture-item-media';
+import {
+  normalizeTourBlock,
+  type CultureTourBlock,
+  type CultureTourType,
+} from '@/lib/culture-item-media';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, type UiMessageKey } from '@/lib/i18n/ui-messages';
 
 interface CultureItemPublicTourProps {
   tour: CultureTourBlock;
   isFirst: boolean;
+  locale?: SiteLocaleCode;
 }
 
-function tourHeading(type: string): string {
-  return TOUR_TYPE_OPTIONS.find((option) => option.value === type)?.label ?? 'Virtual tour';
+const TOUR_TYPE_MESSAGE: Record<CultureTourType, UiMessageKey> = {
+  LIDAR: 'tourTypeLidar',
+  SCAN_3D: 'tourTypeScan3d',
+  DRONE: 'tourTypeDrone',
+};
+
+function tourHeading(type: CultureTourType, locale: SiteLocaleCode): string {
+  return uiMessage(locale, TOUR_TYPE_MESSAGE[type] ?? 'virtualTour');
 }
 
-export function CultureItemPublicTour({ tour, isFirst }: CultureItemPublicTourProps) {
-  const title = tour.title || tourHeading(tour.type);
-  const embeddable = Boolean(tour.url && isMatterportUrl(tour.url));
+export function CultureItemPublicTour({
+  tour,
+  isFirst,
+  locale = 'EN',
+}: CultureItemPublicTourProps) {
+  const normalized = normalizeTourBlock(tour);
+  if (!normalized.url) return null;
+
+  const title = normalized.title || tourHeading(normalized.type, locale);
+  const embeddable = isMatterportUrl(normalized.url);
 
   return (
     <div id={isFirst ? 'tour' : undefined} className="catalog-item-media-block">
-      <p className="sec-label">Virtual Experience</p>
+      <p className="sec-label">{uiMessage(locale, 'virtualExperience')}</p>
       <h2 className="sec-title">{title}</h2>
       <div className="tour-wrap catalog-tour-wide reveal">
         {embeddable ? (
           <iframe
-            src={tour.url}
+            src={normalized.url}
             title={title}
             className="tour-embed"
             allow="fullscreen; xr-spatial-tracking"
             allowFullScreen
             referrerPolicy="no-referrer-when-downgrade"
           />
-        ) : null}
-        {tour.url && !embeddable ? (
-          <a href={tour.url} className="btn-teal" target="_blank" rel="noopener noreferrer">
-            Open 3D Tour
+        ) : (
+          <a href={normalized.url} className="btn-teal" target="_blank" rel="noopener noreferrer">
+            {uiMessage(locale, 'open3dTour')}
           </a>
-        ) : null}
+        )}
       </div>
     </div>
   );

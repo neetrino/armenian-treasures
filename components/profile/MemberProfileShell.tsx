@@ -8,18 +8,16 @@ import { MemberProfileForm } from '@/components/forms/MemberProfileForm';
 import { MemberDonationHistory } from '@/components/profile/MemberDonationHistory';
 import { signOutMemberAction } from '@/app/(public)/profile/actions';
 import { cn } from '@/lib/utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 type ProfileTab = 'details' | 'donations';
 
 interface MemberProfileShellProps {
   member: MemberContext;
   donations: MemberDonationRecord[];
+  locale?: SiteLocaleCode;
 }
-
-const TABS: { id: ProfileTab; label: string; icon: typeof UserPen }[] = [
-  { id: 'details', label: 'Personal details', icon: UserPen },
-  { id: 'donations', label: 'Donation history', icon: HandCoins },
-];
 
 function memberInitials(name: string, surname: string): string {
   const first = name.trim().charAt(0);
@@ -27,12 +25,20 @@ function memberInitials(name: string, surname: string): string {
   return `${first}${last}`.toUpperCase() || 'AT';
 }
 
-export function MemberProfileShell({ member, donations }: MemberProfileShellProps) {
+export function MemberProfileShell({
+  member,
+  donations,
+  locale = 'EN',
+}: MemberProfileShellProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>('details');
+  const tabs = [
+    { id: 'details', label: uiMessage(locale, 'personalDetails'), icon: UserPen },
+    { id: 'donations', label: uiMessage(locale, 'donationHistory'), icon: HandCoins },
+  ] satisfies { id: ProfileTab; label: string; icon: typeof UserPen }[];
 
   return (
     <div className="auth-profile-layout">
-      <aside className="auth-profile-sidebar" aria-label="Profile sections">
+      <aside className="auth-profile-sidebar" aria-label={uiMessage(locale, 'profileSections')}>
         <div className="auth-profile-sidebar__panel">
           <div aria-hidden className="auth-profile-sidebar__glow" />
 
@@ -41,7 +47,7 @@ export function MemberProfileShell({ member, donations }: MemberProfileShellProp
               {memberInitials(member.name, member.surname)}
             </div>
             <div className="auth-profile-sidebar__identity">
-              <p className="auth-profile-sidebar__eyebrow">Member account</p>
+              <p className="auth-profile-sidebar__eyebrow">{uiMessage(locale, 'memberAccount')}</p>
               <p className="auth-profile-sidebar__name" title={`${member.name} ${member.surname}`}>
                 {member.name} {member.surname}
               </p>
@@ -58,7 +64,7 @@ export function MemberProfileShell({ member, donations }: MemberProfileShellProp
           </div>
 
           <div className="auth-profile-nav" role="navigation">
-            {TABS.map((tab) => {
+            {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
@@ -81,7 +87,7 @@ export function MemberProfileShell({ member, donations }: MemberProfileShellProp
           <form action={signOutMemberAction} className="auth-profile-sidebar__signout">
             <button type="submit" className="auth-profile-sidebar__signout-btn">
               <LogOut size={14} strokeWidth={1.75} aria-hidden />
-              Sign out
+              {uiMessage(locale, 'signOut')}
             </button>
           </form>
         </div>
@@ -91,14 +97,14 @@ export function MemberProfileShell({ member, donations }: MemberProfileShellProp
         <section className="auth-profile-panel" aria-labelledby="profile-panel-heading">
           <p id="profile-panel-heading" className="auth-profile-panel__lead">
             {activeTab === 'details'
-              ? 'Update your account information and password.'
-              : 'Review your past support for the foundation.'}
+              ? uiMessage(locale, 'updateAccountLead')
+              : uiMessage(locale, 'reviewSupportLead')}
           </p>
 
           {activeTab === 'details' ? (
-            <MemberProfileForm member={member} />
+            <MemberProfileForm member={member} locale={locale} />
           ) : (
-            <MemberDonationHistory donations={donations} />
+            <MemberDonationHistory donations={donations} locale={locale} />
           )}
         </section>
       </div>

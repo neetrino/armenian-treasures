@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import { cn } from '@/lib/utils';
 
 type NationalGalleryHeroProps = {
   imgBase: string;
   heroImage?: string | null;
+  locale: SiteLocaleCode;
 };
 
 function LocationIcon() {
@@ -16,26 +21,41 @@ function LocationIcon() {
   );
 }
 
-function NationalGalleryBreadcrumb() {
+function NationalGalleryBreadcrumb({
+  locale,
+  label,
+}: {
+  locale: SiteLocaleCode;
+  label: string;
+}) {
   return (
-    <div className="breadcrumb" aria-label="Breadcrumb">
-      <Link href="/">Armenian Treasures</Link>
+    <div className="breadcrumb" aria-label={uiMessage(locale, 'breadcrumb')}>
+      <Link href="/">{uiMessage(locale, 'armenianTreasures')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Cultural Portal</Link>
+      <Link href="/culture">{uiMessage(locale, 'culturePortal')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Museums</Link>
+      <Link href="/culture">{uiMessage(locale, 'museums')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <span>National Gallery of Armenia</span>
+      <span>{label}</span>
     </div>
   );
 }
 
-export function NationalGalleryHero({ imgBase: _imgBase, heroImage }: NationalGalleryHeroProps) {
+export function NationalGalleryHero({
+  imgBase: _imgBase,
+  heroImage,
+  locale,
+}: NationalGalleryHeroProps) {
   const bannerImage = resolvePageHeroImageUrl(heroImage);
+  const title = uiMessage(locale, 'ngaTitle');
+  const titleAlt = uiMessage(locale, 'ngaTitleAlt');
+  const eyebrow = uiMessage(locale, 'ngaEyebrow');
+  const slogan = uiMessage(locale, 'ngaSlogan');
+  const titleIsArmenian = containsArmenianScript(title);
 
   return (
-    <div className="hero">
-      <NationalGalleryBreadcrumb />
+    <div className="hero" data-site-hero>
+      <NationalGalleryBreadcrumb locale={locale} label={title} />
       {bannerImage ? <HeroImageOverlay imageUrl={bannerImage} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
@@ -47,37 +67,34 @@ export function NationalGalleryHero({ imgBase: _imgBase, heroImage }: NationalGa
         <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
       </svg>
       <div className="hero-content">
-        <p className="hero-eyebrow">✦ Fine Arts Heritage · Republic Square · Yerevan ✦</p>
+        <p className={cn('hero-eyebrow', containsArmenianScript(eyebrow) && 'hero-eyebrow--hy')}>
+          {eyebrow}
+        </p>
         <div className="hero-location">
           <LocationIcon />
-          1 Aram Street · Yerevan 0010 · Armenia
+          {uiMessage(locale, 'ngaLocation')}
         </div>
-        <h1>
-          National Gallery
-          <br />
-          of Armenia
-          <span>Հայաստանի Ազգային Պատկերասրահ</span>
+        <h1 className={cn(titleIsArmenian && 'hero-title--hy')}>
+          {title}
+          <span className={cn(containsArmenianScript(titleAlt) && 'hero-accent--hy')}>{titleAlt}</span>
         </h1>
-        <p className="hero-slogan">The world&apos;s largest Armenian fine arts collection</p>
-        <p className="hero-sub">
-          Established in 1921 and home to over 40,000 works — from Aivazovsky&apos;s seascapes to Saryan&apos;s blazing
-          colours, Kandinsky&apos;s abstractions to Chagall&apos;s dreams.
-        </p>
+        <p className={cn('hero-slogan', containsArmenianScript(slogan) && 'hero-slogan--hy')}>{slogan}</p>
+        <p className="hero-sub">{uiMessage(locale, 'ngaSub')}</p>
         <div className="hero-btns">
-          <a href="#virtual-tour" className="btn-gold">
-            Enter Virtual Tour
+          <a href="#virtual-tour" className="btn-gold btn--hy">
+            {uiMessage(locale, 'enterVirtualTour')}
           </a>
-          <a href="#collection" className="btn-teal">
-            Explore Collection
+          <a href="#collection" className="btn-teal btn--hy">
+            {uiMessage(locale, 'exploreCollection')}
           </a>
-          <a href="#exhibitions" className="btn-outline">
-            Current Exhibitions
+          <a href="#exhibitions" className="btn-outline btn--hy">
+            {uiMessage(locale, 'currentExhibitions')}
           </a>
         </div>
       </div>
       <div className="hero-scroll">
         <div className="scroll-line" />
-        <span>SCROLL</span>
+        <span>{uiMessage(locale, 'scroll')}</span>
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ import {
   type CatalogSearchFilters,
 } from '@/lib/culture-catalog/catalog-search-params';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 const RESULTS_CONTENT = {
   label: 'Catalog results',
@@ -24,6 +26,7 @@ interface CultureSearchPageViewProps {
   regions: CatalogFilterOption[];
   periods: CatalogFilterOption[];
   types: CatalogFilterOption[];
+  locale?: SiteLocaleCode;
 }
 
 export function CultureSearchPageView({
@@ -32,20 +35,22 @@ export function CultureSearchPageView({
   regions,
   periods,
   types,
+  locale = 'EN',
 }: CultureSearchPageViewProps) {
   return (
     <CultureCatalogShell>
       <LandingHero
-        eyebrow="CATALOG SEARCH"
-        title="SEARCH THE"
-        accent="ARCHIVE"
-        subtitle="Find monasteries, museums, people, and heritage objects by region, period, and type."
-        ctas={[{ label: 'Open heritage map', href: '/map', variant: 'teal' }]}
+        locale={locale}
+        eyebrow={uiMessage(locale, 'catalogSearch')}
+        title={uiMessage(locale, 'searchThe')}
+        accent={uiMessage(locale, 'archive')}
+        subtitle={uiMessage(locale, 'searchHeroSubtitle')}
+        ctas={[{ label: uiMessage(locale, 'openHeritageMap'), href: '/map', variant: 'teal' }]}
       />
       <KhndzoreskDivider />
       <section id="results">
-        <p className="sec-label">Filters</p>
-        <h2 className="sec-title">Region, period, type</h2>
+        <p className="sec-label">{uiMessage(locale, 'filters')}</p>
+        <h2 className="sec-title">{uiMessage(locale, 'regionPeriodType')}</h2>
         <CatalogSearchForm
           action={CATALOG_SEARCH_PATH}
           filters={filters}
@@ -54,10 +59,15 @@ export function CultureSearchPageView({
           types={types}
         />
         {items.length > 0 ? (
-          <CultureCatalogItemGrid items={items} content={RESULTS_CONTENT} sectionId="matches" />
+          <CultureCatalogItemGrid
+            items={items}
+            content={RESULTS_CONTENT}
+            sectionId="matches"
+            locale={locale}
+          />
         ) : (
           <p className="sec-desc" style={{ marginTop: '2rem' }}>
-            {RESULTS_CONTENT.emptyMessage} Try another region, period, or keyword.
+            {uiMessage(locale, 'noEntriesMatch')}
           </p>
         )}
       </section>

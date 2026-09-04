@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import { cn } from '@/lib/utils';
 
 type KhachaturianMuseumHeroProps = {
   imgBase: string;
   heroImage?: string | null;
+  locale: SiteLocaleCode;
 };
 
 function LocationIcon() {
@@ -16,26 +21,42 @@ function LocationIcon() {
   );
 }
 
-function KhachaturianBreadcrumb() {
+function KhachaturianBreadcrumb({
+  locale,
+  label,
+}: {
+  locale: SiteLocaleCode;
+  label: string;
+}) {
   return (
-    <div className="breadcrumb" aria-label="Breadcrumb">
-      <Link href="/">Armenian Treasures</Link>
+    <div className="breadcrumb" aria-label={uiMessage(locale, 'breadcrumb')}>
+      <Link href="/">{uiMessage(locale, 'armenianTreasures')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Cultural Portal</Link>
+      <Link href="/culture">{uiMessage(locale, 'culturePortal')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Museums</Link>
+      <Link href="/culture">{uiMessage(locale, 'museums')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <span>Aram Khachaturian House-Museum</span>
+      <span>{label}</span>
     </div>
   );
 }
 
-export function KhachaturianMuseumHero({ imgBase: _imgBase, heroImage }: KhachaturianMuseumHeroProps) {
+export function KhachaturianMuseumHero({
+  imgBase: _imgBase,
+  heroImage,
+  locale,
+}: KhachaturianMuseumHeroProps) {
   const bannerImage = resolvePageHeroImageUrl(heroImage);
+  const title = uiMessage(locale, 'khachaturianTitle');
+  const subtitle = uiMessage(locale, 'khachaturianSubtitle');
+  const eyebrow = uiMessage(locale, 'khachaturianEyebrow');
+  const slogan = uiMessage(locale, 'khachaturianSlogan');
+  const breadcrumbLabel = uiMessage(locale, 'khachaturianBreadcrumb');
+  const titleIsArmenian = containsArmenianScript(title);
 
   return (
-    <div className="hero">
-      <KhachaturianBreadcrumb />
+    <div className="hero" data-site-hero>
+      <KhachaturianBreadcrumb locale={locale} label={breadcrumbLabel} />
       {bannerImage ? <HeroImageOverlay imageUrl={bannerImage} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
@@ -47,29 +68,34 @@ export function KhachaturianMuseumHero({ imgBase: _imgBase, heroImage }: Khachat
         <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
       </svg>
       <div className="hero-content">
-        <p className="hero-eyebrow">✦ Digital Preservation · Music Heritage · Yerevan ✦</p>
+        <p className={cn('hero-eyebrow', containsArmenianScript(eyebrow) && 'hero-eyebrow--hy')}>
+          {eyebrow}
+        </p>
         <div className="hero-location">
           <LocationIcon />
-          3 Zarobyan Street · Yerevan 0009 · Armenia
+          {uiMessage(locale, 'khachaturianLocation')}
         </div>
-        <h1>
-          Aram Khachaturian
-          <span>House-Museum · Տուն-Թանգարան</span>
+        <h1 className={cn(titleIsArmenian && 'hero-title--hy')}>
+          {title}
+          <span className={cn(containsArmenianScript(subtitle) && 'hero-accent--hy')}>{subtitle}</span>
         </h1>
-        <p className="hero-slogan">The soul of Armenia, scored in music</p>
-        <p className="hero-sub">
-          The former private residence of Armenia&apos;s greatest composer — now a living museum preserving his
-          legacy, instruments, manuscripts, and the rooms where he created.
-        </p>
+        <p className={cn('hero-slogan', containsArmenianScript(slogan) && 'hero-slogan--hy')}>{slogan}</p>
+        <p className="hero-sub">{uiMessage(locale, 'khachaturianSub')}</p>
         <div className="hero-btns">
-          <a href="#virtual-tour" className="btn-gold">Enter Virtual Tour</a>
-          <a href="#biography" className="btn-teal">Read Biography</a>
-          <a href="#audio" className="btn-outline">Listen to His Music</a>
+          <a href="#virtual-tour" className="btn-gold btn--hy">
+            {uiMessage(locale, 'enterVirtualTour')}
+          </a>
+          <a href="#biography" className="btn-teal btn--hy">
+            {uiMessage(locale, 'readBiography')}
+          </a>
+          <a href="#audio" className="btn-outline btn--hy">
+            {uiMessage(locale, 'listenToMusic')}
+          </a>
         </div>
       </div>
       <div className="hero-scroll">
         <div className="scroll-line" />
-        <span>SCROLL</span>
+        <span>{uiMessage(locale, 'scroll')}</span>
       </div>
     </div>
   );

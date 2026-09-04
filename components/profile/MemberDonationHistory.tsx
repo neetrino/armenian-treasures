@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import type { MemberDonationRecord } from '@/lib/queries/member-donations';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, type UiMessageKey } from '@/lib/i18n/ui-messages';
 
 interface MemberDonationHistoryProps {
   donations: MemberDonationRecord[];
+  locale: SiteLocaleCode;
 }
 
-const STATUS_LABELS: Record<MemberDonationRecord['status'], string> = {
-  PENDING: 'Pending',
-  COMPLETED: 'Completed',
-  FAILED: 'Failed',
-  REFUNDED: 'Refunded',
+const STATUS_MESSAGE_KEYS: Record<MemberDonationRecord['status'], UiMessageKey> = {
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+  FAILED: 'failed',
+  REFUNDED: 'refunded',
 };
 
 function formatAmount(amount: number, currency: string): string {
@@ -28,16 +31,16 @@ function formatDate(value: Date | string): string {
   }).format(new Date(value));
 }
 
-export function MemberDonationHistory({ donations }: MemberDonationHistoryProps) {
+export function MemberDonationHistory({ donations, locale }: MemberDonationHistoryProps) {
   if (donations.length === 0) {
     return (
       <div className="auth-donation-empty">
-        <p className="auth-donation-empty__title">No donations yet</p>
+        <p className="auth-donation-empty__title">{uiMessage(locale, 'noDonationsYet')}</p>
         <p className="auth-donation-empty__body">
-          When you support the foundation, your patronage history will appear here.
+          {uiMessage(locale, 'donationHistoryLead')}
         </p>
         <Link href="/donate" className="auth-form-link auth-donation-empty__link">
-          Explore donation tiers →
+          {uiMessage(locale, 'exploreDonationTiers')}
         </Link>
       </div>
     );
@@ -57,7 +60,7 @@ export function MemberDonationHistory({ donations }: MemberDonationHistoryProps)
                 {formatAmount(donation.amount, donation.currency)}
               </p>
               <span className={`auth-donation-status auth-donation-status--${donation.status.toLowerCase()}`}>
-                {STATUS_LABELS[donation.status]}
+                {uiMessage(locale, STATUS_MESSAGE_KEYS[donation.status])}
               </span>
             </div>
           </li>

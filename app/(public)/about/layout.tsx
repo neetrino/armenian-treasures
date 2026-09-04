@@ -7,6 +7,7 @@ import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell'
 import { LandingHero } from '@/components/landing/LandingHero';
 import { getAboutContent } from '@/lib/queries/about';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 async function AboutLayout({ children }: { children: ReactNode }) {
   const [content, locale] = await Promise.all([getAboutContent(), getCurrentSiteLocale()]);
@@ -14,13 +15,14 @@ async function AboutLayout({ children }: { children: ReactNode }) {
   return (
     <HeritageLandingShell>
       <LandingHero
+        locale={locale}
         eyebrow={content.heroEyebrow}
         title={content.heroTitle}
-        accent="ABOUT US"
+        accent={uiMessage(locale, 'aboutUs')}
         subtitle={content.heroDescription}
         heroImage={content.heroImage}
         heroClassName="cultural-portal-hero about-portal-hero"
-        ctas={[{ label: 'Explore Sections', href: '#about-main', variant: 'gold' }]}
+        ctas={[{ label: uiMessage(locale, 'exploreSections'), href: '#about-main', variant: 'gold' }]}
       />
 
       <KhndzoreskDivider />

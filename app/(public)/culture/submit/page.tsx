@@ -4,6 +4,8 @@ import { ProjectSubmissionForm } from '@/components/forms/ProjectSubmissionForm'
 import { getMenuTree } from '@/lib/queries/menu';
 import { buildSubmitCategoryOptions } from '@/lib/submit-category';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -15,28 +17,22 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 async function SubmitProjectPage() {
-  const tree = await getMenuTree();
+  const [tree, locale] = await Promise.all([getMenuTree(), getCurrentSiteLocale()]);
   const categories = buildSubmitCategoryOptions(tree);
 
   return (
     <CultureFormPageView
       kind="submit"
-      title="Contribute to the archive."
-      description="Researchers, photographers, families and institutions can submit projects, materials or proposals. We review every submission by hand."
-      breadcrumb={[{ label: 'Add your project' }]}
-      form={<ProjectSubmissionForm categories={categories} />}
+      title={uiMessage(locale, 'contributeToArchive')}
+      description={uiMessage(locale, 'submissionPageDescription')}
+      breadcrumb={[{ label: uiMessage(locale, 'addYourProject') }]}
+      form={<ProjectSubmissionForm categories={categories} locale={locale} />}
       aside={
         <>
-          <p className="sec-label">What we accept</p>
-          <h2 className="sec-title">Field reports, photography, manuscripts, oral history.</h2>
-          <p>
-            We accept proposals from individuals and institutions. Tell us what you have, where
-            it&apos;s located, and how we can verify the material with you.
-          </p>
-          <p>
-            Submissions are queued for curatorial review. We will not auto-publish your material
-            and will only contact you if we need to follow up.
-          </p>
+          <p className="sec-label">{uiMessage(locale, 'whatWeAccept')}</p>
+          <h2 className="sec-title">{uiMessage(locale, 'acceptedMaterials')}</h2>
+          <p>{uiMessage(locale, 'submissionProposalHelp')}</p>
+          <p>{uiMessage(locale, 'submissionReviewNotice')}</p>
         </>
       }
     />

@@ -36,7 +36,7 @@ export async function Footer() {
           <FooterContactsColumn settings={settings} title={chromeLabel(locale, 'contact')} />
         </div>
 
-        <FooterBottomBar settings={settings} />
+        <FooterBottomBar settings={settings} locale={locale} />
       </Container>
     </footer>
   );

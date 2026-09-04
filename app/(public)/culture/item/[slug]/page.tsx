@@ -10,6 +10,7 @@ import {
 } from '@/lib/queries/culture-items';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
 import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export const revalidate = 60;
 
@@ -54,6 +55,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 async function CultureItemDetailPage(props: PageProps) {
   const params = await props.params;
   const searchParams = await props.searchParams;
+  const locale = await getCurrentSiteLocale();
   const preview = isPreviewRequest(searchParams.preview);
 
   if (preview) {
@@ -66,14 +68,14 @@ async function CultureItemDetailPage(props: PageProps) {
           itemId={previewResult.item.id}
           status={previewResult.status}
         />
-        <CultureItemDetailView item={previewResult.item} />
+        <CultureItemDetailView item={previewResult.item} locale={locale} />
       </>
     );
   }
 
   const item = await getCultureItemDetailBySlug(params.slug);
   if (!item) notFound();
-  return <CultureItemDetailView item={item} />;
+  return <CultureItemDetailView item={item} locale={locale} />;
 }
 
 export default CultureItemDetailPage;

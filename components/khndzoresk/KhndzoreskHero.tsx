@@ -1,10 +1,15 @@
 import Link from 'next/link';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import { cn } from '@/lib/utils';
 
 type KhndzoreskHeroProps = {
   imgBase: string;
   heroImage?: string | null;
+  locale: SiteLocaleCode;
 };
 
 function LocationIcon() {
@@ -16,24 +21,35 @@ function LocationIcon() {
   );
 }
 
-function KhndzoreskBreadcrumb() {
+function KhndzoreskBreadcrumb({
+  locale,
+  title,
+}: {
+  locale: SiteLocaleCode;
+  title: string;
+}) {
   return (
-    <div className="breadcrumb" aria-label="Breadcrumb">
-      <Link href="/">Armenian Treasures</Link>
+    <div className="breadcrumb" aria-label={uiMessage(locale, 'breadcrumb')}>
+      <Link href="/">{uiMessage(locale, 'armenianTreasures')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <Link href="/culture">Cultural Portal</Link>
+      <Link href="/culture">{uiMessage(locale, 'culturePortal')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <span>Khndzoresk</span>
+      <span>{title}</span>
     </div>
   );
 }
 
-export function KhndzoreskHero({ imgBase: _imgBase, heroImage }: KhndzoreskHeroProps) {
+export function KhndzoreskHero({ imgBase: _imgBase, heroImage, locale }: KhndzoreskHeroProps) {
   const bannerImage = resolvePageHeroImageUrl(heroImage);
+  const title = uiMessage(locale, 'khndzoreskTitle');
+  const subtitle = uiMessage(locale, 'khndzoreskSubtitle');
+  const eyebrow = uiMessage(locale, 'khndzoreskEyebrow');
+  const slogan = uiMessage(locale, 'khndzoreskSlogan');
+  const titleIsArmenian = containsArmenianScript(title);
 
   return (
-    <div className="hero">
-      <KhndzoreskBreadcrumb />
+    <div className="hero" data-site-hero>
+      <KhndzoreskBreadcrumb locale={locale} title={title} />
       {bannerImage ? <HeroImageOverlay imageUrl={bannerImage} /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
@@ -61,35 +77,34 @@ export function KhndzoreskHero({ imgBase: _imgBase, heroImage }: KhndzoreskHeroP
         <path d="M44 4 Q38 4 38 10 L38 38 Q38 44 32 44" stroke="currentColor" strokeWidth=".6" fill="none" opacity=".5" />
       </svg>
       <div className="hero-content">
-        <p className="hero-eyebrow">✦ Digital Preservation · Syunik Province · Armenia ✦</p>
+        <p className={cn('hero-eyebrow', containsArmenianScript(eyebrow) && 'hero-eyebrow--hy')}>
+          {eyebrow}
+        </p>
         <div className="hero-location">
           <LocationIcon />
-          Goris Municipality · Syunik Province
+          {uiMessage(locale, 'khndzoreskLocation')}
         </div>
-        <h1>
-          Khndzoresk
-          <span>Խնձորեսկ · Cave Settlement &amp; Sacred Gorge</span>
+        <h1 className={cn(titleIsArmenian && 'hero-title--hy')}>
+          {title}
+          <span className={cn(containsArmenianScript(subtitle) && 'hero-accent--hy')}>{subtitle}</span>
         </h1>
-        <p className="hero-slogan">One of Eastern Armenia&apos;s oldest inhabited landscapes</p>
-        <p className="hero-sub">
-          A cathedral of stone, sky, and memory carved into the cliffs of Khor Dzor — preserved here in full
-          digital dimension.
-        </p>
+        <p className={cn('hero-slogan', containsArmenianScript(slogan) && 'hero-slogan--hy')}>{slogan}</p>
+        <p className="hero-sub">{uiMessage(locale, 'khndzoreskSub')}</p>
         <div className="hero-btns">
-          <a href="#virtual-tour" className="btn-gold">
-            Explore Virtual Tours
+          <a href="#virtual-tour" className="btn-gold btn--hy">
+            {uiMessage(locale, 'exploreVirtualTours')}
           </a>
-          <a href="#3d-aerial" className="btn-teal">
-            View 3D Aerial
+          <a href="#3d-aerial" className="btn-teal btn--hy">
+            {uiMessage(locale, 'view3dAerial')}
           </a>
-          <a href="#about" className="btn-outline">
-            Read the History
+          <a href="#about" className="btn-outline btn--hy">
+            {uiMessage(locale, 'readHistory')}
           </a>
         </div>
       </div>
       <div className="hero-scroll">
         <div className="scroll-line" />
-        <span>SCROLL</span>
+        <span>{uiMessage(locale, 'scroll')}</span>
       </div>
     </div>
   );

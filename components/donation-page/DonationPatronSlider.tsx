@@ -11,6 +11,8 @@ import {
   getImpactText,
   linearFill,
 } from '@/components/donation-page/donation-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 const TICK_LABELS = ['500', '1K', '1.5K', '5K', '10K', '25K', '50K'] as const;
 
@@ -25,6 +27,7 @@ type DonationPatronSliderProps = {
   checkoutEnabled: boolean;
   onSliderChange: (value: number) => void;
   onCustomBlur: (value: string) => void;
+  locale?: SiteLocaleCode;
 };
 
 export function DonationPatronSlider({
@@ -38,6 +41,7 @@ export function DonationPatronSlider({
   checkoutEnabled,
   onSliderChange,
   onCustomBlur,
+  locale = 'EN',
 }: DonationPatronSliderProps) {
   const amount = clampPatronAmount(sliderVal);
   const sliderFill = linearFill(amount);
@@ -47,8 +51,8 @@ export function DonationPatronSlider({
     <div ref={cardRef} className="patron-card reveal" aria-label="Custom monthly contribution">
       <div className="patron-head">
         <div>
-          <div className="patron-label">Patron Contribution</div>
-          <div className="patron-title">Set Your Monthly Legacy</div>
+          <div className="patron-label">{uiMessage(locale, 'patronContribution')}</div>
+          <div className="patron-title">{uiMessage(locale, 'setMonthlyLegacy')}</div>
         </div>
         <div className="impact-block" aria-live="polite" aria-label="Your contribution impact">
           <div className="impact-amd">
@@ -115,7 +119,7 @@ export function DonationPatronSlider({
             ref={inputRef}
             type="number"
             className="custom-inp"
-            placeholder="Type a custom amount"
+            placeholder={uiMessage(locale, 'customAmountPlaceholder')}
             min={PATRON_MIN}
             step={100}
             value={amount}
@@ -129,7 +133,7 @@ export function DonationPatronSlider({
           />
         </div>
         <div className="custom-unit" aria-label="AMD per month">
-          AMD / month
+          {uiMessage(locale, 'amdPerMonth')}
         </div>
       </div>
 
@@ -141,7 +145,7 @@ export function DonationPatronSlider({
           aria-disabled={!checkoutEnabled}
         >
           {checkoutEnabled
-            ? `Confirm ֏${formatAmd(amount)} / month`
+            ? uiMessageFormat(locale, 'confirmMonthly', { amount: formatAmd(amount) })
             : unavailable.patronCtaLabel}
         </button>
         <div className="patron-cta-note">

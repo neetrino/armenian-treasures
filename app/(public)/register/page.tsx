@@ -6,6 +6,8 @@ import { AuthCard, AuthCardIntro } from '@/components/auth/AuthCard';
 import { AuthPageShell } from '@/components/auth/AuthPageShell';
 import { MemberRegisterForm } from '@/components/forms/MemberRegisterForm';
 import { getMemberOrNull } from '@/lib/auth/member-session';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 async function RegisterPage() {
-  const member = await getMemberOrNull();
+  const [member, locale] = await Promise.all([getMemberOrNull(), getCurrentSiteLocale()]);
   if (member) redirect('/profile');
 
   return (
@@ -24,15 +26,15 @@ async function RegisterPage() {
       <AuthCard wide>
         <AuthBrand />
         <AuthCardIntro
-          eyebrow="Join us"
-          title="Create account"
-          lead="Register to follow projects, save favourites, and stay connected with the foundation."
+          eyebrow={uiMessage(locale, 'joinUs')}
+          title={uiMessage(locale, 'createAccount')}
+          lead={uiMessage(locale, 'registerLead')}
         />
-        <MemberRegisterForm />
+        <MemberRegisterForm locale={locale} />
         <p className="auth-card-back">
           ←{' '}
           <Link href="/" className="auth-form-link">
-            Back to home
+            {uiMessage(locale, 'backToHome')}
           </Link>
         </p>
       </AuthCard>

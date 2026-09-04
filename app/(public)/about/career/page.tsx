@@ -3,6 +3,8 @@ import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { getAboutContent } from '@/lib/queries/about';
 import { getActiveCareers } from '@/lib/queries/careers';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -13,7 +15,11 @@ export const metadata = buildPublicPageMetadata({
 });
 
 async function AboutCareerPage() {
-  const [careers, content] = await Promise.all([getActiveCareers(), getAboutContent()]);
+  const [careers, content, locale] = await Promise.all([
+    getActiveCareers(),
+    getAboutContent(),
+    getCurrentSiteLocale(),
+  ]);
   return (
     <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-12">
       <header className="max-w-4xl">
@@ -31,10 +37,10 @@ async function AboutCareerPage() {
       {careers.length === 0 ? (
         <div className="border border-dashed border-surface bg-[var(--surface-card-bg)] px-6 py-14 text-center">
           <h3 className="font-cinzel text-xl font-extrabold uppercase tracking-[0.03em] text-heritage-gold">
-            No open positions
+            {uiMessage(locale, 'noOpenPositions')}
           </h3>
           <p className="mt-3 font-display text-sm text-surface-body">
-            Check back soon - we list every role here before announcing publicly.
+            {uiMessage(locale, 'careersCheckBack')}
           </p>
         </div>
       ) : (
@@ -57,7 +63,7 @@ async function AboutCareerPage() {
                     </div>
                   </div>
                   <span className="about-career-badge">
-                    Open role
+                    {uiMessage(locale, 'openRole')}
                   </span>
                 </div>
 
@@ -74,7 +80,7 @@ async function AboutCareerPage() {
                     rel={career.applyUrl ? 'noopener noreferrer' : undefined}
                     className="about-career-apply"
                   >
-                    Apply <ArrowRight size={14} aria-hidden />
+                    {uiMessage(locale, 'apply')} <ArrowRight size={14} aria-hidden />
                   </a>
                 ) : null}
               </article>

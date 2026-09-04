@@ -5,27 +5,29 @@ import { TextField } from '@/components/forms/fields/TextField';
 import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
 import { submitSubcategoryProposal, type SubmissionActionState } from '@/app/(public)/culture/[categorySlug]/new/actions';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface SubcategoryProposalFormProps {
   parentCategorySlug: string;
+  locale: SiteLocaleCode;
 }
 
 const INITIAL_STATE: SubmissionActionState = { status: 'idle' };
 
-export function SubcategoryProposalForm({ parentCategorySlug }: SubcategoryProposalFormProps) {
+export function SubcategoryProposalForm({ parentCategorySlug, locale }: SubcategoryProposalFormProps) {
   const [state, formAction, isPending] = useActionState(submitSubcategoryProposal, INITIAL_STATE);
   const renderedAt = useMemo(() => Date.now(), []);
 
   if (state.status === 'success') {
     return (
       <div className="rounded-2xl border border-stone-100 bg-white p-8 shadow-card">
-        <p className="eyebrow">Submission received</p>
+        <p className="eyebrow">{uiMessage(locale, 'submissionReceived')}</p>
         <h2 className="mt-3 font-display text-2xl text-ink">
-          {state.message ?? 'Thank you. Your proposal is queued for review.'}
+          {state.message ?? uiMessage(locale, 'thankYouSubmission')}
         </h2>
         <p className="mt-3 text-sm text-ink-soft">
-          Our curators review every entry by hand. You will not receive an automated email — we
-          will be in touch only if we need clarification.
+          {uiMessage(locale, 'proposalFollowUp')}
         </p>
       </div>
     );
@@ -45,53 +47,53 @@ export function SubcategoryProposalForm({ parentCategorySlug }: SubcategoryPropo
       />
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
-          label="Sub-catalog name"
+          label={uiMessage(locale, 'subcatalogName')}
           name="proposedName"
           required
           maxLength={80}
           error={state.fieldErrors?.proposedName}
         />
         <TextField
-          label="Your full name"
+          label={uiMessage(locale, 'yourFullName')}
           name="submitterName"
           required
           maxLength={80}
           error={state.fieldErrors?.submitterName}
         />
         <TextField
-          label="Email"
+          label={uiMessage(locale, 'email')}
           name="submitterEmail"
           type="email"
           required
           error={state.fieldErrors?.submitterEmail}
         />
         <TextField
-          label="Phone (optional)"
+          label={uiMessage(locale, 'phoneOptional')}
           name="submitterPhone"
           type="tel"
           error={state.fieldErrors?.submitterPhone}
         />
       </div>
       <TextareaField
-        label="Why should this sub-catalog exist?"
+        label={uiMessage(locale, 'whySubcatalog')}
         name="description"
         required
         rows={6}
         error={state.fieldErrors?.description}
       />
       <TextareaField
-        label="Additional message (optional)"
+        label={uiMessage(locale, 'additionalMessageOptional')}
         name="message"
         rows={4}
         error={state.fieldErrors?.message}
       />
       {state.status === 'error' ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">
-          {state.message ?? 'Something went wrong. Please try again.'}
+          {state.message ?? uiMessage(locale, 'somethingWrong')}
         </p>
       ) : null}
       <Button type="submit" disabled={isPending} withArrow>
-        {isPending ? 'Submitting…' : 'Submit proposal'}
+        {isPending ? uiMessage(locale, 'submitting') : uiMessage(locale, 'submitProposal')}
       </Button>
     </form>
   );

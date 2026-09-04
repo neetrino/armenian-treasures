@@ -7,6 +7,8 @@ import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell'
 import { LandingHero } from '@/components/landing/LandingHero';
 import { getPublishedBlogPosts } from '@/lib/queries/blogs';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -17,18 +19,19 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 async function BlogPage() {
-  const posts = await getPublishedBlogPosts();
+  const [posts, locale] = await Promise.all([getPublishedBlogPosts(), getCurrentSiteLocale()]);
 
   return (
     <HeritageLandingShell>
       <LandingHero
-        eyebrow="BLOG"
-        title="STORIES FROM"
-        accent="THE MISSION"
-        subtitle="Field reports, restoration updates, and cultural heritage insights from across Armenia and the diaspora."
+        locale={locale}
+        eyebrow={uiMessage(locale, 'blogEyebrow')}
+        title={uiMessage(locale, 'blogTitle')}
+        accent={uiMessage(locale, 'blogAccent')}
+        subtitle={uiMessage(locale, 'blogSubtitle')}
         ctas={[
-          { label: 'Read Articles', href: '#blog-posts', variant: 'gold' },
-          { label: 'Support The Mission', href: '/donate', variant: 'teal' },
+          { label: uiMessage(locale, 'readArticles'), href: '#blog-posts', variant: 'gold' },
+          { label: uiMessage(locale, 'supportTheMission'), href: '/donate', variant: 'teal' },
         ]}
       />
 
@@ -37,13 +40,13 @@ async function BlogPage() {
       <section id="blog-posts" className="blog-page-section">
         <div className="blog-page-inner">
           <header className="blog-section-header">
-            <p className="blog-section-eyebrow">Latest articles</p>
-            <h2 className="blog-section-title">Foundation Journal</h2>
+            <p className="blog-section-eyebrow">{uiMessage(locale, 'latestArticles')}</p>
+            <h2 className="blog-section-title">{uiMessage(locale, 'foundationJournal')}</h2>
             <p className="blog-section-subtitle">
-              Discover how preservation work unfolds in the field, in archives, and across communities worldwide.
+              {uiMessage(locale, 'blogSectionSubtitle')}
             </p>
           </header>
-          <BlogGrid posts={posts} />
+          <BlogGrid posts={posts} locale={locale} />
         </div>
       </section>
     </HeritageLandingShell>

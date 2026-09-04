@@ -12,6 +12,8 @@ import {
 import { mapCultureItemsToHighlightTreasures } from '@/lib/mappers/featured-treasures';
 import { getHighlightCultureItems } from '@/lib/queries/culture-items';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -22,19 +24,23 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 async function HighlightsPage() {
-  const items = await getHighlightCultureItems(HIGHLIGHT_TREASURE_COUNT);
+  const [items, locale] = await Promise.all([
+    getHighlightCultureItems(HIGHLIGHT_TREASURE_COUNT),
+    getCurrentSiteLocale(),
+  ]);
   const treasures = mapCultureItemsToHighlightTreasures(items);
 
   return (
     <HeritageLandingShell>
       <LandingHero
+        locale={locale}
         eyebrow={HIGHLIGHTS_PAGE.eyebrow}
         title={HIGHLIGHTS_PAGE.title}
         accent={HIGHLIGHTS_PAGE.accent}
         subtitle={HIGHLIGHTS_PAGE.subtitle}
         ctas={[
-          { label: 'Browse Highlights', href: '#highlights', variant: 'gold' },
-          { label: 'Support The Mission', href: '/donate', variant: 'teal' },
+          { label: uiMessage(locale, 'browseHighlights'), href: '#highlights', variant: 'gold' },
+          { label: uiMessage(locale, 'supportTheMission'), href: '/donate', variant: 'teal' },
         ]}
       />
       <KhndzoreskDivider />
@@ -42,7 +48,7 @@ async function HighlightsPage() {
         <div className="relative z-10 mx-auto w-full max-w-[76rem]">
           {treasures.length === 0 ? (
             <p className="font-display text-[var(--surface-text-body)]">
-              More highlights will appear here as the archive grows.
+              {uiMessage(locale, 'moreHighlightsSoon')}
             </p>
           ) : (
             <FeaturedTreasuresGrid treasures={treasures} variant="tiles" />

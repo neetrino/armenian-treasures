@@ -8,6 +8,8 @@ import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import {
   filterMapItemsByCategory,
   filterMapItemsBySearch,
@@ -20,16 +22,13 @@ const LeafletMap = dynamic(
   () => import('./LeafletMap').then((m) => ({ default: m.LeafletMap })),
   {
     ssr: false,
-    loading: () => (
-      <div className="flex h-full items-center justify-center bg-stone-100 text-sm text-ink-muted">
-        Loading map…
-      </div>
-    ),
+    loading: () => null,
   },
 );
 
 interface MapPanelProps {
   items: PublicCultureItemDTO[];
+  locale?: SiteLocaleCode;
   /** Home map: filters + site list overlaid on the map viewport. */
   embedToolbar?: boolean;
 }
@@ -51,7 +50,7 @@ function resolveMapItemIcon(mapType: PublicCultureItemDTO['mapType']): LucideIco
   return MAP_TYPE_ICONS[mapType] ?? MapPin;
 }
 
-export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
+export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPanelProps) {
   const [filter, setFilter] = useState<HeritageMapFilterValue>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(items[0]?.id ?? null);
@@ -86,7 +85,7 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
   return (
     <div className="flex flex-col gap-6">
       {!embedToolbar ? (
-        <MapFilterBar filter={filter} onFilterChange={handleFilterChange} />
+        <MapFilterBar filter={filter} onFilterChange={handleFilterChange} locale={locale} />
       ) : null}
 
       <div
@@ -98,6 +97,7 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
         {!embedToolbar ? (
           <MapSiteListPanel
             items={visible}
+            locale={locale}
             activeId={activeId}
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
@@ -116,11 +116,17 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
           {embedToolbar ? (
             <div className="pointer-events-none absolute inset-0 z-[400]">
               <div className="pointer-events-auto absolute inset-x-3 top-3">
-                <MapFilterBar filter={filter} onFilterChange={handleFilterChange} overlay />
+                <MapFilterBar
+                  filter={filter}
+                  onFilterChange={handleFilterChange}
+                  locale={locale}
+                  overlay
+                />
               </div>
               <div className="pointer-events-auto absolute bottom-3 left-3 right-3 top-[4.75rem] w-auto sm:right-auto sm:w-[min(calc(100%-1.5rem),22rem)]">
                 <MapSiteListPanel
                   items={visible}
+                  locale={locale}
                   activeId={activeId}
                   searchQuery={searchQuery}
                   onSearchChange={handleSearchChange}
@@ -134,13 +140,22 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
           ) : null}
 
           {items.length > 0 ? (
-            <LeafletMap items={visible} selectedId={activeId} onSelect={setSelectedId} />
+            <>
+              <div className="absolute inset-0 flex items-center justify-center bg-stone-100 text-sm text-ink-muted">
+                {uiMessage(locale, 'loadingMap')}
+              </div>
+              <LeafletMap
+                items={visible}
+                selectedId={activeId}
+                onSelect={setSelectedId}
+                locale={locale}
+              />
+            </>
           ) : (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-6 text-center">
               <MapPin className="text-heritage-gold/60" size={32} aria-hidden />
               <p className="max-w-sm text-sm text-ink-muted">
-                No geo-located heritage sites are published yet. Coordinates appear here once
-                curators verify locations in the admin CMS.
+                {uiMessage(locale, 'noMappedSites')}
               </p>
             </div>
           )}
@@ -165,11 +180,11 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
       {selected && !embedToolbar ? (
         <div className="relative overflow-hidden rounded-3xl border border-heritage-gold/20 bg-slate-950/75 p-6 shadow-[0_8px_24px_rgba(15,23,42,0.25)] backdrop-blur-md">
           <p className="relative font-cinzel text-[11px] uppercase tracking-[0.24em] text-heritage-gold/90">
-            {selected.mapType ?? 'Heritage site'}
+            {selected.mapType ?? uiMessage(locale, 'heritageSite')}
           </p>
           <h2 className="relative mt-2 font-display text-2xl text-white">{selected.title}</h2>
           <p className="relative mt-1 text-xs uppercase tracking-eyebrow text-heritage-champagne">
-            {selected.region ?? 'Armenia'}
+            {selected.region ?? uiMessage(locale, 'armenia')}
             {selected.periodLabel ? ` · ${selected.periodLabel}` : ''}
           </p>
           {selected.description ? (
@@ -182,7 +197,7 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
               href={resolveCultureItemHref(selected.slug)}
               className="inline-flex items-center rounded-full border border-heritage-gold/30 bg-heritage-gold/10 px-4 py-2 text-xs font-semibold uppercase tracking-eyebrow text-heritage-gold transition hover:bg-heritage-gold/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500"
             >
-              View entry
+              {uiMessage(locale, 'viewEntry')}
             </Link>
             {selected.tourUrl ? (
               <a
@@ -191,7 +206,7 @@ export function MapPanel({ items, embedToolbar = false }: MapPanelProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center rounded-full border border-heritage-teal/30 bg-heritage-teal/10 px-4 py-2 text-xs font-semibold uppercase tracking-eyebrow text-heritage-teal transition hover:bg-heritage-teal/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-500"
               >
-                360° tour
+                {uiMessage(locale, 'tour360')}
               </a>
             ) : null}
           </div>

@@ -24,12 +24,15 @@ import { getPublicDonators } from '@/lib/queries/donators';
 import { getAboutContent } from '@/lib/queries/about';
 import { getCulturalPortalPageContent } from '@/lib/queries/page-content';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 async function CulturalPortalPrimarySections() {
-  const [pageContent, home, menuTree] = await Promise.all([
+  const [pageContent, home, menuTree, locale] = await Promise.all([
     getCulturalPortalPageContent(),
     getHomeContent(),
     getMenuTree(),
+    getCurrentSiteLocale(),
   ]);
   const visibility = pageContent.sectionVisibility;
   const categories = buildCulturePortalCategories(menuTree);
@@ -40,9 +43,10 @@ async function CulturalPortalPrimarySections() {
         <CulturalPortalHero
           eyebrow={home.heroBadge}
           title={`${home.heroTitle} ${home.heroHighlight}`.trim()}
-          accent={(home.heroSubtitle || 'CULTURAL HERITAGE PORTAL').replace('\n', ' ')}
+          accent={(home.heroSubtitle || uiMessage(locale, 'culturalHeritagePortal')).replace('\n', ' ')}
           subtitle={home.heroDescription}
           heroImage={resolvePageHeroImageUrl(pageContent.heroImage)}
+          locale={locale}
         />
       ) : null}
       {isSectionEnabled(visibility, 'stats') ? <CulturalPortalStatsBar stats={home.stats} /> : null}

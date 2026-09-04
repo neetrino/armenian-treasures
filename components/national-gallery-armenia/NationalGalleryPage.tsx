@@ -25,12 +25,16 @@ import { isSectionEnabled } from '@/lib/landing/landing-section-utils';
 import { SvgDefs } from '@/components/national-gallery-armenia/site-icons';
 
 import { getNationalGalleryPageContent } from '@/lib/queries/page-content';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 
 
 export async function NationalGalleryPage() {
 
-  const content = await getNationalGalleryPageContent();
+  const [content, locale] = await Promise.all([
+    getNationalGalleryPageContent(),
+    getCurrentSiteLocale(),
+  ]);
 
   const visibility = content.sectionVisibility;
 
@@ -42,7 +46,11 @@ export async function NationalGalleryPage() {
 
       {isSectionEnabled(visibility, 'hero') ? (
 
-        <NationalGalleryHero imgBase={content.imgBase} heroImage={content.heroImage} />
+        <NationalGalleryHero
+          imgBase={content.imgBase}
+          heroImage={content.heroImage}
+          locale={locale}
+        />
 
       ) : null}
 

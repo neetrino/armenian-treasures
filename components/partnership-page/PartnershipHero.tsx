@@ -1,20 +1,40 @@
 import Link from 'next/link';
 import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import { cn } from '@/lib/utils';
 
-export function PartnershipBreadcrumb() {
+export function PartnershipBreadcrumb({ locale }: { locale: SiteLocaleCode }) {
   return (
-    <div className="breadcrumb" aria-label="Breadcrumb">
-      <Link href="/">Armenian Treasures</Link>
+    <div className="breadcrumb" aria-label={uiMessage(locale, 'breadcrumb')}>
+      <Link href="/">{uiMessage(locale, 'armenianTreasures')}</Link>
       <span style={{ opacity: 0.4 }}>·</span>
-      <span>Partnerships</span>
+      <span>{uiMessage(locale, 'partnerships')}</span>
     </div>
   );
 }
 
-export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
+interface PartnershipHeroProps {
+  heroImage?: string | null;
+  locale: SiteLocaleCode;
+}
+
+export function PartnershipHero({ heroImage, locale }: PartnershipHeroProps) {
+  const title = uiMessage(locale, 'safeguarding');
+  const titleLine2 = uiMessage(locale, 'armenian');
+  const accent = uiMessage(locale, 'civilisationTogether');
+  const globalAlliance = uiMessage(locale, 'globalAlliance');
+  const becomePartner = uiMessage(locale, 'becomeAPartner');
+  const ourPartners = uiMessage(locale, 'ourPartners');
+  const titleIsArmenian =
+    containsArmenianScript(title) ||
+    containsArmenianScript(titleLine2) ||
+    containsArmenianScript(accent);
+
   return (
-    <div className="hero partnership-hero">
-      <PartnershipBreadcrumb />
+    <div className="hero partnership-hero" data-site-hero>
+      <PartnershipBreadcrumb locale={locale} />
       {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
@@ -32,29 +52,40 @@ export function PartnershipHero({ heroImage }: { heroImage?: string | null }) {
         <line x1="1140" y1="450" x2="1440" y2="450" stroke="rgba(201,168,76,0.06)" strokeWidth="1" />
       </svg>
       <div className="hero-content">
-        <div className="hero-eyebrow reveal">Global Institutional Alliance</div>
-        <h1 className="reveal">
-          Safeguarding
+        <div
+          className={cn(
+            'hero-eyebrow reveal',
+            containsArmenianScript(globalAlliance) && 'hero-eyebrow--hy',
+          )}
+        >
+          {globalAlliance}
+        </div>
+        <h1 className={cn('reveal', titleIsArmenian && 'hero-title--hy')}>
+          {title}
           <br />
-          Armenian
-          <span className="hero-accent">Civilisation Together</span>
+          {titleLine2}
+          <span className={cn(containsArmenianScript(accent) && 'hero-accent--hy')}>{accent}</span>
         </h1>
-        <p className="hero-tagline reveal">Cultural Stewardship · Digital Preservation · Global Reach</p>
-        <p className="hero-sub reveal">
-          We unite governments, museums, foundations, and innovators around a single conviction — that Armenian
-          heritage is not a regional concern, but a treasure of all humanity.
-        </p>
+        <p className="hero-tagline reveal">{uiMessage(locale, 'partnershipTagline')}</p>
+        <p className="hero-sub reveal">{uiMessage(locale, 'partnershipHeroDescription')}</p>
         <div className="hero-btns reveal">
-          <a href="#partner-form" className="btn-gold">
-            Become a Partner
+          <a
+            href="#partner-form"
+            className={cn('btn-gold', containsArmenianScript(becomePartner) && 'btn--hy')}
+          >
+            {becomePartner}
           </a>
-          <a href="#partners" className="btn-outline">
-            Our Partners
+          <a
+            href="#partners"
+            className={cn('btn-outline', containsArmenianScript(ourPartners) && 'btn--hy')}
+          >
+            {ourPartners}
           </a>
         </div>
       </div>
       <div className="hero-scroll" aria-hidden>
         <div className="scroll-line" />
+        <span>{uiMessage(locale, 'scroll')}</span>
       </div>
     </div>
   );

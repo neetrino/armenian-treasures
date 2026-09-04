@@ -4,18 +4,21 @@ import { ButtonLink } from '@/components/ui/Button';
 import { clamp, formatCurrency } from '@/lib/utils';
 import type { PublicProjectDTO } from '@/lib/dto';
 import { cn } from '@/lib/utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 interface ProjectCardProps {
   project: PublicProjectDTO;
+  locale: SiteLocaleCode;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, locale }: ProjectCardProps) {
   const percent = project.goalAmount
     ? clamp(Math.round((project.raisedAmount / project.goalAmount) * 100), 0, 100)
     : 0;
   const isFunded = project.status === 'FUNDED' || percent >= 100;
   const statusLabel = isFunded
-    ? 'Funded'
+    ? uiMessage(locale, 'funded')
     : project.status.charAt(0) + project.status.slice(1).toLowerCase();
 
   return (
@@ -62,9 +65,10 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="mt-auto flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs text-surface-body">
             <span>
-              <span className="font-semibold text-heritage-gold">{formatCurrency(project.raisedAmount)}</span>
-              {' raised of '}
-              {formatCurrency(project.goalAmount)}
+              {uiMessageFormat(locale, 'raisedOf', {
+                raised: formatCurrency(project.raisedAmount),
+                goal: formatCurrency(project.goalAmount),
+              })}
             </span>
             <span className="font-semibold text-heritage-teal">{percent}%</span>
           </div>
@@ -87,7 +91,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
               size="sm"
               withArrow={!isFunded}
             >
-              {isFunded ? 'See impact' : 'Support this project'}
+              {isFunded ? uiMessage(locale, 'seeImpact') : uiMessage(locale, 'supportThisProject')}
             </ButtonLink>
           </div>
         </div>

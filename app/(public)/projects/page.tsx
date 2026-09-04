@@ -8,6 +8,8 @@ import { getPublishedProjects } from '@/lib/queries/projects';
 import { getProjectsPageContent } from '@/lib/queries/page-content';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -18,30 +20,35 @@ export const metadata = buildPublicPageMetadata({
 });
 
 async function ProjectsPage() {
-  const [projects, pageContent] = await Promise.all([getPublishedProjects(), getProjectsPageContent()]);
+  const [projects, pageContent, locale] = await Promise.all([
+    getPublishedProjects(),
+    getProjectsPageContent(),
+    getCurrentSiteLocale(),
+  ]);
   const mappedProjects = mapProjectsToCulturalPortalProjects(projects);
   const heroImage = resolvePageHeroImageUrl(pageContent.heroImage);
 
   return (
     <HeritageLandingShell>
       <LandingHero
-        eyebrow="PROJECTS"
-        title="ARMENIAN TREASURES"
-        accent="ACTIVE MISSIONS"
-        subtitle="Field digitization campaigns, restoration initiatives, and archive programs powered by the foundation."
+        locale={locale}
+        eyebrow={uiMessage(locale, 'projectsEyebrow')}
+        title={uiMessage(locale, 'projectsTitle')}
+        accent={uiMessage(locale, 'projectsAccent')}
+        subtitle={uiMessage(locale, 'projectsSubtitle')}
         heroImage={heroImage}
         ctas={[
-          { label: 'Explore Projects', href: '#projects', variant: 'gold' },
-          { label: 'Support The Mission', href: '/donate', variant: 'teal' },
+          { label: uiMessage(locale, 'exploreProjects'), href: '#projects', variant: 'gold' },
+          { label: uiMessage(locale, 'supportTheMission'), href: '/donate', variant: 'teal' },
         ]}
       />
 
       <KhndzoreskDivider />
 
       <CulturalPortalProjects
-        eyebrow="PROJECT PORTAL"
-        title="UPCOMING & ACTIVE INITIATIVES"
-        description="Browse the current foundation roadmap with transparent status, category, and regional focus."
+        eyebrow={uiMessage(locale, 'projectPortal')}
+        title={uiMessage(locale, 'activeInitiatives')}
+        description={uiMessage(locale, 'projectsPortalDescription')}
         projects={mappedProjects}
       />
     </HeritageLandingShell>

@@ -16,7 +16,7 @@ import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-secti
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
-import { hydrateCultureItemMedia, parseCultureItemMedia, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
+import { hydrateCultureItemMedia, parseCultureItemMedia, firstTourUrl, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
 import { mediaForLocale, parseMediaByLocale } from '@/lib/culture-item-media-locale';
 import type {
   Career,
@@ -184,6 +184,18 @@ export function toPublicCultureItem(
   row: CultureItem,
   locale: SiteLocaleCode = 'EN',
 ): PublicCultureItemDTO {
+  const media = mediaForLocale(
+    hydrateCultureItemMedia({
+      mediaContent: row.mediaContent,
+      description: resolveLocalizedText(row.description, locale) || row.description,
+      tourUrl: row.tourUrl,
+      videoUrl: row.videoUrl,
+      galleryImages: row.galleryImages,
+    }),
+    parseMediaByLocale(row.mediaContent),
+    locale,
+  );
+
   return {
     id: row.id,
     title: resolveLocalizedText(row.title, locale),
@@ -201,19 +213,9 @@ export function toPublicCultureItem(
     cardBackgroundColor: row.cardBackgroundColor,
     cardBackgroundImage: row.cardBackgroundImage,
     galleryImages: row.galleryImages ?? [],
-    tourUrl: row.tourUrl,
+    tourUrl: row.tourUrl?.trim() || firstTourUrl(media),
     videoUrl: row.videoUrl,
-    media: mediaForLocale(
-      hydrateCultureItemMedia({
-        mediaContent: row.mediaContent,
-        description: resolveLocalizedText(row.description, locale) || row.description,
-        tourUrl: row.tourUrl,
-        videoUrl: row.videoUrl,
-        galleryImages: row.galleryImages,
-      }),
-      parseMediaByLocale(row.mediaContent),
-      locale,
-    ),
+    media,
     latitude: row.latitude,
     longitude: row.longitude,
     mapUrl: resolveStoredMapUrl(row.mapUrl, row.latitude, row.longitude),

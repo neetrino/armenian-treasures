@@ -5,6 +5,8 @@ import { SubcategoryProposalForm } from '@/components/forms/SubcategoryProposalF
 import { findCategoryPageNode } from '@/lib/culture-routes';
 import { getMenuTree } from '@/lib/queries/menu';
 import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -29,7 +31,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 async function NewSubcategoryFormPage(props: PageProps) {
   const params = await props.params;
-  const tree = await getMenuTree();
+  const [tree, locale] = await Promise.all([getMenuTree(), getCurrentSiteLocale()]);
   const node = findCategoryPageNode(tree, params.categorySlug);
   const formChild = node?.children?.find(
     (child) => child.isActive && child.routeType === 'SUBCATEGORY_FORM',
@@ -40,25 +42,21 @@ async function NewSubcategoryFormPage(props: PageProps) {
     <CultureFormPageView
       kind="new-subcatalog"
       category={node}
-      title="Add a new sub-catalog"
-      description={`Propose a new ${node.title.toLowerCase()} sub-catalog to expand the open archive. Every proposal is reviewed by our curators before it goes live.`}
+      title={uiMessage(locale, 'addNewSubcatalog')}
+      description={uiMessageFormat(locale, 'proposeSubcatalogDescription', {
+        category: node.title.toLowerCase(),
+      })}
       breadcrumb={[
         { label: node.title, href: `/culture/${node.slug}` },
-        { label: 'New sub-catalog' },
+        { label: uiMessage(locale, 'newSubcatalog') },
       ]}
-      form={<SubcategoryProposalForm parentCategorySlug={node.slug} />}
+      form={<SubcategoryProposalForm parentCategorySlug={node.slug} locale={locale} />}
       aside={
         <>
-          <p className="sec-label">How we review</p>
-          <h2 className="sec-title">A curator reads every proposal.</h2>
-          <p>
-            Submissions are queued for review by our cultural curators. We may follow up by email
-            to ask for sources, photos or references before publishing.
-          </p>
-          <p>
-            Approval here is for tracking only — your proposal will be added to the menu manually
-            once a curator approves the scope.
-          </p>
+          <p className="sec-label">{uiMessage(locale, 'howWeReview')}</p>
+          <h2 className="sec-title">{uiMessage(locale, 'curatorReadsEveryProposal')}</h2>
+          <p>{uiMessage(locale, 'proposalReviewDetails')}</p>
+          <p>{uiMessage(locale, 'proposalApprovalDetails')}</p>
         </>
       }
     />
