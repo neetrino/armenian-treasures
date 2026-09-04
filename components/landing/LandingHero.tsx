@@ -2,6 +2,9 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { cn } from '@/lib/utils';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export interface LandingHeroCta {
   label: string;
@@ -20,6 +23,7 @@ interface LandingHeroProps {
   heroClassName?: string;
   showScroll?: boolean;
   breadcrumb?: ReactNode;
+  locale?: SiteLocaleCode;
 }
 
 const CTA_CLASS: Record<LandingHeroCta['variant'], string> = {
@@ -38,7 +42,10 @@ function LandingHeroCornerOrnament() {
 }
 
 function LandingHeroCtaLink({ cta }: { cta: LandingHeroCta }) {
-  const className = CTA_CLASS[cta.variant];
+  const className = cn(
+    CTA_CLASS[cta.variant],
+    containsArmenianScript(cta.label) && 'btn--hy',
+  );
   if (cta.href.startsWith('#')) {
     return (
       <a href={cta.href} className={className}>
@@ -64,21 +71,35 @@ export function LandingHero({
   heroClassName = 'cultural-portal-hero',
   showScroll = true,
   breadcrumb,
+  locale = 'EN',
 }: LandingHeroProps) {
+  const titleIsArmenian = containsArmenianScript(title);
+  const accentIsArmenian = containsArmenianScript(accent);
+  const sloganIsArmenian = Boolean(slogan && containsArmenianScript(slogan));
+
   return (
-    <div className={cn('hero', heroClassName)}>
+    <div className={cn('hero', heroClassName)} data-site-hero>
       {breadcrumb}
       {heroImage ? <HeroImageOverlay imageUrl={heroImage} className="hero-img-overlay" /> : null}
       <div className="hero-bg" />
       <div className="hero-grain" />
       <LandingHeroCornerOrnament />
       <div className="hero-content">
-        <p className="hero-eyebrow reveal">{eyebrow}</p>
-        <h1 className="reveal">
+        <p
+          className={cn(
+            'hero-eyebrow reveal',
+            containsArmenianScript(eyebrow) && 'hero-eyebrow--hy',
+          )}
+        >
+          {eyebrow}
+        </p>
+        <h1 className={cn('reveal', titleIsArmenian && 'hero-title--hy')}>
           {title}
-          <span>{accent}</span>
+          <span className={cn(accentIsArmenian && 'hero-accent--hy')}>{accent}</span>
         </h1>
-        {slogan ? <p className="hero-slogan reveal">{slogan}</p> : null}
+        {slogan ? (
+          <p className={cn('hero-slogan reveal', sloganIsArmenian && 'hero-slogan--hy')}>{slogan}</p>
+        ) : null}
         {subtitle ? <p className="hero-sub reveal">{subtitle}</p> : null}
         {ctas.length > 0 ? (
           <div className="hero-btns reveal">
@@ -91,7 +112,7 @@ export function LandingHero({
       {showScroll ? (
         <div className="hero-scroll">
           <div className="scroll-line" />
-          <span>SCROLL</span>
+          <span>{uiMessage(locale, 'scroll')}</span>
         </div>
       ) : null}
     </div>

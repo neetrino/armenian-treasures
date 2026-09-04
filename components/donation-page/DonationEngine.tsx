@@ -18,6 +18,8 @@ import {
   clampPatronAmount,
   getTierAmountAmd,
 } from '@/components/donation-page/donation-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 type CertificateTemplateUrls = {
   guardian: string | null;
@@ -32,6 +34,7 @@ type DonationEngineProps = {
   patronSliderTicks: readonly number[];
   patronQuickChips: readonly number[];
   certificateUrls?: CertificateTemplateUrls;
+  locale?: SiteLocaleCode;
 };
 
 export function DonationEngine({
@@ -41,6 +44,7 @@ export function DonationEngine({
   patronSliderTicks,
   patronQuickChips,
   certificateUrls,
+  locale = 'EN',
 }: DonationEngineProps) {
   const patronCardRef = useRef<HTMLDivElement>(null);
   const customInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +92,7 @@ export function DonationEngine({
   }
 
   return (
-    <section className="sec" id="give" aria-label="Choose your patronage level">
+    <section className="sec" id="give" aria-label={uiMessage(locale, 'choosePatronage')}>
       <div className="reveal">
         <p className="sec-label">{engine.label}</p>
         <h2 className="sec-title">{engine.title}</h2>
@@ -107,6 +111,7 @@ export function DonationEngine({
         selectedId={selectedId}
         checkoutEnabled={checkoutEnabled}
         onSelect={handleTierSelect}
+        locale={locale}
       />
 
       <DonationPatronSlider
@@ -120,6 +125,7 @@ export function DonationEngine({
         checkoutEnabled={checkoutEnabled}
         onSliderChange={handleSliderChange}
         onCustomBlur={handleCustomBlur}
+        locale={locale}
       />
 
       <DonationCertificateBlock

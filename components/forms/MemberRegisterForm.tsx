@@ -1,27 +1,35 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useMemo } from 'react';
 import { COUNTRY_OPTIONS } from '@/lib/constants/countries';
 import { SelectField } from '@/components/forms/fields/SelectField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { registerAction, type MemberRegisterActionState } from '@/app/(public)/register/actions';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: MemberRegisterActionState = { status: 'idle' };
 
-const countrySelectOptions = [
-  { value: '', label: 'Select country', disabled: true },
-  ...COUNTRY_OPTIONS,
-];
+interface MemberRegisterFormProps {
+  locale?: SiteLocaleCode;
+}
 
-export function MemberRegisterForm() {
+export function MemberRegisterForm({ locale = 'EN' }: MemberRegisterFormProps) {
   const [state, formAction, isPending] = useActionState(registerAction, INITIAL);
+  const countrySelectOptions = useMemo(
+    () => [
+      { value: '', label: uiMessage(locale, 'selectCountry'), disabled: true },
+      ...COUNTRY_OPTIONS,
+    ],
+    [locale],
+  );
 
   return (
     <form action={formAction} className="auth-form">
       <SelectField
-        label="Country"
+        label={uiMessage(locale, 'country')}
         name="country"
         required
         defaultValue=""
@@ -30,7 +38,7 @@ export function MemberRegisterForm() {
         className="auth-field-input rounded-md"
       />
       <TextField
-        label="Email"
+        label={uiMessage(locale, 'email')}
         name="email"
         type="email"
         required
@@ -40,7 +48,7 @@ export function MemberRegisterForm() {
       />
       <div className="auth-form-row">
         <TextField
-          label="Name"
+          label={uiMessage(locale, 'name')}
           name="name"
           required
           autoComplete="given-name"
@@ -49,7 +57,7 @@ export function MemberRegisterForm() {
           inputClassName="auth-field-input rounded-md"
         />
         <TextField
-          label="Surname"
+          label={uiMessage(locale, 'surname')}
           name="surname"
           required
           autoComplete="family-name"
@@ -59,7 +67,7 @@ export function MemberRegisterForm() {
         />
       </div>
       <TextField
-        label="Phone"
+        label={uiMessage(locale, 'phone')}
         name="phone"
         type="tel"
         required
@@ -69,12 +77,12 @@ export function MemberRegisterForm() {
         inputClassName="auth-field-input rounded-md"
       />
       <TextField
-        label="Password"
+        label={uiMessage(locale, 'password')}
         name="password"
         type="password"
         required
         autoComplete="new-password"
-        hint="At least 8 characters"
+        hint={uiMessage(locale, 'passwordHint')}
         error={state.fieldErrors?.password}
         inputClassName="auth-field-input rounded-md"
       />
@@ -82,12 +90,12 @@ export function MemberRegisterForm() {
         <p className="auth-form-error">{state.message}</p>
       ) : null}
       <Button type="submit" disabled={isPending} withArrow className="auth-form-submit">
-        {isPending ? 'Creating account…' : 'Create account'}
+        {isPending ? uiMessage(locale, 'creatingAccount') : uiMessage(locale, 'createAccount')}
       </Button>
       <p className="auth-form-footer">
-        Already have an account?{' '}
+        {uiMessage(locale, 'haveAccount')}{' '}
         <Link href="/login" className="auth-form-link">
-          Sign in
+          {uiMessage(locale, 'signIn')}
         </Link>
       </p>
     </form>

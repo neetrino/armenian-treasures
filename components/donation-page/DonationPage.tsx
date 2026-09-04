@@ -12,12 +12,14 @@ import { getPublicDonators } from '@/lib/queries/donators';
 import { getDonationPageContent } from '@/lib/queries/page-content';
 import { getSiteSettings } from '@/lib/queries/settings';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export async function DonationPage() {
-  const [content, donators, settings] = await Promise.all([
+  const [content, donators, settings, locale] = await Promise.all([
     getDonationPageContent(),
     getPublicDonators(),
     getSiteSettings(),
+    getCurrentSiteLocale(),
   ]);
   const visibility = content.sectionVisibility;
 
@@ -28,6 +30,7 @@ export async function DonationPage() {
           breadcrumb={content.page.breadcrumb}
           hero={content.page.hero}
           heroImage={resolvePageHeroImageUrl(content.heroImage)}
+          locale={locale}
         />
       ) : null}
       {isSectionEnabled(visibility, 'stats') ? <DonationStatsBar stats={content.stats} /> : null}
@@ -39,6 +42,7 @@ export async function DonationPage() {
             impactRanges={content.impactRanges}
             patronSliderTicks={content.patronSliderTicks}
             patronQuickChips={content.patronQuickChips}
+            locale={locale}
             certificateUrls={{
               guardian: settings.certificateGuardianUrl,
               ambassador: settings.certificateAmbassadorUrl,

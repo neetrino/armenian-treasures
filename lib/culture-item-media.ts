@@ -63,6 +63,29 @@ function asString(value: unknown): string {
   return typeof value === 'string' ? value.trim() : '';
 }
 
+function looksLikeHttpUrl(value: string): boolean {
+  if (!value) return false;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Some admin saves put the Matterport/iframe URL in `title` and leave `url` empty.
+ * Normalize so the public page can embed the tour.
+ */
+export function normalizeTourBlock(tour: CultureTourBlock): CultureTourBlock {
+  const title = tour.title.trim();
+  const url = tour.url.trim();
+  if (url || !looksLikeHttpUrl(title)) {
+    return { ...tour, title, url };
+  }
+  return { ...tour, title: '', url: title };
+}
+
 function asTourType(value: unknown): CultureTourType {
   if (value === 'SCAN_3D' || value === 'MODEL_3D' || value === 'MATTERPORT') return 'SCAN_3D';
   if (value === 'DRONE') return 'DRONE';
@@ -103,13 +126,13 @@ function parseBlock(value: unknown): CultureDescriptionBlock {
 
 function parseTour(value: unknown): CultureTourBlock {
   const row = value && typeof value === 'object' ? (value as Record<string, unknown>) : {};
-  return {
+  return normalizeTourBlock({
     id: asString(row.id) || createId(),
     type: asTourType(row.type),
     title: asString(row.title),
     url: asString(row.url),
     previewImage: asString(row.previewImage),
-  };
+  });
 }
 
 function parseVideo(value: unknown): CultureVideoBlock {
@@ -203,7 +226,8 @@ export function galleryUrlsFromMedia(media: CultureItemMediaContent): string[] {
 }
 
 export function firstTourUrl(media: CultureItemMediaContent): string | null {
-  return media.tours.find((tour) => tour.url)?.url ?? null;
+  const tour = media.tours.map(normalizeTourBlock).find((entry) => entry.url);
+  return tour?.url ?? null;
 }
 
 export function firstVideoUrl(media: CultureItemMediaContent): string | null {

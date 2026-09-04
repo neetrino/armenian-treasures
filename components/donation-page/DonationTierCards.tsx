@@ -6,12 +6,15 @@ import {
 } from '@/lib/constants/donation-page';
 import { TierIcon } from '@/components/donation-page/TierIcon';
 import { formatAmd, getTierAmountAmd } from '@/components/donation-page/donation-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 type DonationTierCardsProps = {
   tiers: DonationTier[];
   selectedId: DonationTierId | null;
   checkoutEnabled: boolean;
   onSelect: (tierId: DonationTierId) => void;
+  locale?: SiteLocaleCode;
 };
 
 export function DonationTierCards({
@@ -19,6 +22,7 @@ export function DonationTierCards({
   selectedId,
   checkoutEnabled,
   onSelect,
+  locale = 'EN',
 }: DonationTierCardsProps) {
   const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
@@ -29,7 +33,11 @@ export function DonationTierCards({
   }
 
   return (
-    <div className="donation-tiers reveal" role="radiogroup" aria-label="Patronage tiers">
+    <div
+      className="donation-tiers reveal"
+      role="radiogroup"
+      aria-label={uiMessage(locale, 'choosePatronage')}
+    >
       {tiers.map((tier) => {
         const paymentDisabled = !checkoutEnabled;
         const amount = getTierAmountAmd(tier);
@@ -49,7 +57,7 @@ export function DonationTierCards({
             {tier.recommended ? (
               <>
                 <div className="shimmer" aria-hidden />
-                <div className="badge-rec">Most Chosen</div>
+                <div className="badge-rec">{uiMessage(locale, 'mostChosen')}</div>
               </>
             ) : null}
             <div className="tier-icon" aria-hidden>

@@ -4,9 +4,11 @@ import { Castle, Church, Landmark, MapPin, Mountain, Sparkles } from 'lucide-rea
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
-  HERITAGE_MAP_FILTER_OPTIONS,
+  heritageMapFilterOptions,
   type HeritageMapFilterValue,
 } from '@/lib/constants/heritage-map-filters';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 const FILTER_ICONS: Record<HeritageMapFilterValue, LucideIcon> = {
   ALL: MapPin,
@@ -20,10 +22,18 @@ const FILTER_ICONS: Record<HeritageMapFilterValue, LucideIcon> = {
 interface MapFilterBarProps {
   filter: HeritageMapFilterValue;
   onFilterChange: (value: HeritageMapFilterValue) => void;
+  locale?: SiteLocaleCode;
   overlay?: boolean;
 }
 
-export function MapFilterBar({ filter, onFilterChange, overlay = false }: MapFilterBarProps) {
+export function MapFilterBar({
+  filter,
+  onFilterChange,
+  locale = 'EN',
+  overlay = false,
+}: MapFilterBarProps) {
+  const filterOptions = heritageMapFilterOptions(locale);
+
   return (
     <div
       className={cn(
@@ -31,9 +41,9 @@ export function MapFilterBar({ filter, onFilterChange, overlay = false }: MapFil
         overlay && 'pointer-events-auto',
       )}
       role="group"
-      aria-label="Filter heritage sites by category"
+      aria-label={uiMessage(locale, 'filterSitesByCategory')}
     >
-      {HERITAGE_MAP_FILTER_OPTIONS.map((option) => {
+      {filterOptions.map((option) => {
         const Icon = FILTER_ICONS[option.value];
         const active = filter === option.value;
         return (

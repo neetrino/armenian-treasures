@@ -5,16 +5,22 @@ import { useActionState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { loginAction, type MemberLoginActionState } from '@/app/(public)/login/actions';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: MemberLoginActionState = { status: 'idle' };
 
-export function MemberLoginForm() {
+interface MemberLoginFormProps {
+  locale?: SiteLocaleCode;
+}
+
+export function MemberLoginForm({ locale = 'EN' }: MemberLoginFormProps) {
   const [state, formAction, isPending] = useActionState(loginAction, INITIAL);
 
   return (
     <form action={formAction} className="auth-form">
       <TextField
-        label="Email"
+        label={uiMessage(locale, 'email')}
         name="email"
         type="email"
         required
@@ -23,7 +29,7 @@ export function MemberLoginForm() {
         inputClassName="auth-field-input rounded-md"
       />
       <TextField
-        label="Password"
+        label={uiMessage(locale, 'password')}
         name="password"
         type="password"
         required
@@ -35,12 +41,12 @@ export function MemberLoginForm() {
         <p className="auth-form-error">{state.message}</p>
       ) : null}
       <Button type="submit" disabled={isPending} withArrow className="auth-form-submit">
-        {isPending ? 'Signing in…' : 'Sign in'}
+        {isPending ? uiMessage(locale, 'signingIn') : uiMessage(locale, 'signIn')}
       </Button>
       <p className="auth-form-footer">
-        Don&apos;t have an account?{' '}
+        {uiMessage(locale, 'noAccount')}{' '}
         <Link href="/register" className="auth-form-link">
-          Create one
+          {uiMessage(locale, 'createOne')}
         </Link>
       </p>
     </form>

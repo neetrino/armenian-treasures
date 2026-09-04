@@ -4,11 +4,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface LeafletMapProps {
   items: PublicCultureItemDTO[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  locale?: SiteLocaleCode;
 }
 
 const ARMENIA_CENTER: [number, number] = [40.1, 44.95];
@@ -142,12 +145,16 @@ function mappableItems(items: PublicCultureItemDTO[]): PublicCultureItemDTO[] {
   );
 }
 
-export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
+export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: LeafletMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
   const [wheelZoomActive, setWheelZoomActive] = useState(false);
+  const armeniaLabel = uiMessage(locale, 'armenia');
+  const mapAriaLabel = uiMessage(locale, 'interactiveHeritageMapAria');
+  const clickToZoomHint = uiMessage(locale, 'mapClickToZoom');
+  const scrollToZoomHint = uiMessage(locale, 'mapScrollToZoom');
   const markerIcons = useMemo(() => {
     const icons = new Map<string, L.DivIcon>();
     for (const item of mappableItems(items)) {
@@ -230,11 +237,11 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
       const lng = item.longitude!;
       const marker = L.marker([lat, lng], { icon: markerIcons.get(item.id) ?? makeIcon(item.mapType, false) }).addTo(layer);
       marker.bindPopup(
-        `<strong>${escapeHtml(item.title)}</strong><br /><small>${escapeHtml(item.region ?? 'Armenia')}</small>`,
+        `<strong>${escapeHtml(item.title)}</strong><br /><small>${escapeHtml(item.region ?? armeniaLabel)}</small>`,
       );
       marker.on('click', () => onSelectRef.current(item.id));
     }
-  }, [items, markerIcons]);
+  }, [armeniaLabel, items, markerIcons]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -252,7 +259,7 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
         ref={containerRef}
         className="z-0 h-full w-full"
         role="application"
-        aria-label="Interactive heritage map"
+        aria-label={mapAriaLabel}
         tabIndex={0}
       />
       {!wheelZoomActive ? (
@@ -260,14 +267,14 @@ export function LeafletMap({ items, selectedId, onSelect }: LeafletMapProps) {
           className="pointer-events-none absolute bottom-4 left-1/2 z-[500] max-w-[min(calc(100%-2rem),20rem)] -translate-x-1/2 rounded-full border border-white/15 bg-slate-950/75 px-4 py-2 text-center text-[11px] uppercase tracking-[0.18em] text-slate-200 shadow-lg backdrop-blur-sm"
           aria-hidden
         >
-          Click map to zoom · Scroll page normally
+          {clickToZoomHint}
         </div>
       ) : (
         <div
           className="pointer-events-none absolute bottom-4 left-1/2 z-[500] -translate-x-1/2 rounded-full border border-heritage-teal/35 bg-slate-950/80 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-heritage-teal shadow-lg backdrop-blur-sm"
           aria-hidden
         >
-          Scroll to zoom · Esc to exit
+          {scrollToZoomHint}
         </div>
       )}
     </div>

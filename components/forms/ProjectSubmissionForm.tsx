@@ -10,39 +10,42 @@ import {
   GENERAL_CATEGORY_VALUE,
   PROJECT_SUBMISSION_INITIAL,
 } from '@/app/(public)/culture/submit/project-submission-shared';
+import { uiMessage } from '@/lib/i18n/ui-messages';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface ProjectSubmissionFormProps {
   categories: { id: string; title: string }[];
+  locale?: SiteLocaleCode;
 }
 
-export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps) {
+export function ProjectSubmissionForm({
+  categories,
+  locale = 'EN',
+}: ProjectSubmissionFormProps) {
   const [state, formAction, isPending] = useActionState(
     submitProjectMaterial,
     PROJECT_SUBMISSION_INITIAL,
   );
   const renderedAt = useMemo(() => Date.now(), []);
   const options: SelectOption[] = [
-    { value: '', label: 'Select a category…', disabled: true },
+    { value: '', label: uiMessage(locale, 'selectCategory'), disabled: true },
     ...categories
       .filter((category) => category.id.length > 0)
       .map((category) => ({
         value: category.id,
         label: category.title,
       })),
-    { value: GENERAL_CATEGORY_VALUE, label: 'General submission' },
+    { value: GENERAL_CATEGORY_VALUE, label: uiMessage(locale, 'generalSubmission') },
   ];
 
   if (state.status === 'success') {
     return (
       <div className="rounded-2xl border border-stone-100 bg-white p-8 shadow-card">
-        <p className="eyebrow">Submission received</p>
+        <p className="eyebrow">{uiMessage(locale, 'submissionReceived')}</p>
         <h2 className="mt-3 font-display text-2xl text-ink">
-          {state.message ?? 'Thank you. Your submission is queued for review.'}
+          {state.message ?? uiMessage(locale, 'thankYouSubmission')}
         </h2>
-        <p className="mt-3 text-sm text-ink-soft">
-          Our curators review every project submission by hand and will follow up by email if we
-          need anything further.
-        </p>
+        <p className="mt-3 text-sm text-ink-soft">{uiMessage(locale, 'submissionFollowUp')}</p>
       </div>
     );
   }
@@ -60,27 +63,27 @@ export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps
       />
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField
-          label="Your name"
+          label={uiMessage(locale, 'yourName')}
           name="submitterName"
           required
           maxLength={80}
           error={state.fieldErrors?.submitterName}
         />
         <TextField
-          label="Email"
+          label={uiMessage(locale, 'email')}
           name="submitterEmail"
           type="email"
           required
           error={state.fieldErrors?.submitterEmail}
         />
         <TextField
-          label="Phone (optional)"
+          label={uiMessage(locale, 'phoneOptional')}
           name="submitterPhone"
           type="tel"
           error={state.fieldErrors?.submitterPhone}
         />
         <TextField
-          label="Project title"
+          label={uiMessage(locale, 'projectTitle')}
           name="projectTitle"
           required
           maxLength={120}
@@ -88,7 +91,7 @@ export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps
         />
       </div>
       <SelectField
-        label="Closest category"
+        label={uiMessage(locale, 'closestCategory')}
         name="category"
         required
         defaultValue=""
@@ -96,25 +99,25 @@ export function ProjectSubmissionForm({ categories }: ProjectSubmissionFormProps
         error={state.fieldErrors?.category}
       />
       <TextareaField
-        label="Describe your project or material"
+        label={uiMessage(locale, 'describeProject')}
         name="description"
         required
         rows={7}
         error={state.fieldErrors?.description}
       />
       <TextareaField
-        label="Additional notes (optional)"
+        label={uiMessage(locale, 'additionalNotes')}
         name="message"
         rows={3}
         error={state.fieldErrors?.message}
       />
       {state.status === 'error' ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">
-          {state.message ?? 'Something went wrong. Please try again.'}
+          {state.message ?? uiMessage(locale, 'somethingWrong')}
         </p>
       ) : null}
       <Button type="submit" disabled={isPending} withArrow>
-        {isPending ? 'Sending…' : 'Send submission'}
+        {isPending ? uiMessage(locale, 'sending') : uiMessage(locale, 'sendSubmission')}
       </Button>
     </form>
   );

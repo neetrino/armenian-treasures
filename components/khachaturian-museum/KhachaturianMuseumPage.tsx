@@ -23,12 +23,16 @@ import { isSectionEnabled } from '@/lib/landing/landing-section-utils';
 import { SvgDefs } from '@/components/khachaturian-museum/site-icons';
 
 import { getKhachaturianPageContent } from '@/lib/queries/page-content';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 
 
 export async function KhachaturianMuseumPage() {
 
-  const content = await getKhachaturianPageContent();
+  const [content, locale] = await Promise.all([
+    getKhachaturianPageContent(),
+    getCurrentSiteLocale(),
+  ]);
 
   const visibility = content.sectionVisibility;
 
@@ -40,7 +44,11 @@ export async function KhachaturianMuseumPage() {
 
       {isSectionEnabled(visibility, 'hero') ? (
 
-        <KhachaturianMuseumHero imgBase={content.imgBase} heroImage={content.heroImage} />
+        <KhachaturianMuseumHero
+          imgBase={content.imgBase}
+          heroImage={content.heroImage}
+          locale={locale}
+        />
 
       ) : null}
 

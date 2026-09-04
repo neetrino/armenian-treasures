@@ -21,12 +21,16 @@ import { isSectionEnabled } from '@/lib/landing/landing-section-utils';
 import { SvgDefs } from '@/components/khndzoresk/site-icons';
 
 import { getKhndzoreskPageContent } from '@/lib/queries/page-content';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 
 
 export async function KhndzoreskPage() {
 
-  const content = await getKhndzoreskPageContent();
+  const [content, locale] = await Promise.all([
+    getKhndzoreskPageContent(),
+    getCurrentSiteLocale(),
+  ]);
 
   const visibility = content.sectionVisibility;
 
@@ -38,7 +42,7 @@ export async function KhndzoreskPage() {
 
       {isSectionEnabled(visibility, 'hero') ? (
 
-        <KhndzoreskHero imgBase={content.imgBase} heroImage={content.heroImage} />
+        <KhndzoreskHero imgBase={content.imgBase} heroImage={content.heroImage} locale={locale} />
 
       ) : null}
 

@@ -5,6 +5,7 @@ import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries
 import { parseCatalogSearchParams } from '@/lib/culture-catalog/catalog-search-params';
 import { getPublishedCultureItems } from '@/lib/queries/culture-items';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export const revalidate = 60;
 
@@ -22,9 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function SearchPage(props: SearchPageProps) {
-  const [params, items] = await Promise.all([
+  const [params, items, locale] = await Promise.all([
     props.searchParams,
     getPublishedCultureItems(),
+    getCurrentSiteLocale(),
   ]);
   const filters = parseCatalogSearchParams(params);
   const matches = filterCatalogItems(items, filters);
@@ -37,6 +39,7 @@ async function SearchPage(props: SearchPageProps) {
       regions={options.regions}
       periods={options.periods}
       types={options.types}
+      locale={locale}
     />
   );
 }

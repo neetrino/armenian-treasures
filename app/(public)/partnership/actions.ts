@@ -17,7 +17,10 @@ const partnershipInquirySchema = z.object({
 
 export interface PartnershipInquiryActionState {
   status: 'idle' | 'success' | 'error';
-  message?: string;
+  messageKey?:
+    | 'partnershipTooManyRequests'
+    | 'partnershipCorrectFields'
+    | 'partnershipCredentialsReceived';
   fieldErrors?: Record<string, string>;
 }
 
@@ -30,7 +33,7 @@ export async function submitPartnershipInquiry(
   if (!limit.allowed) {
     return {
       status: 'error',
-      message: 'Too many requests from your network. Please try again later.',
+      messageKey: 'partnershipTooManyRequests',
     };
   }
 
@@ -51,7 +54,7 @@ export async function submitPartnershipInquiry(
     }
     return {
       status: 'error',
-      message: 'Please correct the highlighted fields.',
+      messageKey: 'partnershipCorrectFields',
       fieldErrors,
     };
   }
@@ -59,8 +62,7 @@ export async function submitPartnershipInquiry(
   if (parsed.data.website) {
     return {
       status: 'success',
-      message:
-        'Your credentials have been received. Our Partnerships team will contact you within 5 business days.',
+      messageKey: 'partnershipCredentialsReceived',
     };
   }
 
@@ -84,7 +86,6 @@ export async function submitPartnershipInquiry(
 
   return {
     status: 'success',
-    message:
-      'Your credentials have been received. Our Partnerships team will contact you within 5 business days.',
+    messageKey: 'partnershipCredentialsReceived',
   };
 }

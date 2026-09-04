@@ -6,10 +6,14 @@ import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/Cultur
 import { CultureItemMediaSections } from '@/components/culture-catalog/CultureItemMediaSections';
 import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
+import { firstTourUrl } from '@/lib/culture-item-media';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureItemDetailViewProps {
   item: PublicCultureItemDetailDTO;
+  locale?: SiteLocaleCode;
 }
 
 function formatEnumLabel(value: string): string {
@@ -19,7 +23,7 @@ function formatEnumLabel(value: string): string {
     .join(' ');
 }
 
-export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
+export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetailViewProps) {
   const menu = item.menuItem;
   const parent = menu?.parent ?? null;
   const description = item.shortDescription ?? item.description ?? '';
@@ -36,9 +40,9 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
       : [{ label: item.title }];
 
   const stats = [
-    item.region ? { value: item.region, label: 'Region' } : null,
-    item.periodLabel ? { value: item.periodLabel, label: 'Period' } : null,
-    { value: formatEnumLabel(item.itemType), label: 'Type' },
+    item.region ? { value: item.region, label: uiMessage(locale, 'region') } : null,
+    item.periodLabel ? { value: item.periodLabel, label: uiMessage(locale, 'period') } : null,
+    { value: formatEnumLabel(item.itemType), label: uiMessage(locale, 'type') },
   ].filter((stat): stat is { value: string; label: string } => stat !== null);
 
   const backHref = parent && menu
@@ -46,6 +50,7 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
     : menu
       ? `/culture/${menu.slug}`
       : '/culture';
+  const tourHref = item.tourUrl?.trim() || firstTourUrl(item.media);
 
   return (
     <CultureCatalogShell>
@@ -53,39 +58,49 @@ export function CultureItemDetailView({ item }: CultureItemDetailViewProps) {
         title={item.title}
         eyebrow={
           parent
-            ? `✦ ${parent.title} · ${menu?.title} · Armenia ✦`
-            : `✦ ${menu?.title ?? 'Culture Portal'} · Armenia ✦`
+            ? `✦ ${parent.title} · ${menu?.title} · ${uiMessage(locale, 'armenia')} ✦`
+            : `✦ ${menu?.title ?? uiMessage(locale, 'culturePortal')} · ${uiMessage(locale, 'armenia')} ✦`
         }
-        accent={item.periodLabel ?? item.region ?? 'Heritage Entry'}
+        accent={item.periodLabel ?? item.region ?? uiMessage(locale, 'heritageEntry')}
         slogan={
           item.region
             ? `${item.region}${item.yearLabel ? ` · ${item.yearLabel}` : ''}`
-            : 'Armenian cultural archive'
+            : uiMessage(locale, 'armenianArchive')
         }
-        description={hasTrimmedText(description) ? description : 'Curated entry from the Armenian cultural archive.'}
+        description={
+          hasTrimmedText(description) ? description : uiMessage(locale, 'curatedArchiveEntry')
+        }
         heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
+        locale={locale}
         ctas={[
-          { label: 'View Details', href: '#detail', variant: 'gold' },
-          ...(item.tourUrl ? [{ label: '3D Tour', href: '#tour', variant: 'teal' as const }] : []),
-          { label: 'Back to catalog', href: backHref, variant: 'outline' },
+          { label: uiMessage(locale, 'viewDetails'), href: '#detail', variant: 'gold' },
+          ...(tourHref
+            ? [{ label: uiMessage(locale, 'tour3d'), href: '#tour', variant: 'teal' as const }]
+            : []),
+          { label: uiMessage(locale, 'backToCatalog'), href: backHref, variant: 'outline' },
         ]}
       />
       {stats.length > 0 ? <CulturalPortalStatsBar stats={stats} /> : null}
       <LandingSectionStack>
         <section id="detail" className="catalog-detail-section">
-          <CultureItemMediaSections
-            title={item.title}
-            media={item.media}
-            locationName={item.locationName}
-            showOnMap={item.showOnMap}
-            mapUrl={item.mapUrl}
-          />
+          <div className="catalog-detail-main">
+            <CultureItemMediaSections
+              title={item.title}
+              media={item.media}
+              locationName={item.locationName}
+              showOnMap={item.showOnMap}
+              mapUrl={item.mapUrl}
+              latitude={item.latitude}
+              longitude={item.longitude}
+              locale={locale}
+            />
+          </div>
         </section>
         <div className="catalog-submit-cta reveal">
-          <p>Explore more entries in this catalog.</p>
+          <p>{uiMessage(locale, 'exploreMore')}</p>
           <Link href={backHref} className="btn-outline">
-            Back to {menu?.title ?? 'Culture Portal'}
+            {uiMessage(locale, 'backTo')} {menu?.title ?? uiMessage(locale, 'culturePortal')}
           </Link>
         </div>
       </LandingSectionStack>

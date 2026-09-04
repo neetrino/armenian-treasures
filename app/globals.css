@@ -378,14 +378,112 @@ html[lang='hyw'] .font-cinzel,
 html[lang='hy'] [data-site-hero] h1,
 html[lang='hyw'] [data-site-hero] h1,
 html[lang='hy'] .sec-title,
-html[lang='hyw'] .sec-title {
+html[lang='hyw'] .sec-title,
+html[lang='hy'] .khndzoresk-page h1,
+html[lang='hyw'] .khndzoresk-page h1,
+html[lang='hy'] .khndzoresk-page h2,
+html[lang='hyw'] .khndzoresk-page h2,
+html[lang='hy'] .blog-detail-title,
+html[lang='hyw'] .blog-detail-title,
+html[lang='hy'] .blog-section-title,
+html[lang='hyw'] .blog-section-title,
+html[lang='hy'] .blog-card-title,
+html[lang='hyw'] .blog-card-title,
+html[lang='hy'] .contact-direct-title,
+html[lang='hyw'] .contact-direct-title,
+html[lang='hy'] .about-mission-title,
+html[lang='hyw'] .about-mission-title,
+html[lang='hy'] .about-mission-pair-title,
+html[lang='hyw'] .about-mission-pair-title,
+html[lang='hy'] .about-team-name,
+html[lang='hyw'] .about-team-name,
+html[lang='hy'] .about-career-title,
+html[lang='hyw'] .about-career-title,
+html[lang='hy'] .khndzoresk-page .font-cinzel,
+html[lang='hyw'] .khndzoresk-page .font-cinzel,
+html[lang='hy'] .khndzoresk-page h2.font-cinzel,
+html[lang='hyw'] .khndzoresk-page h2.font-cinzel,
+html[lang='hy'] .khndzoresk-page h3.font-cinzel,
+html[lang='hyw'] .khndzoresk-page h3.font-cinzel {
   font-family: var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Override page CSS that forces Cinzel 800 on Armenian locales */
+html[lang='hy'] .khndzoresk-page .contact-direct-title,
+html[lang='hyw'] .khndzoresk-page .contact-direct-title,
+html[lang='hy'] .khndzoresk-page .about-mission-title,
+html[lang='hyw'] .khndzoresk-page .about-mission-title,
+html[lang='hy'] .khndzoresk-page .about-mission-pair-title,
+html[lang='hyw'] .khndzoresk-page .about-mission-pair-title,
+html[lang='hy'] .khndzoresk-page .about-team-name,
+html[lang='hyw'] .khndzoresk-page .about-team-name,
+html[lang='hy'] .khndzoresk-page .about-team-role,
+html[lang='hyw'] .khndzoresk-page .about-team-role,
+html[lang='hy'] .khndzoresk-page .about-career-title,
+html[lang='hyw'] .khndzoresk-page .about-career-title,
+html[lang='hy'] .khndzoresk-page .about-career-apply,
+html[lang='hyw'] .khndzoresk-page .about-career-apply {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.03em !important;
+  text-transform: none;
+}
+
+/* Armenian display titles: Cinzel has no Armenian glyphs; weight 900 synthesizes badly. */
+html[lang='hy'] .khndzoresk-page .hero h1,
+html[lang='hyw'] .khndzoresk-page .hero h1,
+.khndzoresk-page .hero h1.hero-title--hy,
+[data-site-hero] h1.hero-title--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.14 !important;
+}
+
+html[lang='hy'] .khndzoresk-page .hero h1 span,
+html[lang='hyw'] .khndzoresk-page .hero h1 span,
+.khndzoresk-page .hero h1 .hero-accent--hy,
+[data-site-hero] h1 .hero-accent--hy {
+  letter-spacing: 0.1em !important;
+  font-weight: 500 !important;
+}
+
+.khndzoresk-page .hero-eyebrow--hy,
+.khndzoresk-page .hero-slogan--hy,
+html[lang='hy'] .khndzoresk-page .hero-eyebrow,
+html[lang='hyw'] .khndzoresk-page .hero-eyebrow,
+html[lang='hy'] .khndzoresk-page .hero-slogan,
+html[lang='hyw'] .khndzoresk-page .hero-slogan {
+  font-family: var(--font-noto-serif-armenian), var(--font-inter), sans-serif;
+  letter-spacing: 0.12em;
+}
+
+.btn--hy,
+.khndzoresk-page .btn--hy,
+html[lang='hy'] .khndzoresk-page .btn-gold,
+html[lang='hyw'] .khndzoresk-page .btn-gold,
+html[lang='hy'] .khndzoresk-page .btn-teal,
+html[lang='hyw'] .khndzoresk-page .btn-teal,
+html[lang='hy'] .khndzoresk-page .btn-outline,
+html[lang='hyw'] .khndzoresk-page .btn-outline,
+html[lang='hy'] .khndzoresk-page a.btn-gold,
+html[lang='hyw'] .khndzoresk-page a.btn-gold,
+html[lang='hy'] .khndzoresk-page a.btn-teal,
+html[lang='hyw'] .khndzoresk-page a.btn-teal,
+html[lang='hy'] .khndzoresk-page a.btn-outline,
+html[lang='hyw'] .khndzoresk-page a.btn-outline {
+  font-family: var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.06em;
+  font-weight: 700;
 }
 
 html[lang='hy'] [data-site-header] nav[aria-label='Primary'] .font-cinzel,
 html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
   font-family: var(--font-noto-serif-armenian), Georgia, serif;
   font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -10,6 +10,8 @@ import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-cont
 import { CulturalCategoryIcon } from '@/components/sections/cultural-portal/CulturalCategoryIcon';
 import { getCardBackgroundStyle } from '@/lib/card-background-style';
 import { cn } from '@/lib/utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 const HUB_CARD_BACKGROUND = {
   colorVarName: '--hub-card-bg-color',
@@ -23,6 +25,7 @@ interface CultureCatalogSubcategoryGridProps {
   content: CultureCatalogContent['items'];
   /** Hub mode: title + description, then large shortcut cards. */
   variant?: 'default' | 'hub';
+  locale?: SiteLocaleCode;
 }
 
 function SubcategoryCatalogCard({
@@ -101,6 +104,7 @@ export function CultureCatalogSubcategoryGrid({
   nodes,
   content,
   variant = 'default',
+  locale = 'EN',
 }: CultureCatalogSubcategoryGridProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const visibleNodes = useMemo(
@@ -124,11 +128,12 @@ export function CultureCatalogSubcategoryGrid({
         description={content.description}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search categories…"
+        searchPlaceholder={uiMessage(locale, 'searchCategories')}
+        locale={locale}
       />
       {visibleNodes.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
-          No categories match your search. Try another title or keyword.
+          {uiMessage(locale, 'noCategoriesMatch')}
         </p>
       ) : (
         <div className="cat-grid">

@@ -7,15 +7,26 @@ import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { CatalogSearchFormModel } from '@/lib/culture-catalog/catalog-filter-options';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureCatalogItemGridProps {
   items: PublicCultureItemDTO[];
   content: CultureCatalogContent['items'];
   sectionId?: string;
   searchForm?: CatalogSearchFormModel;
+  locale?: SiteLocaleCode;
 }
 
-function CatalogItemCard({ item, index }: { item: PublicCultureItemDTO; index: number }) {
+function CatalogItemCard({
+  item,
+  index,
+  locale,
+}: {
+  item: PublicCultureItemDTO;
+  index: number;
+  locale: SiteLocaleCode;
+}) {
   const href = resolveCultureItemHref(item.slug);
   const imageSrc = item.image
     ? resolvePublicAssetUrl(item.image)
@@ -34,7 +45,7 @@ function CatalogItemCard({ item, index }: { item: PublicCultureItemDTO; index: n
         <div className="catalog-item-card__overlay" aria-hidden />
         {item.tourUrl ? (
           <span className="catalog-item-card__badge">
-            <Box size={11} aria-hidden /> 3D Tour
+            <Box size={11} aria-hidden /> {uiMessage(locale, 'tour3d')}
           </span>
         ) : null}
         <span className="catalog-item-card__num" aria-hidden>
@@ -54,7 +65,7 @@ function CatalogItemCard({ item, index }: { item: PublicCultureItemDTO; index: n
         </div>
         <h3 className="catalog-item-card__title">{item.title}</h3>
         {item.description ? <p className="catalog-item-card__excerpt">{item.description}</p> : null}
-        <span className="catalog-item-card__cta">Explore →</span>
+        <span className="catalog-item-card__cta">{uiMessage(locale, 'exploreArrow')}</span>
       </div>
     </Link>
   );
@@ -65,6 +76,7 @@ export function CultureCatalogItemGrid({
   content,
   sectionId = 'entries',
   searchForm,
+  locale = 'EN',
 }: CultureCatalogItemGridProps) {
   if (!searchForm && items.length === 0) {
     return null;
@@ -82,12 +94,12 @@ export function CultureCatalogItemGrid({
       {searchForm ? <CatalogSearchForm {...searchForm} /> : null}
       {items.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
-          No entries match your search. Try another name, region, or period.
+          {uiMessage(locale, 'noEntriesMatch')}
         </p>
       ) : (
         <div className="catalog-item-grid">
           {items.map((item, index) => (
-            <CatalogItemCard key={item.id} item={item} index={index} />
+            <CatalogItemCard key={item.id} item={item} index={index} locale={locale} />
           ))}
         </div>
       )}

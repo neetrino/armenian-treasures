@@ -7,6 +7,7 @@ import { parseCatalogSearchParams } from '@/lib/culture-catalog/catalog-search-p
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
 import { getMenuTree } from '@/lib/queries/menu';
 import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export const revalidate = 60;
 
@@ -29,7 +30,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 async function CultureCategoryPage(props: PageProps) {
   const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
-  const tree = await getMenuTree();
+  const [tree, locale] = await Promise.all([getMenuTree(), getCurrentSiteLocale()]);
   const node = findCategoryPageNode(tree, params.categorySlug);
   if (!node) notFound();
 
@@ -44,6 +45,7 @@ async function CultureCategoryPage(props: PageProps) {
       subcategories={subcategories}
       items={items}
       filters={parseCatalogSearchParams(searchParams)}
+      locale={locale}
     />
   );
 }

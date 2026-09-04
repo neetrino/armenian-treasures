@@ -3,7 +3,9 @@ import Link from 'next/link';
 import { VirtualMuseumSection } from '@/components/sections/VirtualMuseumSection';
 import { getHomeContent } from '@/lib/queries/home';
 import { getMenuTree } from '@/lib/queries/menu';
-import { AI_HISTORIAN_ROADMAP, PRODUCT_ROADMAP_MODULES } from '@/lib/constants/product-roadmap';
+import { getProductRoadmapModules } from '@/lib/constants/product-roadmap';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import { buildMenuHrefMap, resolveMenuHrefFromMap } from '@/lib/navigation/menu-href-map';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
@@ -19,14 +21,20 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 async function VirtualMuseumPage() {
-  const [home, menuTree] = await Promise.all([getHomeContent(), getMenuTree()]);
+  const [home, menuTree, locale] = await Promise.all([
+    getHomeContent(),
+    getMenuTree(),
+    getCurrentSiteLocale(),
+  ]);
   const menuHrefMap = buildMenuHrefMap(menuTree);
   const churchesHref = resolveMenuHrefFromMap(
     menuHrefMap,
     'architecture/churches',
     '/culture/architecture/churches',
   );
-  const roadmapModules = PRODUCT_ROADMAP_MODULES.filter(
+  const localizedModules = getProductRoadmapModules(locale);
+  const aiHistorian = localizedModules.find((module) => module.id === 'ai-historian')!;
+  const roadmapModules = localizedModules.filter(
     (module) => module.id !== 'ai-historian',
   );
 
@@ -41,21 +49,20 @@ async function VirtualMuseumPage() {
         <div className="mx-auto w-full max-w-[73.75rem]">
           <header className="mb-10 max-w-[40rem]">
             <p className="mb-3 font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
-              Product Roadmap
+              {uiMessage(locale, 'productRoadmap')}
             </p>
             <h2
               id="virtual-museum-roadmap-heading"
               className="font-cinzel text-[clamp(1.75rem,2.5vw,2.5rem)] font-extrabold uppercase tracking-[0.02em] text-heritage-gold"
             >
-              Coming Modules
+              {uiMessage(locale, 'comingModules')}
             </h2>
             <p className="mt-4 font-display text-base italic leading-relaxed text-surface-muted">
-              These experiences launch as verified content and integrations become available. Beta
-              360° tours are already linked from individual heritage entries and{' '}
+              {uiMessage(locale, 'roadmapAvailability')}
               <Link href="/khndzoresk" className="text-heritage-teal underline-offset-2 hover:underline">
                 Khndzoresk
               </Link>
-              .
+              {uiMessage(locale, 'roadmapAvailabilityEnd')}
             </p>
           </header>
 
@@ -66,7 +73,7 @@ async function VirtualMuseumPage() {
                 className="rounded-2xl border border-stone-200/70 bg-white/80 p-6 shadow-card backdrop-blur-sm"
               >
                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-heritage-teal">
-                  {module.status.replace('_', ' ')}
+                  {module.statusLabel}
                 </p>
                 <h3 className="mt-2 font-cinzel text-lg font-extrabold uppercase text-heritage-gold">
                   {module.title}
@@ -78,17 +85,17 @@ async function VirtualMuseumPage() {
 
           <aside className="mt-10 rounded-2xl border border-dashed border-heritage-gold/30 bg-heritage-gold/5 p-6">
             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-heritage-gold">
-              {AI_HISTORIAN_ROADMAP.status.replace('_', ' ')}
+              {aiHistorian.statusLabel}
             </p>
             <h3 className="mt-2 font-cinzel text-lg font-extrabold uppercase text-heritage-gold">
-              {AI_HISTORIAN_ROADMAP.title}
+              {aiHistorian.title}
             </h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink-soft">
-              {AI_HISTORIAN_ROADMAP.description} Membership tiers reference this module on the{' '}
+              {aiHistorian.description} {uiMessage(locale, 'historianMembershipPrefix')}
               <Link href="/donate" className="text-heritage-teal underline-offset-2 hover:underline">
-                donation page
-              </Link>{' '}
-              — it remains disabled until a vetted model and source corpus are approved.
+                {uiMessage(locale, 'donationPage')}
+              </Link>
+              {uiMessage(locale, 'historianMembershipSuffix')}
             </p>
           </aside>
 
@@ -97,13 +104,13 @@ async function VirtualMuseumPage() {
               href="/map"
               className="inline-flex items-center rounded-full border border-heritage-teal/30 bg-heritage-teal/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-eyebrow text-heritage-teal transition hover:bg-heritage-teal/15"
             >
-              Explore heritage map
+              {uiMessage(locale, 'exploreHeritageMap')}
             </Link>
             <Link
               href={churchesHref}
               className="inline-flex items-center rounded-full border border-heritage-gold/30 bg-heritage-gold/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-eyebrow text-heritage-gold transition hover:bg-heritage-gold/15"
             >
-              Browse churches with tours
+              {uiMessage(locale, 'browseChurchTours')}
             </Link>
           </div>
         </div>

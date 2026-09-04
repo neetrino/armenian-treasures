@@ -4,6 +4,8 @@ import type { PartnerLogo } from '@/lib/constants/partnership-page';
 import { hasPartnershipCategories } from '@/lib/landing/landing-section-utils';
 import { getPartnershipPageContent } from '@/lib/queries/page-content';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 function PlaceholderIcon() {
   return (
@@ -51,7 +53,7 @@ function PartnerShortcard({
   );
 }
 
-export async function PartnershipShowcase() {
+export async function PartnershipShowcase({ locale }: { locale: SiteLocaleCode }) {
   const { categories } = await getPartnershipPageContent();
 
   if (!hasPartnershipCategories(categories)) {
@@ -66,13 +68,13 @@ export async function PartnershipShowcase() {
       <div className="partners-inner">
         <div className="partners-header">
           <div className="sec-label" style={{ textAlign: 'center' }}>
-            Institutional Alliance
+            {uiMessage(locale, 'institutionalAlliance')}
           </div>
           <div className="sec-title" style={{ textAlign: 'center' }}>
-            Our Partners
+            {uiMessage(locale, 'ourPartners')}
           </div>
           <p className="sec-desc" style={{ margin: '0 auto', textAlign: 'center' }}>
-            Partner shortcards in a consistent layout — logos and names only.
+            {uiMessage(locale, 'partnerShowcaseDescription')}
           </p>
         </div>
         <div className="partner-shortcard-grid">

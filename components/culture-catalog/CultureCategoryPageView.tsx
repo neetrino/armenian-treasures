@@ -18,22 +18,27 @@ import {
   resolveCultureCatalogHubDescription,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureCategoryPageViewProps {
   category: MenuNode;
   subcategories: MenuNode[];
   items: PublicCultureItemDTO[];
   filters: CatalogSearchFilters;
+  locale?: SiteLocaleCode;
 }
 
 function CultureCategoryHubPage({
   category,
   subcategories,
   content,
+  locale,
 }: {
   category: MenuNode;
   subcategories: MenuNode[];
   content: ReturnType<typeof resolveCultureCatalogContent>;
+  locale: SiteLocaleCode;
 }) {
   return (
     <CultureCatalogShell>
@@ -50,6 +55,7 @@ function CultureCategoryHubPage({
           ),
         }}
         variant="hub"
+        locale={locale}
       />
     </CultureCatalogShell>
   );
@@ -60,11 +66,13 @@ function CultureCategoryLeafPage({
   items,
   filters,
   content,
+  locale,
 }: {
   category: MenuNode;
   items: PublicCultureItemDTO[];
   filters: CatalogSearchFilters;
   content: ReturnType<typeof resolveCultureCatalogContent>;
+  locale: SiteLocaleCode;
 }) {
   const visibility = content.sectionVisibility;
   const stats = buildCultureCatalogCategoryStats(0, items.length, {
@@ -91,7 +99,7 @@ function CultureCategoryLeafPage({
           breadcrumb={buildCultureCatalogBreadcrumb(category)}
           ctas={
             visibility.entries
-              ? [{ label: 'Explore Entries', href: '#entries', variant: 'gold' as const }]
+              ? [{ label: uiMessage(locale, 'exploreEntries'), href: '#entries', variant: 'gold' as const }]
               : []
           }
         />
@@ -105,6 +113,7 @@ function CultureCategoryLeafPage({
             content={content.items}
             sectionId="entries"
             searchForm={searchForm}
+            locale={locale}
           />
         ) : null}
         {visibility.map ? (
@@ -125,6 +134,7 @@ export function CultureCategoryPageView({
   subcategories,
   items,
   filters,
+  locale = 'EN',
 }: CultureCategoryPageViewProps) {
   const hasChildren = subcategories.length > 0;
   const content = resolveCultureCatalogContent(category, undefined, { hasSubcategories: hasChildren });
@@ -135,6 +145,7 @@ export function CultureCategoryPageView({
         category={category}
         subcategories={subcategories}
         content={content}
+        locale={locale}
       />
     );
   }
@@ -145,6 +156,7 @@ export function CultureCategoryPageView({
       items={items}
       filters={filters}
       content={content}
+      locale={locale}
     />
   );
 }

@@ -4,9 +4,12 @@ import { ChevronRight, Search, X } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 interface MapSiteListPanelProps {
   items: PublicCultureItemDTO[];
+  locale?: SiteLocaleCode;
   activeId: string | null;
   searchQuery: string;
   onSearchChange: (value: string) => void;
@@ -18,6 +21,7 @@ interface MapSiteListPanelProps {
 
 export function MapSiteListPanel({
   items,
+  locale = 'EN',
   activeId,
   searchQuery,
   onSearchChange,
@@ -53,15 +57,15 @@ export function MapSiteListPanel({
 
       <div className="relative flex items-center justify-between px-3 pb-2 pt-3">
         <p className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-heritage-gold/90">
-          Heritage Locations
+          {uiMessage(locale, 'heritageLocations')}
         </p>
         <span className="text-[11px] uppercase tracking-[0.2em] text-heritage-teal/80">
-          {items.length} visible
+          {uiMessageFormat(locale, 'visibleCount', { n: items.length })}
         </span>
       </div>
 
       <label className="relative mb-3 block px-3">
-        <span className="sr-only">Search heritage sites</span>
+        <span className="sr-only">{uiMessage(locale, 'searchSites')}</span>
         <div className="relative">
           <Search
             size={15}
@@ -72,13 +76,13 @@ export function MapSiteListPanel({
             type="search"
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search sites…"
+            placeholder={uiMessage(locale, 'searchSites')}
             className="w-full rounded-xl border border-white/10 bg-slate-900/80 py-2.5 pl-10 pr-10 font-display text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-heritage-gold/45 focus:ring-2 focus:ring-heritage-gold/20"
           />
           {searchQuery ? (
             <button
               type="button"
-              aria-label="Clear search"
+              aria-label={uiMessage(locale, 'clearSearch')}
               onClick={() => onSearchChange('')}
               className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-slate-400 transition hover:text-heritage-gold"
             >
@@ -92,8 +96,8 @@ export function MapSiteListPanel({
         {items.length === 0 ? (
           <li className="rounded-2xl border border-heritage-gold/20 bg-slate-900/70 px-4 py-6 text-sm text-slate-300">
             {searchQuery.trim()
-              ? 'No published sites match your search. Try another name, region, or period.'
-              : 'No published sites match this filter yet. Try another category or check back as the archive grows.'}
+              ? uiMessage(locale, 'noSitesMatch')
+              : uiMessage(locale, 'noMappedSites')}
           </li>
         ) : (
           items.map((item) => {
@@ -146,7 +150,9 @@ export function MapSiteListPanel({
                           active ? 'text-heritage-champagne' : 'text-amber-200/75',
                         )}
                       >
-                        <span className="truncate">{item.region ?? 'Armenia'}</span>
+                        <span className="truncate">
+                          {item.region ?? uiMessage(locale, 'armenia')}
+                        </span>
                         {item.periodLabel ? (
                           <>
                             <span className="h-1 w-1 rounded-full bg-current/80" aria-hidden />

@@ -1,6 +1,8 @@
 'use client';
 
 import { Search, X } from 'lucide-react';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureCatalogSectionHeaderProps {
   label: string;
@@ -9,6 +11,7 @@ interface CultureCatalogSectionHeaderProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
   searchPlaceholder?: string;
+  locale?: SiteLocaleCode;
 }
 
 export function CultureCatalogSectionHeader({
@@ -17,8 +20,10 @@ export function CultureCatalogSectionHeader({
   description,
   searchQuery,
   onSearchChange,
-  searchPlaceholder = 'Search entries…',
+  searchPlaceholder,
+  locale = 'EN',
 }: CultureCatalogSectionHeaderProps) {
+  const placeholder = searchPlaceholder ?? uiMessage(locale, 'searchEntries');
   return (
     <div className="catalog-section-intro">
       <div className="catalog-section-intro__copy">
@@ -27,19 +32,19 @@ export function CultureCatalogSectionHeader({
         {description ? <p className="sec-desc">{description}</p> : null}
       </div>
       <label className="catalog-section-intro__search">
-        <span className="sr-only">Search catalog entries</span>
+        <span className="sr-only">{uiMessage(locale, 'searchEntries')}</span>
         <Search size={15} aria-hidden className="catalog-section-intro__search-icon" />
         <input
           type="search"
           value={searchQuery}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder={searchPlaceholder}
+          placeholder={placeholder}
           className="catalog-section-intro__search-input"
         />
         {searchQuery ? (
           <button
             type="button"
-            aria-label="Clear search"
+            aria-label={uiMessage(locale, 'clearSearch')}
             onClick={() => onSearchChange('')}
             className="catalog-section-intro__search-clear"
           >

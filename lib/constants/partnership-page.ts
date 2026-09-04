@@ -1,3 +1,6 @@
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, type UiMessageKey } from '@/lib/i18n/ui-messages';
+
 export const PARTNERSHIP_STATS = [
   { num: '14+', label: 'Partner Institutions' },
   { num: '7', label: 'Countries Reached' },
@@ -183,3 +186,31 @@ export const PARTNERSHIP_SECTORS = [
   'Media & Publishing',
   'Other',
 ] as const;
+
+export interface PartnershipSectorOption {
+  value: (typeof PARTNERSHIP_SECTORS)[number];
+  label: string;
+}
+
+const PARTNERSHIP_SECTOR_KEYS: Record<
+  PartnershipSectorOption['value'],
+  UiMessageKey
+> = {
+  'Government & Public Institution': 'sectorGovernment',
+  'Religious & Cultural Heritage': 'sectorReligiousHeritage',
+  'Museum & Archive': 'sectorMuseumArchive',
+  'University & Research': 'sectorUniversityResearch',
+  'Foundation & NGO': 'sectorFoundationNgo',
+  'Technology & Corporate': 'sectorTechnologyCorporate',
+  'Media & Publishing': 'sectorMediaPublishing',
+  Other: 'sectorOther',
+};
+
+export function getPartnershipSectorOptions(
+  locale: SiteLocaleCode,
+): PartnershipSectorOption[] {
+  return PARTNERSHIP_SECTORS.map((value) => ({
+    value,
+    label: uiMessage(locale, PARTNERSHIP_SECTOR_KEYS[value]),
+  }));
+}

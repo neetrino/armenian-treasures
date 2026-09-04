@@ -83,10 +83,10 @@ export function HeaderBar({
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}
         >
           <Suspense fallback={null}>
-            <HeaderSearch />
+            <HeaderSearch locale={locale} />
           </Suspense>
           <LanguageSelector className="hidden lg:inline-flex" enabledLocales={enabledLocales} />
-          <HeaderProfileButton account={account} />
+          <HeaderProfileButton account={account} locale={locale} />
           <MobileMenu
             tree={menuTree}
             cultureMegaMenu={cultureMegaMenu}

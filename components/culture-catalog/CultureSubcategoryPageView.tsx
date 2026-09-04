@@ -11,12 +11,15 @@ import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries
 import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import { filterMappableItems } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureSubcategoryPageViewProps {
   parent: MenuNode;
   subcategory: MenuNode;
   items: PublicCultureItemDTO[];
   filters: CatalogSearchFilters;
+  locale?: SiteLocaleCode;
 }
 
 export function CultureSubcategoryPageView({
@@ -24,6 +27,7 @@ export function CultureSubcategoryPageView({
   subcategory,
   items,
   filters,
+  locale = 'EN',
 }: CultureSubcategoryPageViewProps) {
   const content = resolveCultureCatalogContent(subcategory, parent);
   const visibility = content.sectionVisibility;
@@ -46,12 +50,12 @@ export function CultureSubcategoryPageView({
           breadcrumb={buildCultureCatalogBreadcrumb(subcategory, parent)}
           ctas={[
             ...(visibility.map
-              ? [{ label: 'View on Map', href: '#map', variant: 'teal' as const }]
+              ? [{ label: uiMessage(locale, 'viewOnMap'), href: '#map', variant: 'teal' as const }]
               : []),
             ...(visibility.entries
-              ? [{ label: 'Explore Entries', href: '#entries', variant: 'gold' as const }]
+              ? [{ label: uiMessage(locale, 'exploreEntries'), href: '#entries', variant: 'gold' as const }]
               : []),
-            { label: `Back to ${parent.title}`, href: `/culture/${parent.slug}`, variant: 'outline' as const },
+            { label: `${uiMessage(locale, 'backTo')} ${parent.title}`, href: `/culture/${parent.slug}`, variant: 'outline' as const },
           ]}
         />
       ) : null}
@@ -69,6 +73,7 @@ export function CultureSubcategoryPageView({
             items={visibleItems}
             content={content.items}
             searchForm={searchForm}
+            locale={locale}
           />
         ) : null}
       </LandingSectionStack>

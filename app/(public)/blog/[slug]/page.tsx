@@ -4,6 +4,7 @@ import { BlogDetailView } from '@/components/blog/BlogDetailView';
 import { blogMetaDescription } from '@/lib/blog-description';
 import { getBlogPostBySlug } from '@/lib/queries/blogs';
 import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import '@/components/khndzoresk/khndzoresk.css';
 import '@/components/blog/blog.css';
 
@@ -28,10 +29,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 async function BlogPostPage(props: PageProps) {
   const params = await props.params;
-  const post = await getBlogPostBySlug(params.slug);
+  const [post, locale] = await Promise.all([
+    getBlogPostBySlug(params.slug),
+    getCurrentSiteLocale(),
+  ]);
   if (!post) notFound();
 
-  return <BlogDetailView post={post} />;
+  return <BlogDetailView post={post} locale={locale} />;
 }
 
 export default BlogPostPage;

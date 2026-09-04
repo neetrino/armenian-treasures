@@ -2,12 +2,15 @@ import { Briefcase, MapPin, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import type { PublicCareerDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CareerCardProps {
   career: PublicCareerDTO;
+  locale: SiteLocaleCode;
 }
 
-export function CareerCard({ career }: CareerCardProps) {
+export function CareerCard({ career, locale }: CareerCardProps) {
   const applyHref = career.applyUrl ?? (career.applyEmail ? `mailto:${career.applyEmail}` : null);
   return (
     <Card className="p-7">
@@ -23,7 +26,7 @@ export function CareerCard({ career }: CareerCardProps) {
             </span>
           </div>
         </div>
-        <Badge tone="bronze">Open role</Badge>
+        <Badge tone="bronze">{uiMessage(locale, 'openRole')}</Badge>
       </div>
       {career.description ? (
         <p className="mt-5 text-sm leading-relaxed text-ink-soft">{career.description}</p>
@@ -35,7 +38,7 @@ export function CareerCard({ career }: CareerCardProps) {
           rel={career.applyUrl ? 'noopener noreferrer' : undefined}
           className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-pomegranate hover:underline"
         >
-          Apply <ArrowRight size={14} aria-hidden />
+          {uiMessage(locale, 'apply')} <ArrowRight size={14} aria-hidden />
         </a>
       ) : null}
     </Card>

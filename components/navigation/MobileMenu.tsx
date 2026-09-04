@@ -12,6 +12,7 @@ import {
 } from './primary-links';
 import { LanguageSelector } from './LanguageSelector';
 import { chromeLabel, primaryLinkLabel, translatedAboutMenu } from '@/lib/i18n/ui-chrome';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import { signOutAccountAction } from '@/app/(public)/profile/actions';
 import type { HeaderAccountSummary } from '@/lib/auth/header-session';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -94,7 +95,7 @@ export function MobileMenu({
           'inline-flex h-10 w-10 items-center justify-center border transition',
           'border-[var(--surface-border)] text-[var(--nav-text)] hover:border-[rgba(39,198,200,0.45)] hover:text-[var(--nav-text-active)]',
         )}
-        aria-label="Open menu"
+        aria-label={uiMessage(locale, 'openMenu')}
         aria-expanded={open}
         {...(reduced ? {} : navItemInteraction)}
       >
@@ -121,15 +122,15 @@ export function MobileMenu({
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               role="dialog"
               aria-modal="true"
-              aria-label="Mobile navigation"
+              aria-label={uiMessage(locale, 'menu')}
             >
               <div className="mb-5 flex items-center justify-between">
-                <span className={MOBILE_SECTION}>Menu</span>
+                <span className={MOBILE_SECTION}>{uiMessage(locale, 'menu')}</span>
                 <button
                   type="button"
                   onClick={close}
                   className="inline-flex h-10 w-10 items-center justify-center border border-[var(--surface-border)] text-[var(--nav-text)] hover:text-[var(--nav-text-active)]"
-                  aria-label="Close menu"
+                  aria-label={uiMessage(locale, 'closeMenu')}
                 >
                   <X size={20} strokeWidth={1.5} aria-hidden />
                 </button>
@@ -254,27 +255,29 @@ export function MobileMenu({
                 {account ? (
                   <div className="flex flex-col gap-3">
                     <p className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal">
-                      {account.kind === 'admin' ? 'Admin account' : 'Account'}
+                      {account.kind === 'admin'
+                        ? uiMessage(locale, 'adminAccount')
+                        : uiMessage(locale, 'account')}
                     </p>
                     <p className="font-display text-sm text-[var(--nav-text)]">{account.name}</p>
                     {account.kind === 'admin' ? (
                       <Link href="/admin" onClick={close} className={MOBILE_LINK}>
-                        Admin panel
+                        {uiMessage(locale, 'adminPanel')}
                       </Link>
                     ) : (
                       <Link href="/profile" onClick={close} className={MOBILE_LINK}>
-                        Profile
+                        {uiMessage(locale, 'profile')}
                       </Link>
                     )}
                     <form action={signOutAccountAction}>
                       <button type="submit" className={cn(MOBILE_LINK, 'text-left')}>
-                        Sign out
+                        {uiMessage(locale, 'signOut')}
                       </button>
                     </form>
                   </div>
                 ) : (
                   <Link href="/login" onClick={close} className={MOBILE_LINK}>
-                    Sign in
+                    {uiMessage(locale, 'signIn')}
                   </Link>
                 )}
               </div>
