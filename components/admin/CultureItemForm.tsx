@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CultureItemEditorMetaBar } from '@/components/admin/culture-item-editor/CultureItemEditorMetaBar';
+import { CultureItemEditorLocaleTabs } from '@/components/admin/culture-item-editor/CultureItemEditorLocaleTabs';
 import { CultureItemEditorSectionsList } from '@/components/admin/culture-item-editor/CultureItemEditorSectionsList';
 import { CultureItemEditorToolbar } from '@/components/admin/culture-item-editor/CultureItemEditorToolbar';
 import { CultureItemMenuField } from '@/components/admin/culture-item-editor/CultureItemMenuField';
@@ -27,8 +28,8 @@ import {
   syncSharedLocaleMedia,
   type CultureItemLocaleMedia,
 } from '@/lib/culture-item-media-locale';
-import { type SiteLocaleCode } from '@/lib/i18n/locale-config';
-import { buildTabErrorMap } from '@/lib/i18n/translatable-content';
+import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { buildTabErrorMap, decodeTranslatableText } from '@/lib/i18n/translatable-content';
 import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
@@ -93,6 +94,16 @@ export function CultureItemForm({
   const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
   const [mediaByLocale, setMediaByLocale] = useState(() => parseMediaByLocale(initial?.mediaContent));
   const [isSaved, setIsSaved] = useState(mode === 'edit');
+  const [completedLocales, setCompletedLocales] = useState<Partial<Record<SiteLocaleCode, boolean>>>(() => {
+    const titles = decodeTranslatableText(initial?.title ?? '');
+    const shorts = decodeTranslatableText(initial?.shortDescription ?? '');
+    return Object.fromEntries(
+      SITE_LOCALE_CODES.map((code) => [
+        code,
+        Boolean(titles[code]?.trim() || shorts[code]?.trim()),
+      ]),
+    );
+  });
   const [sectionOrder, setSectionOrder] = useState<CultureItemEditorSectionId[]>(() =>
     resolveCultureItemSectionOrder(
       hydrateCultureItemMedia({
@@ -217,6 +228,14 @@ export function CultureItemForm({
         previewHref={previewHref}
         errorMessage={errorMessage}
         onCancel={onCancel}
+        localeTabs={
+          <CultureItemEditorLocaleTabs
+            activeLocale={activeLocale}
+            completedLocales={completedLocales}
+            tabErrors={tabErrors}
+            onChange={handleLocaleChange}
+          />
+        }
       />
 
       <CultureItemEditorMetaBar
@@ -232,6 +251,8 @@ export function CultureItemForm({
         tabErrors={tabErrors}
         activeLocale={activeLocale}
         onLocaleChange={handleLocaleChange}
+        hideLocaleTabs
+        onCompletedLocalesChange={setCompletedLocales}
       />
 
       <CultureItemMenuField

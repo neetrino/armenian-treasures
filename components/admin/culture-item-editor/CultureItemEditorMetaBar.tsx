@@ -23,6 +23,8 @@ interface CultureItemEditorMetaBarProps {
   tabErrors?: Partial<Record<SiteLocaleCode, boolean>>;
   activeLocale?: SiteLocaleCode;
   onLocaleChange?: (locale: SiteLocaleCode) => void;
+  hideLocaleTabs?: boolean;
+  onCompletedLocalesChange?: (completed: Partial<Record<SiteLocaleCode, boolean>>) => void;
 }
 
 const FEATURED_ORDER_OPTIONS = [
@@ -62,6 +64,8 @@ export function CultureItemEditorMetaBar({
   tabErrors,
   activeLocale: controlledLocale,
   onLocaleChange,
+  hideLocaleTabs = false,
+  onCompletedLocalesChange,
 }: CultureItemEditorMetaBarProps) {
   const [internalLocale, setInternalLocale] = useState<SiteLocaleCode>('EN');
   const activeLocale = controlledLocale ?? internalLocale;
@@ -87,6 +91,16 @@ export function CultureItemEditorMetaBar({
     ]),
   ) as Partial<Record<SiteLocaleCode, boolean>>;
 
+  useEffect(() => {
+    const next = Object.fromEntries(
+      SITE_LOCALE_CODES.map((code) => [
+        code,
+        localeHasContent(valueFor(titleValues, code), valueFor(shortDescriptionValues, code)),
+      ]),
+    ) as Partial<Record<SiteLocaleCode, boolean>>;
+    onCompletedLocalesChange?.(next);
+  }, [titleValues, shortDescriptionValues, onCompletedLocalesChange]);
+
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
       {SITE_LOCALE_CODES.map((code) => {
@@ -105,12 +119,14 @@ export function CultureItemEditorMetaBar({
       })}
 
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <CultureItemEditorLocaleTabs
-          activeLocale={activeLocale}
-          completedLocales={completedLocales}
-          tabErrors={tabErrors}
-          onChange={setActiveLocale}
-        />
+        {hideLocaleTabs ? null : (
+          <CultureItemEditorLocaleTabs
+            activeLocale={activeLocale}
+            completedLocales={completedLocales}
+            tabErrors={tabErrors}
+            onChange={setActiveLocale}
+          />
+        )}
         <div className="flex flex-wrap items-center gap-4 xl:justify-end">
           <div className="w-44">
             <SelectField

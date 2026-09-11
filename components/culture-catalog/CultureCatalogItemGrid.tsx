@@ -5,6 +5,7 @@ import { CatalogSearchForm } from '@/components/search/CatalogSearchForm';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { firstBlockBody } from '@/lib/culture-item-media';
+import { stripRichText } from '@/lib/rich-text';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { CatalogSearchFormModel } from '@/lib/culture-catalog/catalog-filter-options';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -28,11 +29,12 @@ function catalogItemCardCopy(item: PublicCultureItemDTO): {
     item.locationName?.trim() ||
     item.media.address?.trim() ||
     '';
-  const excerpt =
+  const excerpt = stripRichText(
     item.shortDescription?.trim() ||
-    item.description?.trim() ||
-    firstBlockBody(item.media)?.trim() ||
-    '';
+      item.description?.trim() ||
+      firstBlockBody(item.media)?.trim() ||
+      '',
+  );
   return { regionLabel, excerpt };
 }
 

@@ -917,6 +917,42 @@
   white-space: pre-line;
 }
 
+.khndzoresk-page .catalog-rich-text b,
+.khndzoresk-page .catalog-rich-text strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.khndzoresk-page .catalog-rich-text i,
+.khndzoresk-page .catalog-rich-text em {
+  font-style: italic;
+}
+
+.khndzoresk-page .catalog-rich-text u {
+  text-underline-offset: 0.15em;
+}
+
+.khndzoresk-page .catalog-rich-text p + p {
+  margin-top: 0.9em;
+}
+
+.khndzoresk-page .catalog-rich-text ul {
+  list-style: disc;
+  padding-left: 1.25em;
+  margin: 0.6em 0;
+}
+
+.khndzoresk-page .catalog-rich-text ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+  margin: 0.6em 0;
+}
+
+.khndzoresk-page .catalog-rich-text a {
+  color: var(--teal, #27c6c8);
+  text-decoration: underline;
+}
+
 .khndzoresk-page .catalog-expandable__toggle {
   margin-top: 0.75rem;
   border: 0;

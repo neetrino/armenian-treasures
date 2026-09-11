@@ -7,11 +7,14 @@ import { cn } from '@/lib/utils';
 
 interface RichTextFieldProps {
   label: string;
-  name: string;
+  name?: string;
   required?: boolean;
   defaultValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
   error?: string;
   hint?: string;
+  compact?: boolean;
 }
 
 function toolbarButtonClass(active: boolean): string {
@@ -28,24 +31,38 @@ export function RichTextField({
   name,
   required,
   defaultValue = '',
+  value,
+  onValueChange,
   error,
   hint,
+  compact = false,
 }: RichTextFieldProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const [html, setHtml] = useState(defaultValue);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const isControlled = typeof value === 'string';
+  const currentHtml = isControlled ? value : html;
 
   useEffect(() => {
-    setHtml(defaultValue);
-  }, [defaultValue]);
+    if (!isControlled) {
+      setHtml(defaultValue);
+    }
+  }, [defaultValue, isControlled]);
 
   useEffect(() => {
     const editor = editorRef.current;
     if (!editor) return;
-    if (editor.innerHTML !== html) editor.innerHTML = html;
-  }, [html]);
+    if (editor.innerHTML !== currentHtml) editor.innerHTML = currentHtml;
+  }, [currentHtml]);
+
+  function commitHtml(next: string) {
+    if (!isControlled) {
+      setHtml(next);
+    }
+    onValueChange?.(next);
+  }
 
   function updateToolbarState() {
     setIsBold(document.queryCommandState('bold'));
@@ -58,7 +75,7 @@ export function RichTextField({
     if (!editor) return;
     editor.focus();
     document.execCommand(command, false, value);
-    setHtml(editor.innerHTML);
+    commitHtml(editor.innerHTML);
     updateToolbarState();
   }
 
@@ -105,18 +122,19 @@ export function RichTextField({
           contentEditable
           suppressContentEditableWarning
           className={cn(
-            'min-h-[18rem] w-full px-3.5 py-2.5 text-sm text-ink outline-none',
+            compact ? 'min-h-[10rem]' : 'min-h-[18rem]',
+            'w-full px-3.5 py-2.5 text-sm text-ink outline-none',
             'focus:ring-2 focus:ring-bronze-500/30',
             '[&_p]:my-0 [&_p+*]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_a]:text-heritage-teal [&_a]:underline',
           )}
-          onInput={(event) => setHtml(event.currentTarget.innerHTML)}
+          onInput={(event) => commitHtml(event.currentTarget.innerHTML)}
           onKeyUp={updateToolbarState}
           onMouseUp={updateToolbarState}
           aria-invalid={Boolean(error)}
         />
       </div>
 
-      <input type="hidden" name={name} value={html} />
+      {name ? <input type="hidden" name={name} value={currentHtml} /> : null}
 
       {error ? (
         <p className="text-xs text-pomegranate">{error}</p>
