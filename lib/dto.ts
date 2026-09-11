@@ -61,7 +61,6 @@ export interface PublicCultureItemDTO {
   century: number | null;
   image: string | null;
   coverImage: string | null;
-  cardBackgroundColor: string | null;
   cardBackgroundImage: string | null;
   galleryImages: string[];
   tourUrl: string | null;
@@ -187,7 +186,7 @@ export function toPublicCultureItem(
   const media = mediaForLocale(
     hydrateCultureItemMedia({
       mediaContent: row.mediaContent,
-      description: resolveLocalizedText(row.description, locale) || row.description,
+      description: resolveLocalizedText(row.description, locale),
       tourUrl: row.tourUrl,
       videoUrl: row.videoUrl,
       galleryImages: row.galleryImages,
@@ -210,7 +209,6 @@ export function toPublicCultureItem(
     century: row.century,
     image: row.image,
     coverImage: row.coverImage,
-    cardBackgroundColor: row.cardBackgroundColor,
     cardBackgroundImage: row.cardBackgroundImage,
     galleryImages: row.galleryImages ?? [],
     tourUrl: row.tourUrl?.trim() || firstTourUrl(media),

@@ -70,7 +70,7 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
   const entryRows = managesGridCards
     ? await prisma.cultureItem.findMany({
         where: { menuItemId: match.node.id },
-        orderBy: [{ order: 'asc' }, { title: 'asc' }],
+        orderBy: [{ createdAt: 'desc' }, { order: 'asc' }],
       })
     : [];
   const featuredById = await fetchFeaturedHomeByIds(entryRows.map((row) => row.id));
@@ -84,7 +84,6 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
     periodLabel: getAdminLocaleValue(row.periodLabel),
     image: row.image ?? '',
     galleryImages: row.galleryImages ?? [],
-    cardBackgroundColor: row.cardBackgroundColor ?? '',
     cardBackgroundImage: row.cardBackgroundImage ?? '',
     featuredOnHome: featuredById.get(row.id)?.featuredOnHome ?? false,
     featuredOrder: featuredById.get(row.id)?.featuredOrder ?? null,

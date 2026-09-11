@@ -3,17 +3,21 @@
 import { useState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { AdminLocaleAwareTextField } from '@/components/forms/fields/AdminLocaleAwareTextField';
 import { CULTURE_ITEM_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface CultureItemBasicsFieldsProps {
   initial?: CultureItemFormInitial;
   fieldErrors?: Record<string, string>;
+  activeLocale: SiteLocaleCode;
 }
 
 export function CultureItemBasicsFields({
   initial,
   fieldErrors,
+  activeLocale,
 }: CultureItemBasicsFieldsProps) {
   const [itemType, setItemType] = useState(initial?.itemType ?? 'OTHER');
 
@@ -34,11 +38,18 @@ export function CultureItemBasicsFields({
         onChange={(event) => setItemType(event.target.value)}
         error={fieldErrors?.itemType}
       />
-      <TextField label="Region" name="region" defaultValue={initial?.region ?? ''} error={fieldErrors?.region} />
-      <TextField
+      <AdminLocaleAwareTextField
+        label="Region"
+        name="region"
+        encodedValue={initial?.region ?? ''}
+        activeLocale={activeLocale}
+        error={fieldErrors?.region}
+      />
+      <AdminLocaleAwareTextField
         label="Period label"
         name="periodLabel"
-        defaultValue={initial?.periodLabel ?? ''}
+        encodedValue={initial?.periodLabel ?? ''}
+        activeLocale={activeLocale}
         hint='e.g. "9th c." or "782 BC"'
         error={fieldErrors?.periodLabel}
       />

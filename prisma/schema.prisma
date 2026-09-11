@@ -140,7 +140,6 @@ model CultureItem {
   yearLabel        String?
   image            String?
   coverImage       String?
-  cardBackgroundColor String?
   cardBackgroundImage String?
   galleryImages    String[]        @default([])
   tourUrl          String?

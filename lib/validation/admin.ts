@@ -87,13 +87,6 @@ export const cultureMenuReorderSchema = z.object({
   order: z.array(z.string().min(1)),
 });
 
-const optionalHexColor = z
-  .string()
-  .trim()
-  .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, 'Must be a hex color like #0f1419')
-  .optional()
-  .or(z.literal(''));
-
 export const cultureItemSchema = z.object({
   title: z.string().trim().min(2).max(140),
   slug: z
@@ -112,7 +105,6 @@ export const cultureItemSchema = z.object({
   yearLabel: optionalShortString,
   image: optionalShortString,
   coverImage: optionalShortString,
-  cardBackgroundColor: optionalHexColor,
   cardBackgroundImage: optionalShortString,
   galleryImages: z.array(z.string()).max(20).default([]),
   tourUrl: optionalUrl,

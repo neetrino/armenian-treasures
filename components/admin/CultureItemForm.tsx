@@ -161,6 +161,7 @@ export function CultureItemForm({
       saved[nextLocale] = nextSlice;
       setMedia((current) => ({
         ...current,
+        address: nextSlice.address,
         blocks: nextSlice.blocks,
         tours: media.tours,
         videos: media.videos,
@@ -186,6 +187,7 @@ export function CultureItemForm({
         fieldErrors={state.fieldErrors}
         media={media}
         mapUrl={mapUrl}
+        activeLocale={activeLocale}
         onMediaChange={patchMedia}
         onMapUrlChange={(value) => {
           setMapUrl(value);
@@ -239,6 +241,7 @@ export function CultureItemForm({
       <CultureItemFormBasicsSection
         initial={initial}
         fieldErrors={state.fieldErrors}
+        activeLocale={activeLocale}
         forceOpen={hasBasicsErrors}
       />
     </form>

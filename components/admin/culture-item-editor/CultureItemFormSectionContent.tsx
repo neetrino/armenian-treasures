@@ -13,6 +13,7 @@ import { CultureItemEditorSection } from '@/components/admin/culture-item-editor
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemFormInitial } from '@/lib/admin/culture-item-form-initial';
 import type { CultureItemMediaContent } from '@/lib/culture-item-media';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface CultureItemFormSectionContentProps {
   sectionId: CultureItemEditorSectionId;
@@ -20,6 +21,7 @@ interface CultureItemFormSectionContentProps {
   fieldErrors?: Record<string, string>;
   media: CultureItemMediaContent;
   mapUrl: string;
+  activeLocale: SiteLocaleCode;
   onMediaChange: (patch: Partial<CultureItemMediaContent>) => void;
   onMapUrlChange: (value: string) => void;
 }
@@ -30,6 +32,7 @@ export function CultureItemFormSectionContent({
   fieldErrors,
   media,
   mapUrl,
+  activeLocale,
   onMediaChange,
   onMapUrlChange,
 }: CultureItemFormSectionContentProps): ReactNode {
@@ -58,9 +61,7 @@ export function CultureItemFormSectionContent({
             />
           </div>
           <CultureItemCardBackgroundFields
-            colorDefaultValue={initial?.cardBackgroundColor ?? ''}
             imageDefaultValue={initial?.cardBackgroundImage ?? ''}
-            colorError={fieldErrors?.cardBackgroundColor}
             imageError={fieldErrors?.cardBackgroundImage}
           />
         </div>
@@ -75,13 +76,15 @@ export function CultureItemFormSectionContent({
     case 'map':
       return (
         <AdminLocationMapField
-          locationName={initial?.locationName}
+          locationNameEncoded={initial?.locationName}
           address={media.address}
           mapUrl={mapUrl}
           mapType={initial?.mapType}
           showOnMap={initial?.showOnMap}
+          activeLocale={activeLocale}
           fieldErrors={fieldErrors}
           onMapUrlChange={onMapUrlChange}
+          onAddressChange={(value) => onMediaChange({ address: value })}
         />
       );
     case 'tours':
@@ -113,12 +116,14 @@ export function CultureItemFormSectionContent({
 interface CultureItemFormBasicsSectionProps {
   initial?: CultureItemFormInitial;
   fieldErrors?: Record<string, string>;
+  activeLocale: SiteLocaleCode;
   forceOpen?: boolean;
 }
 
 export function CultureItemFormBasicsSection({
   initial,
   fieldErrors,
+  activeLocale,
   forceOpen = false,
 }: CultureItemFormBasicsSectionProps) {
   return (
@@ -128,7 +133,11 @@ export function CultureItemFormBasicsSection({
       defaultOpen={forceOpen}
       forceOpen={forceOpen}
     >
-      <CultureItemBasicsFields initial={initial} fieldErrors={fieldErrors} />
+      <CultureItemBasicsFields
+        initial={initial}
+        fieldErrors={fieldErrors}
+        activeLocale={activeLocale}
+      />
     </CultureItemEditorSection>
   );
 }

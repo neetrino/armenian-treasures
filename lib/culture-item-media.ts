@@ -1,4 +1,3 @@
-import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 import { isCultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
@@ -197,7 +196,8 @@ export function hydrateCultureItemMedia(input: {
   galleryImages?: string[] | null;
 }): CultureItemMediaContent {
   const media = parseCultureItemMedia(input.mediaContent);
-  const legacyDescription = getAdminLocaleValue(input.description);
+  // Public callers pass already locale-resolved description — never cross-locale admin helpers.
+  const legacyDescription = input.description?.trim() ?? '';
   if (media.blocks.length === 0 && legacyDescription) {
     media.blocks.push({ ...emptyDescriptionBlock(), body: legacyDescription });
   }
