@@ -61,9 +61,16 @@ export const MARKETING_PAGE_CONTENT_INDEX_SLUGS = [
 
 export const jsonRecordSchema = z.record(z.unknown());
 
+export type DonationCertificateTemplateUrls = {
+  guardian?: string;
+  ambassador?: string;
+  magistr?: string;
+};
+
 export type DonationPageContent = {
   heroImage?: string;
   sectionVisibility?: DonationSectionVisibility;
+  certificateUrls?: DonationCertificateTemplateUrls;
   metadata: { title: string; description: string };
   page: typeof DONATION_PAGE;
   stats: typeof DONATION_STATS;
@@ -152,6 +159,7 @@ export function buildDefaultStaticPageHeroContent(): StaticPageHeroContent {
 
 export function buildDefaultDonationPageContent(): DonationPageContent {
   return {
+    certificateUrls: { guardian: '', ambassador: '', magistr: '' },
     metadata: { ...DONATION_PAGE.metadata },
     page: structuredClone(DONATION_PAGE),
     stats: [...DONATION_STATS],

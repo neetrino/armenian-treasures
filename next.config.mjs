@@ -6,6 +6,8 @@ function buildR2RemotePatterns() {
     { protocol: 'https', hostname: 'khndzoresk.armeniantreasures.com' },
     { protocol: 'https', hostname: 'armeniantreasures.com' },
     { protocol: 'https', hostname: 'akhachaturianmuseum.am' },
+    { protocol: 'https', hostname: 'i.ytimg.com' },
+    { protocol: 'https', hostname: 'img.youtube.com' },
     { protocol: 'http', hostname: 'localhost' },
   ];
 

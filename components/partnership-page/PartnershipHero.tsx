@@ -83,10 +83,6 @@ export function PartnershipHero({ heroImage, locale }: PartnershipHeroProps) {
           </a>
         </div>
       </div>
-      <div className="hero-scroll" aria-hidden>
-        <div className="scroll-line" />
-        <span>{uiMessage(locale, 'scroll')}</span>
-      </div>
     </div>
   );
 }

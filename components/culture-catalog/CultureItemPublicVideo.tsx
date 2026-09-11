@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Play } from 'lucide-react';
 import { useState } from 'react';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
-import { toYouTubeEmbedSrc } from '@/lib/embed-urls';
+import { toYouTubeEmbedSrc, toYouTubeThumbnailSrc } from '@/lib/embed-urls';
 import type { CultureVideoBlock } from '@/lib/culture-item-media';
 
 interface CultureItemPublicVideoProps {
@@ -14,7 +14,7 @@ interface CultureItemPublicVideoProps {
 
 export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPublicVideoProps) {
   const title = video.title || fallbackTitle;
-  const preview = video.previewImage.trim();
+  const preview = video.previewImage.trim() || toYouTubeThumbnailSrc(video.url) || '';
   const embedSrc = toYouTubeEmbedSrc(video.url);
   const [playing, setPlaying] = useState(false);
 

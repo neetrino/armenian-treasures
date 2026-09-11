@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { Check, Eye, ChevronDown, GripVertical } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -11,6 +12,7 @@ interface CultureItemEditorToolbarProps {
   previewHref?: string;
   errorMessage?: string;
   onCancel?: () => void;
+  localeTabs?: ReactNode;
 }
 
 function formatSavedLabel(isPending: boolean, isSaved: boolean): string {
@@ -26,12 +28,13 @@ export function CultureItemEditorToolbar({
   previewHref,
   errorMessage,
   onCancel,
+  localeTabs,
 }: CultureItemEditorToolbarProps) {
   const savedLabel = formatSavedLabel(isPending, isSaved);
 
   return (
-    <div className="sticky top-0 z-20 -mx-4 border-b border-stone-200/80 bg-parchment-50/95 px-4 py-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex flex-col gap-4">
+    <div className="sticky top-0 z-30 -mx-4 border-b border-stone-200/80 bg-parchment-50/95 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center gap-3">
             {onCancel ? (
@@ -103,6 +106,7 @@ export function CultureItemEditorToolbar({
             </Button>
           </div>
         </div>
+        {localeTabs ? <div className="border-t border-stone-200/70 pt-3">{localeTabs}</div> : null}
         {errorMessage ? (
           <p className="rounded-lg bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate" role="alert">
             {errorMessage}

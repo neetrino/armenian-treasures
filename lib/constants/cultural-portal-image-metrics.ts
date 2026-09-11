@@ -20,7 +20,7 @@ export const CULTURAL_PORTAL_CARD_IMAGE_INTRINSIC = {
 export const CULTURAL_PORTAL_CARD_IMAGE_SIZES =
   '(max-width: 379px) calc(100vw - 2.5rem), (max-width: 767px) calc((100vw - 2.5rem) / 2), (max-width: 1023px) calc((min(100vw, 73.75rem) - 3rem) / 3), calc(min(100vw, 73.75rem) / 5)';
 
-/** Badge icon in featured-treasure cards: 82px container, `scale-[2]` → ~164px visible. */
-export const CULTURAL_PORTAL_BADGE_IMAGE_PX = 164;
+/** Badge icon in featured-treasure cards: 68px container, scaled to fill the circle. */
+export const CULTURAL_PORTAL_BADGE_IMAGE_PX = 140;
 
 export const CULTURAL_PORTAL_BADGE_IMAGE_SIZES = `${CULTURAL_PORTAL_BADGE_IMAGE_PX}px`;

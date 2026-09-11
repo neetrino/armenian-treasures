@@ -13,6 +13,13 @@ const metadataSchema = z.object({
 
 const donationPageContentSchema = z.object({
   heroImage: optionalHeroImage,
+  certificateUrls: z
+    .object({
+      guardian: z.string().optional(),
+      ambassador: z.string().optional(),
+      magistr: z.string().optional(),
+    })
+    .optional(),
   metadata: metadataSchema,
   page: z.record(z.unknown()),
   stats: z.array(z.unknown()),

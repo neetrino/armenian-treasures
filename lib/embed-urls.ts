@@ -28,7 +28,7 @@ export function isSketchfabShortUrl(url?: string | null): boolean {
   }
 }
 
-export function toYouTubeEmbedSrc(url: string): string | null {
+export function youtubeVideoId(url: string): string | null {
   try {
     const parsed = new URL(url.trim());
     const host = parsed.hostname.replace(/^www\./, '');
@@ -45,10 +45,20 @@ export function toYouTubeEmbedSrc(url: string): string | null {
       }
     }
     if (!videoId || !/^[a-zA-Z0-9_-]{6,}$/.test(videoId)) return null;
-    return `https://www.youtube.com/embed/${videoId}`;
+    return videoId;
   } catch {
     return null;
   }
+}
+
+export function toYouTubeEmbedSrc(url: string): string | null {
+  const videoId = youtubeVideoId(url);
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+}
+
+export function toYouTubeThumbnailSrc(url: string): string | null {
+  const videoId = youtubeVideoId(url);
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
 }
 
 function sketchfabEmbedFromModelId(modelId: string): string | null {

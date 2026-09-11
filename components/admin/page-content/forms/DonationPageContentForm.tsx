@@ -5,6 +5,7 @@ import { PageContentFormShell } from '@/components/admin/page-content/PageConten
 import { SectionVisibilityPanel } from '@/components/admin/page-content/SectionVisibilityPanel';
 import { PageContentSection } from '@/components/admin/page-content/PageContentSection';
 import { HeroBannerImageField } from '@/components/admin/page-content/HeroBannerImageField';
+import { PageContentImageField } from '@/components/admin/page-content/PageContentImageField';
 import { LabelValueFactsEditor } from '@/components/admin/page-content/editors/ContentListEditors';
 import { MetadataFields, SectionTextFields } from '@/components/admin/page-content/editors/SectionTextFields';
 import { TextField } from '@/components/forms/fields/TextField';
@@ -105,6 +106,31 @@ export function DonationPageContentForm({ initial, locale }: Props) {
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}
       />
+
+      <PageContentSection
+        title="Donation certificates"
+        description="Template images shown on the public donate page for Guardian, Ambassador, and Magistr."
+      >
+        <div className="grid gap-5 sm:grid-cols-3">
+          {(['guardian', 'ambassador', 'magistr'] as const).map((slot) => (
+            <PageContentImageField
+              key={slot}
+              label={slot === 'guardian' ? 'Guardian' : slot === 'ambassador' ? 'Ambassador' : 'Magistr'}
+              value={readString(readRecord(content.certificateUrls)[slot])}
+              layout="card"
+              folder="culture"
+              onChange={(url) =>
+                update({
+                  certificateUrls: {
+                    ...readRecord(content.certificateUrls),
+                    [slot]: url,
+                  },
+                })
+              }
+            />
+          ))}
+        </div>
+      </PageContentSection>
 
       <PageContentSection title="Hero badges">
         {heroBadges.map((badge, index) => (

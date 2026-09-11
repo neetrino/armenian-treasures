@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { HeroHome } from '@/components/sections/HeroHome';
 import { HomeHeritageSections } from '@/components/sections/HomeHeritageSections';
 import { getHeaderAccountSummary } from '@/lib/auth/header-session';
-import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { getHomeContent } from '@/lib/queries/home';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 
@@ -24,10 +23,9 @@ function isLoginLikeHref(href: string): boolean {
 }
 
 async function HomePage() {
-  const [home, account, locale] = await Promise.all([
+  const [home, account] = await Promise.all([
     getHomeContent(),
     getHeaderAccountSummary(),
-    getCurrentSiteLocale(),
   ]);
   const hideLoginCta = Boolean(account) && isLoginLikeHref(home.secondaryCtaUrl);
 
@@ -48,7 +46,6 @@ async function HomePage() {
         heroImage={home.heroImage}
         heroMobileImage={home.heroMobileImage}
         hideSecondaryCta={hideLoginCta}
-        locale={locale}
       />
 
       <HomeHeritageSections />

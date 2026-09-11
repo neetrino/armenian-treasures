@@ -50,7 +50,7 @@ const HEADER_HY: Partial<Record<UiChromeKey, string>> = {
   upcomingProjects: 'Ծրագրեր',
   heritageMap: 'Քարտեզ',
   partnership: 'Գործընկերներ',
-  donate: 'Նվիրել',
+  donate: 'Նվիրատվություն',
   highlights: 'Ընտրյալ',
   aboutUs: 'Մեր մասին',
 };

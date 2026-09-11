@@ -44,9 +44,9 @@ export async function DonationPage() {
             patronQuickChips={content.patronQuickChips}
             locale={locale}
             certificateUrls={{
-              guardian: settings.certificateGuardianUrl,
-              ambassador: settings.certificateAmbassadorUrl,
-              magistr: settings.certificateMagistrUrl,
+              guardian: content.certificateUrls?.guardian || settings.certificateGuardianUrl,
+              ambassador: content.certificateUrls?.ambassador || settings.certificateAmbassadorUrl,
+              magistr: content.certificateUrls?.magistr || settings.certificateMagistrUrl,
             }}
           />
         ) : null}

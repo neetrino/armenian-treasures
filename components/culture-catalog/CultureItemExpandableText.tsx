@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
+import { looksLikeHtml, stripRichText, toSafeRichTextHtml } from '@/lib/rich-text';
 import { cn } from '@/lib/utils';
 
 interface CultureItemExpandableTextProps {
@@ -19,21 +20,37 @@ export function CultureItemExpandableText({
   preserveLineBreaks = false,
 }: CultureItemExpandableTextProps) {
   const [expanded, setExpanded] = useState(false);
-  const shouldCollapse = text.trim().length > 280;
-  const textClassName = cn(preserveLineBreaks && 'catalog-expandable__preline');
+  const plainLength = stripRichText(text).length;
+  const shouldCollapse = plainLength > 280;
+  const isHtml = looksLikeHtml(text);
+  const html = isHtml ? toSafeRichTextHtml(text) : '';
+  const textClassName = cn(
+    preserveLineBreaks && !isHtml && 'catalog-expandable__preline',
+    isHtml && 'catalog-rich-text',
+  );
+
+  const body = isHtml ? (
+    <div
+      className={cn(textClassName, shouldCollapse && !expanded && 'catalog-expandable__clamp')}
+      style={shouldCollapse && !expanded ? { WebkitLineClamp: collapsedLines } : undefined}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  ) : (
+    <p
+      className={cn(textClassName, shouldCollapse && !expanded && 'catalog-expandable__clamp')}
+      style={shouldCollapse && !expanded ? { WebkitLineClamp: collapsedLines } : undefined}
+    >
+      {text}
+    </p>
+  );
 
   if (!shouldCollapse) {
-    return <p className={textClassName || undefined}>{text}</p>;
+    return body;
   }
 
   return (
     <div className="catalog-expandable">
-      <p
-        className={cn(textClassName, !expanded && 'catalog-expandable__clamp')}
-        style={!expanded ? { WebkitLineClamp: collapsedLines } : undefined}
-      >
-        {text}
-      </p>
+      {body}
       <button
         type="button"
         className="catalog-expandable__toggle"

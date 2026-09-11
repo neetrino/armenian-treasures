@@ -1,10 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { toSketchfabEmbedSrc, toTourEmbedSrc, toYouTubeEmbedSrc } from '@/lib/embed-urls';
+import {
+  toSketchfabEmbedSrc,
+  toTourEmbedSrc,
+  toYouTubeEmbedSrc,
+  toYouTubeThumbnailSrc,
+} from '@/lib/embed-urls';
 
 describe('embed-urls', () => {
   it('builds YouTube embed from watch URL', () => {
     expect(toYouTubeEmbedSrc('https://www.youtube.com/watch?v=NAExQa6twus')).toBe(
       'https://www.youtube.com/embed/NAExQa6twus',
+    );
+    expect(toYouTubeThumbnailSrc('https://www.youtube.com/watch?v=NAExQa6twus')).toBe(
+      'https://i.ytimg.com/vi/NAExQa6twus/hqdefault.jpg',
+    );
+    expect(toYouTubeThumbnailSrc('https://youtu.be/NAExQa6twus')).toBe(
+      'https://i.ytimg.com/vi/NAExQa6twus/hqdefault.jpg',
     );
   });
 

@@ -10,6 +10,7 @@ import {
 } from '@/lib/queries/culture-items';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
 import { firstBlockBody } from '@/lib/culture-item-media';
+import { stripRichText } from '@/lib/rich-text';
 import { buildNotFoundMetadata, buildPublicPageMetadata } from '@/lib/seo/metadata';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
@@ -23,7 +24,7 @@ interface PageProps {
 function itemMetaDescription(item: PublicCultureItemDetailDTO): string {
   if (item.shortDescription) return item.shortDescription;
   if (item.description) return item.description.slice(0, 160);
-  const blockBody = firstBlockBody(item.media);
+  const blockBody = stripRichText(firstBlockBody(item.media) ?? '');
   if (blockBody) return blockBody.slice(0, 160);
   return `Curated Armenian heritage entry: ${item.title}.`;
 }

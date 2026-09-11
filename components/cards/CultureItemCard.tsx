@@ -5,6 +5,7 @@ import { Box, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
 import { firstBlockBody } from '@/lib/culture-item-media';
+import { stripRichText } from '@/lib/rich-text';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -20,11 +21,12 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
     item.locationName?.trim() ||
     item.media.address?.trim() ||
     '';
-  const excerpt =
+  const excerpt = stripRichText(
     item.shortDescription?.trim() ||
-    item.description?.trim() ||
-    firstBlockBody(item.media)?.trim() ||
-    '';
+      item.description?.trim() ||
+      firstBlockBody(item.media)?.trim() ||
+      '',
+  );
   const imageElement = (
     <div className="aspect-[4/3] w-full">
       <Image

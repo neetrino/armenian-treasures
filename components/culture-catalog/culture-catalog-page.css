@@ -649,7 +649,7 @@
   letter-spacing: 0.01em;
   color: var(--text);
   opacity: 0.72;
-  margin: 0 0 14px;
+  margin: 0 0 4em;
 }
 
 .khndzoresk-page .catalog-detail-card {
@@ -917,6 +917,42 @@
   white-space: pre-line;
 }
 
+.khndzoresk-page .catalog-rich-text b,
+.khndzoresk-page .catalog-rich-text strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.khndzoresk-page .catalog-rich-text i,
+.khndzoresk-page .catalog-rich-text em {
+  font-style: italic;
+}
+
+.khndzoresk-page .catalog-rich-text u {
+  text-underline-offset: 0.15em;
+}
+
+.khndzoresk-page .catalog-rich-text p + p {
+  margin-top: 0.9em;
+}
+
+.khndzoresk-page .catalog-rich-text ul {
+  list-style: disc;
+  padding-left: 1.25em;
+  margin: 0.6em 0;
+}
+
+.khndzoresk-page .catalog-rich-text ol {
+  list-style: decimal;
+  padding-left: 1.25em;
+  margin: 0.6em 0;
+}
+
+.khndzoresk-page .catalog-rich-text a {
+  color: var(--teal, #27c6c8);
+  text-decoration: underline;
+}
+
 .khndzoresk-page .catalog-expandable__toggle {
   margin-top: 0.75rem;
   border: 0;
@@ -961,7 +997,7 @@
 
 .khndzoresk-page .catalog-video-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
   margin-top: 24px;
 }
@@ -982,8 +1018,11 @@
 }
 
 .khndzoresk-page .catalog-video-shortcut__media--embed {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: auto;
   position: relative;
+  width: 100%;
+  height: min(56vh, 480px);
+  min-height: 280px;
 }
 
 .khndzoresk-page .catalog-video-shortcut__iframe {
@@ -1016,7 +1055,8 @@
   overflow: hidden;
 }
 
-.khndzoresk-page .catalog-map-embed .map-embed {
+.khndzoresk-page .catalog-map-embed .map-embed,
+.khndzoresk-page .catalog-map-embed .tour-embed {
   width: 100%;
   height: min(56vh, 480px);
   min-height: 280px;
@@ -1051,7 +1091,11 @@
 .khndzoresk-page .catalog-video-shortcut__media {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  aspect-ratio: auto;
+  width: 100%;
+  height: min(56vh, 480px);
+  min-height: 280px;
   background: #120f0c;
 }
 

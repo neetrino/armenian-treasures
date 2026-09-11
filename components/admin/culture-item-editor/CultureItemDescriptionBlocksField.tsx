@@ -1,7 +1,7 @@
 'use client';
 
 import { TextField } from '@/components/forms/fields/TextField';
-import { TextareaField } from '@/components/forms/fields/TextareaField';
+import { RichTextField } from '@/components/forms/fields/RichTextField';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import {
   RepeatableFieldCard,
@@ -90,19 +90,19 @@ export function CultureItemDescriptionBlocksField({
                       )
                     }
                   />
-                  <TextareaField
+                  <RichTextField
                     label="Text"
                     name={`${prefix}.body`}
-                    rows={6}
+                    compact
                     value={block.body}
-                    onChange={(event) =>
+                    onValueChange={(body) =>
                       onChange(
                         blocks.map((item, current) =>
-                          current === index ? { ...item, body: event.target.value } : item,
+                          current === index ? { ...item, body } : item,
                         ),
                       )
                     }
-                    hint="Line breaks are kept on the public page."
+                    hint="Select text and use Bold, Italic, or lists."
                   />
                 </div>
               </div>

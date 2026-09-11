@@ -73,10 +73,6 @@ export function DonationHero({
           })}
         </div>
       </div>
-      <div className="hero-scroll" aria-hidden>
-        <span>{uiMessage(locale, 'scroll')}</span>
-        <div className="scroll-line" />
-      </div>
     </div>
   );
 }
