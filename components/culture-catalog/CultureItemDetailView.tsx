@@ -61,15 +61,9 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
             ? `✦ ${parent.title} · ${menu?.title} · ${uiMessage(locale, 'armenia')} ✦`
             : `✦ ${menu?.title ?? uiMessage(locale, 'culturePortal')} · ${uiMessage(locale, 'armenia')} ✦`
         }
-        accent={item.periodLabel ?? item.region ?? uiMessage(locale, 'heritageEntry')}
-        slogan={
-          item.region
-            ? `${item.region}${item.yearLabel ? ` · ${item.yearLabel}` : ''}`
-            : uiMessage(locale, 'armenianArchive')
-        }
-        description={
-          hasTrimmedText(description) ? description : uiMessage(locale, 'curatedArchiveEntry')
-        }
+        accent={item.periodLabel?.trim() || item.region?.trim() || ''}
+        slogan={item.region?.trim() || undefined}
+        description={hasTrimmedText(description) ? description : undefined}
         heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         locale={locale}

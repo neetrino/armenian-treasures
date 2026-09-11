@@ -26,4 +26,13 @@ describe('ui chrome translations', () => {
     expect(headerChromeLabel('HY', 'aboutUs')).toBe('Մեր մասին');
     expect(headerChromeLabel('EN', 'culturalPortal')).toBe('Cultural Portal');
   });
+
+  it('uses compact header labels for long locales', () => {
+    expect(headerChromeLabel('RU', 'culturalPortal')).toBe('Портал');
+    expect(headerChromeLabel('RU', 'upcomingProjects')).toBe('Проекты');
+    expect(headerChromeLabel('RU', 'donate')).toBe('Донат');
+    expect(headerPrimaryLinkLabel('/donate', 'RU')).toBe('Донат');
+    expect(headerChromeLabel('FR', 'heritageMap')).toBe('Carte');
+    expect(headerChromeLabel('PT', 'upcomingProjects')).toBe('Projetos');
+  });
 });

@@ -24,20 +24,13 @@ export function isLocalizedJsonContent(value: unknown): value is LocalizedJsonPa
 export function resolveLocalizedJsonContent(
   value: unknown,
   locale: SiteLocaleCode,
-  fallbackLocale: SiteLocaleCode = 'EN',
 ): JsonObject {
   if (!isLocalizedJsonContent(value)) {
     return isJsonObject(value) ? value : {};
   }
+  // Strict: never fall back to another locale's JSON payload.
   const localized = value.values[locale];
-  if (isJsonObject(localized)) return localized;
-  const fallback = value.values[fallbackLocale];
-  if (isJsonObject(fallback)) return fallback;
-  for (const code of SITE_LOCALE_CODES) {
-    const candidate = value.values[code];
-    if (isJsonObject(candidate)) return candidate;
-  }
-  return {};
+  return isJsonObject(localized) ? localized : {};
 }
 
 export function mergeLocalizedJsonContent(

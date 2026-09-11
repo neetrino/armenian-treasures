@@ -23,7 +23,6 @@ function item(partial: Partial<PublicCultureItemDTO>): PublicCultureItemDTO {
     century: partial.century ?? 9,
     image: null,
     coverImage: null,
-    cardBackgroundColor: null,
     cardBackgroundImage: null,
     galleryImages: [],
     tourUrl: null,

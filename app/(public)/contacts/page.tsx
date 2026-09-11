@@ -49,12 +49,12 @@ async function ContactsPage() {
         <div className="grid gap-9 lg:grid-cols-[1fr_1.7fr] lg:gap-10">
           <aside className="contact-direct-card p-6 text-sm text-surface-muted lg:p-9">
             <p className="contact-direct-eyebrow">{uiMessage(locale, 'directLines')}</p>
-            <h2 className="contact-direct-title">{settings.foundationName}</h2>
-            <p className="contact-direct-subtitle">{settings.foundationSubtitle}</p>
+            <h2 className="contact-direct-title">{uiMessage(locale, 'foundationBrandName')}</h2>
+            <p className="contact-direct-subtitle">{uiMessage(locale, 'foundationBrandSubtitle')}</p>
             <ul className="contact-direct-list">
               <li className="contact-direct-item">
                 <MapPin size={16} className="contact-direct-icon" aria-hidden />
-                {settings.address}
+                {uiMessage(locale, 'contactCityCountry')}
               </li>
               <li className="contact-direct-item">
                 <Mail size={16} className="contact-direct-icon" aria-hidden />

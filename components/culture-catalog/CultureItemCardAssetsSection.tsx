@@ -5,7 +5,6 @@ interface CultureItemCardAssetsSectionProps {
   title: string;
   image?: string | null;
   coverImage?: string | null;
-  cardBackgroundColor?: string | null;
   cardBackgroundImage?: string | null;
 }
 
@@ -37,14 +36,11 @@ export function CultureItemCardAssetsSection({
   title,
   image,
   coverImage,
-  cardBackgroundColor,
   cardBackgroundImage,
 }: CultureItemCardAssetsSectionProps) {
-  const tiles = collectImageTiles({ title, image, coverImage, cardBackgroundColor, cardBackgroundImage });
-  const color = cardBackgroundColor?.trim() ?? '';
-  const hasColor = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(color);
+  const tiles = collectImageTiles({ title, image, coverImage, cardBackgroundImage });
 
-  if (tiles.length === 0 && !hasColor) return null;
+  if (tiles.length === 0) return null;
 
   return (
     <div className="catalog-item-media-block">
@@ -65,17 +61,6 @@ export function CultureItemCardAssetsSection({
             <figcaption className="catalog-card-assets__label">{tile.label}</figcaption>
           </figure>
         ))}
-        {hasColor ? (
-          <div className="catalog-card-assets__tile catalog-card-assets__tile--color reveal">
-            <div
-              className="catalog-card-assets__swatch"
-              style={{ backgroundColor: color }}
-              aria-hidden
-            />
-            <p className="catalog-card-assets__label">Card background color</p>
-            <p className="catalog-card-assets__value">{color}</p>
-          </div>
-        ) : null}
       </div>
     </div>
   );

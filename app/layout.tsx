@@ -1,10 +1,20 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter, Noto_Serif_Armenian } from 'next/font/google';
+import localFont from 'next/font/local';
 import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
 import './globals.css';
+
+const kelvinch = localFont({
+  src: './fonts/kelvinch/Kelvinch-Roman.woff2',
+  variable: '--font-kelvinch',
+  display: 'swap',
+  weight: '400',
+  style: 'normal',
+});
+
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -78,7 +88,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
       lang={currentLocale.toLowerCase()}
       data-theme={DEFAULT_SITE_THEME}
       suppressHydrationWarning
-      className={`scrollbar-none ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable} ${notoSerifArmenian.variable}`}
+      className={`scrollbar-none ${kelvinch.variable} ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable} ${notoSerifArmenian.variable}`}
     >
       <body className="scrollbar-none min-h-screen antialiased">
         <ThemeInitScript />

@@ -8,23 +8,32 @@ import type { PublicBlogPostDTO } from '@/lib/dto';
 
 interface BlogCardProps {
   post: PublicBlogPostDTO;
+  featured?: boolean;
 }
 
-export function BlogCard({ post }: BlogCardProps) {
+export function BlogCard({ post, featured = false }: BlogCardProps) {
   const imageSrc = post.image?.trim()
     ? resolvePublicAssetUrl(post.image)
     : resolvePublicAssetUrl('/images/culture/card-heritage.webp');
   const preview = truncateBlogDescription(post.content) || 'Read the full story from Armenian Treasures.';
 
   return (
-    <Link href={`/blog/${post.slug}`} className="blog-card group">
+    <Link
+      href={`/blog/${post.slug}`}
+      className={featured ? 'blog-card blog-card--featured group' : 'blog-card group'}
+    >
       <div className="blog-card__image">
         <Image
           src={imageSrc}
           alt={post.title}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          sizes={
+            featured
+              ? '(max-width: 768px) 100vw, 70vw'
+              : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          }
           className="object-cover"
+          priority={featured}
         />
       </div>
       <div className="blog-card__body">

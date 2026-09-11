@@ -39,13 +39,6 @@ async function BlogPage() {
 
       <section id="blog-posts" className="blog-page-section">
         <div className="blog-page-inner">
-          <header className="blog-section-header">
-            <p className="blog-section-eyebrow">{uiMessage(locale, 'latestArticles')}</p>
-            <h2 className="blog-section-title">{uiMessage(locale, 'foundationJournal')}</h2>
-            <p className="blog-section-subtitle">
-              {uiMessage(locale, 'blogSectionSubtitle')}
-            </p>
-          </header>
           <BlogGrid posts={posts} locale={locale} />
         </div>
       </section>

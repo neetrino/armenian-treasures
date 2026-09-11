@@ -116,9 +116,31 @@ function withLocaleMedia(
   } catch {
     parsedByLocale = parseMediaByLocale({ byLocale: {} });
   }
+  const activeSlice = sliceLocaleMedia(media);
+  const byLocale = Object.fromEntries(
+    Object.entries({ ...parsedByLocale, [locale]: activeSlice }).map(([code, slice]) => [
+      code,
+      slice
+        ? {
+            ...slice,
+            tours: media.tours,
+            videos: media.videos,
+            gallery: media.gallery,
+          }
+        : slice,
+    ]),
+  );
+  const enBlocks = byLocale.EN?.blocks ?? (locale === 'EN' ? media.blocks : []);
+  const enAddress = byLocale.EN?.address ?? (locale === 'EN' ? media.address : '');
   return {
     ...media,
-    byLocale: { ...parsedByLocale, [locale]: sliceLocaleMedia(media) },
+    // Root stays EN-canonical only — never copy active (HY/RU) text into root when EN is empty.
+    address: enAddress,
+    blocks: enBlocks,
+    tours: media.tours,
+    videos: media.videos,
+    gallery: media.gallery,
+    byLocale,
   };
 }
 
@@ -133,6 +155,9 @@ function parseForm(formData: FormData):
   const titleI18n = readLocalizedTextFromFormData(formData, 'title');
   const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const shortDescriptionI18n = readLocalizedTextFromFormData(formData, 'shortDescription');
+  const regionI18n = readLocalizedTextFromFormData(formData, 'region');
+  const locationNameI18n = readLocalizedTextFromFormData(formData, 'locationName');
+  const periodLabelI18n = readLocalizedTextFromFormData(formData, 'periodLabel');
   const media = withLocaleMedia(formData, readCultureItemMediaFromForm(formData));
   const titleRaw = pickDefaultLocaleText(titleI18n);
   const slugRaw = formData.get('slug')?.toString() ?? '';
@@ -150,17 +175,21 @@ function parseForm(formData: FormData):
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
-    description: pickDefaultLocaleText(descriptionI18n) || firstBlockBody(media) || '',
+    description: pickDefaultLocaleText(descriptionI18n) || firstBlockBody({
+      ...media,
+      blocks: media.byLocale && typeof media.byLocale === 'object' && !Array.isArray(media.byLocale)
+        ? ((media.byLocale as Record<string, { blocks?: typeof media.blocks }>).EN?.blocks ?? media.blocks)
+        : media.blocks,
+    }) || '',
     shortDescription: pickDefaultLocaleText(shortDescriptionI18n),
     menuItemId: formData.get('menuItemId')?.toString() ?? '',
-    region: formData.get('region')?.toString() ?? '',
-    locationName: formData.get('locationName')?.toString() ?? '',
-    periodLabel: formData.get('periodLabel')?.toString() ?? '',
+    region: pickDefaultLocaleText(regionI18n),
+    locationName: pickDefaultLocaleText(locationNameI18n),
+    periodLabel: pickDefaultLocaleText(periodLabelI18n),
     century: numberOrNull(formData.get('century')),
     yearLabel: formData.get('yearLabel')?.toString() ?? '',
     image: formData.get('image')?.toString() ?? '',
     coverImage: formData.get('coverImage')?.toString() ?? '',
-    cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
     galleryImages: galleryUrlsFromMedia(media),
     tourUrl: firstTourUrl(media) ?? '',
@@ -196,6 +225,9 @@ function parseForm(formData: FormData):
       titleI18n,
       descriptionI18n,
       shortDescriptionI18n,
+      regionI18n,
+      locationNameI18n,
+      periodLabelI18n,
       media,
     }),
     featuredOnHome: parsed.data.featuredOnHome,
@@ -209,23 +241,34 @@ function toData(
     titleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     descriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     shortDescriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    regionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    locationNameI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    periodLabelI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     media: ReturnType<typeof readCultureItemMediaFromForm>;
   },
 ) {
   return {
     title: encodeTranslatableText(i18n.titleI18n),
     slug: input.slug,
-    description: encodeTranslatableText(i18n.descriptionI18n) || firstBlockBody(i18n.media),
+    // Prefer explicit i18n description fields; otherwise encode EN first block only (never active-locale plain text).
+    description:
+      encodeTranslatableText(i18n.descriptionI18n) ||
+      (() => {
+        const enBody = firstBlockBody({
+          ...i18n.media,
+          blocks: i18n.media.blocks,
+        });
+        return enBody ? encodeTranslatableText({ EN: enBody }) : '';
+      })(),
     shortDescription: encodeTranslatableText(i18n.shortDescriptionI18n) || null,
     menuItemId: input.menuItemId,
-    region: input.region?.trim() ? input.region : null,
-    locationName: input.locationName?.trim() ? input.locationName : null,
-    periodLabel: input.periodLabel?.trim() ? input.periodLabel : null,
+    region: encodeTranslatableText(i18n.regionI18n) || null,
+    locationName: encodeTranslatableText(i18n.locationNameI18n) || null,
+    periodLabel: encodeTranslatableText(i18n.periodLabelI18n) || null,
     century: input.century ?? null,
     yearLabel: input.yearLabel?.trim() ? input.yearLabel : null,
     image: input.image?.trim() ? input.image : null,
     coverImage: input.coverImage?.trim() ? input.coverImage : null,
-    cardBackgroundColor: input.cardBackgroundColor?.trim() ? input.cardBackgroundColor : null,
     cardBackgroundImage: input.cardBackgroundImage?.trim() ? input.cardBackgroundImage : null,
     galleryImages: input.galleryImages,
     tourUrl: input.tourUrl?.trim() ? input.tourUrl : null,

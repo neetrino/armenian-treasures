@@ -1,4 +1,7 @@
-import { isMatterportUrl } from '@/lib/matterport';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { isSketchfabShortUrl, toTourEmbedSrc } from '@/lib/embed-urls';
 import {
   normalizeTourBlock,
   type CultureTourBlock,
@@ -29,29 +32,78 @@ export function CultureItemPublicTour({
   locale = 'EN',
 }: CultureItemPublicTourProps) {
   const normalized = normalizeTourBlock(tour);
+  const initialEmbed = normalized.url ? toTourEmbedSrc(normalized.url) : null;
+  const [embedSrc, setEmbedSrc] = useState<string | null>(initialEmbed);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!normalized.url) return;
+    const direct = toTourEmbedSrc(normalized.url);
+    if (direct) {
+      setEmbedSrc(direct);
+      setFailed(false);
+      return;
+    }
+    if (!isSketchfabShortUrl(normalized.url)) {
+      setEmbedSrc(null);
+      setFailed(true);
+      return;
+    }
+
+    let cancelled = false;
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch(
+          `/api/embed/resolve?url=${encodeURIComponent(normalized.url)}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) throw new Error('resolve failed');
+        const data = (await response.json()) as { embedSrc?: string };
+        if (cancelled) return;
+        if (data.embedSrc) {
+          setEmbedSrc(data.embedSrc);
+          setFailed(false);
+        } else {
+          setFailed(true);
+        }
+      } catch {
+        if (!cancelled) setFailed(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [normalized.url]);
+
   if (!normalized.url) return null;
 
   const title = normalized.title || tourHeading(normalized.type, locale);
-  const embeddable = isMatterportUrl(normalized.url);
 
   return (
     <div id={isFirst ? 'tour' : undefined} className="catalog-item-media-block">
       <p className="sec-label">{uiMessage(locale, 'virtualExperience')}</p>
       <h2 className="sec-title">{title}</h2>
       <div className="tour-wrap catalog-tour-wide reveal">
-        {embeddable ? (
+        {embedSrc ? (
           <iframe
-            src={normalized.url}
+            src={embedSrc}
             title={title}
             className="tour-embed"
-            allow="fullscreen; xr-spatial-tracking"
+            allow="fullscreen; xr-spatial-tracking; autoplay"
             allowFullScreen
             referrerPolicy="no-referrer-when-downgrade"
           />
+        ) : failed ? (
+          <div className="tour-embed tour-embed--fallback">
+            <a href={normalized.url} target="_blank" rel="noreferrer" className="btn-teal">
+              {uiMessage(locale, 'open3dTour')}
+            </a>
+          </div>
         ) : (
-          <a href={normalized.url} className="btn-teal" target="_blank" rel="noopener noreferrer">
-            {uiMessage(locale, 'open3dTour')}
-          </a>
+          <div className="tour-embed tour-embed--loading" aria-busy="true" aria-label="Loading" />
         )}
       </div>
     </div>

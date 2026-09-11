@@ -17,6 +17,7 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "db:seed": "prisma db seed",
+    "db:seed-qa-i18n": "tsx scripts/seed-qa-i18n-culture-item.ts",
     "admin:create": "tsx scripts/create-admin.ts",
     "admin:change-password": "tsx scripts/change-admin-password.ts",
     "r2:migrate-public": "tsx scripts/migrate-public-to-r2.ts",

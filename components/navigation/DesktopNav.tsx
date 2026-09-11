@@ -20,7 +20,7 @@ export function DesktopNav({ cultureMegaMenu, projectsMenu, locale }: DesktopNav
   return (
     <nav
       aria-label="Primary"
-      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-6 lg:ml-5 lg:flex xl:ml-6"
+      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-[clamp(0.55rem,1.05vw,1.15rem)] lg:ml-2 lg:flex xl:ml-4 xl:gap-5"
     >
       <CultureMegaMenu columns={cultureMegaMenu} locale={locale} />
       <ProjectsDropdown items={projectsMenu} locale={locale} />

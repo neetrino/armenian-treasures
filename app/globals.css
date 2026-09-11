@@ -5,8 +5,8 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --site-header-logo-height: 6.75rem;
-    --site-header-height: calc(var(--site-header-logo-height) + 1rem);
+    --site-header-logo-height: 7rem;
+    --site-header-height: calc(var(--site-header-logo-height) + 1.25rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
     --section-divider-y: 0.75rem;
@@ -130,15 +130,15 @@
 
   @media (min-width: 768px) {
     :root {
-      --site-header-logo-height: 7rem;
-      --site-header-height: calc(var(--site-header-logo-height) + 1rem);
+      --site-header-logo-height: 7.5rem;
+      --site-header-height: calc(var(--site-header-logo-height) + 1.35rem);
     }
   }
 
   @media (min-width: 1024px) {
     :root {
-      --site-header-logo-height: 7.5rem;
-      --site-header-height: calc(var(--site-header-logo-height) + 1rem);
+      --site-header-logo-height: 8rem;
+      --site-header-height: calc(var(--site-header-logo-height) + 1.5rem);
     }
   }
 
@@ -413,6 +413,8 @@ html[lang='hyw'] .khndzoresk-page h3.font-cinzel {
 /* Override page CSS that forces Cinzel 800 on Armenian locales */
 html[lang='hy'] .khndzoresk-page .contact-direct-title,
 html[lang='hyw'] .khndzoresk-page .contact-direct-title,
+html[lang='hy'] .khndzoresk-page .contact-direct-subtitle,
+html[lang='hyw'] .khndzoresk-page .contact-direct-subtitle,
 html[lang='hy'] .khndzoresk-page .about-mission-title,
 html[lang='hyw'] .khndzoresk-page .about-mission-title,
 html[lang='hy'] .khndzoresk-page .about-mission-pair-title,
@@ -425,10 +427,17 @@ html[lang='hy'] .khndzoresk-page .about-career-title,
 html[lang='hyw'] .khndzoresk-page .about-career-title,
 html[lang='hy'] .khndzoresk-page .about-career-apply,
 html[lang='hyw'] .khndzoresk-page .about-career-apply {
-  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), Georgia, serif !important;
   font-weight: 700 !important;
   letter-spacing: 0.03em !important;
   text-transform: none;
+  line-height: 1.35 !important;
+  overflow: visible;
+}
+
+html[lang='hy'] .khndzoresk-page .contact-direct-list,
+html[lang='hyw'] .khndzoresk-page .contact-direct-list {
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), Georgia, serif !important;
 }
 
 /* Armenian display titles: Cinzel has no Armenian glyphs; weight 900 synthesizes badly. */
@@ -439,7 +448,9 @@ html[lang='hyw'] .khndzoresk-page .hero h1,
   font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
-  line-height: 1.14 !important;
+  line-height: 1.22 !important;
+  padding-block: 0.12em 0.1em;
+  overflow: visible;
 }
 
 html[lang='hy'] .khndzoresk-page .hero h1 span,
@@ -448,6 +459,9 @@ html[lang='hyw'] .khndzoresk-page .hero h1 span,
 [data-site-hero] h1 .hero-accent--hy {
   letter-spacing: 0.1em !important;
   font-weight: 500 !important;
+  line-height: 1.4 !important;
+  padding-block: 0.12em 0.08em;
+  overflow: visible;
 }
 
 .khndzoresk-page .hero-eyebrow--hy,
@@ -483,7 +497,16 @@ html[lang='hy'] [data-site-header] nav[aria-label='Primary'] .font-cinzel,
 html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
   font-family: var(--font-noto-serif-armenian), Georgia, serif;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+}
+
+html[lang='ru'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='ru'] [data-site-header] nav[aria-label='Primary'] button,
+html[lang='fr'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='fr'] [data-site-header] nav[aria-label='Primary'] button,
+html[lang='pt'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='pt'] [data-site-header] nav[aria-label='Primary'] button {
+  letter-spacing: 0.05em;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -95,7 +95,9 @@ export function LandingHero({
         </p>
         <h1 className={cn('reveal', titleIsArmenian && 'hero-title--hy')}>
           {title}
-          <span className={cn(accentIsArmenian && 'hero-accent--hy')}>{accent}</span>
+          {accent.trim() ? (
+            <span className={cn(accentIsArmenian && 'hero-accent--hy')}>{accent}</span>
+          ) : null}
         </h1>
         {slogan ? (
           <p className={cn('hero-slogan reveal', sloganIsArmenian && 'hero-slogan--hy')}>{slogan}</p>

@@ -39,13 +39,6 @@ export interface CultureCatalogEntryFormState {
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().or(z.literal(''));
 
-const optionalHexColor = z
-  .string()
-  .trim()
-  .regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, 'Must be a hex color like #0f1419')
-  .optional()
-  .or(z.literal(''));
-
 const catalogEntrySchema = z.object({
   title: z.string().trim().min(1, 'Title is required').max(200),
   description: z.string().trim().min(1, 'Description is required').max(5000),
@@ -53,7 +46,6 @@ const catalogEntrySchema = z.object({
   periodLabel: optionalText(80),
   image: optionalText(500),
   galleryImages: z.array(z.string().trim().max(500)).max(20).default([]),
-  cardBackgroundColor: optionalHexColor,
   cardBackgroundImage: optionalText(500),
   featuredOnHome: z.boolean().default(false),
   featuredOrder: z.number().int().min(1).max(5).optional().nullable(),
@@ -77,7 +69,6 @@ function readEntryFields(formData: FormData) {
       .getAll('galleryImages')
       .map((value) => value.toString().trim())
       .filter((value) => value.length > 0),
-    cardBackgroundColor: formData.get('cardBackgroundColor')?.toString() ?? '',
     cardBackgroundImage: formData.get('cardBackgroundImage')?.toString() ?? '',
     ...parseFeaturedHomeFields(formData),
     tourUrl: formData.get('tourUrl')?.toString() ?? '',
@@ -185,7 +176,6 @@ export async function saveCultureCatalogEntryAction(
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
       galleryImages: data.galleryImages,
-      cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
       order: data.order,
@@ -272,7 +262,6 @@ export async function createCultureCatalogEntryAction(
       periodLabel: encodeTranslatableText(fields.periodLabelI18n) || null,
       image: data.image || null,
       galleryImages: data.galleryImages,
-      cardBackgroundColor: data.cardBackgroundColor || null,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
       order: data.order,

@@ -69,7 +69,7 @@ export function CultureCatalogEntryCard({
           </button>
         ) : null}
         {entry.tourUrl ? (
-          <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full border border-bronze-400/40 bg-black/50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-bronze-200">
+          <span className="absolute left-3 top-3 z-10 inline-flex items-center gap-1 rounded-full border border-white/70 bg-[#27C6C8] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-[#0f1419] shadow-[0_4px_14px_rgba(0,0,0,0.45)]">
             <Box size={11} aria-hidden /> 3D Tour
           </span>
         ) : null}
@@ -91,9 +91,6 @@ export function CultureCatalogEntryCard({
           {entry.periodLabel ? <span>{entry.periodLabel}</span> : null}
         </div>
         <h3 className="mt-2 font-display text-lg uppercase leading-tight text-bronze-400">{entry.title}</h3>
-        {entry.description ? (
-          <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-stone-400">{entry.description}</p>
-        ) : null}
         {isDraft ? (
           <p className="mt-3 text-[11px] font-medium uppercase tracking-wide text-amber-400">Draft — not public</p>
         ) : null}

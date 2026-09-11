@@ -9,7 +9,6 @@ export interface CultureCatalogEntryAdmin {
   periodLabel: string;
   image: string;
   galleryImages: string[];
-  cardBackgroundColor: string;
   cardBackgroundImage: string;
   featuredOnHome: boolean;
   featuredOrder: number | null;

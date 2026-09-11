@@ -5,7 +5,8 @@ import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureItemPublicMapProps {
-  showOnMap: boolean;
+  /** Kept for callers; heritage-map pin filtering uses DB `showOnMap` separately. */
+  showOnMap?: boolean;
   mapUrl?: string | null;
   locationName?: string | null;
   latitude?: number | null;
@@ -14,21 +15,20 @@ interface CultureItemPublicMapProps {
 }
 
 export async function CultureItemPublicMap({
-  showOnMap,
   mapUrl,
   locationName,
   latitude,
   longitude,
   locale = 'EN',
 }: CultureItemPublicMapProps) {
-  if (!showOnMap) return null;
-
   const link = mapUrl?.trim() ?? '';
   const coords = await resolvePublicMapCoordinates({ latitude, longitude, mapUrl: link });
-  if (!coords && !link) return null;
+  const externalHref = link && isExternalMapLink(link) ? link : null;
+
+  // Detail page: render a map whenever coordinates or a maps link exist.
+  if (!coords && !externalHref) return null;
 
   const label = locationName?.trim() || uiMessage(locale, 'openMap');
-  const externalHref = link && isExternalMapLink(link) ? link : null;
 
   return (
     <div className="catalog-item-media-block">
@@ -38,11 +38,22 @@ export async function CultureItemPublicMap({
         <div className="tour-wrap catalog-map-embed reveal">
           <CultureItemDetailMapLazy latitude={coords.latitude} longitude={coords.longitude} />
         </div>
+      ) : externalHref ? (
+        <div className="tour-wrap catalog-map-embed reveal">
+          <iframe
+            title={label}
+            src={`https://www.google.com/maps?q=${encodeURIComponent(externalHref)}&output=embed`}
+            className="tour-embed"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        </div>
       ) : null}
       {externalHref ? (
         <a
           href={externalHref}
-          className={coords ? 'catalog-map-external-link' : 'catalog-map-shortcut reveal'}
+          className="catalog-map-external-link"
           target="_blank"
           rel="noopener noreferrer"
         >

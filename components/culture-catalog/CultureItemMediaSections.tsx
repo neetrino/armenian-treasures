@@ -6,6 +6,7 @@ import { CultureItemPublicVideo } from '@/components/culture-catalog/CultureItem
 import { CultureBeforeAfterCard } from '@/components/culture-catalog/CultureBeforeAfterCard';
 import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-sections';
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { CultureItemMediaContent } from '@/lib/culture-item-media';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -131,9 +132,26 @@ function DescriptionBlocks({
   return (
     <>
       {media.blocks.map((block) => {
-        if (!block.title && !block.subtitle && !block.body) return null;
+        if (!block.title && !block.subtitle && !block.body && !block.image) return null;
+        const hasImage = Boolean(block.image?.trim());
         return (
-          <article key={block.id} className="catalog-detail-card reveal">
+          <article
+            key={block.id}
+            className={
+              hasImage
+                ? 'catalog-detail-card catalog-detail-card--with-media reveal'
+                : 'catalog-detail-card reveal'
+            }
+          >
+            {hasImage ? (
+              <div className="catalog-detail-card__media">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={resolvePublicAssetUrl(block.image)}
+                  alt={block.caption || block.title || ''}
+                />
+              </div>
+            ) : null}
             <div className="about-body catalog-detail-card__body">
               {block.title ? <h3>{block.title}</h3> : null}
               {block.subtitle ? <p className="sec-desc">{block.subtitle}</p> : null}

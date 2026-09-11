@@ -1,5 +1,4 @@
 import type { CultureItem } from '@prisma/client';
-import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 import type { FeaturedHomeState } from '@/lib/queries/featured-home-sql';
 
 export interface CultureItemFormInitial {
@@ -15,7 +14,6 @@ export interface CultureItemFormInitial {
   yearLabel: string;
   image: string;
   coverImage: string;
-  cardBackgroundColor: string;
   cardBackgroundImage: string;
   galleryImages: string[];
   tourUrl: string;
@@ -42,14 +40,13 @@ export function toCultureItemFormInitial(
     description: item.description ?? '',
     shortDescription: item.shortDescription ?? '',
     menuItemId: item.menuItemId,
-    region: getAdminLocaleValue(item.region),
-    locationName: getAdminLocaleValue(item.locationName),
-    periodLabel: getAdminLocaleValue(item.periodLabel),
+    region: item.region ?? '',
+    locationName: item.locationName ?? '',
+    periodLabel: item.periodLabel ?? '',
     century: item.century !== null ? String(item.century) : '',
-    yearLabel: getAdminLocaleValue(item.yearLabel),
+    yearLabel: item.yearLabel ?? '',
     image: item.image ?? '',
     coverImage: item.coverImage ?? '',
-    cardBackgroundColor: item.cardBackgroundColor ?? '',
     cardBackgroundImage: item.cardBackgroundImage ?? '',
     mediaContent: item.mediaContent,
     galleryImages: item.galleryImages ?? [],

@@ -48,6 +48,14 @@ function parsePayload(raw: string): LocaleTextMap | null {
   }
 }
 
+/** Infer owner locale for unmarked legacy CMS strings (never invent EN for Armenian text). */
+export function inferLocaleFromScript(text: string): SiteLocaleCode | null {
+  if (/[\u0530-\u058F]/.test(text)) return 'HY';
+  if (/[\u0400-\u04FF]/.test(text)) return 'RU';
+  if (/[A-Za-z]/.test(text)) return 'EN';
+  return null;
+}
+
 export function decodeTranslatableText(
   raw: string | null | undefined,
   fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
@@ -56,7 +64,8 @@ export function decodeTranslatableText(
   if (!value) return {};
   const fromPayload = parsePayload(value);
   if (fromPayload) return fromPayload;
-  return { [fallbackLocale]: value };
+  const inferred = inferLocaleFromScript(value);
+  return { [inferred ?? fallbackLocale]: value };
 }
 
 export function encodeTranslatableText(
@@ -79,25 +88,25 @@ export function encodeTranslatableText(
 export function resolveLocalizedText(
   raw: string | null | undefined,
   locale: SiteLocaleCode,
-  fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
 ): string {
-  const map = decodeTranslatableText(raw, fallbackLocale);
-  const primary = map[locale]?.trim();
-  if (primary) return primary;
-  const fallback = map[fallbackLocale]?.trim();
-  if (fallback) return fallback;
-  for (const code of SITE_LOCALE_CODES) {
-    const candidate = map[code]?.trim();
-    if (candidate) return candidate;
-  }
-  return '';
+  // Strict: never fall back to another locale. Missing translation stays empty.
+  const map = decodeTranslatableText(raw);
+  return map[locale]?.trim() ?? '';
 }
 
 export function getAdminLocaleValue(
   raw: string | null | undefined,
   locale: SiteLocaleCode = DEFAULT_LOCALE,
 ): string {
-  return resolveLocalizedText(raw, locale, DEFAULT_LOCALE);
+  const map = decodeTranslatableText(raw, locale);
+  const primary = map[locale]?.trim();
+  if (primary) return primary;
+  // Admin lists may show any available value so editors still see an entry label.
+  for (const code of SITE_LOCALE_CODES) {
+    const candidate = map[code]?.trim();
+    if (candidate) return candidate;
+  }
+  return '';
 }
 
 export function pickDefaultLocaleText(

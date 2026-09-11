@@ -12,8 +12,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-async function CreateCultureItemPage() {
+interface PageProps {
+  searchParams: Promise<{ menuItemId?: string }>;
+}
+
+async function CreateCultureItemPage(props: PageProps) {
   const user = await requireAdmin();
+  const searchParams = await props.searchParams;
+  const lockedMenuItemId = searchParams.menuItemId?.trim() || undefined;
   const menu = await prisma.cultureMenuItem.findMany({
     orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
     include: { parent: true },
@@ -24,6 +30,9 @@ async function CreateCultureItemPage() {
       ? `${getAdminLocaleValue(m.parent.title)} / ${getAdminLocaleValue(m.title)}`
       : getAdminLocaleValue(m.title),
   }));
+  const menuExists = lockedMenuItemId
+    ? options.some((option) => option.id === lockedMenuItemId)
+    : true;
 
   return (
     <AdminPageShell
@@ -33,7 +42,10 @@ async function CreateCultureItemPage() {
       size="full"
       beforeHeader={<AdminBackLink href="/admin/culture-items" label="All culture items" />}
     >
-      <CultureItemCreateForm menuOptions={options} />
+      <CultureItemCreateForm
+        menuOptions={options}
+        lockedMenuItemId={menuExists ? lockedMenuItemId : undefined}
+      />
     </AdminPageShell>
   );
 }

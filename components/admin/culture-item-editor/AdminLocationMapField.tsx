@@ -2,47 +2,60 @@
 
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { AdminLocaleAwareTextField } from '@/components/forms/fields/AdminLocaleAwareTextField';
 import { CULTURE_MAP_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface AdminLocationMapFieldProps {
-  locationName?: string;
+  locationNameEncoded?: string;
   address?: string;
   mapUrl?: string;
   mapType?: string;
   showOnMap?: boolean;
+  activeLocale: SiteLocaleCode;
   fieldErrors?: Record<string, string>;
   onMapUrlChange: (value: string) => void;
+  onAddressChange: (value: string) => void;
 }
 
 export function AdminLocationMapField({
-  locationName,
-  address,
+  locationNameEncoded,
+  address = '',
   mapUrl = '',
   mapType,
   showOnMap,
+  activeLocale,
   fieldErrors,
   onMapUrlChange,
+  onAddressChange,
 }: AdminLocationMapFieldProps) {
   const parsed = parseMapCoordinatesFromUrl(mapUrl);
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField
+        <AdminLocaleAwareTextField
           label="Location name"
           name="locationName"
-          defaultValue={locationName ?? ''}
+          encodedValue={locationNameEncoded}
+          activeLocale={activeLocale}
           error={fieldErrors?.locationName}
         />
-        <TextField label="Address" name="address" defaultValue={address ?? ''} />
+        <TextField
+          label="Address"
+          name="address"
+          value={address}
+          onChange={(event) => onAddressChange(event.target.value)}
+          hint="Per language — switch locale tabs to edit other translations."
+        />
         <div className="sm:col-span-2">
           <TextField
             label="Map link"
             name="mapUrl"
             value={mapUrl}
             onChange={(event) => onMapUrlChange(event.target.value)}
-            hint="Paste a Google Maps, OpenStreetMap, or geo: link. Coordinates for the heritage map are read from the URL."
+            hint="Shared for all languages. Paste a Google Maps, OpenStreetMap, or geo: link."
             error={fieldErrors?.mapUrl}
           />
         </div>
