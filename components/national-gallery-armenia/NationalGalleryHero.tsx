@@ -92,10 +92,6 @@ export function NationalGalleryHero({
           </a>
         </div>
       </div>
-      <div className="hero-scroll">
-        <div className="scroll-line" />
-        <span>{uiMessage(locale, 'scroll')}</span>
-      </div>
     </div>
   );
 }

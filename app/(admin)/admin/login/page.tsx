@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 function AdminLoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-parchment-200/40 p-6">
+    <main data-admin className="flex min-h-screen items-center justify-center bg-parchment-200/40 p-6">
       <div className="w-full max-w-md rounded-2xl border border-stone-100 bg-white p-8 shadow-card">
         <Logo variant="on-light" />
         <div className="mt-8 flex flex-col gap-2">

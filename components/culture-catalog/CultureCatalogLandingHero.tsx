@@ -3,7 +3,6 @@ import type { LandingBreadcrumbSegment } from '@/components/landing/LandingBread
 import { CulturePortalLandingBreadcrumb } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
-import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 export type CultureCatalogLandingHeroCta = LandingHeroCta;
 
@@ -16,8 +15,6 @@ interface CultureCatalogLandingHeroProps {
   breadcrumb: LandingBreadcrumbSegment[];
   heroImage?: string;
   ctas?: CultureCatalogLandingHeroCta[];
-  showScroll?: boolean;
-  locale?: SiteLocaleCode;
 }
 
 export function CultureCatalogLandingHero({
@@ -29,8 +26,6 @@ export function CultureCatalogLandingHero({
   breadcrumb,
   heroImage,
   ctas = [],
-  showScroll = true,
-  locale = 'EN',
 }: CultureCatalogLandingHeroProps) {
   const imageUrl = hasTrimmedText(heroImage) ? resolvePublicAssetUrl(heroImage!) : null;
 
@@ -44,8 +39,6 @@ export function CultureCatalogLandingHero({
       heroImage={imageUrl}
       ctas={ctas}
       heroClassName="culture-catalog-hero"
-      showScroll={showScroll}
-      locale={locale}
       breadcrumb={<CulturePortalLandingBreadcrumb segments={breadcrumb} />}
     />
   );

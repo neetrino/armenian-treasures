@@ -25,10 +25,6 @@ export function CulturalCategoryCard({ category }: CulturalCategoryCardProps) {
         <h3 className="cultural-portal-card__title font-cinzel text-[14px] font-extrabold uppercase leading-[1.15] tracking-[0.04em] sm:text-[15px] sm:leading-[1.2]">
           {category.title}
         </h3>
-
-        <p className="cultural-portal-card__description font-display text-[13px] leading-[1.4] sm:text-[14px]">
-          {category.description}
-        </p>
       </div>
     </Link>
   );

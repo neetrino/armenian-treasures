@@ -4,7 +4,6 @@ import { HeroImageOverlay } from '@/components/sections/hero/HeroImageOverlay';
 import { cn } from '@/lib/utils';
 import { containsArmenianScript } from '@/lib/i18n/armenian-script';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
-import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export interface LandingHeroCta {
   label: string;
@@ -21,7 +20,6 @@ interface LandingHeroProps {
   heroImage?: string | null;
   ctas?: LandingHeroCta[];
   heroClassName?: string;
-  showScroll?: boolean;
   breadcrumb?: ReactNode;
   locale?: SiteLocaleCode;
 }
@@ -69,9 +67,7 @@ export function LandingHero({
   heroImage,
   ctas = [],
   heroClassName = 'cultural-portal-hero',
-  showScroll = true,
   breadcrumb,
-  locale = 'EN',
 }: LandingHeroProps) {
   const titleIsArmenian = containsArmenianScript(title);
   const accentIsArmenian = containsArmenianScript(accent);
@@ -85,14 +81,16 @@ export function LandingHero({
       <div className="hero-grain" />
       <LandingHeroCornerOrnament />
       <div className="hero-content">
-        <p
-          className={cn(
-            'hero-eyebrow reveal',
-            containsArmenianScript(eyebrow) && 'hero-eyebrow--hy',
-          )}
-        >
-          {eyebrow}
-        </p>
+        {breadcrumb || !eyebrow.trim() ? null : (
+          <p
+            className={cn(
+              'hero-eyebrow reveal',
+              containsArmenianScript(eyebrow) && 'hero-eyebrow--hy',
+            )}
+          >
+            {eyebrow}
+          </p>
+        )}
         <h1 className={cn('reveal', titleIsArmenian && 'hero-title--hy')}>
           {title}
           {accent.trim() ? (
@@ -111,12 +109,6 @@ export function LandingHero({
           </div>
         ) : null}
       </div>
-      {showScroll ? (
-        <div className="hero-scroll">
-          <div className="scroll-line" />
-          <span>{uiMessage(locale, 'scroll')}</span>
-        </div>
-      ) : null}
     </div>
   );
 }

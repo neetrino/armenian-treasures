@@ -9,6 +9,7 @@ import {
   HIGHLIGHTS_PAGE_PATH,
 } from '@/lib/constants/featured-treasures';
 import {
+  buildHomeFeaturedMosaic,
   excerptFeaturedTreasureText,
   mapBlogPostsToFeaturedTreasures,
   mapCultureItemsToFeaturedTreasures,
@@ -75,7 +76,30 @@ describe('featured treasures mapping', () => {
   it('keeps the discover-more shortcut on /highlights with 30 archive slots', () => {
     expect(HIGHLIGHT_TREASURE_COUNT).toBe(30);
     expect(DISCOVER_MORE_HIGHLIGHTS_TREASURE.href).toBe(HIGHLIGHTS_PAGE_PATH);
-    expect(DISCOVER_MORE_HIGHLIGHTS_TREASURE.layout).toBe('more');
+    expect(DISCOVER_MORE_HIGHLIGHTS_TREASURE.layout).toBe('bottom-right');
+  });
+
+  it('keeps five homepage mosaic cells and puts Discover more in the bottom-right slot', () => {
+    const treasures = mapCultureItemsToFeaturedTreasures([
+      item(1),
+      item(2),
+      { ...item(3), title: 'Vahanavank', slug: 'vahanavank' },
+      item(4),
+      item(5),
+    ]);
+    const mosaic = buildHomeFeaturedMosaic(treasures);
+
+    expect(mosaic).toHaveLength(5);
+    expect(mosaic.map((entry) => entry.layout)).toEqual([
+      'tall',
+      'top-mid',
+      'top-right',
+      'bottom-mid',
+      'bottom-right',
+    ]);
+    expect(mosaic[2]?.title).toBe('STORY 5');
+    expect(mosaic[4]?.href).toBe(HIGHLIGHTS_PAGE_PATH);
+    expect(mosaic.some((entry) => /vahanavank/i.test(entry.title))).toBe(false);
   });
 
   it('keeps highlight cards short and links to the item page', () => {

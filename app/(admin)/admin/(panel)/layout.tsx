@@ -13,7 +13,10 @@ async function AdminPanelLayout({ children }: { children: ReactNode }) {
 
   return (
     <AdminMotionDisabled>
-      <div className="admin-no-motion relative flex h-screen overflow-hidden bg-gradient-to-br from-parchment-100/90 via-parchment-50 to-stone-100/50">
+      <div
+        data-admin
+        className="admin-no-motion relative flex h-screen overflow-hidden bg-gradient-to-br from-parchment-100/90 via-parchment-50 to-stone-100/50"
+      >
         <div
           className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-bronze-300/15 blur-3xl"
           aria-hidden

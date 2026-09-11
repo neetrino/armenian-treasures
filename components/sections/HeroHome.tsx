@@ -3,10 +3,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { HeroCtaButtons } from '@/components/sections/hero/HeroCtaButtons';
 import { HeroBackground } from '@/components/sections/hero/HeroBackground';
-import { HeroScrollIndicator } from '@/components/sections/hero/HeroScrollIndicator';
 import { HeroStatsBar, type HomeStat } from '@/components/sections/hero/HeroStatsBar';
 import { HeroTextBlock } from '@/components/sections/hero/HeroTextBlock';
-import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface HeroHomeProps {
   badge: string;
@@ -23,12 +21,10 @@ interface HeroHomeProps {
   heroImage?: string | null;
   heroMobileImage?: string | null;
   hideSecondaryCta?: boolean;
-  locale?: SiteLocaleCode;
 }
 
 export function HeroHome(props: HeroHomeProps) {
   const reduced = useReducedMotion();
-  const locale = props.locale ?? 'EN';
 
   return (
     <section
@@ -66,7 +62,6 @@ export function HeroHome(props: HeroHomeProps) {
               secondaryHref={props.secondaryCtaUrl}
               hideSecondary={props.hideSecondaryCta}
             />
-            <HeroScrollIndicator className="mt-12" locale={locale} />
           </motion.div>
         </div>
 

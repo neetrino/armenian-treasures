@@ -35,7 +35,6 @@ export function CultureFormPageView({
         slogan={content.slogan}
         description={description}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
-        showScroll={false}
         ctas={[{ label: 'Go to form', href: '#form', variant: 'gold' }]}
       />
       <div id="form" className="catalog-form-section">

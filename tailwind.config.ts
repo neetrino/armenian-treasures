@@ -74,10 +74,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['var(--font-cormorant)', 'Playfair Display', 'Georgia', 'serif'],
-        cinzel: ['var(--font-cinzel)', 'Georgia', 'serif'],
-        'cinzel-deco': ['var(--font-cinzel-deco)', 'var(--font-cinzel)', 'Georgia', 'serif'],
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-header)'],
+        cinzel: ['var(--font-header)'],
+        'cinzel-deco': ['var(--font-header)'],
+        sans: ['var(--font-body)'],
+        header: ['var(--font-header)'],
+        body: ['var(--font-body)'],
       },
       boxShadow: {
         card: '0 2px 24px -12px rgba(26,23,20,0.18)',

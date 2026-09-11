@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter, Noto_Serif_Armenian } from 'next/font/google';
+import { Cinzel, Cormorant_Garamond, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
@@ -7,6 +7,7 @@ import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
 import './globals.css';
 
+/** Body: Kelvinch — Armenian Unicode serif (Latin / Armenian / Cyrillic / Greek). */
 const kelvinch = localFont({
   src: './fonts/kelvinch/Kelvinch-Roman.woff2',
   variable: '--font-kelvinch',
@@ -15,25 +16,18 @@ const kelvinch = localFont({
   style: 'normal',
 });
 
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-cinzel-legacy',
+  display: 'swap',
+});
+
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-  display: 'swap',
-});
-
-const cinzel = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-cinzel',
-  display: 'swap',
-});
-
-const cinzelDeco = Cinzel_Decorative({
-  subsets: ['latin'],
-  weight: ['400', '700', '900'],
-  variable: '--font-cinzel-deco',
+  variable: '--font-cormorant-legacy',
   display: 'swap',
 });
 
@@ -41,13 +35,6 @@ const inter = Inter({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-inter',
-  display: 'swap',
-});
-
-const notoSerifArmenian = Noto_Serif_Armenian({
-  subsets: ['armenian'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-noto-serif-armenian',
   display: 'swap',
 });
 
@@ -88,7 +75,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
       lang={currentLocale.toLowerCase()}
       data-theme={DEFAULT_SITE_THEME}
       suppressHydrationWarning
-      className={`scrollbar-none ${kelvinch.variable} ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable} ${notoSerifArmenian.variable}`}
+      className={`scrollbar-none ${kelvinch.variable} ${cinzel.variable} ${cormorant.variable} ${inter.variable}`}
     >
       <body className="scrollbar-none min-h-screen antialiased">
         <ThemeInitScript />

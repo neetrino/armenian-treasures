@@ -1,7 +1,9 @@
 import { getFeaturedCultureItems } from '@/lib/queries/culture-items';
-import { mapCultureItemsToFeaturedTreasures } from '@/lib/mappers/featured-treasures';
 import {
-  DISCOVER_MORE_HIGHLIGHTS_TREASURE,
+  buildHomeFeaturedMosaic,
+  mapCultureItemsToFeaturedTreasures,
+} from '@/lib/mappers/featured-treasures';
+import {
   FEATURED_TREASURE_COUNT,
   FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS,
   type FeaturedTreasure,
@@ -31,11 +33,11 @@ export async function FeaturedTreasuresGrid({
 
   const treasures =
     variant === 'tiles' ? resolvedTreasures : resolvedTreasures.slice(0, FEATURED_TREASURE_COUNT);
-  const items = showDiscoverMore ? [...treasures, DISCOVER_MORE_HIGHLIGHTS_TREASURE] : treasures;
+  const items =
+    variant === 'mosaic' && showDiscoverMore ? buildHomeFeaturedMosaic(resolvedTreasures) : treasures;
   const gridClassName = cn(
     'featured-treasures-grid',
     variant === 'tiles' && 'featured-treasures-grid--tiles',
-    showDiscoverMore && 'featured-treasures-grid--with-more',
   );
 
   if (variant === 'tiles') {

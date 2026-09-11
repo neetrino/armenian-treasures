@@ -8,7 +8,7 @@ import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/hom
 
 export async function FeaturedTreasuresSection({ home }: HomeSectionContentProps) {
   const { featuredTreasures } = getHomeSections(home);
-  const items = await getFeaturedCultureItems(FEATURED_TREASURE_COUNT);
+  const items = await getFeaturedCultureItems(FEATURED_TREASURE_COUNT + 1);
   const treasures = mapCultureItemsToFeaturedTreasures(items);
 
   if (treasures.length === 0) {

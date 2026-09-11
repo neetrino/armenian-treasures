@@ -1,4 +1,8 @@
-import type { FeaturedTreasure, FeaturedTreasureLayout } from '@/lib/constants/featured-treasures';
+import {
+  DISCOVER_MORE_HIGHLIGHTS_TREASURE,
+  type FeaturedTreasure,
+  type FeaturedTreasureLayout,
+} from '@/lib/constants/featured-treasures';
 import type { PublicBlogPostDTO, PublicCultureItemDetailDTO } from '@/lib/dto';
 import { firstBlockBody } from '@/lib/culture-item-media';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
@@ -60,6 +64,23 @@ export function mapCultureItemsToFeaturedTreasures(
   items: PublicCultureItemDetailDTO[],
 ): FeaturedTreasure[] {
   return items.map(mapCultureItemToFeaturedTreasure);
+}
+
+function isVahanavankTreasure(treasure: FeaturedTreasure): boolean {
+  return /vahanavank/i.test(treasure.href) || /vahanavank/i.test(treasure.title);
+}
+
+/** Five mosaic cells: four stories + Discover more in the bottom-right slot. */
+export function buildHomeFeaturedMosaic(treasures: FeaturedTreasure[]): FeaturedTreasure[] {
+  const stories = treasures.filter((treasure) => !isVahanavankTreasure(treasure)).slice(0, 4);
+  const mosaic = [stories[0], stories[1], stories[3], stories[2], DISCOVER_MORE_HIGHLIGHTS_TREASURE].filter(
+    (entry): entry is FeaturedTreasure => Boolean(entry),
+  );
+
+  return mosaic.map((treasure, index) => ({
+    ...treasure,
+    layout: LAYOUTS[index] ?? treasure.layout,
+  }));
 }
 
 export function mapBlogPostsToFeaturedTreasures(posts: PublicBlogPostDTO[]): FeaturedTreasure[] {

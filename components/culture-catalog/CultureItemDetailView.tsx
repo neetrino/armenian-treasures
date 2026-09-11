@@ -68,7 +68,6 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
         description={hasTrimmedText(description) ? description : undefined}
         heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
-        locale={locale}
         ctas={[
           { label: uiMessage(locale, 'viewDetails'), href: '#detail', variant: 'gold' },
           ...(tourHref

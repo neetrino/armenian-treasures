@@ -58,8 +58,9 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
     {
       key: 'post',
       header: 'Post',
+      width: '42%',
       cell: (row) => (
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-12 w-[4.5rem] shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
             {row.image ? (
               <Image
@@ -87,8 +88,9 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
     {
       key: 'content',
       header: 'Description',
+      width: '32%',
       cell: (row) => (
-        <p className="line-clamp-2 max-w-md text-sm text-ink-soft">
+        <p className="line-clamp-2 break-words text-sm text-ink-soft">
           {truncateBlogDescription(row.content) || '—'}
         </p>
       ),
@@ -96,11 +98,13 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
     {
       key: 'status',
       header: 'Status',
+      width: '8rem',
       cell: (row) => (row.isPublished ? <Badge tone="green">Published</Badge> : <Badge>Draft</Badge>),
     },
     {
       key: 'actions',
       header: 'Actions',
+      width: '11rem',
       align: 'right',
       cell: (row) => (
         <div className="flex items-center justify-end gap-1">

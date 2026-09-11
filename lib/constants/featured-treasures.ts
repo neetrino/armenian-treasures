@@ -50,7 +50,7 @@ export const DISCOVER_MORE_HIGHLIGHTS_TREASURE: FeaturedTreasure = {
   description:
     'Open thirty more stories from the archive — monasteries, music, people, and living heritage beyond the homepage five.',
   href: HIGHLIGHTS_PAGE_PATH,
-  layout: 'more',
+  layout: 'bottom-right',
   cardBackgroundColor: null,
   cardBackgroundImage: null,
 };

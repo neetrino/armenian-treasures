@@ -13,7 +13,12 @@ export interface SettingsFormState {
   fieldErrors?: Record<string, string>;
 }
 
-const siteSettingsFormSchema = siteSettingsSchema.omit({ socialLinks: true });
+const siteSettingsFormSchema = siteSettingsSchema.omit({
+  socialLinks: true,
+  certificateGuardianUrl: true,
+  certificateAmbassadorUrl: true,
+  certificateMagistrUrl: true,
+});
 
 function parseSocialLinksFromForm(formData: FormData): unknown | undefined {
   if (!formData.has('socialLinks')) return undefined;
@@ -43,9 +48,6 @@ export async function saveSiteSettingsAction(
     address: formData.get('address')?.toString() ?? '',
     copyrightText: formData.get('copyrightText')?.toString() ?? '',
     enabledLocales: enabledLocaleValues,
-    certificateGuardianUrl: formData.get('certificateGuardianUrl')?.toString() ?? '',
-    certificateAmbassadorUrl: formData.get('certificateAmbassadorUrl')?.toString() ?? '',
-    certificateMagistrUrl: formData.get('certificateMagistrUrl')?.toString() ?? '',
   });
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};

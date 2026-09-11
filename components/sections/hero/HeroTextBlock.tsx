@@ -47,13 +47,17 @@ export function HeroTextBlock({
         ))}
       </p>
 
-      <p className="mx-auto mt-9 max-w-[820px] font-cinzel text-[clamp(0.75rem,0.85vw,1rem)] font-normal uppercase leading-normal tracking-[0.26em] text-heritage-champagne/90 lg:mt-8">
-        {tagline}
-      </p>
+      {tagline.trim() ? (
+        <p className="mx-auto mt-9 max-w-[820px] font-cinzel text-[clamp(0.75rem,0.85vw,1rem)] font-normal uppercase leading-normal tracking-[0.26em] text-heritage-champagne/90 lg:mt-8">
+          {tagline}
+        </p>
+      ) : null}
 
-      <p className="mx-auto mt-[18px] max-w-[610px] min-w-0 font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.62] text-heritage-text-muted">
-        {description}
-      </p>
+      {description.trim() ? (
+        <p className="mx-auto mt-[4em] max-w-[610px] min-w-0 font-display text-[clamp(0.9375rem,1vw,1.125rem)] italic leading-[1.62] text-heritage-text-muted">
+          {description}
+        </p>
+      ) : null}
     </div>
   );
 }
