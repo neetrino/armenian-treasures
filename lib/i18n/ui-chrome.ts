@@ -55,11 +55,47 @@ const HEADER_HY: Partial<Record<UiChromeKey, string>> = {
   aboutUs: 'Մեր մասին',
 };
 
+/** Compact header labels so long locales (RU/FR/PT) do not collide in the nav bar. */
+const HEADER_SHORT: Partial<Record<Exclude<SiteLocaleCode, 'EN' | 'HY' | 'HYW'>, Partial<Record<UiChromeKey, string>>>> = {
+  RU: {
+    culturalPortal: 'Портал',
+    upcomingProjects: 'Проекты',
+    heritageMap: 'Карта',
+    partnership: 'Партнёры',
+    donate: 'Донат',
+    blog: 'Блог',
+    highlights: 'Избранное',
+    aboutUs: 'О нас',
+  },
+  FR: {
+    culturalPortal: 'Portail',
+    upcomingProjects: 'Projets',
+    heritageMap: 'Carte',
+    partnership: 'Partenaires',
+    donate: 'Don',
+    blog: 'Blog',
+    highlights: 'À la une',
+    aboutUs: 'À propos',
+  },
+  PT: {
+    culturalPortal: 'Portal',
+    upcomingProjects: 'Projetos',
+    heritageMap: 'Mapa',
+    partnership: 'Parceria',
+    donate: 'Doar',
+    blog: 'Blog',
+    highlights: 'Destaques',
+    aboutUs: 'Sobre',
+  },
+};
+
 export function headerChromeLabel(locale: SiteLocaleCode, key: UiChromeKey): string {
   if (isArmenianLocale(locale)) {
     const shortLabel = HEADER_HY[key];
     if (shortLabel) return shortLabel;
   }
+  const shortByLocale = HEADER_SHORT[locale as 'RU' | 'FR' | 'PT'];
+  if (shortByLocale?.[key]) return shortByLocale[key]!;
   return chromeLabel(locale, key);
 }
 

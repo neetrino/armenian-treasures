@@ -28,14 +28,40 @@ describe('culture item locale media', () => {
     expect(mediaForLocale(english, parsed, 'HY').blocks[0]?.title).toBe('Տաթև');
   });
 
-  it('clones EN media structure with cleared text for a new locale', () => {
-    const source = sliceLocaleMedia({
+  it('does not invent EN from root when only HY exists in byLocale', () => {
+    const hyOnly = {
       ...parseCultureItemMedia(null),
-      blocks: [{ ...emptyDescriptionBlock(), title: 'Keep image', body: 'Secret', image: '/a.webp' }],
-    });
-    const cloned = emptyTextLocaleMedia(source);
-    expect(cloned.blocks[0]?.image).toBe('/a.webp');
-    expect(cloned.blocks[0]?.title).toBe('');
-    expect(cloned.blocks[0]?.body).toBe('');
+      blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Տաթև', body: 'Հայերեն' }],
+      byLocale: {
+        HY: {
+          blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Տաթև', body: 'հայերեն' }],
+          tours: [],
+          videos: [],
+          gallery: [],
+        },
+      },
+    };
+    const parsed = parseMediaByLocale(hyOnly);
+    expect(parsed.EN).toBeUndefined();
+    expect(mediaForLocale(hyOnly, parsed, 'HY').blocks[0]?.body).toBe('հայերեն');
+  });
+
+  it('keeps shared tours on root when resolving locale blocks', () => {
+    const english = {
+      ...parseCultureItemMedia(null),
+      blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Tatev', body: 'English body' }],
+      tours: [{ id: 't1', type: 'LIDAR' as const, title: 'Scan', url: 'https://my.matterport.com/show/?m=abc', previewImage: '' }],
+    };
+    const byLocale = {
+      EN: sliceLocaleMedia(english),
+      HY: emptyTextLocaleMedia(sliceLocaleMedia(english)),
+    };
+    byLocale.HY.blocks[0] = { ...byLocale.HY.blocks[0]!, title: 'Տաթև', body: 'հայերեն' };
+    byLocale.HY.tours = [];
+
+    const resolved = mediaForLocale(english, byLocale, 'HY');
+    expect(resolved.blocks[0]?.body).toBe('հայերեն');
+    expect(resolved.tours).toHaveLength(1);
+    expect(resolved.tours[0]?.url).toContain('matterport');
   });
 });

@@ -62,10 +62,10 @@ export function HeaderBar({
         />
       </div>
 
-      <div className="relative mx-auto flex h-site-header w-full items-center justify-between gap-2 px-[clamp(1.25rem,2.6vw,3rem)] lg:px-12">
-        <div className="flex min-w-0 flex-1 items-center gap-[clamp(1.125rem,1.45vw,2rem)]">
+      <div className="relative mx-auto flex h-site-header w-full items-center justify-between gap-3 px-[clamp(1rem,2vw,2.5rem)] lg:px-8 xl:px-12">
+        <div className="flex min-w-0 flex-1 items-center gap-[clamp(0.75rem,1.2vw,1.5rem)]">
           <motion.div
-            className="mr-1 flex shrink-0 items-center py-1 lg:mr-8"
+            className="mr-0 flex shrink-0 items-center py-1 lg:mr-3 xl:mr-6"
             initial={reduced ? false : { opacity: 0, x: -18 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.08 }}
@@ -77,7 +77,7 @@ export function HeaderBar({
         </div>
 
         <motion.div
-          className="relative z-20 ml-3 flex shrink-0 items-center gap-2 lg:ml-2"
+          className="relative z-20 ml-2 flex shrink-0 items-center gap-1.5 lg:ml-3 lg:gap-2"
           initial={reduced ? false : { opacity: 0, x: 18 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.55, ease: HEADER_EASE, delay: 0.22 }}

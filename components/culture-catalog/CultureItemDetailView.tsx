@@ -64,7 +64,7 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
         accent={item.periodLabel ?? item.region ?? uiMessage(locale, 'heritageEntry')}
         slogan={
           item.region
-            ? `${item.region}${item.yearLabel ? ` · ${item.yearLabel}` : ''}`
+            ? item.region
             : uiMessage(locale, 'armenianArchive')
         }
         description={

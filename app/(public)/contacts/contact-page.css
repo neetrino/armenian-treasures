@@ -32,23 +32,27 @@
 
 .khndzoresk-page .contact-direct-title {
   margin-top: 0.55rem;
-  font-family: var(--font-cinzel), serif;
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
   font-size: clamp(1.75rem, 2.4vw, 2.45rem);
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--gold);
+  overflow: visible;
+  padding-block: 0.06em;
 }
 
 .khndzoresk-page .contact-direct-subtitle {
   margin-top: 0.5rem;
-  font-family: var(--font-cinzel), serif;
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  line-height: 1.45;
   color: var(--surface-text-body);
+  overflow: visible;
 }
 
 .khndzoresk-page .contact-direct-list {
@@ -57,7 +61,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.78rem;
-  font-family: var(--font-cormorant), serif;
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), var(--font-cormorant), Georgia, serif;
   font-size: 1.06rem;
   line-height: 1.7;
   color: var(--surface-text);

@@ -116,9 +116,29 @@ function withLocaleMedia(
   } catch {
     parsedByLocale = parseMediaByLocale({ byLocale: {} });
   }
+  const activeSlice = sliceLocaleMedia(media);
+  const byLocale = Object.fromEntries(
+    Object.entries({ ...parsedByLocale, [locale]: activeSlice }).map(([code, slice]) => [
+      code,
+      slice
+        ? {
+            ...slice,
+            tours: media.tours,
+            videos: media.videos,
+            gallery: media.gallery,
+          }
+        : slice,
+    ]),
+  );
+  const enBlocks = byLocale.EN?.blocks ?? (locale === 'EN' ? media.blocks : []);
   return {
     ...media,
-    byLocale: { ...parsedByLocale, [locale]: sliceLocaleMedia(media) },
+    // Root blocks stay EN-canonical so list/excerpt fallbacks never leak another locale.
+    blocks: enBlocks.length > 0 ? enBlocks : media.blocks,
+    tours: media.tours,
+    videos: media.videos,
+    gallery: media.gallery,
+    byLocale,
   };
 }
 
@@ -150,7 +170,12 @@ function parseForm(formData: FormData):
   const parsed = cultureItemSchema.safeParse({
     title: titleRaw,
     slug: finalSlug,
-    description: pickDefaultLocaleText(descriptionI18n) || firstBlockBody(media) || '',
+    description: pickDefaultLocaleText(descriptionI18n) || firstBlockBody({
+      ...media,
+      blocks: media.byLocale && typeof media.byLocale === 'object' && !Array.isArray(media.byLocale)
+        ? ((media.byLocale as Record<string, { blocks?: typeof media.blocks }>).EN?.blocks ?? media.blocks)
+        : media.blocks,
+    }) || '',
     shortDescription: pickDefaultLocaleText(shortDescriptionI18n),
     menuItemId: formData.get('menuItemId')?.toString() ?? '',
     region: formData.get('region')?.toString() ?? '',
@@ -215,7 +240,16 @@ function toData(
   return {
     title: encodeTranslatableText(i18n.titleI18n),
     slug: input.slug,
-    description: encodeTranslatableText(i18n.descriptionI18n) || firstBlockBody(i18n.media),
+    // Prefer explicit i18n description fields; otherwise encode EN first block only (never active-locale plain text).
+    description:
+      encodeTranslatableText(i18n.descriptionI18n) ||
+      (() => {
+        const enBody = firstBlockBody({
+          ...i18n.media,
+          blocks: i18n.media.blocks,
+        });
+        return enBody ? encodeTranslatableText({ EN: enBody }) : '';
+      })(),
     shortDescription: encodeTranslatableText(i18n.shortDescriptionI18n) || null,
     menuItemId: input.menuItemId,
     region: input.region?.trim() ? input.region : null,

@@ -57,7 +57,11 @@ export function parseMediaByLocale(raw: unknown): Partial<Record<SiteLocaleCode,
       if (parsed) byLocale[code] = parsed;
     }
   }
-  if (!byLocale.EN) byLocale.EN = sliceLocaleMedia(root);
+  // Legacy rows without byLocale: treat root as EN only.
+  // Never seed EN from root when other locales already exist — root may be the last edited locale.
+  if (Object.keys(byLocale).length === 0) {
+    byLocale.EN = sliceLocaleMedia(root);
+  }
   return byLocale;
 }
 
@@ -67,7 +71,31 @@ export function mediaForLocale(
   locale: SiteLocaleCode,
 ): CultureItemMediaContent {
   const slice = byLocale[locale] ?? byLocale.EN ?? sliceLocaleMedia(media);
-  return applyLocaleMedia(media, slice);
+  // Tours / videos / gallery stay on the shared root (static across locales).
+  // Only description blocks are locale-specific.
+  return {
+    ...media,
+    blocks: slice.blocks,
+  };
+}
+
+/** Propagate shared media (tours/videos/gallery) to every locale slice. */
+export function syncSharedLocaleMedia(
+  map: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+  shared: Pick<CultureItemLocaleMedia, 'tours' | 'videos' | 'gallery'>,
+): Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>> {
+  const next = { ...map };
+  for (const code of SITE_LOCALE_CODES) {
+    const existing = next[code];
+    if (!existing) continue;
+    next[code] = {
+      ...existing,
+      tours: shared.tours,
+      videos: shared.videos,
+      gallery: shared.gallery,
+    };
+  }
+  return next;
 }
 
 export function emptyTextLocaleMedia(source: CultureItemLocaleMedia): CultureItemLocaleMedia {

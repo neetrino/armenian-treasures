@@ -162,6 +162,27 @@ export const PAGE_MESSAGES = {
     'Lignes directes',
     'Contactos diretos',
   ),
+  foundationBrandName: row(
+    'ՀԱՅԿԱԿԱՆ ԳԱՆՁԵՐ',
+    'ARMENIAN TREASURES',
+    'АРМЯНСКИЕ СОКРОВИЩА',
+    'TRÉSORS ARMÉNIENS',
+    'TESOUROS ARMÉNIOS',
+  ),
+  foundationBrandSubtitle: row(
+    'ՄՇԱԿՈՒԹԱՅԻՆ ԺԱՌԱՆԳՈՒԹՅԱՆ ՀԻՄՆԱԴՐԱՄ',
+    'CULTURAL HERITAGE FOUNDATION',
+    'ФОНД КУЛЬТУРНОГО НАСЛЕДИЯ',
+    'FONDATION DU PATRIMOINE CULTUREL',
+    'FUNDAÇÃO DO PATRIMÓNIO CULTURAL',
+  ),
+  contactCityCountry: row(
+    'Երևան, Հայաստան',
+    'Yerevan, Armenia',
+    'Ереван, Армения',
+    'Erevan, Arménie',
+    'Erevan, Arménia',
+  ),
   contactSubtitle: row(
     'Կապվեք մեզ հետ գործընկերության, մամուլի, հետազոտական համագործակցության կամ կամավորության համար։',
     'Reach us for partnerships, press requests, research collaboration, or volunteer opportunities.',

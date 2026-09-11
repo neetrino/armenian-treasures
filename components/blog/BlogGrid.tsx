@@ -17,13 +17,22 @@ export function BlogGrid({ posts, locale = 'EN' }: BlogGridProps) {
     );
   }
 
+  const [featured, ...rest] = posts;
+
   return (
     <div className="blog-layout">
-      <div className="blog-grid">
-        {posts.map((post) => (
-          <BlogCard key={post.id} post={post} />
-        ))}
-      </div>
+      {featured ? (
+        <div className="blog-featured">
+          <BlogCard post={featured} featured />
+        </div>
+      ) : null}
+      {rest.length > 0 ? (
+        <div className="blog-grid">
+          {rest.map((post) => (
+            <BlogCard key={post.id} post={post} />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

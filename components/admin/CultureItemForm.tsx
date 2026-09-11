@@ -20,6 +20,7 @@ import {
   emptyTextLocaleMedia,
   parseMediaByLocale,
   sliceLocaleMedia,
+  syncSharedLocaleMedia,
   type CultureItemLocaleMedia,
 } from '@/lib/culture-item-media-locale';
 import { type SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -121,15 +122,23 @@ export function CultureItemForm({
       state.fieldErrors?.itemType ||
       state.fieldErrors?.region ||
       state.fieldErrors?.periodLabel ||
-      state.fieldErrors?.century ||
-      state.fieldErrors?.yearLabel ||
       state.fieldErrors?.order,
   );
 
   function patchMedia(patch: Partial<CultureItemMediaContent>): void {
     setMedia((current) => {
       const next = { ...current, ...patch };
-      setMediaByLocale((map) => ({ ...map, [activeLocale]: sliceLocaleMedia(next) }));
+      setMediaByLocale((map) => {
+        const withActive = { ...map, [activeLocale]: sliceLocaleMedia(next) };
+        if (patch.tours || patch.videos || patch.gallery) {
+          return syncSharedLocaleMedia(withActive, {
+            tours: next.tours,
+            videos: next.videos,
+            gallery: next.gallery,
+          });
+        }
+        return withActive;
+      });
       return next;
     });
     setIsSaved(false);
@@ -141,9 +150,22 @@ export function CultureItemForm({
         ...map,
         [activeLocale]: sliceLocaleMedia(media),
       };
-      const nextSlice = saved[nextLocale] ?? emptyTextLocaleMedia(saved.EN ?? sliceLocaleMedia(media));
+      const template = saved.EN ?? sliceLocaleMedia(media);
+      const nextSlice =
+        saved[nextLocale] ??
+        emptyTextLocaleMedia(template);
+      // Shared media always follows the current root (last edited tours/videos/gallery).
+      nextSlice.tours = media.tours;
+      nextSlice.videos = media.videos;
+      nextSlice.gallery = media.gallery;
       saved[nextLocale] = nextSlice;
-      setMedia((current) => ({ ...current, ...nextSlice }));
+      setMedia((current) => ({
+        ...current,
+        blocks: nextSlice.blocks,
+        tours: media.tours,
+        videos: media.videos,
+        gallery: media.gallery,
+      }));
       return saved;
     });
     setActiveLocale(nextLocale);

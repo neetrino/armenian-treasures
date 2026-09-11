@@ -89,7 +89,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
         className={cn(
           'inline-flex h-9 items-center gap-[7px] px-3.5',
           'bg-[rgba(201,168,76,0.08)] border border-[var(--surface-border)]',
-          'font-cinzel text-[9.5px] font-bold uppercase tracking-[0.12em] text-heritage-gold',
+          'font-cinzel text-[12px] font-bold uppercase tracking-[0.14em] text-heritage-gold',
           'transition hover:border-[rgba(214,184,90,0.35)]',
           '[clip-path:polygon(6px_0%,100%_0%,calc(100%-6px)_100%,0%_100%)]',
           hasChoice && 'cursor-pointer',
