@@ -18,6 +18,10 @@ import {
 import { hydrateCultureItemMedia, type CultureItemMediaContent } from '@/lib/culture-item-media';
 import {
   emptyTextLocaleMedia,
+  mediaForLocale,
+  mergeSharedGallery,
+  mergeSharedTours,
+  mergeSharedVideos,
   parseMediaByLocale,
   sliceLocaleMedia,
   syncSharedLocaleMedia,
@@ -75,15 +79,16 @@ export function CultureItemForm({
     mode === 'edit' && updateBound ? updateBound : createCultureItemAction,
     INITIAL,
   );
-  const [media, setMedia] = useState<CultureItemMediaContent>(() =>
-    hydrateCultureItemMedia({
+  const [media, setMedia] = useState<CultureItemMediaContent>(() => {
+    const hydrated = hydrateCultureItemMedia({
       mediaContent: initial?.mediaContent,
       description: initial?.description,
       tourUrl: initial?.tourUrl,
       videoUrl: initial?.videoUrl,
       galleryImages: initial?.galleryImages,
-    }),
-  );
+    });
+    return mediaForLocale(hydrated, parseMediaByLocale(initial?.mediaContent), 'EN');
+  });
   const [mapUrl, setMapUrl] = useState(initial?.mapUrl ?? '');
   const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
   const [mediaByLocale, setMediaByLocale] = useState(() => parseMediaByLocale(initial?.mediaContent));
@@ -131,11 +136,15 @@ export function CultureItemForm({
       setMediaByLocale((map) => {
         const withActive = { ...map, [activeLocale]: sliceLocaleMedia(next) };
         if (patch.tours || patch.videos || patch.gallery) {
-          return syncSharedLocaleMedia(withActive, {
-            tours: next.tours,
-            videos: next.videos,
-            gallery: next.gallery,
-          });
+          return syncSharedLocaleMedia(
+            withActive,
+            {
+              tours: next.tours,
+              videos: next.videos,
+              gallery: next.gallery,
+            },
+            activeLocale,
+          );
         }
         return withActive;
       });
@@ -151,21 +160,21 @@ export function CultureItemForm({
         [activeLocale]: sliceLocaleMedia(media),
       };
       const template = saved.EN ?? sliceLocaleMedia(media);
-      const nextSlice =
-        saved[nextLocale] ??
-        emptyTextLocaleMedia(template);
-      // Shared media always follows the current root (last edited tours/videos/gallery).
-      nextSlice.tours = media.tours;
-      nextSlice.videos = media.videos;
-      nextSlice.gallery = media.gallery;
-      saved[nextLocale] = nextSlice;
+      const nextSlice = saved[nextLocale] ?? emptyTextLocaleMedia(template);
+      saved[nextLocale] = {
+        ...nextSlice,
+        tours: mergeSharedTours(media.tours, nextSlice.tours, nextLocale),
+        videos: mergeSharedVideos(media.videos, nextSlice.videos, nextLocale),
+        gallery: mergeSharedGallery(media.gallery, nextSlice.gallery, nextLocale),
+      };
+      const resolved = saved[nextLocale]!;
       setMedia((current) => ({
         ...current,
-        address: nextSlice.address,
-        blocks: nextSlice.blocks,
-        tours: media.tours,
-        videos: media.videos,
-        gallery: media.gallery,
+        address: resolved.address,
+        blocks: resolved.blocks,
+        tours: resolved.tours,
+        videos: resolved.videos,
+        gallery: resolved.gallery,
       }));
       return saved;
     });

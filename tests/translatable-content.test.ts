@@ -22,13 +22,15 @@ describe('resolveLocalizedText', () => {
 
   it('attributes unmarked Armenian plain strings to HY only', () => {
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HY')).toBe('ԽՆՁՈՐԵՍԿ');
+    expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HYW')).toBe('ԽՆՁՈՐԵՍԿ');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'EN')).toBe('');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'RU')).toBe('');
   });
 
-  it('attributes unmarked Latin plain strings to EN only', () => {
-    expect(resolveLocalizedText('Khndzoresk', 'EN')).toBe('Khndzoresk');
-    expect(resolveLocalizedText('Khndzoresk', 'HY')).toBe('');
-    expect(resolveLocalizedText('Khndzoresk', 'RU')).toBe('');
+  it('keeps unmarked Latin legacy fields shared across locales', () => {
+    expect(resolveLocalizedText('Syunik', 'EN')).toBe('Syunik');
+    expect(resolveLocalizedText('Syunik', 'HY')).toBe('Syunik');
+    expect(resolveLocalizedText('Syunik', 'RU')).toBe('Syunik');
+    expect(resolveLocalizedText('17th c.', 'HY')).toBe('17th c.');
   });
 });

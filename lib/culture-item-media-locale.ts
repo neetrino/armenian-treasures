@@ -112,37 +112,95 @@ export function mediaForLocale(
     blocks: slice.blocks,
     tours: media.tours.map((tour) => ({
       ...tour,
-      title: toursById.get(tour.id)?.title ?? '',
+      title: localeOwnsMediaText(toursById.get(tour.id)?.title ?? '', locale),
     })),
     videos: media.videos.map((video) => ({
       ...video,
-      title: videosById.get(video.id)?.title ?? '',
+      title: localeOwnsMediaText(videosById.get(video.id)?.title ?? '', locale),
     })),
     gallery: media.gallery.map((item) => {
       const localized = galleryById.get(item.id);
       return {
         ...item,
-        caption: localized?.caption ?? '',
-        alt: localized?.alt ?? '',
+        caption: localeOwnsMediaText(localized?.caption ?? '', locale),
+        alt: localeOwnsMediaText(localized?.alt ?? '', locale),
       };
     }),
   };
 }
 
-/** Propagate shared media (tours/videos/gallery) to every locale slice. */
+export function localeOwnsMediaText(text: string, locale: SiteLocaleCode): string {
+  const trimmed = text.trim();
+  if (!trimmed) return '';
+  if (/[\u0530-\u058F]/.test(trimmed) && locale !== 'HY' && locale !== 'HYW') return '';
+  if (/[\u0400-\u04FF]/.test(trimmed) && locale !== 'RU') return '';
+  return trimmed;
+}
+
+export function mergeSharedTours(
+  shared: CultureTourBlock[],
+  localized: CultureTourBlock[] | undefined,
+  locale?: SiteLocaleCode,
+): CultureTourBlock[] {
+  const byId = new Map((localized ?? []).map((tour) => [tour.id, tour]));
+  return shared.map((tour) => {
+    const title = byId.get(tour.id)?.title ?? '';
+    return {
+      ...tour,
+      title: locale ? localeOwnsMediaText(title, locale) : title,
+    };
+  });
+}
+
+export function mergeSharedVideos(
+  shared: CultureVideoBlock[],
+  localized: CultureVideoBlock[] | undefined,
+  locale?: SiteLocaleCode,
+): CultureVideoBlock[] {
+  const byId = new Map((localized ?? []).map((video) => [video.id, video]));
+  return shared.map((video) => {
+    const title = byId.get(video.id)?.title ?? '';
+    return {
+      ...video,
+      title: locale ? localeOwnsMediaText(title, locale) : title,
+    };
+  });
+}
+
+export function mergeSharedGallery(
+  shared: CultureGalleryBlock[],
+  localized: CultureGalleryBlock[] | undefined,
+  locale?: SiteLocaleCode,
+): CultureGalleryBlock[] {
+  const byId = new Map((localized ?? []).map((item) => [item.id, item]));
+  return shared.map((item) => {
+    const existing = byId.get(item.id);
+    const caption = existing?.caption ?? '';
+    const alt = existing?.alt ?? '';
+    return {
+      ...item,
+      caption: locale ? localeOwnsMediaText(caption, locale) : caption,
+      alt: locale ? localeOwnsMediaText(alt, locale) : alt,
+    };
+  });
+}
+
+/** Sync tour/video/gallery structure across locales, keeping each locale's own titles. */
 export function syncSharedLocaleMedia(
   map: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
   shared: Pick<CultureItemLocaleMedia, 'tours' | 'videos' | 'gallery'>,
+  activeLocale?: SiteLocaleCode,
 ): Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>> {
   const next = { ...map };
   for (const code of SITE_LOCALE_CODES) {
     const existing = next[code];
     if (!existing) continue;
+    const useActiveText = code === activeLocale;
     next[code] = {
       ...existing,
-      tours: shared.tours,
-      videos: shared.videos,
-      gallery: shared.gallery,
+      tours: mergeSharedTours(shared.tours, useActiveText ? shared.tours : existing.tours, code),
+      videos: mergeSharedVideos(shared.videos, useActiveText ? shared.videos : existing.videos, code),
+      gallery: mergeSharedGallery(shared.gallery, useActiveText ? shared.gallery : existing.gallery, code),
     };
   }
   return next;

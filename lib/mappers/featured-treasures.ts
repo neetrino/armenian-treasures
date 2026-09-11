@@ -1,5 +1,6 @@
 import type { FeaturedTreasure, FeaturedTreasureLayout } from '@/lib/constants/featured-treasures';
 import type { PublicBlogPostDTO, PublicCultureItemDetailDTO } from '@/lib/dto';
+import { firstBlockBody } from '@/lib/culture-item-media';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
 
@@ -45,7 +46,9 @@ export function mapCultureItemToFeaturedTreasure(
     icon: resolveMenuIconKey(slug, parentSlug),
     categories,
     title: item.title.toUpperCase(),
-    description: excerptFeaturedTreasureText(item.shortDescription || item.description || ''),
+    description: excerptFeaturedTreasureText(
+      item.shortDescription || item.description || firstBlockBody(item.media) || '',
+    ),
     href: resolveCultureItemHref(item.slug),
     layout: LAYOUTS[index % LAYOUTS.length]!,
     cardBackgroundColor: null,
@@ -80,7 +83,7 @@ export function mapCultureItemsToHighlightTreasures(
     ...mapCultureItemToFeaturedTreasure(item, index),
     layout: 'tile',
     description: excerptFeaturedTreasureText(
-      item.shortDescription || item.description || '',
+      item.shortDescription || item.description || firstBlockBody(item.media) || '',
       HIGHLIGHT_TREASURE_EXCERPT_LENGTH,
     ),
   }));

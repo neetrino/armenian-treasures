@@ -19,8 +19,14 @@ import {
   firstVideoUrl,
   galleryUrlsFromMedia,
 } from '@/lib/culture-item-media';
-import { parseMediaByLocale, sliceLocaleMedia } from '@/lib/culture-item-media-locale';
-import { isSiteLocaleCode } from '@/lib/i18n/locale-config';
+import {
+  mergeSharedGallery,
+  mergeSharedTours,
+  mergeSharedVideos,
+  parseMediaByLocale,
+  sliceLocaleMedia,
+} from '@/lib/culture-item-media-locale';
+import { isSiteLocaleCode, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
 import { cultureItemSchema } from '@/lib/validation';
 import type { Prisma } from '@prisma/client';
@@ -123,9 +129,13 @@ function withLocaleMedia(
       slice
         ? {
             ...slice,
-            tours: media.tours,
-            videos: media.videos,
-            gallery: media.gallery,
+            tours: mergeSharedTours(media.tours, code === locale ? media.tours : slice.tours, code as SiteLocaleCode),
+            videos: mergeSharedVideos(media.videos, code === locale ? media.videos : slice.videos, code as SiteLocaleCode),
+            gallery: mergeSharedGallery(
+              media.gallery,
+              code === locale ? media.gallery : slice.gallery,
+              code as SiteLocaleCode,
+            ),
           }
         : slice,
     ]),

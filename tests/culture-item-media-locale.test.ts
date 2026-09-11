@@ -5,6 +5,7 @@ import {
   mediaForLocale,
   parseMediaByLocale,
   sliceLocaleMedia,
+  syncSharedLocaleMedia,
 } from '@/lib/culture-item-media-locale';
 
 describe('culture item locale media', () => {
@@ -17,7 +18,9 @@ describe('culture item locale media', () => {
       EN: sliceLocaleMedia(english),
       HY: emptyTextLocaleMedia(sliceLocaleMedia(english)),
     };
-    byLocale.HY.blocks[0] = { ...byLocale.HY.blocks[0]!, title: 'Տաթև', body: 'Հայերեն' };
+    byLocale.HY.blocks[0] = { ...byLocale.HY.blocks[0]!, title: 'Tatev HY', body: 'Armenian body' };
+    byLocale.HY.blocks[0]!.title = 'Տաթև';
+    byLocale.HY.blocks[0]!.body = 'Հայերեն';
 
     const stored = { ...english, byLocale };
     expect(parseCultureItemMedia(stored).byLocale).toBeDefined();
@@ -53,7 +56,15 @@ describe('culture item locale media', () => {
     const english = {
       ...parseCultureItemMedia(null),
       blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Tatev', body: 'English body' }],
-      tours: [{ id: 't1', type: 'LIDAR' as const, title: 'Scan', url: 'https://my.matterport.com/show/?m=abc', previewImage: '' }],
+      tours: [
+        {
+          id: 't1',
+          type: 'LIDAR' as const,
+          title: 'Scan',
+          url: 'https://my.matterport.com/show/?m=abc',
+          previewImage: '',
+        },
+      ],
     };
     const byLocale = {
       EN: sliceLocaleMedia(english),
@@ -79,11 +90,11 @@ describe('culture item locale media', () => {
   it('attributes legacy root without byLocale to HY when text is Armenian', () => {
     const hyLegacy = {
       ...parseCultureItemMedia(null),
-      address: 'Խնձորեսկ',
-      blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'ԽՆՁՈՐԵՍԿ', body: 'հայերեն' }],
+      address: '\u053d\u0576\u0571\u0578\u0580\u0565\u057d\u056f',
+      blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: '\u053d\u0546\u0541\u0548\u0550\u0535\u054d\u053f', body: '\u0570\u0561\u0575\u0565\u0580\u0565\u0576' }],
     };
     const parsed = parseMediaByLocale(hyLegacy);
-    expect(parsed.HY?.blocks[0]?.title).toBe('ԽՆՁՈՐԵՍԿ');
+    expect(parsed.HY?.blocks[0]?.title).toBe('\u053d\u0546\u0541\u0548\u0550\u0535\u054d\u053f');
     expect(parsed.EN).toBeUndefined();
     expect(mediaForLocale(hyLegacy, parsed, 'EN').blocks).toEqual([]);
     expect(mediaForLocale(hyLegacy, parsed, 'EN').address).toBe('');
@@ -105,5 +116,36 @@ describe('culture item locale media', () => {
 
     expect(mediaForLocale(english, byLocale, 'EN').address).toBe('Syunik EN');
     expect(mediaForLocale(english, byLocale, 'HY').address).toBe('Սյունիք HY');
+  });
+
+  it('does not copy HY tour titles into EN when syncing shared tours', () => {
+    const hyTour = {
+      id: 't1',
+      type: 'SCAN_3D' as const,
+      title: 'Սուրբ Հռիփսիմե եկեղեցի',
+      url: 'https://skfb.ly/oSq9S',
+      previewImage: '',
+    };
+    const map = {
+      HY: {
+        address: '',
+        blocks: [],
+        tours: [hyTour],
+        videos: [],
+        gallery: [],
+      },
+      EN: {
+        address: '',
+        blocks: [],
+        tours: [{ ...hyTour, title: 'Սուրբ Հռիփսիմե եկեղեցի' }],
+        videos: [],
+        gallery: [],
+      },
+    };
+    const synced = syncSharedLocaleMedia(map, { tours: [hyTour], videos: [], gallery: [] }, 'HY');
+    expect(synced.HY?.tours[0]?.title).toBe('Սուրբ Հռիփսիմե եկեղեցի');
+    expect(synced.HY?.tours[0]?.url).toContain('skfb.ly');
+    expect(synced.EN?.tours[0]?.title).toBe('');
+    expect(synced.EN?.tours[0]?.url).toContain('skfb.ly');
   });
 });

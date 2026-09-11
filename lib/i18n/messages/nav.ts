@@ -54,7 +54,7 @@ export const NAV_MESSAGES = {
     'Trésors arméniens',
     'Tesouros arménios',
   ),
-  scroll: row('ՈԼՈՐԵԼ', 'SCROLL', 'ПРОКРУТИТЬ', 'DÉFILER', 'DESLOCAR'),
+  scroll: row('Իջնել ներքև', 'Scroll down', 'Листать вниз', 'Défiler vers le bas', 'Deslocar para baixo'),
   skipToContent: row(
     'Անցնել բովանդակությանը',
     'Skip to content',

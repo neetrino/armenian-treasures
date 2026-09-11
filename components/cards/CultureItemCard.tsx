@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Box, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
+import { firstBlockBody } from '@/lib/culture-item-media';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 
@@ -14,6 +15,16 @@ interface CultureItemCardProps {
 }
 
 export function CultureItemCard({ item, href, className }: CultureItemCardProps) {
+  const regionLabel =
+    item.region?.trim() ||
+    item.locationName?.trim() ||
+    item.media.address?.trim() ||
+    '';
+  const excerpt =
+    item.shortDescription?.trim() ||
+    item.description?.trim() ||
+    firstBlockBody(item.media)?.trim() ||
+    '';
   const imageElement = (
     <div className="aspect-[4/3] w-full">
       <Image
@@ -43,9 +54,9 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-eyebrow text-bronze-700">
-          {item.region ? (
+          {regionLabel ? (
             <span className="inline-flex items-center gap-1">
-              <MapPin size={12} aria-hidden /> {item.region}
+              <MapPin size={12} aria-hidden /> {regionLabel}
             </span>
           ) : null}
           {item.periodLabel ? <span>· {item.periodLabel}</span> : null}
@@ -57,8 +68,8 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
         ) : (
           <h3 className="font-display text-xl text-ink">{item.title}</h3>
         )}
-        {item.description ? (
-          <p className="text-sm leading-relaxed text-ink-soft line-clamp-3">{item.description}</p>
+        {excerpt ? (
+          <p className="text-sm leading-relaxed text-ink-soft line-clamp-3">{excerpt}</p>
         ) : null}
       </div>
     </Card>

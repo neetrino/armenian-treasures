@@ -4,6 +4,7 @@ import { Box, MapPin } from 'lucide-react';
 import { CatalogSearchForm } from '@/components/search/CatalogSearchForm';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
+import { firstBlockBody } from '@/lib/culture-item-media';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { CatalogSearchFormModel } from '@/lib/culture-catalog/catalog-filter-options';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -16,6 +17,23 @@ interface CultureCatalogItemGridProps {
   sectionId?: string;
   searchForm?: CatalogSearchFormModel;
   locale?: SiteLocaleCode;
+}
+
+function catalogItemCardCopy(item: PublicCultureItemDTO): {
+  regionLabel: string;
+  excerpt: string;
+} {
+  const regionLabel =
+    item.region?.trim() ||
+    item.locationName?.trim() ||
+    item.media.address?.trim() ||
+    '';
+  const excerpt =
+    item.shortDescription?.trim() ||
+    item.description?.trim() ||
+    firstBlockBody(item.media)?.trim() ||
+    '';
+  return { regionLabel, excerpt };
 }
 
 function CatalogItemCard({
@@ -31,6 +49,7 @@ function CatalogItemCard({
   const imageSrc = item.image
     ? resolvePublicAssetUrl(item.image)
     : resolvePublicAssetUrl('/images/placeholder.svg');
+  const { regionLabel, excerpt } = catalogItemCardCopy(item);
 
   return (
     <Link href={href} className="catalog-item-card reveal">
@@ -54,9 +73,9 @@ function CatalogItemCard({
       </div>
       <div className="catalog-item-card__body">
         <div className="catalog-item-card__meta">
-          {item.region ? (
+          {regionLabel ? (
             <span className="catalog-item-card__region">
-              <MapPin size={11} aria-hidden /> {item.region}
+              <MapPin size={11} aria-hidden /> {regionLabel}
             </span>
           ) : null}
           {item.periodLabel ? (
@@ -64,7 +83,7 @@ function CatalogItemCard({
           ) : null}
         </div>
         <h3 className="catalog-item-card__title">{item.title}</h3>
-        {item.description ? <p className="catalog-item-card__excerpt">{item.description}</p> : null}
+        {excerpt ? <p className="catalog-item-card__excerpt">{excerpt}</p> : null}
         <span className="catalog-item-card__cta">{uiMessage(locale, 'exploreArrow')}</span>
       </div>
     </Link>
