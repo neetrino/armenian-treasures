@@ -55,7 +55,7 @@ export const CULTURE_ITEM_EDITOR_SECTIONS: Record<
     id: 'gallery',
     number: 6,
     title: 'Gallery',
-    description: 'Images or Before/After pairs, each with an optional caption.',
+    description: 'Select several photos at once. Optional captions and before/after pairs.',
     unlimited: true,
   },
 };

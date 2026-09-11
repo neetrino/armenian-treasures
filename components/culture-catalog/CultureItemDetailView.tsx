@@ -42,7 +42,9 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
   const stats = [
     item.region ? { value: item.region, label: uiMessage(locale, 'region') } : null,
     item.periodLabel ? { value: item.periodLabel, label: uiMessage(locale, 'period') } : null,
-    { value: formatEnumLabel(item.itemType), label: uiMessage(locale, 'type') },
+    item.itemType !== 'OTHER'
+      ? { value: formatEnumLabel(item.itemType), label: uiMessage(locale, 'type') }
+      : null,
   ].filter((stat): stat is { value: string; label: string } => stat !== null);
 
   const backHref = parent && menu
@@ -58,8 +60,8 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
         title={item.title}
         eyebrow={
           parent
-            ? `✦ ${parent.title} · ${menu?.title} · ${uiMessage(locale, 'armenia')} ✦`
-            : `✦ ${menu?.title ?? uiMessage(locale, 'culturePortal')} · ${uiMessage(locale, 'armenia')} ✦`
+            ? `✦ ${parent.title} · ${menu?.title} ✦`
+            : `✦ ${menu?.title ?? uiMessage(locale, 'culturePortal')} ✦`
         }
         accent={item.periodLabel?.trim() || item.region?.trim() || ''}
         slogan={item.region?.trim() || undefined}

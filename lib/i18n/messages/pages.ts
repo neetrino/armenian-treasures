@@ -348,7 +348,7 @@ export const PAGE_MESSAGES = {
   draft: row('Սևագիր', 'Draft', 'Черновик', 'Brouillon', 'Rascunho'),
   published: row('Հրապարակված', 'Published', 'Опубликовано', 'Publié', 'Publicado'),
   archived: row('Արխիվացված', 'Archived', 'В архиве', 'Archivé', 'Arquivado'),
-  scroll: row('ՈԼՈՐԵԼ', 'SCROLL', 'ЛИСТАТЬ', 'DÉFILER', 'DESLOCAR'),
+  scroll: row('Իջնել ներքև', 'Scroll down', 'Листать вниз', 'Défiler vers le bas', 'Deslocar para baixo'),
   noOpenPositions: row('Բաց հաստիքներ չկան', 'No open positions', 'Открытых вакансий нет', 'Aucun poste ouvert', 'Sem vagas abertas'),
   careersCheckBack: row('Շուտով կրկին այցելեք․ յուրաքանչյուր հաստիք այստեղ ենք հրապարակում նախքան հանրային հայտարարությունը։', 'Check back soon — we list every role here before announcing publicly.', 'Загляните позже — все вакансии сначала публикуются здесь.', 'Revenez bientôt : chaque poste est publié ici avant toute annonce publique.', 'Volte em breve — publicamos todas as vagas aqui antes do anúncio público.'),
   raisedOf: row('{raised}՝ հավաքված {goal}-ից', '{raised} raised of {goal}', 'Собрано {raised} из {goal}', '{raised} collectés sur {goal}', '{raised} angariados de {goal}'),

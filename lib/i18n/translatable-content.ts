@@ -48,7 +48,7 @@ function parsePayload(raw: string): LocaleTextMap | null {
   }
 }
 
-/** Infer owner locale for unmarked legacy CMS strings (never invent EN for Armenian text). */
+/** Infer owner locale for unmarked legacy CMS strings. */
 export function inferLocaleFromScript(text: string): SiteLocaleCode | null {
   if (/[\u0530-\u058F]/.test(text)) return 'HY';
   if (/[\u0400-\u04FF]/.test(text)) return 'RU';
@@ -56,16 +56,31 @@ export function inferLocaleFromScript(text: string): SiteLocaleCode | null {
   return null;
 }
 
+function decodeUnmarkedText(value: string): LocaleTextMap {
+  // Armenian / Cyrillic unmarked strings stay language-bound (avoids HY under EN/RU).
+  if (/[\u0530-\u058F]/.test(value)) {
+    return { HY: value, HYW: value };
+  }
+  if (/[\u0400-\u04FF]/.test(value)) {
+    return { RU: value };
+  }
+  // Latin / numeric / mixed legacy fields (region, period, …) were historically shared.
+  const shared: LocaleTextMap = {};
+  for (const code of SITE_LOCALE_CODES) {
+    shared[code] = value;
+  }
+  return shared;
+}
+
 export function decodeTranslatableText(
   raw: string | null | undefined,
-  fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
+  _fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
 ): LocaleTextMap {
   const value = raw?.trim();
   if (!value) return {};
   const fromPayload = parsePayload(value);
   if (fromPayload) return fromPayload;
-  const inferred = inferLocaleFromScript(value);
-  return { [inferred ?? fallbackLocale]: value };
+  return decodeUnmarkedText(value);
 }
 
 export function encodeTranslatableText(
