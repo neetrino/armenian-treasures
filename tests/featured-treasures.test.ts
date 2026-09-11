@@ -32,7 +32,6 @@ function item(index: number): PublicCultureItemDetailDTO {
     century: 9,
     image: null,
     coverImage: null,
-    cardBackgroundColor: null,
     cardBackgroundImage: null,
     galleryImages: [],
     tourUrl: null,
