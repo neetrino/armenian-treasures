@@ -88,7 +88,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
       <button
         type="button"
         className={cn(
-          'inline-flex h-9 items-center gap-[7px] px-3.5',
+          'inline-flex h-9 items-center justify-center gap-[7px] px-4',
           'bg-[rgba(201,168,76,0.08)] border border-[var(--surface-border)]',
           'font-cinzel text-[12px] font-bold uppercase tracking-[0.14em] text-heritage-gold',
           'transition hover:border-[rgba(214,184,90,0.35)]',

@@ -56,10 +56,10 @@ export function MapSiteListPanel({
       />
 
       <div className="relative flex items-center justify-between px-3 pb-2 pt-3">
-        <p className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-heritage-gold/90">
+        <p className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-white">
           {uiMessage(locale, 'heritageLocations')}
         </p>
-        <span className="text-[11px] uppercase tracking-[0.2em] text-heritage-teal/80">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-white/80">
           {uiMessageFormat(locale, 'visibleCount', { n: items.length })}
         </span>
       </div>
@@ -70,14 +70,14 @@ export function MapSiteListPanel({
           <Search
             size={15}
             aria-hidden
-            className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-heritage-teal/70"
+            className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2 text-heritage-gold/80"
           />
           <input
             type="search"
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder={uiMessage(locale, 'searchSites')}
-            className="w-full rounded-xl border border-white/10 bg-slate-900/80 py-2.5 pl-10 pr-10 font-display text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-heritage-gold/45 focus:ring-2 focus:ring-heritage-gold/20"
+            className="w-full rounded-xl border border-heritage-gold/40 bg-[rgba(232,216,155,0.16)] py-2.5 pl-10 pr-10 font-sans text-sm text-heritage-champagne caret-heritage-gold outline-none transition placeholder:text-heritage-champagne/75 focus:border-heritage-gold/70 focus:bg-[rgba(232,216,155,0.22)] focus:ring-2 focus:ring-heritage-gold/25 [-webkit-text-fill-color:var(--heritage-champagne)]"
           />
           {searchQuery ? (
             <button

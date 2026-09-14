@@ -60,8 +60,8 @@ export function VirtualMuseumCard({
           <span
             data-tone={badgeTone}
             className={cn(
-              'virtual-museum-card__badge inline-flex h-[22px] w-fit items-center border bg-[rgba(214,184,90,0.055)] px-3.5',
-              'mb-[18px] font-cinzel text-[8px] font-extrabold uppercase tracking-[0.2em] transition-[border-color,background] duration-[320ms] ease-out sm:text-[9px]',
+              'virtual-museum-card__badge inline-flex h-[22px] w-fit items-center justify-center border bg-[rgba(214,184,90,0.055)] px-5 text-center',
+              'mb-[18px] font-cinzel text-[8px] font-extrabold uppercase leading-none tracking-[0.16em] transition-[border-color,background] duration-[320ms] ease-out sm:text-[9px]',
               status.text,
               status.border,
             )}
@@ -69,7 +69,7 @@ export function VirtualMuseumCard({
             {badge}
           </span>
 
-          <h3 className="virtual-museum-card__title mb-4 font-cinzel text-[clamp(1.125rem,1.35vw,1.5rem)] font-extrabold uppercase leading-[1.1] tracking-[0.04em] text-heritage-gold transition-colors duration-[320ms] ease-out">
+          <h3 className="virtual-museum-card__title mb-4 break-words font-cinzel text-[clamp(1.125rem,1.35vw,1.5rem)] font-extrabold uppercase leading-[1.2] tracking-[0.04em] text-heritage-gold transition-colors duration-[320ms] ease-out">
             {title}
           </h3>
 

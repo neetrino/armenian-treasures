@@ -23,7 +23,7 @@ export function AboutUsCard({ card }: AboutUsCardProps) {
     >
       <AboutUsCardIcon type={card.icon} />
 
-      <h3 className="mt-5 font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.15] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[var(--accent-hover)]">
+      <h3 className="mt-5 w-full break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.04em] text-heritage-gold transition-colors duration-[240ms] group-hover:text-[var(--accent-hover)]">
         {card.title}
       </h3>
 

@@ -103,8 +103,10 @@
 .cultural-portal-card__title {
   color: #d6b85a;
   margin: 0;
-  max-width: 12ch;
-  font-family: var(--font-cinzel-legacy), Cinzel, Georgia, serif !important;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  font-family: var(--font-cinzel), Cinzel, Georgia, serif !important;
   font-size: 15px !important;
   font-weight: 800 !important;
   letter-spacing: 0.04em !important;
@@ -116,8 +118,10 @@
 .cultural-portal-card__description {
   color: var(--surface-text-subtle);
   margin: 0;
-  max-width: 22ch;
-  font-family: var(--font-cormorant-legacy), "Cormorant Garamond", Georgia, serif !important;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif !important;
   font-size: 14px !important;
   font-weight: 400 !important;
   font-style: normal !important;

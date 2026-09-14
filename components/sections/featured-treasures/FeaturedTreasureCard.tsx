@@ -48,7 +48,7 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
           <CulturalCategoryIcon type={icon} className="featured-treasure-card__icon" />
           <div className="featured-treasure-card__content">
             <CategoryLine first={categories[0]} second={categories[1]} />
-            <h3 className="featured-treasure-card__title font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.2] tracking-[0.03em]">
+            <h3 className="featured-treasure-card__title break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">
               {title}
             </h3>
             <div className="featured-treasure-card__meta">
@@ -72,7 +72,7 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
             <div className="mt-5">
               <CategoryLine first={categories[0]} second={categories[1]} />
             </div>
-            <h3 className="featured-treasure-card__title mt-3 max-w-[20rem] font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.2] tracking-[0.03em]">
+            <h3 className="featured-treasure-card__title mt-3 max-w-[20rem] break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">
               {title}
             </h3>
             {description ? (

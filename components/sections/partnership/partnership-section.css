@@ -83,13 +83,14 @@
   min-width: min(100%, 18.75rem);
   align-items: center;
   justify-content: center;
-  padding: 0 2.25rem;
+  text-align: center;
+  line-height: 1.25;
+  padding: 0.65rem 2.25rem;
   border: 1px solid rgba(214, 184, 90, 0.42);
   border-bottom: none;
   font-family: var(--font-cinzel), Georgia, serif;
   font-size: 0.75rem;
   font-weight: 800;
-  line-height: 1;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #d6b85a;

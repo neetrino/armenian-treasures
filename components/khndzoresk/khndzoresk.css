@@ -170,17 +170,17 @@
   }
 }
 
-/* Armenian + gradient titles: tight line-height clips ascenders with background-clip:text. */
+/* Armenian + gradient titles: keep glyphs visible without stretching line gaps. */
 .khndzoresk-page .hero h1 {
-  line-height: 1.18;
-  padding-block: 0.12em 0.08em;
+  line-height: 0.95;
+  padding-block: 0.04em 0;
   overflow: visible;
 }
 
 .khndzoresk-page .hero h1 span {
   display: block;
-  line-height: 1.35;
-  padding-block: 0.1em 0.06em;
+  line-height: 1;
+  padding-block: 0;
   overflow: visible;
   -webkit-text-fill-color: transparent;
 }
@@ -193,4 +193,20 @@
 
 .khndzoresk-page .corner-ornament {
   top: calc(var(--site-header-height) + 12px);
+}
+
+.khndzoresk-page .btn-gold,
+.khndzoresk-page .btn-teal,
+.khndzoresk-page .btn-outline,
+.khndzoresk-page a.btn-gold,
+.khndzoresk-page a.btn-teal,
+.khndzoresk-page a.btn-outline,
+.khndzoresk-page button.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.25;
+  padding-inline: 42px;
+  white-space: normal;
 }
