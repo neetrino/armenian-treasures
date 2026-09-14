@@ -11,14 +11,18 @@ import { getSiteSettings } from '@/lib/queries/settings';
 import { getContactsPageContent } from '@/lib/queries/page-content';
 import { resolvePageHeroImageUrl } from '@/lib/page-content-images';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
+import type { Metadata } from 'next';
 
 export const revalidate = 60;
 
-export const metadata = buildPublicPageMetadata({
-  title: 'Contact us',
-  description: 'Write to the Armenian Treasures foundation — partnerships, press, research and more.',
-  pathname: '/contacts',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getCurrentSiteLocale();
+  return buildPublicPageMetadata({
+    title: uiMessage(locale, 'contactMetaTitle'),
+    description: uiMessage(locale, 'contactMetaDescription'),
+    pathname: '/contacts',
+  });
+}
 
 async function ContactsPage() {
   const [settings, pageContent, locale] = await Promise.all([

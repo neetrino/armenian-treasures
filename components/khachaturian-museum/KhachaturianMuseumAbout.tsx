@@ -1,5 +1,7 @@
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
 import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 type KhachaturianMuseumStatsBarProps = {
   stats: KhachaturianPageContent['stats'];
@@ -27,33 +29,21 @@ export function KhachaturianMuseumStatsBar({ stats }: KhachaturianMuseumStatsBar
 
 type KhachaturianMuseumBiographyProps = {
   facts: KhachaturianPageContent['facts'];
+  locale?: SiteLocaleCode;
 };
 
-export function KhachaturianMuseumBiography({ facts }: KhachaturianMuseumBiographyProps) {
+export function KhachaturianMuseumBiography({ facts, locale = 'EN' }: KhachaturianMuseumBiographyProps) {
   return (
     <section id="biography">
-      <p className="sec-label">Biography</p>
-      <h2 className="sec-title">Aram Khachaturian — Voice of a Nation</h2>
-      <p className="sec-desc">
-        World-famous Armenian composer, conductor, pedagogue, and public figure — composer of the first Armenian
-        national ballet, symphony, and instrumental concertos.
-      </p>
+      <p className="sec-label">{uiMessage(locale, 'biography')}</p>
+      <h2 className="sec-title">{uiMessage(locale, 'voiceOfANation')}</h2>
+      <p className="sec-desc">{uiMessage(locale, 'voiceOfANationDesc')}</p>
       <div className="about-split">
         <div className="about-body reveal">
-          <p>
-            <strong>Aram Ilyich Khachaturian</strong> (Armenian: Արամ Ղաչատրյան) was born on{' '}
-            <strong>June 6, 1903</strong> in Kojori, a suburb of Tiflis (now Tbilisi, Georgia). His father Yeghia had
-            moved from the village of Upper Aza to Tiflis, where he ran a bookbinding shop. His mother Kumash was from
-            Lower Aza.
-          </p>
-          <h3>Early Life &amp; Education</h3>
-          <p>
-            Khachaturian grew up surrounded by the rich folk music traditions of the Caucasus — Armenian, Georgian, and
-            Azerbaijani melodies formed the sonic landscape of his childhood. He moved to Moscow in 1921 at age 18 with
-            virtually no formal musical training, and enrolled in the Gnessin Musical Institute, then later at the Moscow
-            Conservatory under Nikolai Myaskovsky.
-          </p>
-          <h3>Musical Legacy</h3>
+          <p>{uiMessage(locale, 'khachaturianAboutP1')}</p>
+          <h3>{uiMessage(locale, 'earlyLifeHeading')}</h3>
+          <p>{uiMessage(locale, 'khachaturianAboutP2')}</p>
+          <h3>{uiMessage(locale, 'musicalLegacy')}</h3>
           <p>
             He composed the <strong>Sabre Dance</strong> from the ballet <em>Gayane</em> (1942) — one of the most
             recognisable musical pieces in the world. His other major works include the ballets <em>Spartacus</em> and{' '}

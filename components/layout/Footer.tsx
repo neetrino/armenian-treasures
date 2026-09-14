@@ -16,13 +16,13 @@ export async function Footer() {
     getMenuTree(),
     getCurrentSiteLocale(),
   ]);
-  const culturalPortalLinks = buildFooterCultureLinks(menuTree);
+  const culturalPortalLinks = buildFooterCultureLinks(menuTree, locale);
 
   return (
     <footer className="site-footer">
       <Container className="px-5 pb-[clamp(3.5rem,6vw,4.5rem)] sm:px-6">
         <div className="site-footer__grid">
-          <FooterBrand settings={settings} />
+          <FooterBrand settings={settings} locale={locale} />
           <FooterNavColumn
             title={chromeLabel(locale, 'culturalPortal')}
             links={culturalPortalLinks}

@@ -56,7 +56,7 @@ export async function NationalGalleryPage() {
 
       {isSectionEnabled(visibility, 'stats') ? <NationalGalleryStatsBar stats={content.stats} /> : null}
 
-      {isSectionEnabled(visibility, 'about') ? <NationalGalleryAbout facts={content.facts} /> : null}
+      {isSectionEnabled(visibility, 'about') ? <NationalGalleryAbout facts={content.facts} locale={locale} /> : null}
 
       <LandingSectionStack>
 

@@ -28,16 +28,16 @@ async function HighlightsPage() {
     getHighlightCultureItems(HIGHLIGHT_TREASURE_COUNT),
     getCurrentSiteLocale(),
   ]);
-  const treasures = mapCultureItemsToHighlightTreasures(items);
+  const treasures = mapCultureItemsToHighlightTreasures(items, locale);
 
   return (
     <HeritageLandingShell>
       <LandingHero
         locale={locale}
-        eyebrow={HIGHLIGHTS_PAGE.eyebrow}
-        title={HIGHLIGHTS_PAGE.title}
-        accent={HIGHLIGHTS_PAGE.accent}
-        subtitle={HIGHLIGHTS_PAGE.subtitle}
+        eyebrow={uiMessage(locale, 'highlightsCategory')}
+        title={uiMessage(locale, 'highlightsTitle')}
+        accent={uiMessage(locale, 'highlightsAccent')}
+        subtitle={uiMessage(locale, 'highlightsSubtitle')}
         ctas={[
           { label: uiMessage(locale, 'browseHighlights'), href: '#highlights', variant: 'gold' },
           { label: uiMessage(locale, 'supportTheMission'), href: '/donate', variant: 'teal' },

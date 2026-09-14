@@ -1,9 +1,5 @@
 import { KeyboardEvent } from 'react';
-import {
-  DONATION_CHECKOUT_UNAVAILABLE,
-  type DonationTier,
-  type DonationTierId,
-} from '@/lib/constants/donation-page';
+import { type DonationTier, type DonationTierId } from '@/lib/constants/donation-page';
 import { TierIcon } from '@/components/donation-page/TierIcon';
 import { formatAmd, getTierAmountAmd } from '@/components/donation-page/donation-utils';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -24,8 +20,6 @@ export function DonationTierCards({
   onSelect,
   locale = 'EN',
 }: DonationTierCardsProps) {
-  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
-
   function handleKeyDown(event: KeyboardEvent, tierId: DonationTierId) {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     event.preventDefault();
@@ -78,10 +72,10 @@ export function DonationTierCards({
                 onSelect(tier.id);
               }}
             >
-              {paymentDisabled ? unavailable.tierCtaLabel : tier.ctaLabel}
+              {paymentDisabled ? uiMessage(locale, 'comingSoon') : tier.ctaLabel}
             </button>
             {paymentDisabled ? (
-              <p className="cta-post">{unavailable.tierCtaPost}</p>
+              <p className="cta-post">{uiMessage(locale, 'checkoutNotAvailable')}</p>
             ) : null}
           </article>
         );

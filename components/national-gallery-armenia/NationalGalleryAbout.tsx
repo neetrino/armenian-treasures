@@ -1,5 +1,7 @@
 import type { NationalGalleryPageContent } from '@/lib/queries/page-content';
 import { hasNonEmptyArray } from '@/lib/landing/landing-section-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 type NationalGalleryStatsBarProps = {
   stats: NationalGalleryPageContent['stats'];
@@ -36,49 +38,24 @@ export function NationalGalleryStatsBar({ stats }: NationalGalleryStatsBarProps)
 
 type NationalGalleryAboutProps = {
   facts: NationalGalleryPageContent['facts'];
+  locale?: SiteLocaleCode;
 };
 
-export function NationalGalleryAbout({ facts }: NationalGalleryAboutProps) {
+export function NationalGalleryAbout({ facts, locale = 'EN' }: NationalGalleryAboutProps) {
   return (
     <section id="about">
-      <p className="sec-label">About the Gallery</p>
-      <h2 className="sec-title">A Century of Armenian Art &amp; World Culture</h2>
-      <p className="sec-desc">
-        The National Gallery of Armenia is the country&apos;s major fine art institution and the world&apos;s largest
-        museum by its Armenian fine arts collection.
-      </p>
+      <p className="sec-label">{uiMessage(locale, 'aboutTheGallery')}</p>
+      <h2 className="sec-title">{uiMessage(locale, 'centuryOfArt')}</h2>
+      <p className="sec-desc">{uiMessage(locale, 'centuryOfArtDesc')}</p>
       <div className="about-split">
         <div className="about-body reveal">
-          <p>
-            The <strong>National Gallery of Armenia</strong> (Armenian: Հայաստանի Ազգային Պատկերասրահ) is the
-            country&apos;s principal fine art museum, located in the iconic building on <strong>Republic Square</strong>{' '}
-            in the heart of Yerevan. Established in <strong>1921</strong>, it holds the world&apos;s largest collection
-            of Armenian fine arts and the <strong>second-largest collection of Hovhannes Aivazovsky</strong> works on
-            Earth.
-          </p>
-          <h3>The Collection</h3>
-          <p>
-            The collection encompasses more than <strong>40,000 exhibits</strong> of Armenian and foreign fine art and
-            decorative-applied art, displayed across <strong>56 luminous exhibition halls</strong>. The Armenian Painting
-            Department alone holds over <strong>7,000 works</strong>, tracing national visual arts from medieval icon
-            painting through the vibrant palette of Martiros Saryan and the graphic innovations of Vardges Sureniants,
-            to the striking contemporary visions of Minas Avetisyan and Eduard Isabekyan.
-          </p>
-          <h3>World Art Departments</h3>
-          <p>
-            The Gallery&apos;s foreign art collections include over <strong>1,150 works of European, American, and
-            Russian artists</strong>, a Graphics and Engraving department with 12,000 reserves (watercolour, gouache,
-            chalk), and a Sculpture section with 1,200 specimens spanning Armenian and international masters. The
-            Decorative-Applied Art department ranges from ancient Egyptian and Greek objects to 18th–19th century German,
-            Dutch, and French porcelain.
-          </p>
-          <h3>Education &amp; Community</h3>
-          <p>
-            Interactive educational programmes have run since 2008. Since 2015, a Summer School has been organised for
-            children of all ages. The Gallery has <strong>12 branches</strong> across Yerevan and the regions of
-            Armenia, and hosts regular concerts, lectures, and film screenings in its cinema hall. The library,
-            cafeteria, souvenir shop, and bookshop make every visit a full cultural day.
-          </p>
+          <p>{uiMessage(locale, 'ngaAboutP1')}</p>
+          <h3>{uiMessage(locale, 'collectionHeading')}</h3>
+          <p>{uiMessage(locale, 'ngaAboutP2')}</p>
+          <h3>{uiMessage(locale, 'worldArtHeading')}</h3>
+          <p>{uiMessage(locale, 'ngaAboutP3')}</p>
+          <h3>{uiMessage(locale, 'educationCommunityHeading')}</h3>
+          <p>{uiMessage(locale, 'ngaAboutP4')}</p>
         </div>
         <div className="about-aside">
           {facts.map((fact) => (

@@ -2,6 +2,8 @@
  * Canonical Culture Portal mega menu — aligned 1:1 with the AT Features sheet.
  * DB slugs/paths stay in prisma/seeds/culture-menu.ts; labels and column order live here.
  */
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import type { MegaMenuColumn, MegaMenuItem } from '@/lib/navigation/culture-mega-menu';
 
 type AtFeaturesItem = Omit<MegaMenuItem, 'href'> & {
@@ -217,13 +219,15 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
   },
 ];
 
-export function buildCultureMegaMenuFromAtFeatures(): MegaMenuColumn[] {
+export function buildCultureMegaMenuFromAtFeatures(
+  locale: SiteLocaleCode = 'EN',
+): MegaMenuColumn[] {
   return AT_FEATURES_CULTURE_COLUMNS.map((column) => ({
-    heading: column.heading,
+    heading: cultureMenuLabel(locale, column.headingMenuPath) ?? column.heading,
     headingHref: column.fallbackHeadingHref,
     headingMenuPath: column.headingMenuPath,
     items: column.items.map((item) => ({
-      label: item.label,
+      label: (item.menuPath ? cultureMenuLabel(locale, item.menuPath) : null) ?? item.label,
       href: item.fallbackHref,
       icon: item.icon,
       menuPath: item.menuPath,

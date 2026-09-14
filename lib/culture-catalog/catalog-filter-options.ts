@@ -1,6 +1,13 @@
 import { CULTURE_ITEM_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import {
+  ITEM_TYPE_FILTER_KEYS,
+  PERIOD_FILTER_KEYS,
+  REGION_FILTER_KEYS,
+} from '@/lib/i18n/messages/filters';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export interface CatalogFilterOption {
   value: string;
@@ -61,6 +68,34 @@ export function collectCatalogFilterOptions(items: PublicCultureItemDTO[]): {
     regions: mergeUniqueOptions(CATALOG_REGION_OPTIONS, regions),
     periods: mergeUniqueOptions(CATALOG_PERIOD_OPTIONS, periods),
     types: CATALOG_TYPE_OPTIONS,
+  };
+}
+
+export function localizeCatalogFilterOptions(
+  options: {
+    regions: CatalogFilterOption[];
+    periods: CatalogFilterOption[];
+    types: CatalogFilterOption[];
+  },
+  locale: SiteLocaleCode,
+): {
+  regions: CatalogFilterOption[];
+  periods: CatalogFilterOption[];
+  types: CatalogFilterOption[];
+} {
+  return {
+    regions: options.regions.map((option) => {
+      const key = REGION_FILTER_KEYS[option.value];
+      return key ? { ...option, label: uiMessage(locale, key) } : option;
+    }),
+    periods: options.periods.map((option) => {
+      const key = PERIOD_FILTER_KEYS[option.value];
+      return key ? { ...option, label: uiMessage(locale, key) } : option;
+    }),
+    types: options.types.map((option) => {
+      const key = ITEM_TYPE_FILTER_KEYS[option.value];
+      return key ? { ...option, label: uiMessage(locale, key) } : option;
+    }),
   };
 }
 

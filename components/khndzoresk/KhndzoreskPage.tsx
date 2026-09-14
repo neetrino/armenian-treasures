@@ -48,21 +48,27 @@ export async function KhndzoreskPage() {
 
       {isSectionEnabled(visibility, 'stats') ? <KhndzoreskStatsBar stats={content.stats} /> : null}
 
-      {isSectionEnabled(visibility, 'about') ? <KhndzoreskAbout facts={content.facts} /> : null}
+      {isSectionEnabled(visibility, 'about') ? <KhndzoreskAbout facts={content.facts} locale={locale} /> : null}
 
       <LandingSectionStack>
 
-        {isSectionEnabled(visibility, 'sites') ? <KhndzoreskSites sites={content.sites} /> : null}
+        {isSectionEnabled(visibility, 'sites') ? (
+          <KhndzoreskSites sites={content.sites} locale={locale} />
+        ) : null}
 
         {isSectionEnabled(visibility, 'virtualTour') ? (
 
-          <KhndzoreskVirtualTour tours={content.tours} />
+          <KhndzoreskVirtualTour tours={content.tours} locale={locale} />
 
         ) : null}
 
-        {isSectionEnabled(visibility, 'aerial') ? <KhndzoreskAerial aerial={content.aerial} /> : null}
+        {isSectionEnabled(visibility, 'aerial') ? (
+          <KhndzoreskAerial aerial={content.aerial} locale={locale} />
+        ) : null}
 
-        {isSectionEnabled(visibility, 'panorama') ? <KhndzoreskPanorama panorama={content.panorama} /> : null}
+        {isSectionEnabled(visibility, 'panorama') ? (
+          <KhndzoreskPanorama panorama={content.panorama} locale={locale} />
+        ) : null}
 
         {isSectionEnabled(visibility, 'gallery') ? <KhndzoreskGallery gallery={content.gallery} /> : null}
 

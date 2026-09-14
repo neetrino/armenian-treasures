@@ -5,17 +5,20 @@ import { truncateBlogDescription } from '@/lib/blog-description';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { PublicBlogPostDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface BlogCardProps {
   post: PublicBlogPostDTO;
   featured?: boolean;
+  locale?: SiteLocaleCode;
 }
 
-export function BlogCard({ post, featured = false }: BlogCardProps) {
+export function BlogCard({ post, featured = false, locale = 'EN' }: BlogCardProps) {
   const imageSrc = post.image?.trim()
     ? resolvePublicAssetUrl(post.image)
     : resolvePublicAssetUrl('/images/culture/card-heritage.webp');
-  const preview = truncateBlogDescription(post.content) || 'Read the full story from Armenian Treasures.';
+  const preview = truncateBlogDescription(post.content) || uiMessage(locale, 'readFullStory');
 
   return (
     <Link
@@ -43,7 +46,7 @@ export function BlogCard({ post, featured = false }: BlogCardProps) {
         <h2 className="blog-card__title">{post.title}</h2>
         <p className="blog-card__excerpt">{preview}</p>
         <span className="blog-card__cta inline-flex items-center gap-1.5">
-          Read article <ArrowRight size={12} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
+          {uiMessage(locale, 'readArticle')} <ArrowRight size={12} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
         </span>
       </div>
     </Link>

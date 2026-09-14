@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
 import type { CatalogFilterOption } from '@/lib/culture-catalog/catalog-filter-options';
 import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import { cn } from '@/lib/utils';
 
 interface CatalogSearchFieldsProps {
@@ -9,6 +11,7 @@ interface CatalogSearchFieldsProps {
   periods: CatalogFilterOption[];
   types: CatalogFilterOption[];
   variant?: 'header' | 'page';
+  locale?: SiteLocaleCode;
 }
 
 const FIELD_BASE =
@@ -64,6 +67,7 @@ export function CatalogSearchFields({
   periods,
   types,
   variant = 'page',
+  locale = 'EN',
 }: CatalogSearchFieldsProps) {
   const isHeader = variant === 'header';
   const fieldClassName = cn(FIELD_BASE, FIELD_BY_VARIANT[variant]);
@@ -76,7 +80,7 @@ export function CatalogSearchFields({
       )}
     >
       <label className="catalog-search-control catalog-search-control--query flex min-w-0 flex-col gap-1.5">
-        <FieldLabel>Search</FieldLabel>
+        <FieldLabel>{uiMessage(locale, 'search')}</FieldLabel>
         <span className={cn(!isHeader && 'catalog-search-field-shell')}>
           {!isHeader ? (
             <Search size={15} aria-hidden className="catalog-search-field-icon" />
@@ -85,33 +89,33 @@ export function CatalogSearchFields({
             type="search"
             name="q"
             defaultValue={defaults.q}
-            placeholder="Site, region, period…"
+            placeholder={uiMessage(locale, 'siteRegionPeriod')}
             className={cn(fieldClassName, !isHeader && 'catalog-search-field--query')}
           />
         </span>
       </label>
       <FilterSelect
         name="region"
-        label="Region"
+        label={uiMessage(locale, 'region')}
         value={defaults.region}
         options={regions}
-        allLabel="All regions"
+        allLabel={uiMessage(locale, 'allRegions')}
         fieldClassName={fieldClassName}
       />
       <FilterSelect
         name="period"
-        label="Period"
+        label={uiMessage(locale, 'period')}
         value={defaults.period}
         options={periods}
-        allLabel="All periods"
+        allLabel={uiMessage(locale, 'allPeriods')}
         fieldClassName={fieldClassName}
       />
       <FilterSelect
         name="type"
-        label="Type"
+        label={uiMessage(locale, 'type')}
         value={defaults.type}
         options={types}
-        allLabel="All types"
+        allLabel={uiMessage(locale, 'allTypes')}
         fieldClassName={fieldClassName}
       />
     </div>

@@ -11,11 +11,14 @@ import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'Sign in',
-  description: 'Sign in to your Armenian Treasures account.',
-  robots: { index: false, follow: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getCurrentSiteLocale();
+  return {
+    title: uiMessage(locale, 'loginMetaTitle'),
+    description: uiMessage(locale, 'loginMetaDescription'),
+    robots: { index: false, follow: false },
+  };
+}
 
 async function LoginPage() {
   const [member, locale] = await Promise.all([getMemberOrNull(), getCurrentSiteLocale()]);

@@ -9,6 +9,7 @@ import {
 } from '@/lib/navigation/site-languages';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { SITE_LOCALE_COOKIE } from '@/lib/i18n/locale-cookie';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 import { cn } from '@/lib/utils';
 
 interface LanguageSelectorProps {
@@ -67,7 +68,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
             : 'cursor-not-allowed opacity-55',
         )}
         aria-current={isActive ? 'true' : undefined}
-        title={`Content in ${locale.name}`}
+        title={uiMessageFormat(activeCode, 'contentIn', { name: locale.name })}
         onClick={() => {
           if (!isAvailable) return;
           setActiveCode(locale.code);
@@ -96,7 +97,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
         )}
         aria-expanded={hasChoice ? open : undefined}
         aria-haspopup={hasChoice ? 'listbox' : undefined}
-        aria-label={`Site language: ${active.name}. ${hasChoice ? 'Change language' : 'English only'}`}
+        aria-label={`${uiMessage(activeCode, 'siteLanguage')}: ${active.name}. ${hasChoice ? uiMessage(activeCode, 'changeLanguage') : uiMessage(activeCode, 'englishOnly')}`}
         onClick={() => {
           if (hasChoice) setOpen((value) => !value);
         }}
@@ -109,7 +110,7 @@ export function LanguageSelector({ className, enabledLocales = ['EN'] }: Languag
       {hasChoice && open ? (
         <div
           role="listbox"
-          aria-label="Available languages"
+          aria-label={uiMessage(activeCode, 'availableLanguages')}
           className="absolute right-0 top-[calc(100%+6px)] z-[1002] min-w-[9.5rem] border border-[var(--dropdown-border)] bg-[var(--dropdown-bg)] py-1 shadow-[var(--shadow-dropdown)] backdrop-blur-[20px]"
         >
           {languages.map(renderLocaleButton)}

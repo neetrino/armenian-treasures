@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 import { hasTrimmedText, hasVirtualTourContent } from '@/lib/landing/landing-section-utils';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 function PlayIcon() {
   return (
@@ -12,9 +14,10 @@ function PlayIcon() {
 
 type KhndzoreskVirtualTourProps = {
   tours: KhndzoreskPageContent['tours'];
+  locale?: SiteLocaleCode;
 };
 
-export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
+export function KhndzoreskVirtualTour({ tours, locale = 'EN' }: KhndzoreskVirtualTourProps) {
   if (!hasVirtualTourContent(tours)) {
     return null;
   }
@@ -24,12 +27,9 @@ export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
 
   return (
     <section id="virtual-tour">
-      <p className="sec-label">Virtual Experience</p>
-      <h2 className="sec-title">Walk the Sacred Ground — From Anywhere</h2>
-      <p className="sec-desc">
-        High-resolution Matterport 3D walkthroughs of Khndzoresk&apos;s most significant spaces — step inside
-        the gorge without leaving home.
-      </p>
+      <p className="sec-label">{uiMessage(locale, 'virtualExperience')}</p>
+      <h2 className="sec-title">{uiMessage(locale, 'walkSacredGround')}</h2>
+      <p className="sec-desc">{uiMessage(locale, 'walkSacredGroundDesc')}</p>
       <div className="tour-grid">
         {hasFeatured ? (
           <div className="tour-main reveal">
@@ -38,7 +38,7 @@ export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
               src={featured.embed}
               allowFullScreen
               allow="xr-spatial-tracking"
-              title="St. Hripsime Church Virtual Tour"
+              title={uiMessage(locale, 'virtualTourTitleHripsime')}
             />
             <div className="tour-label">
               <span className="tour-name">{featured.title}</span>
@@ -81,17 +81,18 @@ export function KhndzoreskVirtualTour({ tours }: KhndzoreskVirtualTourProps) {
 
 type KhndzoreskAerialProps = {
   aerial: KhndzoreskPageContent['aerial'];
+  locale?: SiteLocaleCode;
 };
 
-export function KhndzoreskAerial({ aerial }: KhndzoreskAerialProps) {
+export function KhndzoreskAerial({ aerial, locale = 'EN' }: KhndzoreskAerialProps) {
   if (!hasTrimmedText(aerial.embed)) {
     return null;
   }
 
   return (
     <section id="3d-aerial">
-      <p className="sec-label">Aerial 3D Model</p>
-      <h2 className="sec-title">St. Hripsime — Seen From Every Angle</h2>
+      <p className="sec-label">{uiMessage(locale, 'aerial3dModel')}</p>
+      <h2 className="sec-title">{uiMessage(locale, 'stHripsimeEveryAngle')}</h2>
       <p className="sec-desc">
         A fully rotatable photogrammetric 3D model captured by drone and reconstructed to museum standard.
         Rotate, zoom, inspect every stone.
@@ -106,9 +107,9 @@ export function KhndzoreskAerial({ aerial }: KhndzoreskAerialProps) {
           src={aerial.embed}
         />
         <div className="aerial-label">
-          <span className="aerial-badge">✦ 3D Photogrammetry</span>
+          <span className="aerial-badge">{uiMessage(locale, 'photogrammetry3d')}</span>
           <span className="aerial-title">{aerial.modelTitle}</span>
-          <span className="aerial-badge tc">Drone Capture</span>
+          <span className="aerial-badge tc">{uiMessage(locale, 'droneCapture')}</span>
         </div>
       </div>
     </section>
@@ -117,17 +118,18 @@ export function KhndzoreskAerial({ aerial }: KhndzoreskAerialProps) {
 
 type KhndzoreskPanoramaProps = {
   panorama: KhndzoreskPageContent['panorama'];
+  locale?: SiteLocaleCode;
 };
 
-export function KhndzoreskPanorama({ panorama }: KhndzoreskPanoramaProps) {
+export function KhndzoreskPanorama({ panorama, locale = 'EN' }: KhndzoreskPanoramaProps) {
   if (!hasTrimmedText(panorama.embed)) {
     return null;
   }
 
   return (
     <section id="panorama">
-      <p className="sec-label">Aerial 360° Panorama</p>
-      <h2 className="sec-title">The Gorge From Above</h2>
+      <p className="sec-label">{uiMessage(locale, 'aerial360')}</p>
+      <h2 className="sec-title">{uiMessage(locale, 'gorgeFromAbove')}</h2>
       <p className="sec-desc">
         Highest-resolution aerial 360° tour of Khndzoresk — look in every direction across the canyon, the
         village, and the mountains of Syunik.
@@ -141,7 +143,7 @@ export function KhndzoreskPanorama({ panorama }: KhndzoreskPanoramaProps) {
         />
         <div className="pano-footer">
           <span className="pano-title">{panorama.footerTitle}</span>
-          <span className="aerial-badge tc">Highest Resolution</span>
+          <span className="aerial-badge tc">{uiMessage(locale, 'highestResolution')}</span>
         </div>
       </div>
     </section>

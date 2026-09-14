@@ -136,7 +136,7 @@ export function MobileMenu({
                 </button>
               </div>
 
-              <nav className="flex flex-col gap-1" aria-label="Mobile primary">
+              <nav className="flex flex-col gap-1" aria-label={uiMessage(locale, 'mobilePrimaryNav')}>
                 <MobileAccordion
                   label={chromeLabel(locale, 'culturalPortal')}
                   open={cultureOpen}
@@ -166,7 +166,7 @@ export function MobileMenu({
                             )
                           }
                           aria-expanded={openColumn === column.heading}
-                          aria-label={`${openColumn === column.heading ? 'Collapse' : 'Expand'} ${column.heading}`}
+                          aria-label={`${openColumn === column.heading ? uiMessage(locale, 'collapse') : uiMessage(locale, 'expand')} ${column.heading}`}
                         >
                           <ChevronDown
                             size={14}

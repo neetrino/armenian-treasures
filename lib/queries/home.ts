@@ -5,7 +5,17 @@ import { prisma } from '@/lib/db';
 import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 import { DEFAULT_SITE_LOCALE, getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import {
+  localizedHomeSections,
+  localizedHomeStats,
+  localizedHomeTechCards,
+  localizedOrEnglishDefault,
+  overlayLocalizedHomeSections,
+  overlayLocalizedHomeStats,
+  overlayLocalizedHomeTechCards,
+} from '@/lib/i18n/home-fallbacks';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import {
   buildDefaultHomeSections,
   normalizeHomeSections,
@@ -58,34 +68,110 @@ export const HOME_CONTENT_FALLBACK: PublicHomeContentDTO = {
   sections: buildDefaultHomeSections(),
 };
 
-function applyHomeContentFallback(content: PublicHomeContentDTO): PublicHomeContentDTO {
-  const fallback = HOME_CONTENT_FALLBACK;
+function localizedHomeContentFallback(locale: SiteLocaleCode): PublicHomeContentDTO {
+  if (locale === 'EN') return HOME_CONTENT_FALLBACK;
   return {
-    ...fallback,
-    ...content,
-    heroBadge: content.heroBadge || fallback.heroBadge,
-    heroTitle: content.heroTitle || fallback.heroTitle,
-    heroHighlight: content.heroHighlight || fallback.heroHighlight,
-    heroSubtitle: content.heroSubtitle || fallback.heroSubtitle,
-    heroTagline: content.heroTagline || fallback.heroTagline,
-    heroDescription: content.heroDescription || fallback.heroDescription,
-    primaryCtaText: content.primaryCtaText || fallback.primaryCtaText,
-    primaryCtaUrl: content.primaryCtaUrl || fallback.primaryCtaUrl,
-    secondaryCtaText: content.secondaryCtaText || fallback.secondaryCtaText,
-    secondaryCtaUrl: content.secondaryCtaUrl || fallback.secondaryCtaUrl,
-    missionTitle: content.missionTitle || fallback.missionTitle,
-    missionHighlight: content.missionHighlight || fallback.missionHighlight,
-    missionText: content.missionText || fallback.missionText,
-    ctaTitle: content.ctaTitle || fallback.ctaTitle,
-    ctaDescription: content.ctaDescription || fallback.ctaDescription,
-    stats: normalizeHomeStats(content.stats ?? fallback.stats),
-    techCards: normalizeHomeTechCards(content.techCards ?? fallback.techCards),
-    sections: normalizeHomeSections(content.sections ?? fallback.sections),
+    ...HOME_CONTENT_FALLBACK,
+    heroBadge: uiMessage(locale, 'heroBadge'),
+    heroTitle: uiMessage(locale, 'heroTitle'),
+    heroHighlight: uiMessage(locale, 'heroHighlight'),
+    heroSubtitle: uiMessage(locale, 'heroSubtitle'),
+    heroTagline: uiMessage(locale, 'heroTagline'),
+    heroDescription: uiMessage(locale, 'heroDescription'),
+    primaryCtaText: uiMessage(locale, 'exploreArmenianHeritage'),
+    secondaryCtaText: uiMessage(locale, 'supportTheMission').toUpperCase(),
+    stats: localizedHomeStats(locale),
+    missionTitle: uiMessage(locale, 'missionTitle'),
+    missionHighlight: uiMessage(locale, 'missionHighlight'),
+    missionText: uiMessage(locale, 'missionText'),
+    techCards: localizedHomeTechCards(locale),
+    ctaTitle: uiMessage(locale, 'ctaTitle'),
+    ctaDescription: uiMessage(locale, 'ctaDescription'),
+    sections: localizedHomeSections(locale),
   };
 }
 
-function resolveHomeContentAssets(content: PublicHomeContentDTO): PublicHomeContentDTO {
-  const merged = applyHomeContentFallback(content);
+function applyHomeContentFallback(
+  content: PublicHomeContentDTO,
+  locale: SiteLocaleCode,
+): PublicHomeContentDTO {
+  const fallback = localizedHomeContentFallback(locale);
+  const english = HOME_CONTENT_FALLBACK;
+  return {
+    ...fallback,
+    ...content,
+    heroBadge: localizedOrEnglishDefault(content.heroBadge, english.heroBadge, fallback.heroBadge, locale),
+    heroTitle: localizedOrEnglishDefault(content.heroTitle, english.heroTitle, fallback.heroTitle, locale),
+    heroHighlight: localizedOrEnglishDefault(
+      content.heroHighlight,
+      english.heroHighlight,
+      fallback.heroHighlight,
+      locale,
+    ),
+    heroSubtitle: localizedOrEnglishDefault(
+      content.heroSubtitle,
+      english.heroSubtitle,
+      fallback.heroSubtitle,
+      locale,
+    ),
+    heroTagline: localizedOrEnglishDefault(content.heroTagline, english.heroTagline, fallback.heroTagline, locale),
+    heroDescription: localizedOrEnglishDefault(
+      content.heroDescription,
+      english.heroDescription,
+      fallback.heroDescription,
+      locale,
+    ),
+    primaryCtaText: localizedOrEnglishDefault(
+      content.primaryCtaText,
+      english.primaryCtaText,
+      fallback.primaryCtaText,
+      locale,
+    ),
+    primaryCtaUrl: content.primaryCtaUrl || fallback.primaryCtaUrl,
+    secondaryCtaText: localizedOrEnglishDefault(
+      content.secondaryCtaText,
+      english.secondaryCtaText,
+      fallback.secondaryCtaText,
+      locale,
+    ),
+    secondaryCtaUrl: content.secondaryCtaUrl || fallback.secondaryCtaUrl,
+    missionTitle: localizedOrEnglishDefault(
+      content.missionTitle,
+      english.missionTitle,
+      fallback.missionTitle,
+      locale,
+    ),
+    missionHighlight: localizedOrEnglishDefault(
+      content.missionHighlight,
+      english.missionHighlight,
+      fallback.missionHighlight,
+      locale,
+    ),
+    missionText: localizedOrEnglishDefault(content.missionText, english.missionText, fallback.missionText, locale),
+    ctaTitle: localizedOrEnglishDefault(content.ctaTitle, english.ctaTitle, fallback.ctaTitle, locale),
+    ctaDescription: localizedOrEnglishDefault(
+      content.ctaDescription,
+      english.ctaDescription,
+      fallback.ctaDescription,
+      locale,
+    ),
+    stats: overlayLocalizedHomeStats(normalizeHomeStats(content.stats ?? fallback.stats), locale),
+    techCards: overlayLocalizedHomeTechCards(
+      normalizeHomeTechCards(content.techCards ?? fallback.techCards),
+      locale,
+    ),
+    sections: overlayLocalizedHomeSections(
+      normalizeHomeSections(content.sections ?? fallback.sections),
+      locale,
+    ),
+  };
+}
+
+function resolveHomeContentAssets(
+  content: PublicHomeContentDTO,
+  locale: SiteLocaleCode,
+): PublicHomeContentDTO {
+  const merged = applyHomeContentFallback(content, locale);
   return {
     ...merged,
     heroImage: merged.heroImage ? resolvePublicAssetUrl(merged.heroImage) : null,
@@ -110,15 +196,17 @@ async function fetchHomeContent(): Promise<PublicHomeContentDTO> {
     return getHomeContentCachedByLocale(locale);
   } catch {
     logQueryFallback({ query: 'home-content', reason: 'db-error' });
-    return resolveHomeContentAssets(HOME_CONTENT_FALLBACK);
+    return resolveHomeContentAssets(localizedHomeContentFallback(locale), locale);
   }
 }
 
 const getHomeContentCachedByLocale = unstable_cache(
   async (locale: SiteLocaleCode): Promise<PublicHomeContentDTO> => {
     const row = await prisma.homeContent.findFirst();
-    const content = row ? toPublicHomeContent(row, locale) : HOME_CONTENT_FALLBACK;
-    return resolveHomeContentAssets(content);
+    const content = row
+      ? toPublicHomeContent(row, locale)
+      : localizedHomeContentFallback(locale);
+    return resolveHomeContentAssets(content, locale);
   },
   ['home-content'],
   { tags: ['home-content'], revalidate: 60 },

@@ -3,8 +3,6 @@
 import { useRef, useState } from 'react';
 import {
   DONATION_CHECKOUT_ENABLED,
-  DONATION_CHECKOUT_UNAVAILABLE,
-  DONATION_PAGE,
   type DonationImpactRange,
   type DonationTier,
   type DonationTierId,
@@ -29,6 +27,7 @@ type CertificateTemplateUrls = {
 
 type DonationEngineProps = {
   engine: DonationPageContent['page']['engine'];
+  certificates: DonationPageContent['page']['certificates'];
   tiers: DonationTier[];
   impactRanges: DonationImpactRange[];
   patronSliderTicks: readonly number[];
@@ -39,6 +38,7 @@ type DonationEngineProps = {
 
 export function DonationEngine({
   engine,
+  certificates,
   tiers,
   impactRanges,
   patronSliderTicks,
@@ -54,8 +54,6 @@ export function DonationEngine({
   const [inputNudge, setInputNudge] = useState(false);
 
   const checkoutEnabled = DONATION_CHECKOUT_ENABLED;
-  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
-  const certificates = DONATION_PAGE.certificates;
 
   function handleTierSelect(tierId: DonationTierId) {
     setSelectedId(tierId);
@@ -101,8 +99,8 @@ export function DonationEngine({
 
       {!checkoutEnabled ? (
         <div className="donation-checkout-notice reveal" role="status">
-          <p className="donation-checkout-notice__title">{unavailable.noticeTitle}</p>
-          <p className="donation-checkout-notice__body">{unavailable.noticeBody}</p>
+          <p className="donation-checkout-notice__title">{uiMessage(locale, 'checkoutComingSoon')}</p>
+          <p className="donation-checkout-notice__body">{uiMessage(locale, 'checkoutNoticeBody')}</p>
         </div>
       ) : null}
 

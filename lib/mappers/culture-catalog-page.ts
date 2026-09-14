@@ -39,13 +39,13 @@ export function buildCultureCatalogStats(
 export function buildCultureCatalogCategoryStats(
   subcategoryCount: number,
   totalItems: number,
-  labels: Pick<CultureCatalogContent['statLabels'], 'entries' | 'regions'>,
+  labels: CultureCatalogContent['statLabels'],
 ): CultureCatalogStat[] {
   return [
     { value: String(subcategoryCount), label: labels.entries },
     { value: String(totalItems), label: labels.regions },
-    { value: '—', label: 'Periods' },
-    { value: '—', label: '3D Tours' },
+    { value: '—', label: labels.third },
+    { value: '—', label: labels.fourth },
   ];
 }
 

@@ -112,7 +112,7 @@ export function CultureCatalogItemGrid({
           {content.description ? <p className="sec-desc">{content.description}</p> : null}
         </div>
       </div>
-      {searchForm ? <CatalogSearchForm {...searchForm} /> : null}
+      {searchForm ? <CatalogSearchForm {...searchForm} locale={locale} /> : null}
       {items.length === 0 ? (
         <p className="sec-desc reveal" style={{ marginTop: '2rem' }}>
           {uiMessage(locale, 'noEntriesMatch')}

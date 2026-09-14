@@ -5,6 +5,8 @@ import {
 } from '@/lib/types/culture-catalog-content';
 import { EXTENDED_CULTURE_CATALOG_OVERRIDES } from '@/lib/constants/culture-catalog-overrides-extended';
 import { CULTURE_CATALOG_SUBCATEGORY_OVERRIDES } from '@/lib/constants/culture-catalog-subcategory-overrides';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 export interface CultureCatalogFact {
   label: string;
@@ -247,14 +249,16 @@ function buildBaseContent(
   title: string,
   description: string,
   parentTitle?: string,
-  options?: { hasSubcategories?: boolean },
+  options?: { hasSubcategories?: boolean; locale?: SiteLocaleCode },
 ): CultureCatalogContent {
+  const locale = options?.locale ?? 'EN';
   const scope = parentTitle ? `${parentTitle} / ${title}` : title;
   const hasSubcategories = options?.hasSubcategories === true;
+  const titleLower = title.toLowerCase();
   return {
-    eyebrow: `✦ ${scope} · Cultural Portal · Armenia ✦`,
+    eyebrow: uiMessageFormat(locale, 'catalogEyebrow', { scope }),
     accent: title,
-    slogan: description || `Curated ${title.toLowerCase()} from the Armenian archive`,
+    slogan: description || uiMessageFormat(locale, 'catalogSloganFallback', { title: titleLower }),
     sectionVisibility: {
       hero: true,
       about: true,
@@ -265,37 +269,51 @@ function buildBaseContent(
     },
     about: {
       label: scope,
-      title: `Discover ${title}`,
-      description: description || `Curated entries from the Armenian ${title.toLowerCase()} archive.`,
+      title: uiMessageFormat(locale, 'catalogDiscoverTitle', { title }),
+      description:
+        description || uiMessageFormat(locale, 'catalogAboutDescription', { title: titleLower }),
       paragraphs: [
-        `This catalog brings together curated ${title.toLowerCase()} entries — each reviewed, sourced, and prepared for the open heritage archive.`,
-        'Browse the collection below or suggest new material for curatorial review.',
+        uiMessageFormat(locale, 'catalogAboutP1', { title: titleLower }),
+        uiMessage(locale, 'catalogAboutP2'),
       ],
       facts: [
-        { label: 'Curated Archive', value: `Every ${title.toLowerCase()} entry is reviewed before publication.` },
-        { label: 'Regional Context', value: 'Entries include region, period and source information where available.' },
-        { label: 'Open Submission', value: 'Researchers and institutions can propose new material for review.' },
-        { label: 'Digital Access', value: '3D tours, galleries and map coordinates where the material supports them.' },
+        {
+          label: uiMessage(locale, 'factCuratedArchive'),
+          value: uiMessageFormat(locale, 'factCuratedArchiveValue', { title: titleLower }),
+        },
+        {
+          label: uiMessage(locale, 'factRegionalContext'),
+          value: uiMessage(locale, 'factRegionalContextValue'),
+        },
+        {
+          label: uiMessage(locale, 'factOpenSubmission'),
+          value: uiMessage(locale, 'factOpenSubmissionValue'),
+        },
+        {
+          label: uiMessage(locale, 'factDigitalAccess'),
+          value: uiMessage(locale, 'factDigitalAccessValue'),
+        },
       ],
     },
     items: {
-      label: 'Curated Entries',
-      title: title,
-      description: description || `Explore ${title.toLowerCase()} from the Armenian cultural archive.`,
-      submitPrompt: `Know an entry that belongs in ${title}?`,
-      emptyMessage: 'Entries will appear here once published in the admin panel.',
+      label: uiMessage(locale, 'curatedEntries'),
+      title,
+      description:
+        description || uiMessageFormat(locale, 'catalogItemsDescription', { title: titleLower }),
+      submitPrompt: uiMessageFormat(locale, 'catalogSubmitPrompt', { title }),
+      emptyMessage: uiMessage(locale, 'catalogEmptyEntries'),
     },
     map: {
-      eyebrow: 'Heritage Map',
-      title: `${title} on the Map`,
-      description: 'Geolocated entries in this catalog — open the full interactive map to explore.',
-      placeholderTitle: `Explore ${title} Locations`,
+      eyebrow: uiMessage(locale, 'heritageMap'),
+      title: uiMessageFormat(locale, 'catalogOnTheMap', { title }),
+      description: uiMessage(locale, 'catalogMapDescription'),
+      placeholderTitle: uiMessageFormat(locale, 'catalogExploreLocations', { title }),
     },
     statLabels: {
-      entries: 'Entries',
-      regions: 'Regions',
-      third: 'Periods',
-      fourth: '3D Tours',
+      entries: uiMessage(locale, 'statEntries'),
+      regions: uiMessage(locale, 'statRegions'),
+      third: uiMessage(locale, 'statPeriods'),
+      fourth: uiMessage(locale, 'stat3dTours'),
     },
   };
 }
@@ -303,16 +321,12 @@ function buildBaseContent(
 export function resolveCultureCatalogContent(
   node: MenuNode,
   parent?: MenuNode,
-  options?: { hasSubcategories?: boolean },
+  options?: { hasSubcategories?: boolean; locale?: SiteLocaleCode },
 ): CultureCatalogContent {
+  const locale = options?.locale ?? 'EN';
   const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
-  const base = buildBaseContent(
-    node.title,
-    node.description ?? '',
-    parent?.title,
-    options,
-  );
-  const codeOverride = OVERRIDES[key] ?? OVERRIDES[node.slug];
+  const base = buildBaseContent(node.title, node.description ?? '', parent?.title, options);
+  const codeOverride = locale === 'EN' ? OVERRIDES[key] ?? OVERRIDES[node.slug] : undefined;
   const dbOverride = parseMenuCatalogContent(node.catalogContent);
   const merged = mergeCultureCatalogLayers(base, codeOverride, dbOverride);
   const adminHeroImage = dbOverride?.heroImage?.trim() || node.image?.trim();
@@ -328,18 +342,29 @@ export function resolveCultureCatalogContent(
 export function resolveCultureCatalogFormContent(
   kind: 'submit' | 'new-subcatalog',
   category?: MenuNode,
+  locale: SiteLocaleCode = 'EN',
 ): CultureCatalogContent {
   if (kind === 'submit') {
-    const base = buildBaseContent('Add your project', 'Contribute to the open archive.');
-    return mergeContent(base, OVERRIDES.submit);
+    const base = buildBaseContent(
+      uiMessage(locale, 'addYourProject'),
+      uiMessage(locale, 'contributeToArchive'),
+      undefined,
+      { locale },
+    );
+    return locale === 'EN' ? mergeContent(base, OVERRIDES.submit) : base;
   }
-  const title = category?.title ?? 'Category';
-  const base = buildBaseContent('Add a new sub-catalog', `Propose a new ${title.toLowerCase()} sub-catalog.`);
+  const title = category?.title?.trim() || uiMessage(locale, 'categoryFallback');
+  const base = buildBaseContent(
+    uiMessage(locale, 'addNewSubcatalog'),
+    uiMessageFormat(locale, 'proposeSubcatalogDescription', { category: title }),
+    undefined,
+    { locale },
+  );
   return {
     ...base,
-    eyebrow: `✦ ${title} · New Sub-catalog · Armenia ✦`,
-    accent: 'Նոր ենթակատալոգ',
-    slogan: 'Expand the open archive',
+    eyebrow: uiMessageFormat(locale, 'catalogNewSubcatalogEyebrow', { title }),
+    accent: uiMessage(locale, 'newSubcatalog'),
+    slogan: uiMessage(locale, 'expandOpenArchive'),
   };
 }
 

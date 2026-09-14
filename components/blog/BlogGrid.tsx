@@ -23,13 +23,13 @@ export function BlogGrid({ posts, locale = 'EN' }: BlogGridProps) {
     <div className="blog-layout">
       {featured ? (
         <div className="blog-featured">
-          <BlogCard post={featured} featured />
+          <BlogCard post={featured} featured locale={locale} />
         </div>
       ) : null}
       {rest.length > 0 ? (
         <div className="blog-grid">
           {rest.map((post) => (
-            <BlogCard key={post.id} post={post} />
+            <BlogCard key={post.id} post={post} locale={locale} />
           ))}
         </div>
       ) : null}

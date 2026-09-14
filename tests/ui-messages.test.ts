@@ -12,6 +12,12 @@ describe('ui messages', () => {
     expect(uiMessage('RU', 'more')).toBe('Ещё');
     expect(uiMessage('FR', 'heritageMap')).toBe('Carte du patrimoine');
     expect(uiMessage('PT', 'viewDetails')).toBe('Ver detalhes');
+    expect(uiMessage('HY', 'menuArchitecture')).toBe('Ճարտարապետություն');
+    expect(uiMessage('RU', 'allRegions')).toBe('Все регионы');
+    expect(uiMessage('FR', 'newsTitle')).toBe('Récits de la communauté du patrimoine');
+    expect(uiMessage('PT', 'applyFilters')).toBe('Aplicar filtros');
+    expect(uiMessage('HY', 'portalCatDescChurches')).toContain('Հաղպատ');
+    expect(uiMessage('RU', 'lostInArchive')).toContain('архиве');
   });
 
   it('mirrors HY for HYW', () => {

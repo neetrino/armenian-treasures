@@ -10,22 +10,28 @@ import {
 } from '@/lib/constants/featured-treasures';
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { FeaturedTreasureCard } from '@/components/sections/featured-treasures/FeaturedTreasureCard';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cn } from '@/lib/utils';
 
 interface FeaturedTreasuresGridProps {
   treasures?: FeaturedTreasure[];
   showDiscoverMore?: boolean;
   variant?: 'mosaic' | 'tiles';
+  locale?: SiteLocaleCode;
 }
 
 export async function FeaturedTreasuresGrid({
   treasures: treasuresProp,
   showDiscoverMore = false,
   variant = 'mosaic',
+  locale = 'EN',
 }: FeaturedTreasuresGridProps = {}) {
   const resolvedTreasures =
     treasuresProp ??
-    mapCultureItemsToFeaturedTreasures(await getFeaturedCultureItems(FEATURED_TREASURE_COUNT));
+    mapCultureItemsToFeaturedTreasures(
+      await getFeaturedCultureItems(FEATURED_TREASURE_COUNT),
+      locale,
+    );
 
   if (resolvedTreasures.length === 0) {
     return null;
@@ -34,7 +40,9 @@ export async function FeaturedTreasuresGrid({
   const treasures =
     variant === 'tiles' ? resolvedTreasures : resolvedTreasures.slice(0, FEATURED_TREASURE_COUNT);
   const items =
-    variant === 'mosaic' && showDiscoverMore ? buildHomeFeaturedMosaic(resolvedTreasures) : treasures;
+    variant === 'mosaic' && showDiscoverMore
+      ? buildHomeFeaturedMosaic(resolvedTreasures, locale)
+      : treasures;
   const gridClassName = cn(
     'featured-treasures-grid',
     variant === 'tiles' && 'featured-treasures-grid--tiles',

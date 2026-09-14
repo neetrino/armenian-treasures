@@ -14,6 +14,7 @@ import {
 } from '@/lib/types/home-content';
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
 import { hydrateCultureItemMedia, parseCultureItemMedia, firstTourUrl, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
@@ -160,13 +161,26 @@ export type PublicAboutContentDTO = Omit<AboutContent, 'id' | 'createdAt' | 'upd
   pillars: AboutPillar[];
 };
 
+function resolvePublicMenuTitle(
+  raw: string | null | undefined,
+  slug: string,
+  locale: SiteLocaleCode,
+): string {
+  const localized = resolveLocalizedText(raw, locale).trim();
+  const english = resolveLocalizedText(raw, 'EN').trim();
+  const fromCode = cultureMenuLabel(locale, slug);
+  if (locale === 'EN') return localized || fromCode || '';
+  if (localized && localized !== english) return localized;
+  return fromCode || localized || english;
+}
+
 export function toPublicMenuItem(
   row: CultureMenuItem,
   locale: SiteLocaleCode = 'EN',
 ): PublicCultureMenuItemDTO {
   return {
     id: row.id,
-    title: resolveLocalizedText(row.title, locale),
+    title: resolvePublicMenuTitle(row.title, row.slug, locale),
     slug: row.slug,
     description: resolveLocalizedText(row.description, locale) || null,
     image: row.image,
@@ -236,12 +250,16 @@ export function toPublicCultureItemDetail(
     ...toPublicCultureItem(row, locale),
     menuItem: {
       id: row.menuItem.id,
-      title: resolveLocalizedText(row.menuItem.title, locale),
+      title: resolvePublicMenuTitle(row.menuItem.title, row.menuItem.slug, locale),
       slug: row.menuItem.slug,
       parent: row.menuItem.parent
         ? {
             id: row.menuItem.parent.id,
-            title: resolveLocalizedText(row.menuItem.parent.title, locale),
+            title: resolvePublicMenuTitle(
+              row.menuItem.parent.title,
+              row.menuItem.parent.slug,
+              locale,
+            ),
             slug: row.menuItem.parent.slug,
           }
         : null,
