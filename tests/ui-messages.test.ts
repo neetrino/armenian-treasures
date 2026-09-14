@@ -18,6 +18,8 @@ describe('ui messages', () => {
     expect(uiMessage('PT', 'applyFilters')).toBe('Aplicar filtros');
     expect(uiMessage('HY', 'portalCatDescChurches')).toContain('Հաղպատ');
     expect(uiMessage('RU', 'lostInArchive')).toContain('архиве');
+    expect(uiMessage('HY', 'allBlogPosts')).toBe('Բոլորը');
+    expect(uiMessage('FR', 'allBlogPosts')).toBe('Tous');
   });
 
   it('mirrors HY for HYW', () => {

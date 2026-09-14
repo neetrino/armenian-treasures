@@ -2,18 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ExternalLink, Pencil, Plus } from 'lucide-react';
+import { ExternalLink, Pencil, Plus, Search } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
-import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
-import { BlogForm } from '@/components/admin/BlogForm';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { ButtonLink } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
 import { deleteBlogPostAction } from '@/app/(admin)/admin/(panel)/blog/actions';
-import { truncateBlogDescription } from '@/lib/blog-description';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { AdminContext } from '@/lib/auth/require-admin';
@@ -22,15 +20,10 @@ interface Row {
   id: string;
   title: string;
   slug: string;
-  content: string;
+  categoryTitle: string | null;
   image: string | null;
-  headerImage: string | null;
-  backgroundImage: string | null;
-  galleryContent: unknown;
   publishedAt: string;
   isPublished: boolean;
-  featuredOnHome: boolean;
-  featuredOrder: number | null;
 }
 
 interface BlogsPageClientProps {
@@ -40,25 +33,22 @@ interface BlogsPageClientProps {
 
 export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
   const router = useRouter();
-  const [isCreateSheetOpen, setIsCreateSheetOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState<Row | null>(null);
+  const [query, setQuery] = useState('');
 
-  const openCreateSheet = useCallback(() => setIsCreateSheetOpen(true), []);
-  const closeCreateSheet = useCallback(() => setIsCreateSheetOpen(false), []);
-  const openEditSheet = useCallback((row: Row) => setEditingRow(row), []);
-  const closeEditSheet = useCallback(() => setEditingRow(null), []);
-
-  const handleSheetSuccess = useCallback(() => {
-    setIsCreateSheetOpen(false);
-    setEditingRow(null);
-    router.refresh();
-  }, [router]);
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return rows;
+    return rows.filter((row) => {
+      const haystack = [row.title, row.slug, row.categoryTitle ?? ''].join(' ').toLowerCase();
+      return haystack.includes(needle);
+    });
+  }, [query, rows]);
 
   const columns: AdminTableColumn<Row>[] = [
     {
       key: 'post',
       header: 'Post',
-      width: '42%',
+      width: '48%',
       cell: (row) => (
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-12 w-[4.5rem] shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
@@ -77,7 +67,9 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
             )}
           </div>
           <div className="min-w-0">
-            <p className="truncate font-medium text-ink">{row.title}</p>
+            <p className="line-clamp-2 whitespace-normal break-words font-medium leading-snug text-ink">
+              {row.title}
+            </p>
             <p className="truncate text-xs text-ink-muted">
               /blog/{row.slug} · {formatBlogDate(row.publishedAt)}
             </p>
@@ -86,14 +78,10 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
       ),
     },
     {
-      key: 'content',
-      header: 'Description',
-      width: '32%',
-      cell: (row) => (
-        <p className="line-clamp-2 break-words text-sm text-ink-soft">
-          {truncateBlogDescription(row.content) || '—'}
-        </p>
-      ),
+      key: 'category',
+      header: 'Category',
+      width: '18%',
+      cell: (row) => <span className="text-sm text-ink-soft">{row.categoryTitle || '—'}</span>,
     },
     {
       key: 'status',
@@ -118,13 +106,12 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
               <ExternalLink size={12} aria-hidden /> View
             </Link>
           ) : null}
-          <button
-            type="button"
-            onClick={() => openEditSheet(row)}
+          <Link
+            href={`/admin/blog/${row.id}`}
             className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-ink-soft hover:bg-stone-100"
           >
             <Pencil size={12} aria-hidden /> Edit
-          </button>
+          </Link>
           <DeleteActionButton action={deleteBlogPostAction} id={row.id} confirmText={`Delete “${row.title}”?`} />
         </div>
       ),
@@ -132,60 +119,41 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
   ];
 
   return (
-    <>
-      <AdminPageShell
-        user={user}
-        topbarTitle="Blog"
-        title="Blog posts"
-        description="Articles shown on /blog with cover image, summary, and full story pages."
-        actions={
-          <Button type="button" variant="primary" onClick={openCreateSheet}>
-            <Plus size={14} aria-hidden /> New post
-          </Button>
-        }
-      >
-        <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} onRowClick={openEditSheet} />
-      </AdminPageShell>
-      <AdminSheet
-        open={isCreateSheetOpen}
-        onClose={closeCreateSheet}
-        eyebrow="Blog"
-        title="Create post"
-        description="Add a new article with cover image and description."
-        size="2xl"
-      >
-        <BlogForm mode="create" onSuccess={handleSheetSuccess} onCancel={closeCreateSheet} />
-      </AdminSheet>
-      <AdminSheet
-        open={editingRow !== null}
-        onClose={closeEditSheet}
-        eyebrow="Blog"
-        title="Edit post"
-        description={editingRow?.title}
-        size="2xl"
-      >
-        {editingRow ? (
-          <BlogForm
-            key={editingRow.id}
-            mode="edit"
-            itemId={editingRow.id}
-            initial={{
-              title: editingRow.title,
-              content: editingRow.content,
-              image: editingRow.image ?? '',
-              headerImage: editingRow.headerImage ?? '',
-              backgroundImage: editingRow.backgroundImage ?? '',
-              galleryContent: editingRow.galleryContent,
-              publishedAt: editingRow.publishedAt,
-              isPublished: editingRow.isPublished,
-              featuredOnHome: editingRow.featuredOnHome,
-              featuredOrder: editingRow.featuredOrder,
-            }}
-            onSuccess={handleSheetSuccess}
-            onCancel={closeEditSheet}
+    <AdminPageShell
+      user={user}
+      topbarTitle="Blog"
+      title="Blog posts"
+      description="Articles shown on /blog. Create and edit each post on its own page."
+      actions={
+        <ButtonLink href="/admin/blog/new" variant="primary">
+          <Plus size={14} aria-hidden /> New post
+        </ButtonLink>
+      }
+    >
+      <div className="mb-4">
+        <label className="relative block max-w-md">
+          <Search
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted"
+            aria-hidden
           />
-        ) : null}
-      </AdminSheet>
-    </>
+          <Input
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search title, slug, or category"
+            className="pl-9"
+            aria-label="Search blog posts"
+          />
+        </label>
+      </div>
+      <AdminTable
+        columns={columns}
+        rows={filtered}
+        getRowId={(row) => row.id}
+        empty={query.trim() ? 'No posts match this search.' : 'No posts yet.'}
+        onRowClick={(row) => router.push(`/admin/blog/${row.id}`)}
+      />
+    </AdminPageShell>
   );
 }

@@ -106,7 +106,7 @@ export function mapBlogPostsToFeaturedTreasures(
     icon: 'publications',
     categories: [uiMessage(locale, 'communityCategory'), uiMessage(locale, 'updateCategory')],
     title: post.title.toUpperCase(),
-    description: excerptFeaturedTreasureText(post.content),
+    description: excerptFeaturedTreasureText(post.shortDescription || post.content),
     href: `/blog/${post.slug}`,
     layout: LAYOUTS[index % LAYOUTS.length]!,
     cardBackgroundColor: null,

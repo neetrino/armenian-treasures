@@ -25,7 +25,9 @@ function stripUnsafeBlocks(html: string): string {
 function stripUnsafeAttributes(html: string): string {
   return html
     .replace(/\son\w+=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/\s(href|src)\s*=\s*(['"])javascript:[\s\S]*?\2/gi, ' $1="#"');
+    .replace(/\s(href|src)\s*=\s*(['"])javascript:[\s\S]*?\2/gi, ' $1="#"')
+    .replace(/\sstyle\s*=\s*("[^"]*"|'[^']*')/gi, '')
+    .replace(/\scolor\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
 }
 
 function splitIntoParagraphs(text: string): string[] {

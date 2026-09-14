@@ -22,6 +22,8 @@ export const PAGE_MESSAGES = {
     'Aucun article publié pour le moment.',
     'Ainda não há artigos publicados.',
   ),
+  allBlogPosts: row('Բոլորը', 'All', 'Все', 'Tous', 'Todos'),
+  blogCategories: row('Բլոգի բաժիններ', 'Blog categories', 'Разделы блога', 'Catégories du blog', 'Categorias do blog'),
   backToBlog: row(
     'Վերադառնալ բլոգ',
     'Back to blog',

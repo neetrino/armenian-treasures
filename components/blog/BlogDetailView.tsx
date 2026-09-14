@@ -1,9 +1,7 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
-import { CultureItemGalleryLightbox } from '@/components/culture-catalog/CultureItemGalleryLightbox';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { BlogContentBlocks } from '@/components/blog/BlogContentBlocks';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { toBlogRenderHtml } from '@/lib/blog-content';
@@ -19,13 +17,31 @@ interface BlogDetailViewProps {
 
 export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
   const header = post.headerImage?.trim() || post.image?.trim() || '/images/culture/card-heritage.webp';
-  const resolvedHeader = resolvePublicAssetUrl(header);
   const background = post.backgroundImage?.trim();
-  const contentHtml = toBlogRenderHtml(post.content);
-  const photos = post.gallery.filter((item) => item.kind !== 'beforeAfter' && item.url);
+  const hasBlocks = post.blocks.length > 0;
+  const legacyHtml = hasBlocks ? '' : toBlogRenderHtml(post.content);
+  const categoryTitle = post.category?.title?.trim() ?? '';
+  const publishedLabel = formatBlogDate(post.publishedAt);
+  const eyebrow = categoryTitle
+    ? `✦ ${categoryTitle} ✦`
+    : `✦ ${uiMessage(locale, 'blogEyebrow')} ✦`;
 
   return (
     <HeritageLandingShell>
+      <LandingHero
+        locale={locale}
+        eyebrow={eyebrow}
+        title={post.title}
+        accent=""
+        slogan={publishedLabel || undefined}
+        subtitle=""
+        heroImage={resolvePublicAssetUrl(header)}
+        heroClassName="culture-catalog-hero blog-detail-landing-hero"
+        ctas={[{ label: uiMessage(locale, 'backToBlog'), href: '/blog', variant: 'outline' }]}
+      />
+
+      <KhndzoreskDivider />
+
       <div
         className="blog-detail-page"
         style={
@@ -34,53 +50,17 @@ export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
             : undefined
         }
       >
-        <section className="blog-detail-hero">
-          <div className="blog-detail-hero__image">
-            <Image
-              src={resolvedHeader}
-              alt={post.title}
-              fill
-              priority
-              sizes="100vw"
-              className="blog-detail-hero__photo"
-            />
-            <div className="blog-detail-hero__shade" aria-hidden />
-          </div>
-          <Link href="/blog" className="blog-detail-back">
-            <ArrowLeft size={14} aria-hidden /> {uiMessage(locale, 'backToBlog')}
-          </Link>
-          <div className="blog-detail-hero__content">
-            <div className="blog-detail-hero__inner">
-              <time className="blog-detail-date" dateTime={post.publishedAt}>
-                {formatBlogDate(post.publishedAt)}
-              </time>
-              <h1 className="blog-detail-title">{post.title}</h1>
-            </div>
-          </div>
-        </section>
-
-        <KhndzoreskDivider />
-
         <article className="blog-detail-article">
           <div className="blog-detail-article__intro" aria-hidden>
             <span className="blog-detail-article__intro-line" />
             <span className="blog-detail-article__intro-mark">◆</span>
             <span className="blog-detail-article__intro-line" />
           </div>
-          <div className="blog-detail-prose" dangerouslySetInnerHTML={{ __html: contentHtml }} />
-          {photos.length > 0 ? (
-            <div className="mt-10">
-              <CultureItemGalleryLightbox
-                title={`${post.title} — ${uiMessage(locale, 'gallery')}`}
-                items={photos.map((item) => ({
-                  id: item.id,
-                  url: item.url,
-                  caption: item.caption || undefined,
-                  alt: item.caption || post.title,
-                }))}
-              />
-            </div>
-          ) : null}
+          {hasBlocks ? (
+            <BlogContentBlocks blocks={post.blocks} title={post.title} locale={locale} />
+          ) : (
+            <div className="blog-detail-prose" dangerouslySetInnerHTML={{ __html: legacyHtml }} />
+          )}
         </article>
       </div>
     </HeritageLandingShell>

@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { TextField } from '@/components/forms/fields/TextField';
-import { TextareaField } from '@/components/forms/fields/TextareaField';
+import { RichTextField } from '@/components/forms/fields/RichTextField';
 import { decodeTranslatableText, type LocaleTextMap } from '@/lib/i18n/translatable-content';
 import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 
-interface AdminLocaleAwareTextFieldProps {
+interface AdminLocaleAwareRichTextFieldProps {
   name?: string;
   label: string;
   encodedValue?: string;
@@ -15,16 +14,14 @@ interface AdminLocaleAwareTextFieldProps {
   activeLocale: SiteLocaleCode;
   hint?: string;
   error?: string;
-  required?: boolean;
-  multiline?: boolean;
-  rows?: number;
+  compact?: boolean;
 }
 
 function valueFor(values: LocaleTextMap, locale: SiteLocaleCode): string {
   return values[locale] ?? '';
 }
 
-export function AdminLocaleAwareTextField({
+export function AdminLocaleAwareRichTextField({
   name,
   label,
   encodedValue = '',
@@ -33,10 +30,8 @@ export function AdminLocaleAwareTextField({
   activeLocale,
   hint,
   error,
-  required,
-  multiline = false,
-  rows = 1,
-}: AdminLocaleAwareTextFieldProps) {
+  compact = true,
+}: AdminLocaleAwareRichTextFieldProps) {
   const isControlled = controlledValues !== undefined;
   const [internalValues, setInternalValues] = useState<LocaleTextMap>(() =>
     decodeTranslatableText(encodedValue),
@@ -54,9 +49,6 @@ export function AdminLocaleAwareTextField({
     onValuesChange?.(next);
   }
 
-  const fieldName = name ? `${name}.${activeLocale}` : undefined;
-  const currentValue = valueFor(values, activeLocale);
-
   return (
     <>
       {name
@@ -73,29 +65,15 @@ export function AdminLocaleAwareTextField({
             );
           })
         : null}
-      {multiline ? (
-        <TextareaField
-          label={label}
-          name={fieldName}
-          required={required}
-          rows={rows}
-          value={currentValue}
-          onChange={(event) => setValues({ ...values, [activeLocale]: event.target.value })}
-          hint={hint}
-          error={error}
-          textareaClassName={rows === 1 ? 'min-h-0 resize-none overflow-hidden py-2.5' : undefined}
-        />
-      ) : (
-        <TextField
-          label={label}
-          name={fieldName}
-          required={required}
-          value={currentValue}
-          onChange={(event) => setValues({ ...values, [activeLocale]: event.target.value })}
-          hint={hint}
-          error={error}
-        />
-      )}
+      <RichTextField
+        label={label}
+        name={name ? `${name}.${activeLocale}` : undefined}
+        compact={compact}
+        value={valueFor(values, activeLocale)}
+        onValueChange={(next) => setValues({ ...values, [activeLocale]: next })}
+        hint={hint}
+        error={error}
+      />
     </>
   );
 }

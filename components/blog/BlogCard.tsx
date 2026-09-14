@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { truncateBlogDescription } from '@/lib/blog-description';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { PublicBlogPostDTO } from '@/lib/dto';
@@ -18,7 +17,7 @@ export function BlogCard({ post, featured = false, locale = 'EN' }: BlogCardProp
   const imageSrc = post.image?.trim()
     ? resolvePublicAssetUrl(post.image)
     : resolvePublicAssetUrl('/images/culture/card-heritage.webp');
-  const preview = truncateBlogDescription(post.content) || uiMessage(locale, 'readFullStory');
+  const excerpt = post.shortDescription.trim();
 
   return (
     <Link
@@ -44,7 +43,7 @@ export function BlogCard({ post, featured = false, locale = 'EN' }: BlogCardProp
           {formatBlogDate(post.publishedAt)}
         </time>
         <h2 className="blog-card__title">{post.title}</h2>
-        <p className="blog-card__excerpt">{preview}</p>
+        {excerpt ? <p className="blog-card__excerpt">{excerpt}</p> : null}
         <span className="blog-card__cta inline-flex items-center gap-1.5">
           {uiMessage(locale, 'readArticle')} <ArrowRight size={12} aria-hidden className="transition-transform group-hover:translate-x-0.5" />
         </span>
