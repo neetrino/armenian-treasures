@@ -8,7 +8,7 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
-import { persistBlogPostFeaturedHome } from '@/lib/queries/featured-blog-sql';
+import { persistBlogPostFeaturedHome, fetchFeaturedBlogByIds } from '@/lib/queries/featured-blog-sql';
 import { blogPostSchema } from '@/lib/validation';
 import {
   encodeDescriptionHtmlFromBlocks,
@@ -162,4 +162,24 @@ export async function deleteBlogPostAction(id: string): Promise<AdminDeleteResul
     await prisma.blogPost.delete({ where: { id } });
     revalidate(row?.slug ? [row.slug] : []);
   });
+}
+
+export async function toggleBlogPostFeaturedHomeAction(
+  id: string,
+): Promise<{ ok: true; featuredOnHome: boolean } | { ok: false; message: string }> {
+  await requireAdmin();
+  const post = await prisma.blogPost.findUnique({ where: { id }, select: { id: true, slug: true } });
+  if (!post) {
+    return { ok: false, message: 'Post not found.' };
+  }
+
+  const current = (await fetchFeaturedBlogByIds([id])).get(id);
+  const featuredOnHome = !(current?.featuredOnHome ?? false);
+  await persistBlogPostFeaturedHome(
+    id,
+    featuredOnHome,
+    featuredOnHome ? (current?.featuredOrder ?? 5) : null,
+  );
+  revalidate(post.slug ? [post.slug] : []);
+  return { ok: true, featuredOnHome };
 }

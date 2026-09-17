@@ -1,15 +1,12 @@
 'use client';
 
-import { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus } from 'lucide-react';
+import Link from 'next/link';
+import { Pencil, Plus } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
-import { AdminModal } from '@/components/admin/AdminModal';
-import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
-import { TeamMemberForm } from '@/components/admin/TeamMemberForm';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { ButtonLink } from '@/components/ui/Button';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
 import { deleteTeamMemberAction } from '@/app/(admin)/admin/(panel)/team/actions';
 import type { AdminContext } from '@/lib/auth/require-admin';
@@ -20,15 +17,6 @@ interface Row {
   initials: string;
   position: string;
   isActive: boolean;
-  editInitial: {
-    name: string;
-    initials: string;
-    position: string;
-    bio: string;
-    image: string;
-    order: number;
-    isActive: boolean;
-  };
 }
 
 interface TeamPageClientProps {
@@ -38,18 +26,6 @@ interface TeamPageClientProps {
 
 export function TeamPageClient({ user, rows }: TeamPageClientProps) {
   const router = useRouter();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState<Row | null>(null);
-
-  const openCreateModal = useCallback(() => setIsCreateModalOpen(true), []);
-  const closeCreateModal = useCallback(() => setIsCreateModalOpen(false), []);
-  const handleSuccess = useCallback(() => {
-    closeCreateModal();
-    setEditingRow(null);
-    router.refresh();
-  }, [closeCreateModal, router]);
-  const openEdit = useCallback((row: Row) => setEditingRow(row), []);
-  const closeEdit = useCallback(() => setEditingRow(null), []);
 
   const columns: AdminTableColumn<Row>[] = [
     {
@@ -80,11 +56,13 @@ export function TeamPageClient({ user, rows }: TeamPageClientProps) {
       header: 'Actions',
       align: 'right',
       cell: (row) => (
-        <div
-          className="flex items-center justify-end gap-1"
-          onClick={(event) => event.stopPropagation()}
-          onKeyDown={(event) => event.stopPropagation()}
-        >
+        <div className="flex items-center justify-end gap-1">
+          <Link
+            href={`/admin/team/${row.id}`}
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-ink-soft hover:bg-stone-100"
+          >
+            <Pencil size={12} aria-hidden /> Edit
+          </Link>
           <DeleteActionButton action={deleteTeamMemberAction} id={row.id} confirmText={`Delete “${row.name}”?`} />
         </div>
       ),
@@ -92,43 +70,23 @@ export function TeamPageClient({ user, rows }: TeamPageClientProps) {
   ];
 
   return (
-    <>
-      <AdminPageShell
-        user={user}
-        topbarTitle="Team"
-        title="Team members"
-        description="People shown on the public /about/team page."
-        actions={
-          <Button type="button" variant="primary" onClick={openCreateModal}>
-            <Plus size={14} aria-hidden /> Add member
-          </Button>
-        }
-      >
-        <AdminTable columns={columns} rows={rows} getRowId={(row) => row.id} onRowClick={openEdit} />
-      </AdminPageShell>
-      {isCreateModalOpen ? (
-        <AdminModal eyebrow="Team" title="Create team member" onClose={closeCreateModal}>
-          <TeamMemberForm mode="create" onSuccess={handleSuccess} onCancel={closeCreateModal} />
-        </AdminModal>
-      ) : null}
-      <AdminSheet
-        open={editingRow !== null}
-        onClose={closeEdit}
-        eyebrow="Team"
-        title="Edit member"
-        description={editingRow?.name}
-      >
-        {editingRow ? (
-          <TeamMemberForm
-            key={editingRow.id}
-            mode="edit"
-            itemId={editingRow.id}
-            initial={editingRow.editInitial}
-            onSuccess={handleSuccess}
-            onCancel={closeEdit}
-          />
-        ) : null}
-      </AdminSheet>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Team"
+      title="Team members"
+      description="People shown on the public /about/team page. Edit each member in every language."
+      actions={
+        <ButtonLink href="/admin/team/new" variant="primary">
+          <Plus size={14} aria-hidden /> Add member
+        </ButtonLink>
+      }
+    >
+      <AdminTable
+        columns={columns}
+        rows={rows}
+        getRowId={(row) => row.id}
+        onRowClick={(row) => router.push(`/admin/team/${row.id}`)}
+      />
+    </AdminPageShell>
   );
 }

@@ -1,6 +1,5 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import type { AdminDeleteResult } from '@/lib/admin/action-result';
@@ -79,7 +78,7 @@ export async function updateTeamMemberAction(
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
   await prisma.teamMember.update({ where: { id }, data: parsed.data });
   revalidate();
-  redirect('/admin/team');
+  return { status: 'success' };
 }
 
 export async function deleteTeamMemberAction(id: string): Promise<AdminDeleteResult> {

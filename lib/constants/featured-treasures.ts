@@ -27,7 +27,7 @@ export const FEATURED_TREASURE_GRID_ITEM_LAYOUT_CLASS: Record<FeaturedTreasureLa
 
 export interface FeaturedTreasure {
   number: string;
-  icon: CulturalPortalIconKey;
+  icon: CulturalPortalIconKey | null;
   categories: [string, string];
   title: string;
   description: string;
