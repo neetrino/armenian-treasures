@@ -142,6 +142,34 @@ describe('featured treasures mapping', () => {
     ]);
     expect(treasures[0]?.href).toBe('/blog/community-1');
     expect(treasures[0]?.cardBackgroundImage).toBe('/images/blog/1.jpg');
+    expect(treasures[0]?.icon).toBeNull();
+    expect(treasures[0]?.categories[0]).toBe('BLOG');
+    expect(treasures[0]?.description).toBe('Short update 1.');
+  });
+
+  it('uses the blog category label and short description on mosaic cards', () => {
+    const treasures = mapBlogPostsToFeaturedTreasures(
+      [
+        {
+          id: '1',
+          title: 'Hellow',
+          slug: 'hellow',
+          content: 'Full article body that should not appear on the card.',
+          shortDescription: 'A short teaser for the card.',
+          image: '/images/blog/hellow.jpg',
+          headerImage: null,
+          gallery: [],
+          publishedAt: '2026-09-17T00:00:00.000Z',
+          order: 0,
+          category: { id: 'c1', slug: 'news', title: 'News', order: 0 },
+        },
+      ],
+      'EN',
+    );
+
+    expect(treasures[0]?.icon).toBeNull();
+    expect(treasures[0]?.categories).toEqual(['NEWS', '']);
+    expect(treasures[0]?.description).toBe('A short teaser for the card.');
   });
 
   it('truncates leftover full-article text on featured cards', () => {

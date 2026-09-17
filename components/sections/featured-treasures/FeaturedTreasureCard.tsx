@@ -11,12 +11,17 @@ interface FeaturedTreasureCardProps {
   treasure: FeaturedTreasure;
 }
 
-function CategoryLine({ first, second }: { first: string; second: string }) {
+function CategoryLine({ first, second }: { first: string; second?: string }) {
+  const secondary = second?.trim() ?? '';
   return (
     <p className="featured-treasure-card__categories font-cinzel text-[9px] font-extrabold uppercase tracking-[0.22em] sm:text-[10px]">
       {first}
-      <span className="px-1.5 text-[rgba(39,198,200,0.45)]">·</span>
-      {second}
+      {secondary ? (
+        <>
+          <span className="px-1.5 text-[rgba(39,198,200,0.45)]">·</span>
+          {secondary}
+        </>
+      ) : null}
     </p>
   );
 }
@@ -45,7 +50,7 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
       {isTile ? (
         <>
           <span className="featured-treasure-card__overlay" aria-hidden />
-          <CulturalCategoryIcon type={icon} className="featured-treasure-card__icon" />
+          {icon ? <CulturalCategoryIcon type={icon} className="featured-treasure-card__icon" /> : null}
           <div className="featured-treasure-card__content">
             <CategoryLine first={categories[0]} second={categories[1]} />
             <h3 className="featured-treasure-card__title break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">
@@ -68,8 +73,8 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
       ) : (
         <>
           <div className="relative z-[2] flex h-full flex-col items-start text-left">
-            <CulturalCategoryIcon type={icon} />
-            <div className="mt-5">
+            {icon ? <CulturalCategoryIcon type={icon} /> : null}
+            <div className={icon ? 'mt-5' : undefined}>
               <CategoryLine first={categories[0]} second={categories[1]} />
             </div>
             <h3 className="featured-treasure-card__title mt-3 max-w-[20rem] break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">

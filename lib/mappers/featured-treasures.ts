@@ -101,17 +101,21 @@ export function mapBlogPostsToFeaturedTreasures(
   posts: PublicBlogPostDTO[],
   locale: SiteLocaleCode = 'EN',
 ): FeaturedTreasure[] {
-  return posts.map((post, index) => ({
-    number: String(index + 1).padStart(2, '0'),
-    icon: 'publications',
-    categories: [uiMessage(locale, 'communityCategory'), uiMessage(locale, 'updateCategory')],
-    title: post.title.toUpperCase(),
-    description: excerptFeaturedTreasureText(post.shortDescription || post.content),
-    href: `/blog/${post.slug}`,
-    layout: LAYOUTS[index % LAYOUTS.length]!,
-    cardBackgroundColor: null,
-    cardBackgroundImage: post.image,
-  }));
+  return posts.map((post, index) => {
+    const categoryTitle = post.category?.title.trim();
+    const categoryLabel = (categoryTitle || uiMessage(locale, 'blogEyebrow')).toUpperCase();
+    return {
+      number: String(index + 1).padStart(2, '0'),
+      icon: null,
+      categories: [categoryLabel, ''] as [string, string],
+      title: post.title.toUpperCase(),
+      description: excerptFeaturedTreasureText(post.shortDescription),
+      href: `/blog/${post.slug}`,
+      layout: LAYOUTS[index % LAYOUTS.length]!,
+      cardBackgroundColor: null,
+      cardBackgroundImage: post.image,
+    };
+  });
 }
 
 export function mapCultureItemsToHighlightTreasures(
