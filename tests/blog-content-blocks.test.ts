@@ -20,7 +20,6 @@ function post(partial: Partial<PublicBlogPostDTO>): PublicBlogPostDTO {
     shortDescription: 'Excerpt',
     image: null,
     headerImage: null,
-    backgroundImage: null,
     gallery: [],
     publishedAt: '2026-09-14T00:00:00.000Z',
     order: 0,

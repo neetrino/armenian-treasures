@@ -142,7 +142,6 @@ export interface PublicBlogPostDTO {
   shortDescription: string;
   image: string | null;
   headerImage: string | null;
-  backgroundImage: string | null;
   gallery: CultureGalleryBlock[];
   publishedAt: string;
   order: number;
@@ -360,7 +359,6 @@ export function toPublicBlogPost(
     shortDescription: resolveLocalizedText(row.shortDescription, locale),
     image: row.image,
     headerImage: row.headerImage,
-    backgroundImage: row.backgroundImage,
     gallery: parseCultureItemMedia({ gallery: row.galleryContent }).gallery,
     publishedAt: row.publishedAt.toISOString(),
     order: row.order,

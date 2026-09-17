@@ -409,7 +409,6 @@ model BlogPost {
   shortDescription String        @db.Text @default("")
   image            String?
   headerImage      String?
-  backgroundImage  String?
   galleryContent   Json?
   contentBlocks    Json?
   publishedAt      DateTime      @default(now())

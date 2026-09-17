@@ -126,7 +126,6 @@ describe('featured treasures mapping', () => {
       shortDescription: `Short update ${index}.`,
       image: `/images/blog/${index}.jpg`,
       headerImage: null,
-      backgroundImage: null,
       gallery: [],
       publishedAt: '2026-08-18T00:00:00.000Z',
       order: index,

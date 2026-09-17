@@ -164,7 +164,6 @@ export const blogPostSchema = z.object({
   shortDescription: z.string().max(800).optional().or(z.literal('')),
   image: optionalString,
   headerImage: optionalString,
-  backgroundImage: optionalString,
   categoryId: optionalShortString,
   publishedAt: z.coerce.date(),
   order: z.number().int().min(0).default(0),

@@ -9,33 +9,24 @@ import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface BlogCardProps {
   post: PublicBlogPostDTO;
-  featured?: boolean;
   locale?: SiteLocaleCode;
 }
 
-export function BlogCard({ post, featured = false, locale = 'EN' }: BlogCardProps) {
+export function BlogCard({ post, locale = 'EN' }: BlogCardProps) {
   const imageSrc = post.image?.trim()
     ? resolvePublicAssetUrl(post.image)
     : resolvePublicAssetUrl('/images/culture/card-heritage.webp');
   const excerpt = post.shortDescription.trim();
 
   return (
-    <Link
-      href={`/blog/${post.slug}`}
-      className={featured ? 'blog-card blog-card--featured group' : 'blog-card group'}
-    >
+    <Link href={`/blog/${post.slug}`} className="blog-card group">
       <div className="blog-card__image">
         <Image
           src={imageSrc}
           alt={post.title}
           fill
-          sizes={
-            featured
-              ? '(max-width: 768px) 100vw, 70vw'
-              : '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-          }
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
-          priority={featured}
         />
       </div>
       <div className="blog-card__body">

@@ -17,7 +17,6 @@ interface BlogDetailViewProps {
 
 export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
   const header = post.headerImage?.trim() || post.image?.trim() || '/images/culture/card-heritage.webp';
-  const background = post.backgroundImage?.trim();
   const hasBlocks = post.blocks.length > 0;
   const legacyHtml = hasBlocks ? '' : toBlogRenderHtml(post.content);
   const categoryTitle = post.category?.title?.trim() ?? '';
@@ -42,14 +41,7 @@ export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
 
       <KhndzoreskDivider />
 
-      <div
-        className="blog-detail-page"
-        style={
-          background
-            ? { backgroundImage: `url(${resolvePublicAssetUrl(background)})`, backgroundSize: 'cover' }
-            : undefined
-        }
-      >
+      <div className="blog-detail-page">
         <article className="blog-detail-article">
           <div className="blog-detail-article__intro" aria-hidden>
             <span className="blog-detail-article__intro-line" />

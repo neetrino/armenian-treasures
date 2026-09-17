@@ -59,7 +59,6 @@ async function EditBlogPostPage(props: PageProps) {
           shortDescription: item.shortDescription,
           image: item.image ?? '',
           headerImage: item.headerImage ?? '',
-          backgroundImage: item.backgroundImage ?? '',
           galleryContent: item.galleryContent,
           contentBlocks: item.contentBlocks,
           publishedAt: item.publishedAt.toISOString(),

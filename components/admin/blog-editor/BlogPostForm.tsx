@@ -36,7 +36,6 @@ export interface BlogPostFormInitial {
   shortDescription: string;
   image: string;
   headerImage: string;
-  backgroundImage: string;
   galleryContent?: unknown;
   contentBlocks?: unknown;
   publishedAt: string;
@@ -122,7 +121,7 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
+      <div className="sticky top-0 z-30 flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-white/95 p-4 shadow-sm backdrop-blur-md sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <h1 className="font-display text-2xl text-ink sm:text-3xl">
             {mode === 'create' ? 'Create post' : 'Edit post'}
@@ -137,6 +136,17 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
         <p className="text-sm text-ink-muted">
           Fill any language. English is optional. Switching tabs keeps every locale.
         </p>
+        {state.status === 'error' && state.message ? (
+          <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
+        ) : null}
+        <div className="flex flex-wrap items-center gap-3">
+          <Button type="submit" disabled={isPending} withArrow>
+            {isPending ? 'Saving…' : mode === 'create' ? 'Create post' : 'Save changes'}
+          </Button>
+          <Button type="button" variant="ghost" onClick={() => router.push('/admin/blog')}>
+            Cancel
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
@@ -220,14 +230,6 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
           defaultValue={initial?.headerImage ?? ''}
           hint="Full-width hero on the article page. Falls back to the cover if empty."
         />
-        <AdminImageDropzoneField
-          label="Article background"
-          name="backgroundImage"
-          folder="culture"
-          layout="banner"
-          defaultValue={initial?.backgroundImage ?? ''}
-          hint="Optional page background behind the article body."
-        />
         <label className="flex items-center gap-2 text-sm text-ink-soft">
           <input
             type="checkbox"
@@ -244,19 +246,6 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
           label="Show in Stories from the Heritage Community"
           showCatalogToggle={false}
         />
-      </div>
-
-      {state.status === 'error' && state.message ? (
-        <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
-      ) : null}
-
-      <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" disabled={isPending} withArrow>
-          {isPending ? 'Saving…' : mode === 'create' ? 'Create post' : 'Save changes'}
-        </Button>
-        <Button type="button" variant="ghost" onClick={() => router.push('/admin/blog')}>
-          Cancel
-        </Button>
       </div>
     </form>
   );
