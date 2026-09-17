@@ -1,26 +1,27 @@
 'use client';
 
-import { useActionState, useEffect } from 'react';
-import { TranslatableFieldsTabs } from '@/components/admin/TranslatableFieldsTabs';
+import { useActionState, useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { CultureItemEditorLocaleTabs } from '@/components/admin/culture-item-editor/CultureItemEditorLocaleTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
+import { AdminLocaleAwareTextField } from '@/components/forms/fields/AdminLocaleAwareTextField';
 import { TextField } from '@/components/forms/fields/TextField';
-import { TextareaField } from '@/components/forms/fields/TextareaField';
 import { Button } from '@/components/ui/Button';
 import {
   createTeamMemberAction,
   updateTeamMemberAction,
   type TeamFormState,
 } from '@/app/(admin)/admin/(panel)/team/actions';
+import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import {
   buildTabErrorMap,
   decodeTranslatableText,
   type LocaleTextMap,
 } from '@/lib/i18n/translatable-content';
-import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 const INITIAL: TeamFormState = { status: 'idle' };
 
-interface Initial {
+export interface TeamMemberFormInitial {
   name: string;
   initials: string;
   position: string;
@@ -30,66 +31,112 @@ interface Initial {
   isActive: boolean;
 }
 
-interface Props {
+interface TeamMemberFormProps {
   mode: 'create' | 'edit';
   itemId?: string;
-  initial?: Initial;
+  initial?: TeamMemberFormInitial;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: Props) {
+function localeHasContent(name: string, position: string, bio: string): boolean {
+  return name.trim().length > 0 || position.trim().length > 0 || bio.trim().length > 0;
+}
+
+function valueFor(values: LocaleTextMap, locale: SiteLocaleCode): string {
+  return values[locale] ?? '';
+}
+
+export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: TeamMemberFormProps) {
+  const router = useRouter();
   const updateBound = itemId ? updateTeamMemberAction.bind(null, itemId) : undefined;
   const [state, formAction, isPending] = useActionState(
     mode === 'edit' && updateBound ? updateBound : createTeamMemberAction,
     INITIAL,
   );
+  const [activeLocale, setActiveLocale] = useState<SiteLocaleCode>('EN');
+  const [nameValues, setNameValues] = useState<LocaleTextMap>(() =>
+    decodeTranslatableText(initial?.name ?? ''),
+  );
+  const [positionValues, setPositionValues] = useState<LocaleTextMap>(() =>
+    decodeTranslatableText(initial?.position ?? ''),
+  );
+  const [bioValues, setBioValues] = useState<LocaleTextMap>(() =>
+    decodeTranslatableText(initial?.bio ?? ''),
+  );
 
   useEffect(() => {
-    if (mode === 'create' && state.status === 'success') {
-      onSuccess?.();
+    if (state.status !== 'success') return;
+    if (onSuccess) {
+      onSuccess();
+      return;
     }
-  }, [mode, state.status, onSuccess]);
+    router.push('/admin/team');
+    router.refresh();
+  }, [onSuccess, router, state.status]);
 
-  const nameValues = decodeTranslatableText(initial?.name ?? '');
-  const positionValues = decodeTranslatableText(initial?.position ?? '');
-  const bioValues = decodeTranslatableText(initial?.bio ?? '');
   const tabErrors = buildTabErrorMap(state.fieldErrors);
-  const valueFor = (values: LocaleTextMap, locale: SiteLocaleCode): string => values[locale] ?? '';
+  const completedLocales = useMemo(
+    () =>
+      Object.fromEntries(
+        SITE_LOCALE_CODES.map((code) => [
+          code,
+          localeHasContent(
+            valueFor(nameValues, code),
+            valueFor(positionValues, code),
+            valueFor(bioValues, code),
+          ),
+        ]),
+      ) as Partial<Record<SiteLocaleCode, boolean>>,
+    [bioValues, nameValues, positionValues],
+  );
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
-      <TranslatableFieldsTabs tabErrors={tabErrors}>
-        {(locale) => (
-          <div className="grid gap-5">
-            <div className="grid gap-5 sm:grid-cols-2">
-              <TextField
-                label="Name"
-                name={`name.${locale}`}
-                required={locale === 'EN'}
-                defaultValue={valueFor(nameValues, locale)}
-                error={state.fieldErrors?.[`name.${locale}`]}
-              />
-              <TextField
-                label="Position"
-                name={`position.${locale}`}
-                required={locale === 'EN'}
-                defaultValue={valueFor(positionValues, locale)}
-                error={state.fieldErrors?.[`position.${locale}`]}
-              />
-            </div>
-            <TextareaField
-              label="Bio"
-              name={`bio.${locale}`}
-              rows={4}
-              defaultValue={valueFor(bioValues, locale)}
-              error={state.fieldErrors?.[`bio.${locale}`]}
-            />
-          </div>
-        )}
-      </TranslatableFieldsTabs>
+      <div className="flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
+        <CultureItemEditorLocaleTabs
+          activeLocale={activeLocale}
+          completedLocales={completedLocales}
+          tabErrors={tabErrors}
+          onChange={setActiveLocale}
+        />
+        <p className="text-sm text-ink-muted">
+          Fill any language. English is optional. Switching tabs keeps every locale.
+        </p>
+      </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="flex flex-col gap-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <AdminLocaleAwareTextField
+            name="name"
+            label="Name"
+            values={nameValues}
+            activeLocale={activeLocale}
+            onValuesChange={setNameValues}
+            error={state.fieldErrors?.name ?? state.fieldErrors?.[`name.${activeLocale}`]}
+          />
+          <AdminLocaleAwareTextField
+            name="position"
+            label="Position"
+            values={positionValues}
+            activeLocale={activeLocale}
+            onValuesChange={setPositionValues}
+            error={state.fieldErrors?.position ?? state.fieldErrors?.[`position.${activeLocale}`]}
+          />
+        </div>
+        <AdminLocaleAwareTextField
+          name="bio"
+          label="Bio"
+          multiline
+          rows={4}
+          values={bioValues}
+          activeLocale={activeLocale}
+          onValuesChange={setBioValues}
+          error={state.fieldErrors?.bio ?? state.fieldErrors?.[`bio.${activeLocale}`]}
+        />
+      </div>
+
+      <div className="grid gap-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-5">
         <TextField
           label="Initials"
           name="initials"
@@ -117,9 +164,11 @@ export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: P
           Active
         </label>
       </div>
+
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
       ) : null}
+
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={isPending} withArrow>
           {isPending ? 'Saving…' : mode === 'create' ? 'Create member' : 'Save changes'}
@@ -128,7 +177,11 @@ export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: P
           <Button type="button" variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
-        ) : null}
+        ) : (
+          <Button type="button" variant="ghost" onClick={() => router.push('/admin/team')}>
+            Cancel
+          </Button>
+        )}
       </div>
     </form>
   );

@@ -14,18 +14,11 @@ async function AdminTeamPage() {
     <TeamPageClient
       user={user}
       rows={rows.map((row) => ({
-        ...row,
+        id: row.id,
         name: getAdminLocaleValue(row.name),
+        initials: row.initials,
         position: getAdminLocaleValue(row.position),
-        editInitial: {
-          name: row.name,
-          initials: row.initials,
-          position: row.position,
-          bio: row.bio ?? '',
-          image: row.image ?? '',
-          order: row.order,
-          isActive: row.isActive,
-        },
+        isActive: row.isActive,
       }))}
     />
   );

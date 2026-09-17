@@ -2,18 +2,22 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { ExternalLink, Pencil, Plus, Search } from 'lucide-react';
+import { ExternalLink, Pencil, Plus, Search, Star } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
-import { deleteBlogPostAction } from '@/app/(admin)/admin/(panel)/blog/actions';
+import {
+  deleteBlogPostAction,
+  toggleBlogPostFeaturedHomeAction,
+} from '@/app/(admin)/admin/(panel)/blog/actions';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { cn } from '@/lib/utils';
 import type { AdminContext } from '@/lib/auth/require-admin';
 
 interface Row {
@@ -24,11 +28,63 @@ interface Row {
   image: string | null;
   publishedAt: string;
   isPublished: boolean;
+  featuredOnHome: boolean;
 }
 
 interface BlogsPageClientProps {
   user: AdminContext;
   rows: Row[];
+}
+
+function FeaturedHomeStarButton({
+  postId,
+  featuredOnHome,
+  title,
+}: {
+  postId: string;
+  featuredOnHome: boolean;
+  title: string;
+}) {
+  const router = useRouter();
+  const [pending, startTransition] = useTransition();
+  const [active, setActive] = useState(featuredOnHome);
+
+  useEffect(() => {
+    setActive(featuredOnHome);
+  }, [featuredOnHome]);
+
+  return (
+    <button
+      type="button"
+      data-admin-row-action
+      disabled={pending}
+      aria-pressed={active}
+      aria-label={active ? `Remove “${title}” from homepage` : `Show “${title}” on homepage`}
+      title={active ? 'Shown on homepage' : 'Show on homepage'}
+      className={cn(
+        'inline-flex h-8 w-8 items-center justify-center rounded-md transition',
+        active
+          ? 'text-bronze-500 hover:bg-bronze-50'
+          : 'text-stone-300 hover:bg-stone-100 hover:text-bronze-400',
+        pending && 'opacity-60',
+      )}
+      onClick={() => {
+        startTransition(async () => {
+          const previous = active;
+          setActive(!previous);
+          const result = await toggleBlogPostFeaturedHomeAction(postId);
+          if (!result.ok) {
+            setActive(previous);
+            return;
+          }
+          setActive(result.featuredOnHome);
+          router.refresh();
+        });
+      }}
+    >
+      <Star size={16} aria-hidden className={active ? 'fill-current' : undefined} />
+    </button>
+  );
 }
 
 export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
@@ -46,9 +102,22 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
 
   const columns: AdminTableColumn<Row>[] = [
     {
+      key: 'home',
+      header: 'Home',
+      width: '4.5rem',
+      align: 'center',
+      cell: (row) => (
+        <FeaturedHomeStarButton
+          postId={row.id}
+          featuredOnHome={row.featuredOnHome}
+          title={row.title}
+        />
+      ),
+    },
+    {
       key: 'post',
       header: 'Post',
-      width: '48%',
+      width: '44%',
       cell: (row) => (
         <div className="flex min-w-0 items-center gap-3">
           <div className="relative h-12 w-[4.5rem] shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-100">
@@ -123,7 +192,7 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
       user={user}
       topbarTitle="Blog"
       title="Blog posts"
-      description="Articles shown on /blog. Create and edit each post on its own page."
+      description="Articles shown on /blog. Star a post to show it in Stories from the Heritage Community on the homepage."
       actions={
         <ButtonLink href="/admin/blog/new" variant="primary">
           <Plus size={14} aria-hidden /> New post
