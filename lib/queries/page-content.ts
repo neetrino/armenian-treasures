@@ -3,7 +3,16 @@ import { prisma } from '@/lib/db';
 import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { resolveLandingImg } from '@/lib/page-content-images';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import {
+  localizedCulturalPortalPageContent,
+  localizedDonationPageContent,
+  localizedKhachaturianContent,
+  localizedKhndzoreskContent,
+  localizedNationalGalleryContent,
+  localizedPartnershipPageContent,
+} from '@/lib/i18n/localized-page-defaults';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { overlayLocalizedDefaults } from '@/lib/i18n/overlay-localized-defaults';
 import { resolveLocalizedJsonContent } from '@/lib/i18n/translatable-json-content';
 import {
   buildDefaultCulturalPortalPageContent,
@@ -44,12 +53,15 @@ function createPageContentGetter<T>(
   slug: PageContentSlug,
   fallback: () => T,
   parse: (value: unknown) => T,
+  localize?: (locale: SiteLocaleCode) => T,
 ): () => Promise<T> {
   const getCachedPageContent = unstable_cache(
     async (locale: SiteLocaleCode) => {
+      const english = fallback();
       const raw = await fetchPageContentRaw(slug);
-      if (raw === null) return fallback();
-      return parse(resolveLocalizedJsonContent(raw, locale));
+      const parsed = raw === null ? english : parse(resolveLocalizedJsonContent(raw, locale));
+      if (!localize || locale === 'EN') return parsed;
+      return overlayLocalizedDefaults(parsed, english, localize(locale), locale);
     },
     [`page-content-${slug}`],
     { tags: [`page-content-${slug}`, 'page-content'], revalidate: 60 },
@@ -65,36 +77,42 @@ export const getDonationPageContent = createPageContentGetter(
   'donation-page',
   buildDefaultDonationPageContent,
   parseDonationPageContent,
+  localizedDonationPageContent,
 );
 
 export const getPartnershipPageContent = createPageContentGetter(
   'partnership-page',
   buildDefaultPartnershipPageContent,
   parsePartnershipPageContent,
+  localizedPartnershipPageContent,
 );
 
 export const getCulturalPortalPageContent = createPageContentGetter(
   'cultural-portal-page',
   buildDefaultCulturalPortalPageContent,
   parseCulturalPortalPageContent,
+  localizedCulturalPortalPageContent,
 );
 
 export const getKhndzoreskPageContent = createPageContentGetter(
   'khndzoresk',
   buildDefaultKhndzoreskContent,
   parseKhndzoreskPageContent,
+  localizedKhndzoreskContent,
 );
 
 export const getKhachaturianPageContent = createPageContentGetter(
   'khachaturian-museum',
   buildDefaultKhachaturianContent,
   parseKhachaturianPageContent,
+  localizedKhachaturianContent,
 );
 
 export const getNationalGalleryPageContent = createPageContentGetter(
   'national-gallery-armenia',
   buildDefaultNationalGalleryContent,
   parseNationalGalleryPageContent,
+  localizedNationalGalleryContent,
 );
 
 export const getContactsPageContent = createPageContentGetter(

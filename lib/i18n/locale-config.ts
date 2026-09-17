@@ -8,17 +8,17 @@ export interface SiteLocaleDefinition {
   flag: string;
   name: string;
   tabLabel: string;
-  /** True when full UI translations ship; English is the only live locale today. */
+  /** True when public UI catalogs ship for this locale. */
   hasTranslations: boolean;
 }
 
 export const SITE_LOCALE_DEFINITIONS: SiteLocaleDefinition[] = [
-  { code: 'HY', flag: '🇦🇲', name: 'Armenian (Eastern)', tabLabel: 'ARM (E)', hasTranslations: false },
-  { code: 'HYW', flag: '🇦🇲', name: 'Armenian (Western)', tabLabel: 'ARM (W)', hasTranslations: false },
+  { code: 'HY', flag: '🇦🇲', name: 'Armenian (Eastern)', tabLabel: 'ARM (E)', hasTranslations: true },
+  { code: 'HYW', flag: '🇦🇲', name: 'Armenian (Western)', tabLabel: 'ARM (W)', hasTranslations: true },
   { code: 'EN', flag: '🇬🇧', name: 'English', tabLabel: 'EN', hasTranslations: true },
-  { code: 'RU', flag: '🇷🇺', name: 'Russian', tabLabel: 'RU', hasTranslations: false },
-  { code: 'FR', flag: '🇫🇷', name: 'French', tabLabel: 'FR', hasTranslations: false },
-  { code: 'PT', flag: '🇵🇹', name: 'Portuguese', tabLabel: 'PT', hasTranslations: false },
+  { code: 'RU', flag: '🇷🇺', name: 'Russian', tabLabel: 'RU', hasTranslations: true },
+  { code: 'FR', flag: '🇫🇷', name: 'French', tabLabel: 'FR', hasTranslations: true },
+  { code: 'PT', flag: '🇵🇹', name: 'Portuguese', tabLabel: 'PT', hasTranslations: true },
 ];
 
 export const DEFAULT_ENABLED_LOCALES: SiteLocaleCode[] = ['EN'];

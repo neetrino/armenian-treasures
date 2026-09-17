@@ -17,8 +17,8 @@ export async function Header() {
     getCurrentSiteLocale(),
   ]);
 
-  const cultureMegaMenu = resolveCultureMegaMenu(menuTree);
-  const projectsMenu = resolveProjectsNavItems();
+  const cultureMegaMenu = resolveCultureMegaMenu(menuTree, locale);
+  const projectsMenu = resolveProjectsNavItems(locale);
 
   return (
     <HeaderThemeProvider>

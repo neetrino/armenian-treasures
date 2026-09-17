@@ -32,7 +32,7 @@ export function HomeSectionHeader({
         </p>
         <h2
           id={id}
-          className="font-cinzel text-[clamp(2rem,3vw,3.25rem)] font-extrabold uppercase leading-[1.03] tracking-[0.01em] text-heritage-gold"
+          className="font-cinzel text-[clamp(2rem,3vw,3.25rem)] font-extrabold uppercase leading-[1.15] tracking-[0.01em] text-heritage-gold [overflow-wrap:anywhere]"
         >
           {title}
         </h2>

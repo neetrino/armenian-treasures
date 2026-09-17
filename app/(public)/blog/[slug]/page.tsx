@@ -21,7 +21,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   return buildPublicPageMetadata({
     title: post.title,
-    description: blogMetaDescription(post.content),
+    description: blogMetaDescription(post.shortDescription || post.content),
     pathname: `/blog/${post.slug}`,
     openGraphImage: post.image ?? undefined,
   });

@@ -5,13 +5,18 @@ import '@/components/sections/partnership/partnership-section.css';
 import { PartnershipApplyCta } from '@/components/sections/partnership/PartnershipApplyCta';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import { collectHighlightedPartnerLogos } from '@/lib/mappers/partner-logos';
 import { getHomeSections, type HomeSectionContentProps } from '@/lib/queries/home';
 import { getPartnershipPageContent } from '@/lib/queries/page-content';
 
 export async function HomePartnersLogosSection({ home }: HomeSectionContentProps) {
   const { partnership } = getHomeSections(home);
-  const { categories } = await getPartnershipPageContent();
+  const [{ categories }, locale] = await Promise.all([
+    getPartnershipPageContent(),
+    getCurrentSiteLocale(),
+  ]);
   const logos = collectHighlightedPartnerLogos(categories);
 
   if (logos.length === 0) {
@@ -28,7 +33,7 @@ export async function HomePartnersLogosSection({ home }: HomeSectionContentProps
         <HomeSectionHeader
           id="home-partners-heading"
           eyebrow={partnership.eyebrow}
-          title="Our Partners"
+          title={uiMessage(locale, 'ourPartners')}
         />
 
         <div className="home-partners-logos">

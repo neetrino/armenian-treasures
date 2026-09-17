@@ -14,13 +14,20 @@ import {
 } from '@/lib/types/home-content';
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
 import { hydrateCultureItemMedia, parseCultureItemMedia, firstTourUrl, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
 import { mediaForLocale, parseMediaByLocale } from '@/lib/culture-item-media-locale';
+import {
+  hydrateBlogContentBlocks,
+  resolveBlogContentBlocks,
+  type ResolvedBlogContentBlock,
+} from '@/lib/blog-content-blocks';
 import type {
   Career,
   BlogPost,
+  BlogCategory,
   ContactMessage,
   CultureItem,
   CultureMenuItem,
@@ -120,20 +127,30 @@ export interface PublicCareerDTO {
   order: number;
 }
 
+export interface PublicBlogCategoryDTO {
+  id: string;
+  slug: string;
+  title: string;
+  order: number;
+}
+
 export interface PublicBlogPostDTO {
   id: string;
   title: string;
   slug: string;
   content: string;
+  shortDescription: string;
   image: string | null;
   headerImage: string | null;
-  backgroundImage: string | null;
   gallery: CultureGalleryBlock[];
   publishedAt: string;
   order: number;
+  category: PublicBlogCategoryDTO | null;
 }
 
-export type PublicBlogPostDetailDTO = PublicBlogPostDTO;
+export interface PublicBlogPostDetailDTO extends PublicBlogPostDTO {
+  blocks: ResolvedBlogContentBlock[];
+}
 
 export interface PublicDonatorDTO {
   id: string;
@@ -160,13 +177,26 @@ export type PublicAboutContentDTO = Omit<AboutContent, 'id' | 'createdAt' | 'upd
   pillars: AboutPillar[];
 };
 
+function resolvePublicMenuTitle(
+  raw: string | null | undefined,
+  slug: string,
+  locale: SiteLocaleCode,
+): string {
+  const localized = resolveLocalizedText(raw, locale).trim();
+  const english = resolveLocalizedText(raw, 'EN').trim();
+  const fromCode = cultureMenuLabel(locale, slug);
+  if (locale === 'EN') return localized || fromCode || '';
+  if (localized && localized !== english) return localized;
+  return fromCode || localized || english;
+}
+
 export function toPublicMenuItem(
   row: CultureMenuItem,
   locale: SiteLocaleCode = 'EN',
 ): PublicCultureMenuItemDTO {
   return {
     id: row.id,
-    title: resolveLocalizedText(row.title, locale),
+    title: resolvePublicMenuTitle(row.title, row.slug, locale),
     slug: row.slug,
     description: resolveLocalizedText(row.description, locale) || null,
     image: row.image,
@@ -236,12 +266,16 @@ export function toPublicCultureItemDetail(
     ...toPublicCultureItem(row, locale),
     menuItem: {
       id: row.menuItem.id,
-      title: resolveLocalizedText(row.menuItem.title, locale),
+      title: resolvePublicMenuTitle(row.menuItem.title, row.menuItem.slug, locale),
       slug: row.menuItem.slug,
       parent: row.menuItem.parent
         ? {
             id: row.menuItem.parent.id,
-            title: resolveLocalizedText(row.menuItem.parent.title, locale),
+            title: resolvePublicMenuTitle(
+              row.menuItem.parent.title,
+              row.menuItem.parent.slug,
+              locale,
+            ),
             slug: row.menuItem.parent.slug,
           }
         : null,
@@ -299,8 +333,22 @@ export function toPublicCareer(
   };
 }
 
+type BlogPostWithCategory = BlogPost & { category?: BlogCategory | null };
+
+export function toPublicBlogCategory(
+  row: BlogCategory,
+  locale: SiteLocaleCode = 'EN',
+): PublicBlogCategoryDTO {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: resolveLocalizedText(row.title, locale),
+    order: row.order,
+  };
+}
+
 export function toPublicBlogPost(
-  row: BlogPost,
+  row: BlogPostWithCategory,
   locale: SiteLocaleCode = 'EN',
 ): PublicBlogPostDTO {
   return {
@@ -308,20 +356,30 @@ export function toPublicBlogPost(
     title: resolveLocalizedText(row.title, locale),
     slug: row.slug,
     content: resolveLocalizedText(row.content, locale),
+    shortDescription: resolveLocalizedText(row.shortDescription, locale),
     image: row.image,
     headerImage: row.headerImage,
-    backgroundImage: row.backgroundImage,
     gallery: parseCultureItemMedia({ gallery: row.galleryContent }).gallery,
     publishedAt: row.publishedAt.toISOString(),
     order: row.order,
+    category: row.category ? toPublicBlogCategory(row.category, locale) : null,
   };
 }
 
 export function toPublicBlogPostDetail(
-  row: BlogPost,
+  row: BlogPostWithCategory,
   locale: SiteLocaleCode = 'EN',
 ): PublicBlogPostDetailDTO {
-  return toPublicBlogPost(row, locale);
+  const post = toPublicBlogPost(row, locale);
+  const stored = hydrateBlogContentBlocks({
+    contentBlocks: row.contentBlocks,
+    content: row.content,
+    galleryContent: row.galleryContent,
+  });
+  return {
+    ...post,
+    blocks: resolveBlogContentBlocks(stored, locale),
+  };
 }
 
 export function toPublicDonator(

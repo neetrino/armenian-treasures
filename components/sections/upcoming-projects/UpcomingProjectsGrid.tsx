@@ -4,16 +4,21 @@ import { mapProjectsToCulturalPortalProjects } from '@/lib/mappers/cultural-port
 import { Stagger, StaggerItem } from '@/components/motion/Stagger';
 import { ProjectPortalCard } from '@/components/project-portal/ProjectPortalCard';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export async function UpcomingProjectsGrid() {
-  const projects = await getPublishedProjects(HOME_UPCOMING_PROJECTS_LIMIT);
+  const [projects, locale] = await Promise.all([
+    getPublishedProjects(HOME_UPCOMING_PROJECTS_LIMIT),
+    getCurrentSiteLocale(),
+  ]);
   const portalProjects = mapProjectsToCulturalPortalProjects(projects);
 
   if (portalProjects.length === 0) {
     return (
       <EmptyState
-        title="No projects published yet"
-        description="Projects will appear here once curators publish them in the admin panel."
+        title={uiMessage(locale, 'noProjectsPublished')}
+        description={uiMessage(locale, 'noProjectsPublishedDescription')}
       />
     );
   }

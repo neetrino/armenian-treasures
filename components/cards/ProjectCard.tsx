@@ -35,7 +35,7 @@ export function ProjectCard({ project, locale }: ProjectCardProps) {
         </div>
         <span
           className={cn(
-            'heritage-cta-clip absolute left-4 top-4 inline-flex h-[22px] items-center border px-3.5 font-cinzel text-[8px] font-extrabold uppercase tracking-[0.2em] sm:text-[9px]',
+            'heritage-cta-clip absolute left-4 top-4 inline-flex h-[22px] items-center justify-center px-5 text-center font-cinzel text-[8px] font-extrabold uppercase leading-none tracking-[0.16em] sm:text-[9px]',
             isFunded
               ? 'border-[rgba(39,198,200,0.35)] bg-[rgba(39,198,200,0.08)] text-heritage-teal'
               : 'border-[rgba(214,184,90,0.3)] bg-[rgba(214,184,90,0.08)] text-heritage-gold',

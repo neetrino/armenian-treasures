@@ -64,18 +64,8 @@
     --color-text-muted: rgba(232, 216, 155, 0.68);
     --shadow-dropdown: 0 26px 70px rgba(0, 0, 0, 0.55);
     --shadow-teal-soft: 0 0 40px rgba(39, 198, 200, 0.08);
-    --font-header: "Times New Roman", Times, var(--font-kelvinch), serif;
-    --font-body: var(--font-kelvinch), "Kelvinch", "Times New Roman", Times, serif;
-    --text-header: 38px;
-    --text-body: 18px;
-    --font-cinzel: var(--font-header);
-    --font-cinzel-deco: var(--font-header);
-    --font-cormorant: var(--font-body);
-    --font-inter: var(--font-body);
-    --font-display: var(--font-header);
-    --font-noto-serif-armenian: var(--font-header);
-    --font-serif-display: var(--font-header);
-    --font-serif-body: var(--font-body);
+    --font-serif-display: var(--font-cinzel), Georgia, serif;
+    --font-serif-body: var(--font-cormorant), Georgia, serif;
     --layout-bg: #faf6ee;
     --surface-bg: #030504;
     --surface-text: rgba(232, 216, 155, 0.82);
@@ -160,23 +150,15 @@
   }
 
   body {
-    @apply antialiased;
+    @apply font-sans antialiased;
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-body);
-    font-size: var(--text-body);
-    line-height: 1.7;
-    font-feature-settings: 'liga', 'kern';
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
     color: var(--foreground);
-    font-family: var(--font-header);
-    font-size: var(--text-header);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    line-height: 1.15;
-    text-transform: uppercase;
     font-feature-settings: 'liga', 'kern';
   }
 
@@ -219,6 +201,10 @@
 
   .heritage-cta-clip {
     clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .text-surface {
@@ -386,95 +372,144 @@
   }
 
   [data-site-hero] h1 {
-    font-family: var(--font-header);
-    font-size: var(--text-header);
-    text-transform: uppercase;
+    font-family: var(--font-cinzel), Georgia, serif;
     color: transparent;
   }
 }
 
-/* Site-wide typefaces: Times New Roman headers (caps, 38) + Kelvinch body (18). */
-html body:not(:has([data-admin])),
-html body:not(:has([data-admin])) p,
-html body:not(:has([data-admin])) li,
-html body:not(:has([data-admin])) .sec-desc,
-html body:not(:has([data-admin])) .hero-sub,
-html body:not(:has([data-admin])) .about-body,
-html body:not(:has([data-admin])) .catalog-rich-text {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  line-height: 1.7;
+html[lang='hy'] .font-cinzel,
+html[lang='hyw'] .font-cinzel,
+html[lang='hy'] [data-site-hero] h1,
+html[lang='hyw'] [data-site-hero] h1,
+html[lang='hy'] .sec-title,
+html[lang='hyw'] .sec-title,
+html[lang='hy'] .khndzoresk-page h1,
+html[lang='hyw'] .khndzoresk-page h1,
+html[lang='hy'] .khndzoresk-page h2,
+html[lang='hyw'] .khndzoresk-page h2,
+html[lang='hy'] .blog-detail-title,
+html[lang='hyw'] .blog-detail-title,
+html[lang='hy'] .blog-section-title,
+html[lang='hyw'] .blog-section-title,
+html[lang='hy'] .blog-card-title,
+html[lang='hyw'] .blog-card-title,
+html[lang='hy'] .contact-direct-title,
+html[lang='hyw'] .contact-direct-title,
+html[lang='hy'] .about-mission-title,
+html[lang='hyw'] .about-mission-title,
+html[lang='hy'] .about-mission-pair-title,
+html[lang='hyw'] .about-mission-pair-title,
+html[lang='hy'] .about-team-name,
+html[lang='hyw'] .about-team-name,
+html[lang='hy'] .about-career-title,
+html[lang='hyw'] .about-career-title,
+html[lang='hy'] .khndzoresk-page .font-cinzel,
+html[lang='hyw'] .khndzoresk-page .font-cinzel,
+html[lang='hy'] .khndzoresk-page h2.font-cinzel,
+html[lang='hyw'] .khndzoresk-page h2.font-cinzel,
+html[lang='hy'] .khndzoresk-page h3.font-cinzel,
+html[lang='hyw'] .khndzoresk-page h3.font-cinzel {
+  font-family: var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
-html body:not(:has([data-admin])) h1,
-html body:not(:has([data-admin])) h2,
-html body:not(:has([data-admin])) h3,
-html body:not(:has([data-admin])) .sec-title,
-html body:not(:has([data-admin])) .hero h1,
-html body:not(:has([data-admin])) [data-site-hero] h1,
-html body:not(:has([data-admin])) .blog-detail-title,
-html body:not(:has([data-admin])) .blog-section-title,
-html body:not(:has([data-admin])) .contact-direct-title,
-html body:not(:has([data-admin])) .about-mission-title,
-html body:not(:has([data-admin])) .about-mission-pair-title,
-html body:not(:has([data-admin])) .about-career-title {
-  font-family: var(--font-header) !important;
-  font-size: var(--text-header) !important;
+/* Override page CSS that forces Cinzel 800 on Armenian locales */
+html[lang='hy'] .khndzoresk-page .contact-direct-title,
+html[lang='hyw'] .khndzoresk-page .contact-direct-title,
+html[lang='hy'] .khndzoresk-page .contact-direct-subtitle,
+html[lang='hyw'] .khndzoresk-page .contact-direct-subtitle,
+html[lang='hy'] .khndzoresk-page .about-mission-title,
+html[lang='hyw'] .khndzoresk-page .about-mission-title,
+html[lang='hy'] .khndzoresk-page .about-mission-pair-title,
+html[lang='hyw'] .khndzoresk-page .about-mission-pair-title,
+html[lang='hy'] .khndzoresk-page .about-team-name,
+html[lang='hyw'] .khndzoresk-page .about-team-name,
+html[lang='hy'] .khndzoresk-page .about-team-role,
+html[lang='hyw'] .khndzoresk-page .about-team-role,
+html[lang='hy'] .khndzoresk-page .about-career-title,
+html[lang='hyw'] .khndzoresk-page .about-career-title,
+html[lang='hy'] .khndzoresk-page .about-career-apply,
+html[lang='hyw'] .khndzoresk-page .about-career-apply {
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), Georgia, serif !important;
   font-weight: 700 !important;
-  letter-spacing: 0.04em !important;
-  line-height: 1.15 !important;
-  text-transform: uppercase !important;
-}
-
-html body:not(:has([data-admin])) .font-cinzel,
-html body:not(:has([data-admin])) .font-display,
-html body:not(:has([data-admin])) .hero-eyebrow,
-html body:not(:has([data-admin])) .hero-slogan,
-html body:not(:has([data-admin])) .btn-gold,
-html body:not(:has([data-admin])) .btn-teal,
-html body:not(:has([data-admin])) .btn-outline,
-html body:not(:has([data-admin])) [data-site-header] nav {
-  font-family: var(--font-header);
-  text-transform: uppercase;
-}
-
-[data-admin] {
-  --font-header: var(--font-cinzel-legacy), Cinzel, Georgia, serif;
-  --font-body: var(--font-inter), Inter, system-ui, sans-serif;
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  letter-spacing: normal;
+  letter-spacing: 0.03em !important;
   text-transform: none;
+  line-height: 1.35 !important;
+  overflow: visible;
 }
 
-[data-admin] h1,
-[data-admin] h2,
-[data-admin] h3,
-[data-admin] h4,
-[data-admin] .font-display {
-  font-family: var(--font-cormorant-legacy), "Cormorant Garamond", Georgia, serif;
-  letter-spacing: normal;
-  text-transform: none;
+html[lang='hy'] .khndzoresk-page .contact-direct-list,
+html[lang='hyw'] .khndzoresk-page .contact-direct-list {
+  font-family: var(--font-kelvinch), var(--font-noto-serif-armenian), Georgia, serif !important;
 }
 
-[data-admin] .font-cinzel {
-  font-family: var(--font-cinzel-legacy), Cinzel, Georgia, serif;
+/* Armenian display titles: Cinzel has no Armenian glyphs; weight 900 synthesizes badly. */
+html[lang='hy'] .khndzoresk-page .hero h1,
+html[lang='hyw'] .khndzoresk-page .hero h1,
+.khndzoresk-page .hero h1.hero-title--hy,
+[data-site-hero] h1.hero-title--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.02 !important;
+  padding-block: 0.02em 0;
+  overflow: visible;
 }
 
-[data-admin] p,
-[data-admin] li,
-[data-admin] td,
-[data-admin] th,
-[data-admin] input,
-[data-admin] textarea,
-[data-admin] select,
-[data-admin] button,
-[data-admin] label {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  letter-spacing: normal;
+html[lang='hy'] .khndzoresk-page .hero h1 span,
+html[lang='hyw'] .khndzoresk-page .hero h1 span,
+.khndzoresk-page .hero h1 .hero-accent--hy {
+  letter-spacing: 0.1em !important;
+  font-weight: 500 !important;
+  line-height: 1.05 !important;
+  padding-block: 0;
+  overflow: visible;
+}
+
+.khndzoresk-page .hero-eyebrow--hy,
+.khndzoresk-page .hero-slogan--hy,
+html[lang='hy'] .khndzoresk-page .hero-eyebrow,
+html[lang='hyw'] .khndzoresk-page .hero-eyebrow,
+html[lang='hy'] .khndzoresk-page .hero-slogan,
+html[lang='hyw'] .khndzoresk-page .hero-slogan {
+  font-family: var(--font-noto-serif-armenian), var(--font-inter), sans-serif;
+  letter-spacing: 0.12em;
+}
+
+.btn--hy,
+.khndzoresk-page .btn--hy,
+html[lang='hy'] .khndzoresk-page .btn-gold,
+html[lang='hyw'] .khndzoresk-page .btn-gold,
+html[lang='hy'] .khndzoresk-page .btn-teal,
+html[lang='hyw'] .khndzoresk-page .btn-teal,
+html[lang='hy'] .khndzoresk-page .btn-outline,
+html[lang='hyw'] .khndzoresk-page .btn-outline,
+html[lang='hy'] .khndzoresk-page a.btn-gold,
+html[lang='hyw'] .khndzoresk-page a.btn-gold,
+html[lang='hy'] .khndzoresk-page a.btn-teal,
+html[lang='hyw'] .khndzoresk-page a.btn-teal,
+html[lang='hy'] .khndzoresk-page a.btn-outline,
+html[lang='hyw'] .khndzoresk-page a.btn-outline {
+  font-family: var(--font-noto-serif-armenian), var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+html[lang='hy'] [data-site-header] nav[aria-label='Primary'] .font-cinzel,
+html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+html[lang='ru'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='ru'] [data-site-header] nav[aria-label='Primary'] button,
+html[lang='fr'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='fr'] [data-site-header] nav[aria-label='Primary'] button,
+html[lang='pt'] [data-site-header] nav[aria-label='Primary'] a,
+html[lang='pt'] [data-site-header] nav[aria-label='Primary'] button {
+  letter-spacing: 0.05em;
 }
 
 html body .hero-slogan + .hero-sub {

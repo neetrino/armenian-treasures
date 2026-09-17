@@ -5,20 +5,18 @@ import {
   DISCOVER_MORE_UPDATES,
   FEATURED_BLOG_COUNT,
 } from '@/lib/constants/featured-treasures';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 import { mapBlogPostsToFeaturedTreasures } from '@/lib/mappers/featured-treasures';
 import { getFeaturedBlogPosts } from '@/lib/queries/blogs';
 import Link from 'next/link';
 
-const SECTION = {
-  eyebrow: 'NEWS & IMPACT',
-  title: 'Stories from the Heritage Community',
-  description:
-    'Impact stories, donor updates, and field notes from the Armenian Treasures network — curated from our news archive.',
-} as const;
-
 export async function HomeNewsFeedSection() {
-  const posts = await getFeaturedBlogPosts(FEATURED_BLOG_COUNT);
-  const treasures = mapBlogPostsToFeaturedTreasures(posts);
+  const [posts, locale] = await Promise.all([
+    getFeaturedBlogPosts(FEATURED_BLOG_COUNT),
+    getCurrentSiteLocale(),
+  ]);
+  const treasures = mapBlogPostsToFeaturedTreasures(posts, locale);
 
   return (
     <section
@@ -33,12 +31,12 @@ export async function HomeNewsFeedSection() {
       <div className="relative z-10 mx-auto w-full max-w-[73.75rem]">
         <HomeSectionHeader
           id="home-news-heading"
-          eyebrow={SECTION.eyebrow}
-          title={SECTION.title}
-          description={SECTION.description}
+          eyebrow={uiMessage(locale, 'newsEyebrow')}
+          title={uiMessage(locale, 'newsTitle')}
+          description={uiMessage(locale, 'newsDescription')}
           action={
             <Link href={DISCOVER_MORE_UPDATES.href} className="btn-gold">
-              {DISCOVER_MORE_UPDATES.label}
+              {uiMessage(locale, 'discoverMoreUpdates')}
             </Link>
           }
         />
@@ -48,12 +46,10 @@ export async function HomeNewsFeedSection() {
         ) : (
           <div className="heritage-card-surface rounded-sm px-6 py-10 text-center">
             <p className="font-cinzel text-sm font-semibold uppercase tracking-[0.14em] text-heritage-gold">
-              News feed launching soon
+              {uiMessage(locale, 'newsFeedSoon')}
             </p>
             <p className="mt-3 font-display text-sm leading-relaxed text-surface-muted">
-              Impact stories, image posts, and donor updates will appear here once published in the
-              admin blog. Video posts and Meta publishing integration are planned for a future
-              release.
+              {uiMessage(locale, 'newsFeedSoonDescription')}
             </p>
             {/* TODO(meta-publishing): one-click Meta publish when API credentials and workflow exist */}
           </div>

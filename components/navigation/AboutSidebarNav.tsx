@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { aboutMenuLabel } from '@/lib/i18n/ui-chrome';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export interface AboutShortcutImages {
   mission?: string | null;
@@ -31,7 +32,7 @@ function imageForHref(href: string, images: AboutShortcutImages): string | null 
 export function AboutSidebarNav({ shortcutImages = {}, locale = 'EN' }: AboutSidebarNavProps) {
   const pathname = usePathname();
   return (
-    <nav aria-label="About sections" className="w-full">
+    <nav aria-label={uiMessage(locale, 'aboutSections')} className="w-full">
       <ul className="flex flex-wrap justify-center gap-2 pb-2 lg:gap-2.5 lg:pb-0">
         {ABOUT_TABS.map((tab) => {
           const active = pathname?.startsWith(tab.href);

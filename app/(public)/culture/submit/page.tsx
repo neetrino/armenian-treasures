@@ -23,6 +23,7 @@ async function SubmitProjectPage() {
   return (
     <CultureFormPageView
       kind="submit"
+      locale={locale}
       title={uiMessage(locale, 'contributeToArchive')}
       description={uiMessage(locale, 'submissionPageDescription')}
       breadcrumb={[{ label: uiMessage(locale, 'addYourProject') }]}

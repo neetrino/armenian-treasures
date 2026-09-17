@@ -160,13 +160,20 @@ export const careerSchema = z.object({
 export const blogPostSchema = z.object({
   title: z.string().trim().min(2).max(160),
   slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9-]+$/),
-  content: z.string().trim().min(10).max(20000),
+  content: z.string().max(100000).optional().or(z.literal('')),
+  shortDescription: z.string().max(800).optional().or(z.literal('')),
   image: optionalString,
   headerImage: optionalString,
-  backgroundImage: optionalString,
+  categoryId: optionalShortString,
   publishedAt: z.coerce.date(),
   order: z.number().int().min(0).default(0),
   isPublished: z.boolean().default(true),
+});
+
+export const blogCategorySchema = z.object({
+  title: z.string().trim().min(2).max(120),
+  slug: z.string().trim().min(1).max(160).regex(/^[a-z0-9-]+$/),
+  order: z.number().int().min(0).default(0),
 });
 
 export const submissionUpdateSchema = z.object({

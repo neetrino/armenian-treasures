@@ -38,6 +38,7 @@ export async function DonationPage() {
         {isSectionEnabled(visibility, 'engine') ? (
           <DonationEngine
             engine={content.page.engine}
+            certificates={content.page.certificates}
             tiers={content.tiers}
             impactRanges={content.impactRanges}
             patronSliderTicks={content.patronSliderTicks}

@@ -13,6 +13,7 @@ import {
   Newspaper,
   Settings,
   HandCoins,
+  Tags,
   UserCircle,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -22,6 +23,19 @@ export interface AdminNavLink {
   label: string;
   description?: string;
   icon: LucideIcon;
+  children?: AdminNavLink[];
+  isActive?: (pathname: string) => boolean;
+}
+
+export function isAdminNavLinkActive(pathname: string, link: AdminNavLink): boolean {
+  if (link.isActive) return link.isActive(pathname);
+  if (link.href === '/admin/dashboard') return pathname === link.href;
+  return pathname.startsWith(link.href);
+}
+
+function isBlogPostsPath(pathname: string): boolean {
+  if (pathname.startsWith('/admin/blog/categories')) return false;
+  return pathname === '/admin/blog' || pathname.startsWith('/admin/blog/');
 }
 
 export interface AdminNavGroup {
@@ -67,6 +81,15 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         label: 'Blog',
         description: 'News articles and stories',
         icon: Newspaper,
+        isActive: isBlogPostsPath,
+        children: [
+          {
+            href: '/admin/blog/categories',
+            label: 'Categories',
+            description: 'Flat blog categories for public tabs',
+            icon: Tags,
+          },
+        ],
       },
     ],
   },

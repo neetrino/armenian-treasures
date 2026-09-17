@@ -1,6 +1,11 @@
 import { CatalogSearchFields } from '@/components/search/CatalogSearchFields';
-import type { CatalogSearchFormModel } from '@/lib/culture-catalog/catalog-filter-options';
+import {
+  localizeCatalogFilterOptions,
+  type CatalogSearchFormModel,
+} from '@/lib/culture-catalog/catalog-filter-options';
 import { catalogSearchHref } from '@/lib/culture-catalog/catalog-search-params';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export function CatalogSearchForm({
   action,
@@ -8,7 +13,9 @@ export function CatalogSearchForm({
   regions,
   periods,
   types,
-}: CatalogSearchFormModel) {
+  locale = 'EN',
+}: CatalogSearchFormModel & { locale?: SiteLocaleCode }) {
+  const localized = localizeCatalogFilterOptions({ regions, periods, types }, locale);
   return (
     <form
       key={catalogSearchHref(filters, action)}
@@ -18,12 +25,13 @@ export function CatalogSearchForm({
     >
       <CatalogSearchFields
         defaults={filters}
-        regions={regions}
-        periods={periods}
-        types={types}
+        regions={localized.regions}
+        periods={localized.periods}
+        types={localized.types}
+        locale={locale}
       />
       <button type="submit" className="btn-gold catalog-search-form__submit">
-        Apply filters
+        {uiMessage(locale, 'applyFilters')}
       </button>
     </form>
   );

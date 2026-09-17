@@ -54,7 +54,9 @@ export async function KhachaturianMuseumPage() {
 
       {isSectionEnabled(visibility, 'stats') ? <KhachaturianMuseumStatsBar stats={content.stats} /> : null}
 
-      {isSectionEnabled(visibility, 'about') ? <KhachaturianMuseumBiography facts={content.facts} /> : null}
+      {isSectionEnabled(visibility, 'about') ? (
+        <KhachaturianMuseumBiography facts={content.facts} locale={locale} />
+      ) : null}
 
       <LandingSectionStack>
 

@@ -14,6 +14,7 @@ interface CultureItemFeaturedFieldsProps {
   featuredOrder?: number | null;
   featuredOrderError?: string;
   label?: string;
+  showCatalogToggle?: boolean;
 }
 
 export function CultureItemFeaturedFields({
@@ -22,18 +23,21 @@ export function CultureItemFeaturedFields({
   featuredOrder = 5,
   featuredOrderError,
   label = 'Featured Highlight',
+  showCatalogToggle = true,
 }: CultureItemFeaturedFieldsProps) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
-        <input
-          type="checkbox"
-          name="featuredOnCatalog"
-          defaultChecked={featuredOnCatalog}
-          className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
-        />
-        Featured Catalog
-      </label>
+      {showCatalogToggle ? (
+        <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
+          <input
+            type="checkbox"
+            name="featuredOnCatalog"
+            defaultChecked={featuredOnCatalog}
+            className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
+          />
+          Featured Catalog
+        </label>
+      ) : null}
       <label className="flex items-center gap-2 pt-7 text-sm text-ink-soft">
         <input
           type="checkbox"

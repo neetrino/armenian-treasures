@@ -4,6 +4,8 @@ import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalog
 import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
 import { resolveCultureCatalogFormContent } from '@/lib/constants/culture-catalog-content';
 import type { MenuNode } from '@/lib/culture-menu';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 interface CultureFormPageViewProps {
   kind: 'submit' | 'new-subcatalog';
@@ -13,6 +15,7 @@ interface CultureFormPageViewProps {
   breadcrumb: { label: string; href?: string }[];
   form: ReactNode;
   aside: ReactNode;
+  locale?: SiteLocaleCode;
 }
 
 export function CultureFormPageView({
@@ -23,8 +26,9 @@ export function CultureFormPageView({
   breadcrumb,
   form,
   aside,
+  locale = 'EN',
 }: CultureFormPageViewProps) {
-  const content = resolveCultureCatalogFormContent(kind, category);
+  const content = resolveCultureCatalogFormContent(kind, category, locale);
 
   return (
     <CultureCatalogShell>
@@ -35,7 +39,7 @@ export function CultureFormPageView({
         slogan={content.slogan}
         description={description}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
-        ctas={[{ label: 'Go to form', href: '#form', variant: 'gold' }]}
+        ctas={[{ label: uiMessage(locale, 'goToForm'), href: '#form', variant: 'gold' }]}
       />
       <div id="form" className="catalog-form-section">
         <div className="catalog-form-panel reveal">{form}</div>

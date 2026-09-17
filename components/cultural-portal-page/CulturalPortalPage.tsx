@@ -35,7 +35,7 @@ async function CulturalPortalPrimarySections() {
     getCurrentSiteLocale(),
   ]);
   const visibility = pageContent.sectionVisibility;
-  const categories = buildCulturePortalCategories(menuTree);
+  const categories = buildCulturePortalCategories(menuTree, locale);
 
   return (
     <>

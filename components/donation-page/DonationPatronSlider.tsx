@@ -1,8 +1,5 @@
 import { RefObject } from 'react';
-import {
-  DONATION_CHECKOUT_UNAVAILABLE,
-  type DonationImpactRange,
-} from '@/lib/constants/donation-page';
+import { type DonationImpactRange } from '@/lib/constants/donation-page';
 import {
   PATRON_MAX,
   PATRON_MIN,
@@ -45,7 +42,6 @@ export function DonationPatronSlider({
 }: DonationPatronSliderProps) {
   const amount = clampPatronAmount(sliderVal);
   const sliderFill = linearFill(amount);
-  const unavailable = DONATION_CHECKOUT_UNAVAILABLE;
 
   return (
     <div ref={cardRef} className="patron-card reveal" aria-label="Custom monthly contribution">
@@ -146,17 +142,17 @@ export function DonationPatronSlider({
         >
           {checkoutEnabled
             ? uiMessageFormat(locale, 'confirmMonthly', { amount: formatAmd(amount) })
-            : unavailable.patronCtaLabel}
+            : uiMessage(locale, 'checkoutComingSoon')}
         </button>
         <div className="patron-cta-note">
           {checkoutEnabled ? (
             <>
-              Secured checkout · Encrypted · Pause or cancel anytime
+              {uiMessage(locale, 'securedCheckoutNote')}
               <br />
-              A receipt is sent immediately — no follow-up solicitation
+              {uiMessage(locale, 'receiptNote')}
             </>
           ) : (
-            unavailable.patronNote
+            uiMessage(locale, 'checkoutNoCard')
           )}
         </div>
       </div>

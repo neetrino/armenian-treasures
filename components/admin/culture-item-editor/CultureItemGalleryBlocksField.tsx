@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 interface CultureItemGalleryBlocksFieldProps {
   items: CultureGalleryBlock[];
   onChange: (items: CultureGalleryBlock[]) => void;
+  includeHiddenFields?: boolean;
 }
 
 function patchItem(
@@ -23,7 +24,11 @@ function patchItem(
   return items.map((item, current) => (current === index ? { ...item, ...patch } : item));
 }
 
-export function CultureItemGalleryBlocksField({ items, onChange }: CultureItemGalleryBlocksFieldProps) {
+export function CultureItemGalleryBlocksField({
+  items,
+  onChange,
+  includeHiddenFields = true,
+}: CultureItemGalleryBlocksFieldProps) {
   const inputId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -67,10 +72,14 @@ export function CultureItemGalleryBlocksField({ items, onChange }: CultureItemGa
 
   return (
     <div className="flex flex-col gap-5">
-      <input type="hidden" name="galleryCount" value={items.length} />
-      {items.map((item, index) => (
-        <GalleryHiddenFields key={item.id} item={item} index={index} />
-      ))}
+      {includeHiddenFields ? (
+        <>
+          <input type="hidden" name="galleryCount" value={items.length} />
+          {items.map((item, index) => (
+            <GalleryHiddenFields key={item.id} item={item} index={index} />
+          ))}
+        </>
+      ) : null}
 
       <div
         role="button"

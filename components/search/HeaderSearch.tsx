@@ -7,6 +7,7 @@ import {
   CATALOG_PERIOD_OPTIONS,
   CATALOG_REGION_OPTIONS,
   CATALOG_TYPE_OPTIONS,
+  localizeCatalogFilterOptions,
 } from '@/lib/culture-catalog/catalog-filter-options';
 import {
   CATALOG_SEARCH_PATH,
@@ -29,6 +30,15 @@ export function HeaderSearch({ locale = 'EN' }: HeaderSearchProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const defaults = parseCatalogSearchParams(searchParams);
+  const { regions: localizedRegions, periods: localizedPeriods, types: localizedTypes } =
+    localizeCatalogFilterOptions(
+      {
+        regions: CATALOG_REGION_OPTIONS,
+        periods: CATALOG_PERIOD_OPTIONS,
+        types: CATALOG_TYPE_OPTIONS,
+      },
+      locale,
+    );
 
   useEffect(() => {
     if (!open) return;
@@ -63,10 +73,11 @@ export function HeaderSearch({ locale = 'EN' }: HeaderSearchProps) {
           <form action={CATALOG_SEARCH_PATH} method="get" className="flex flex-col gap-3">
             <CatalogSearchFields
               defaults={defaults}
-              regions={CATALOG_REGION_OPTIONS}
-              periods={CATALOG_PERIOD_OPTIONS}
-              types={CATALOG_TYPE_OPTIONS}
+              regions={localizedRegions}
+              periods={localizedPeriods}
+              types={localizedTypes}
               variant="header"
+              locale={locale}
             />
             <button
               type="submit"

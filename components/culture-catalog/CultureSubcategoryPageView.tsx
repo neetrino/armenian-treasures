@@ -29,7 +29,7 @@ export function CultureSubcategoryPageView({
   filters,
   locale = 'EN',
 }: CultureSubcategoryPageViewProps) {
-  const content = resolveCultureCatalogContent(subcategory, parent);
+  const content = resolveCultureCatalogContent(subcategory, parent, { locale });
   const visibility = content.sectionVisibility;
   const mapItems = filterMappableItems(items);
   const visibleItems = filterCatalogItems(items, filters);

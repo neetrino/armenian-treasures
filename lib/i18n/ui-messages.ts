@@ -7,11 +7,16 @@ import {
   type DonationMessageKey,
   type PartnershipMessageKey,
 } from '@/lib/i18n/messages/donation-partnership';
+import { FILTER_MESSAGES, type FilterMessageKey } from '@/lib/i18n/messages/filters';
 import { FORM_MESSAGES, type FormMessageKey } from '@/lib/i18n/messages/forms';
+import { HOME_MESSAGES, type HomeMessageKey } from '@/lib/i18n/messages/home';
 import { MAP_MESSAGES, type MapMessageKey } from '@/lib/i18n/messages/map';
+import { MENU_MESSAGES, type MenuMessageKey } from '@/lib/i18n/messages/menu';
 import { NAV_MESSAGES, type NavMessageKey } from '@/lib/i18n/messages/nav';
 import { PAGE_MESSAGES, type PageMessageKey } from '@/lib/i18n/messages/pages';
+import { LANDING_COPY_MESSAGES, type LandingCopyMessageKey } from '@/lib/i18n/messages/landing-copy';
 import { MICROSITE_MESSAGES, type MicrositeMessageKey } from '@/lib/i18n/messages/microsites';
+import { PAGE_DEFAULT_MESSAGES, type PageDefaultMessageKey } from '@/lib/i18n/messages/page-defaults';
 
 export const UI_MESSAGES = {
   ...NAV_MESSAGES,
@@ -22,6 +27,11 @@ export const UI_MESSAGES = {
   ...DONATION_MESSAGES,
   ...PARTNERSHIP_MESSAGES,
   ...MICROSITE_MESSAGES,
+  ...MENU_MESSAGES,
+  ...HOME_MESSAGES,
+  ...FILTER_MESSAGES,
+  ...LANDING_COPY_MESSAGES,
+  ...PAGE_DEFAULT_MESSAGES,
 } as const;
 
 export type UiMessageKey =
@@ -32,7 +42,12 @@ export type UiMessageKey =
   | PageMessageKey
   | DonationMessageKey
   | PartnershipMessageKey
-  | MicrositeMessageKey;
+  | MicrositeMessageKey
+  | MenuMessageKey
+  | HomeMessageKey
+  | FilterMessageKey
+  | LandingCopyMessageKey
+  | PageDefaultMessageKey;
 
 export function uiMessage(locale: SiteLocaleCode, key: UiMessageKey): string {
   return pickLocale(UI_MESSAGES[key], locale);

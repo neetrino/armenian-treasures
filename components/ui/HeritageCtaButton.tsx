@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
 import { cn } from '@/lib/utils';
 
 type HeritageCtaVariant = 'gold' | 'teal';
@@ -31,21 +32,26 @@ export function HeritageCtaButton({
   variant = 'gold',
   className,
 }: HeritageCtaButtonProps) {
+  const isArmenian = containsArmenianScript(label);
+
   return (
     <Link
       href={href}
       className={cn(
-        'heritage-cta-clip inline-flex h-[54px] w-full max-w-[320px] items-center justify-center',
-        'whitespace-nowrap px-[34px] font-cinzel text-xs font-extrabold uppercase leading-none tracking-[0.14em]',
+        'heritage-cta-clip inline-flex min-h-[54px] w-full max-w-full items-center justify-center',
+        'px-[max(2.75rem,calc(7%+14px))] py-3 text-center font-cinzel font-extrabold uppercase',
+        isArmenian
+          ? 'whitespace-normal text-[11px] leading-snug tracking-[0.06em]'
+          : 'whitespace-nowrap text-xs leading-none tracking-[0.14em]',
         'transition-[transform,box-shadow,filter] duration-200 ease-out motion-reduce:transition-none',
         'hover:-translate-y-0.5 hover:brightness-[1.08] active:translate-y-0 motion-reduce:hover:translate-y-0',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ring-offset)]',
-        'sm:min-w-[315px] sm:max-w-[340px] sm:w-auto',
+        'sm:w-auto sm:min-w-[315px] sm:max-w-[min(100%,42rem)]',
         VARIANT_STYLES[variant],
         className,
       )}
     >
-      {label}
+      <span className="block w-full text-center">{label}</span>
     </Link>
   );
 }

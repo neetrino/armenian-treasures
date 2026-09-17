@@ -123,12 +123,13 @@ describe('featured treasures mapping', () => {
       title: `Community ${index}`,
       slug: `community-${index}`,
       content: `Update ${index} from the field.`,
+      shortDescription: `Short update ${index}.`,
       image: `/images/blog/${index}.jpg`,
       headerImage: null,
-      backgroundImage: null,
       gallery: [],
       publishedAt: '2026-08-18T00:00:00.000Z',
       order: index,
+      category: null,
     }));
     const treasures = mapBlogPostsToFeaturedTreasures(posts);
 

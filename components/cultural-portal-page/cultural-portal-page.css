@@ -46,7 +46,8 @@
 }
 
 .khndzoresk-page .cat-card-sub {
-  max-width: 22ch;
+  max-width: 100%;
+  text-align: center;
 }
 
 .khndzoresk-page .cat-arrow {

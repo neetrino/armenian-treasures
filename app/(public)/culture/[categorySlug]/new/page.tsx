@@ -41,6 +41,7 @@ async function NewSubcategoryFormPage(props: PageProps) {
   return (
     <CultureFormPageView
       kind="new-subcatalog"
+      locale={locale}
       category={node}
       title={uiMessage(locale, 'addNewSubcatalog')}
       description={uiMessageFormat(locale, 'proposeSubcatalogDescription', {

@@ -1013,8 +1013,14 @@
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.25;
   padding-top: 0.875rem;
   padding-bottom: 0.875rem;
+  padding-inline: 2.25rem;
   clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
   box-shadow: 0 8px 28px rgba(201, 168, 76, 0.32);
   transition:

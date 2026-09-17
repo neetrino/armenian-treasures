@@ -6,6 +6,7 @@ import { parseCatalogSearchParams } from '@/lib/culture-catalog/catalog-search-p
 import { getPublishedCultureItems } from '@/lib/queries/culture-items';
 import { buildPublicPageMetadata } from '@/lib/seo/metadata';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
+import { uiMessage } from '@/lib/i18n/ui-messages';
 
 export const revalidate = 60;
 
@@ -14,10 +15,10 @@ interface SearchPageProps {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getCurrentSiteLocale();
   return buildPublicPageMetadata({
-    title: 'Search the archive — Armenian Treasures',
-    description:
-      'Search Armenian heritage entries by name, region, period, and type.',
+    title: uiMessage(locale, 'searchMetaTitle'),
+    description: uiMessage(locale, 'searchMetaDescription'),
     pathname: '/search',
   });
 }

@@ -12,14 +12,6 @@ import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 
-const RESULTS_CONTENT = {
-  label: 'Catalog results',
-  title: 'Matching heritage entries',
-  description: 'Filter by region, period, and type, or search by name.',
-  submitPrompt: '',
-  emptyMessage: 'No entries match these filters.',
-};
-
 interface CultureSearchPageViewProps {
   items: PublicCultureItemDTO[];
   filters: CatalogSearchFilters;
@@ -57,11 +49,18 @@ export function CultureSearchPageView({
           regions={regions}
           periods={periods}
           types={types}
+          locale={locale}
         />
         {items.length > 0 ? (
           <CultureCatalogItemGrid
             items={items}
-            content={RESULTS_CONTENT}
+            content={{
+              label: uiMessage(locale, 'catalogResults'),
+              title: uiMessage(locale, 'matchingHeritageEntries'),
+              description: uiMessage(locale, 'filterByRegionPeriodType'),
+              submitPrompt: '',
+              emptyMessage: uiMessage(locale, 'noEntriesMatchFilters'),
+            }}
             sectionId="matches"
             locale={locale}
           />

@@ -19,4 +19,14 @@ describe('toBlogRenderHtml', () => {
     expect(html).toContain('<h2 class="blog-detail-prose__heading">Title</h2>');
     expect(html).toContain('<p>Body text.</p>');
   });
+
+  it('strips pasted editor colors so public copy stays readable on dark pages', () => {
+    const html = toBlogRenderHtml(
+      '<p style="color: rgb(26, 23, 20)"><span style="color:#000000">Body text.</span></p>',
+    );
+
+    expect(html).not.toContain('style=');
+    expect(html).not.toContain('rgb(26, 23, 20)');
+    expect(html).toContain('Body text.');
+  });
 });

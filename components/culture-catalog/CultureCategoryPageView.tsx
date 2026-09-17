@@ -76,8 +76,8 @@ function CultureCategoryLeafPage({
 }) {
   const visibility = content.sectionVisibility;
   const stats = buildCultureCatalogCategoryStats(0, items.length, {
-    entries: content.statLabels.entries,
-    regions: 'Total Entries',
+    ...content.statLabels,
+    regions: uiMessage(locale, 'totalEntries'),
   });
   const mapItems = filterMappableItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
@@ -137,7 +137,10 @@ export function CultureCategoryPageView({
   locale = 'EN',
 }: CultureCategoryPageViewProps) {
   const hasChildren = subcategories.length > 0;
-  const content = resolveCultureCatalogContent(category, undefined, { hasSubcategories: hasChildren });
+  const content = resolveCultureCatalogContent(category, undefined, {
+    hasSubcategories: hasChildren,
+    locale,
+  });
 
   if (hasChildren) {
     return (
