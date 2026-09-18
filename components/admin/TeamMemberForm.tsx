@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { CultureItemEditorLocaleTabs } from '@/components/admin/culture-item-editor/CultureItemEditorLocaleTabs';
 import { AdminImageDropzoneField } from '@/components/forms/fields/AdminImageDropzoneField';
 import { AdminLocaleAwareTextField } from '@/components/forms/fields/AdminLocaleAwareTextField';
-import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import {
   createTeamMemberAction,
@@ -23,11 +22,9 @@ const INITIAL: TeamFormState = { status: 'idle' };
 
 export interface TeamMemberFormInitial {
   name: string;
-  initials: string;
   position: string;
   bio: string;
   image: string;
-  order: number;
   isActive: boolean;
 }
 
@@ -137,24 +134,15 @@ export function TeamMemberForm({ mode, itemId, initial, onSuccess, onCancel }: T
       </div>
 
       <div className="grid gap-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:grid-cols-2 sm:p-5">
-        <TextField
-          label="Initials"
-          name="initials"
-          required
-          maxLength={4}
-          defaultValue={initial?.initials ?? ''}
-          error={state.fieldErrors?.initials}
-        />
-        <TextField label="Order" name="order" type="number" min={0} defaultValue={initial?.order ?? 0} />
         <AdminImageDropzoneField
           label="Profile photo"
           name="image"
           folder="culture"
           layout="card"
           defaultValue={initial?.image ?? ''}
-          hint="Upload a square portrait. Leave empty to show initials only."
+          hint="Upload a square portrait."
         />
-        <label className="flex items-center gap-2 pt-6 text-sm text-ink-soft">
+        <label className="flex items-center gap-2 self-end pb-1 text-sm text-ink-soft">
           <input
             type="checkbox"
             name="isActive"
