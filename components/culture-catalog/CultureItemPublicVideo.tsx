@@ -10,9 +10,14 @@ import type { CultureVideoBlock } from '@/lib/culture-item-media';
 interface CultureItemPublicVideoProps {
   video: CultureVideoBlock;
   fallbackTitle: string;
+  showTitle?: boolean;
 }
 
-export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPublicVideoProps) {
+export function CultureItemPublicVideo({
+  video,
+  fallbackTitle,
+  showTitle = true,
+}: CultureItemPublicVideoProps) {
   const title = video.title || fallbackTitle;
   const preview = video.previewImage.trim() || toYouTubeThumbnailSrc(video.url) || '';
   const embedSrc = toYouTubeEmbedSrc(video.url);
@@ -31,14 +36,16 @@ export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPubl
             referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
-        <a
-          href={video.url}
-          className="catalog-video-shortcut__label catalog-video-shortcut__label--link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {title}
-        </a>
+        {showTitle ? (
+          <a
+            href={video.url}
+            className="catalog-video-shortcut__label catalog-video-shortcut__label--link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {title}
+          </a>
+        ) : null}
       </div>
     );
   }
@@ -67,7 +74,7 @@ export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPubl
             <Play size={28} aria-hidden />
           </span>
         </span>
-        <span className="catalog-video-shortcut__label">{title}</span>
+        {showTitle ? <span className="catalog-video-shortcut__label">{title}</span> : null}
       </button>
     );
   }
@@ -78,6 +85,7 @@ export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPubl
       className="catalog-video-shortcut reveal"
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={title}
     >
       <span className="catalog-video-shortcut__media">
         {preview ? (
@@ -95,7 +103,7 @@ export function CultureItemPublicVideo({ video, fallbackTitle }: CultureItemPubl
           <Play size={28} aria-hidden />
         </span>
       </span>
-      <span className="catalog-video-shortcut__label">{title}</span>
+      {showTitle ? <span className="catalog-video-shortcut__label">{title}</span> : null}
     </a>
   );
 }

@@ -121,21 +121,22 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <div className="sticky top-0 z-30 flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-white/95 p-4 shadow-sm backdrop-blur-md sm:p-5">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <h1 className="font-display text-2xl text-ink sm:text-3xl">
-            {mode === 'create' ? 'Create post' : 'Edit post'}
-          </h1>
-          <CultureItemEditorLocaleTabs
-            activeLocale={activeLocale}
-            completedLocales={completedLocales}
-            tabErrors={tabErrors}
-            onChange={setActiveLocale}
-          />
-        </div>
+      <div className="flex flex-col gap-2">
+        <h1 className="font-display text-2xl text-ink sm:text-3xl">
+          {mode === 'create' ? 'Create post' : 'Edit post'}
+        </h1>
         <p className="text-sm text-ink-muted">
           Fill any language. English is optional. Switching tabs keeps every locale.
         </p>
+      </div>
+
+      <div className="sticky top-0 z-30 flex flex-col gap-3 rounded-2xl border border-stone-200/80 bg-white/95 p-4 shadow-sm backdrop-blur-md sm:p-5">
+        <CultureItemEditorLocaleTabs
+          activeLocale={activeLocale}
+          completedLocales={completedLocales}
+          tabErrors={tabErrors}
+          onChange={setActiveLocale}
+        />
         {state.status === 'error' && state.message ? (
           <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
         ) : null}
@@ -215,7 +216,7 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
 
       <div className="grid gap-5 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
         <AdminImageDropzoneField
-          label="Cover image"
+          label="Card image"
           name="image"
           folder="culture"
           layout="banner"
@@ -223,7 +224,7 @@ export function BlogPostForm({ mode, itemId, initial, categories }: BlogPostForm
           hint="Cover visual on blog cards and listings."
         />
         <AdminImageDropzoneField
-          label="Article header"
+          label="Post cover"
           name="headerImage"
           folder="culture"
           layout="banner"

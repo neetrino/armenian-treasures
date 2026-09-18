@@ -29,4 +29,14 @@ describe('toBlogRenderHtml', () => {
     expect(html).not.toContain('rgb(26, 23, 20)');
     expect(html).toContain('Body text.');
   });
+
+  it('keeps text-align while stripping other inline styles', () => {
+    const html = toBlogRenderHtml(
+      '<p style="color:#000; text-align: center">Centered body.</p>',
+    );
+
+    expect(html).toContain('style="text-align: center"');
+    expect(html).not.toContain('color');
+    expect(html).toContain('Centered body.');
+  });
 });

@@ -32,11 +32,9 @@ async function EditTeamMemberPage(props: PageProps) {
           itemId={member.id}
           initial={{
             name: member.name,
-            initials: member.initials,
             position: member.position,
             bio: member.bio ?? '',
             image: member.image ?? '',
-            order: member.order,
             isActive: member.isActive,
           }}
         />

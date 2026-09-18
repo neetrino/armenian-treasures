@@ -5,7 +5,8 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateTeamCache } from '@/lib/cache/revalidation';
-import { teamMemberSchema } from '@/lib/validation';
+import { teamMemberReorderSchema, teamMemberSchema } from '@/lib/validation';
+import { getInitials } from '@/lib/utils';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -18,17 +19,20 @@ export interface TeamFormState {
   fieldErrors?: Record<string, string>;
 }
 
+export type ReorderTeamResult = { ok: true } | { ok: false; message: string };
+
 function parseForm(formData: FormData) {
   const nameI18n = readLocalizedTextFromFormData(formData, 'name');
   const positionI18n = readLocalizedTextFromFormData(formData, 'position');
   const bioI18n = readLocalizedTextFromFormData(formData, 'bio');
+  const displayName = pickDefaultLocaleText(nameI18n);
   const parsed = teamMemberSchema.safeParse({
-    name: pickDefaultLocaleText(nameI18n),
-    initials: formData.get('initials')?.toString() ?? '',
+    name: displayName,
+    initials: getInitials(displayName) || 'AT',
     position: pickDefaultLocaleText(positionI18n),
     bio: pickDefaultLocaleText(bioI18n),
     image: formData.get('image')?.toString() ?? '',
-    order: Number(formData.get('order') ?? 0),
+    order: 0,
     isActive: formData.get('isActive') === 'on',
   });
   if (!parsed.success) {
@@ -43,10 +47,11 @@ function parseForm(formData: FormData) {
     }
     return { ok: false as const, errors };
   }
+  const { order: _order, ...rest } = parsed.data;
   return {
     ok: true as const,
     data: {
-      ...parsed.data,
+      ...rest,
       name: encodeTranslatableText(nameI18n),
       position: encodeTranslatableText(positionI18n),
       bio: encodeTranslatableText(bioI18n) || null,
@@ -63,7 +68,13 @@ export async function createTeamMemberAction(_p: TeamFormState, formData: FormDa
   await requireAdmin();
   const parsed = parseForm(formData);
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
-  await prisma.teamMember.create({ data: parsed.data });
+  const maxOrder = await prisma.teamMember.aggregate({ _max: { order: true } });
+  await prisma.teamMember.create({
+    data: {
+      ...parsed.data,
+      order: (maxOrder._max.order ?? -1) + 1,
+    },
+  });
   revalidate();
   return { status: 'success' };
 }
@@ -79,6 +90,30 @@ export async function updateTeamMemberAction(
   await prisma.teamMember.update({ where: { id }, data: parsed.data });
   revalidate();
   return { status: 'success' };
+}
+
+export async function reorderTeamMembersAction(orderedIds: string[]): Promise<ReorderTeamResult> {
+  await requireAdmin();
+  const parsed = teamMemberReorderSchema.safeParse({ order: orderedIds });
+  if (!parsed.success) {
+    return { ok: false, message: 'Invalid reorder payload.' };
+  }
+
+  const members = await prisma.teamMember.findMany({ select: { id: true } });
+  const memberIds = new Set(members.map((member) => member.id));
+  if (orderedIds.length !== members.length || !orderedIds.every((id) => memberIds.has(id))) {
+    return { ok: false, message: 'Order must include all team members.' };
+  }
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) => prisma.teamMember.update({ where: { id }, data: { order: index } })),
+    );
+    revalidate();
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Could not save order. Please try again.' };
+  }
 }
 
 export async function deleteTeamMemberAction(id: string): Promise<AdminDeleteResult> {

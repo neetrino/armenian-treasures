@@ -1,9 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Link2, List, ListOrdered, Pilcrow } from 'lucide-react';
+import {
+  AlignCenter,
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  Link2,
+  List,
+  ListOrdered,
+  Pilcrow,
+} from 'lucide-react';
 import { Label } from '@/components/ui/Label';
 import { cn } from '@/lib/utils';
+
+type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 interface RichTextFieldProps {
   label: string;
@@ -26,6 +37,13 @@ function toolbarButtonClass(active: boolean): string {
   );
 }
 
+const ALIGN_COMMANDS: Record<TextAlign, string> = {
+  left: 'justifyLeft',
+  center: 'justifyCenter',
+  right: 'justifyRight',
+  justify: 'justifyFull',
+};
+
 export function RichTextField({
   label,
   name,
@@ -42,6 +60,7 @@ export function RichTextField({
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
+  const [textAlign, setTextAlign] = useState<TextAlign>('left');
   const isControlled = typeof value === 'string';
   const currentHtml = isControlled ? value : html;
 
@@ -64,17 +83,25 @@ export function RichTextField({
     onValueChange?.(next);
   }
 
+  function readActiveAlign(): TextAlign {
+    if (document.queryCommandState('justifyCenter')) return 'center';
+    if (document.queryCommandState('justifyRight')) return 'right';
+    if (document.queryCommandState('justifyFull')) return 'justify';
+    return 'left';
+  }
+
   function updateToolbarState() {
     setIsBold(document.queryCommandState('bold'));
     setIsItalic(document.queryCommandState('italic'));
     setIsUnderline(document.queryCommandState('underline'));
+    setTextAlign(readActiveAlign());
   }
 
-  function runCommand(command: string, value?: string) {
+  function runCommand(command: string, commandValue?: string) {
     const editor = editorRef.current;
     if (!editor) return;
     editor.focus();
-    document.execCommand(command, false, value);
+    document.execCommand(command, false, commandValue);
     commitHtml(editor.innerHTML);
     updateToolbarState();
   }
@@ -113,6 +140,43 @@ export function RichTextField({
           </button>
           <button type="button" className={toolbarButtonClass(false)} onMouseDown={(event) => event.preventDefault()} onClick={applyLink} aria-label="Insert link">
             <Link2 size={14} aria-hidden />
+          </button>
+          <span className="mx-0.5 h-5 w-px bg-stone-200" aria-hidden />
+          <button
+            type="button"
+            className={toolbarButtonClass(textAlign === 'left')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => runCommand(ALIGN_COMMANDS.left)}
+            aria-label="Align left"
+          >
+            <AlignLeft size={14} aria-hidden />
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass(textAlign === 'center')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => runCommand(ALIGN_COMMANDS.center)}
+            aria-label="Align center"
+          >
+            <AlignCenter size={14} aria-hidden />
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass(textAlign === 'right')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => runCommand(ALIGN_COMMANDS.right)}
+            aria-label="Align right"
+          >
+            <AlignRight size={14} aria-hidden />
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass(textAlign === 'justify')}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => runCommand(ALIGN_COMMANDS.justify)}
+            aria-label="Justify"
+          >
+            <AlignJustify size={14} aria-hidden />
           </button>
         </div>
 

@@ -24,10 +24,21 @@ function stripUnsafeBlocks(html: string): string {
     .replace(/<(iframe|object|embed|meta|link)[^>]*>/gi, '');
 }
 
+function sanitizeInlineStyle(styleValue: string): string | null {
+  const alignMatch = /text-align\s*:\s*(left|center|right|justify)\b/i.exec(styleValue);
+  if (!alignMatch?.[1]) return null;
+  return `text-align: ${alignMatch[1].toLowerCase()}`;
+}
+
 function stripUnsafeAttributes(html: string): string {
   return html
     .replace(/\son\w+=(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(/\s(href|src)\s*=\s*(['"])javascript:[\s\S]*?\2/gi, ' $1="#"');
+    .replace(/\s(href|src)\s*=\s*(['"])javascript:[\s\S]*?\2/gi, ' $1="#"')
+    .replace(/\sstyle\s*=\s*("[^"]*"|'[^']*')/gi, (_match, quoted: string) => {
+      const raw = quoted.slice(1, -1);
+      const safe = sanitizeInlineStyle(raw);
+      return safe ? ` style="${safe}"` : '';
+    });
 }
 
 export function toSafeRichTextHtml(value: string): string {

@@ -254,7 +254,7 @@
 }
 
 .blog-detail-prose {
-  max-width: 42rem;
+  max-width: min(56rem, 100%);
   margin: 0 auto;
   font-family: var(--font-cormorant), var(--font-display), serif;
   font-size: clamp(1.125rem, 1.65vw, 1.25rem);
@@ -333,6 +333,7 @@
   font-weight: 600;
   line-height: 1.28;
   letter-spacing: 0.06em;
+  text-align: center;
   text-transform: uppercase;
   color: var(--surface, #f5f0e6);
   text-shadow: 0 0 40px rgba(201, 168, 76, 0.12);
@@ -472,7 +473,13 @@
 .blog-detail-blocks {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 3vw, 2.25rem);
+  gap: clamp(2.25rem, 4.5vw, 3.5rem);
+}
+
+.blog-detail-gallery + .blog-detail-prose__heading,
+.blog-detail-photo + .blog-detail-prose__heading,
+.blog-detail-embed + .blog-detail-prose__heading {
+  margin-top: clamp(0.75rem, 2vw, 1.5rem);
 }
 
 .blog-detail-photo {

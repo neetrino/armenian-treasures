@@ -18,7 +18,7 @@ export function isProjectsNavActive(pathname: string): boolean {
 }
 
 const NAV_ITEM_BASE =
-  'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent px-0.5 py-2 font-cinzel text-[clamp(0.625rem,0.72vw,0.75rem)] font-semibold uppercase leading-[1.2] tracking-[0.08em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none xl:text-[0.8125rem] xl:tracking-[0.1em]';
+  'relative inline-flex shrink-0 items-center whitespace-nowrap border-none bg-transparent px-0.5 py-2 font-cinzel text-[12px] font-semibold uppercase leading-[1.2] tracking-[0.1em] transition-[color,text-shadow] duration-200 ease-out cursor-pointer focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[rgba(39,198,200,0.75)] motion-reduce:transition-none';
 
 export function navItemClassName(active: boolean, open = false): string {
   const isHighlighted = active || open;

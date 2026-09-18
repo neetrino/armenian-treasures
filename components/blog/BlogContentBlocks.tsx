@@ -55,8 +55,9 @@ export function BlogContentBlocks({ blocks, title, locale }: BlogContentBlocksPr
             return (
               <div key={block.id} className="blog-detail-embed">
                 <CultureItemPublicVideo
-                  video={{ id: block.id, title, url: block.url, previewImage: '' }}
+                  video={{ id: block.id, title: '', url: block.url, previewImage: '' }}
                   fallbackTitle={title}
+                  showTitle={false}
                 />
               </div>
             );
