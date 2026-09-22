@@ -23,9 +23,16 @@ import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 interface Props {
   initial: Record<string, unknown>;
   locale: SiteLocaleCode;
+  allLocaleDrafts?: Partial<Record<SiteLocaleCode, Record<string, unknown>>>;
+  onContentChange?: (content: Record<string, unknown>) => void;
 }
 
-export function CulturalPortalPageContentForm({ initial, locale }: Props) {
+export function CulturalPortalPageContentForm({
+  initial,
+  locale,
+  allLocaleDrafts,
+  onContentChange,
+}: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseCulturalPortalPageContent(initial)),
   );
@@ -50,7 +57,13 @@ export function CulturalPortalPageContentForm({ initial, locale }: Props) {
   const partnershipSection = readRecord(content.HOME_PARTNERSHIP_SECTION);
 
   return (
-    <PageContentFormShell slug="cultural-portal-page" content={content} locale={locale}>
+    <PageContentFormShell
+      slug="cultural-portal-page"
+      content={content}
+      locale={locale}
+      allLocaleDrafts={allLocaleDrafts}
+      onContentChange={onContentChange}
+    >
       <SectionVisibilityPanel
         sections={CULTURAL_PORTAL_SECTION_TOGGLES}
         visibility={content.sectionVisibility as Record<string, boolean | undefined> | undefined}

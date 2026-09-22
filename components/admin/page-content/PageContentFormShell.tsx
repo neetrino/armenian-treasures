@@ -16,6 +16,8 @@ interface PageContentFormShellProps {
   slug: PageContentSlug;
   content: Record<string, unknown>;
   locale?: SiteLocaleCode;
+  allLocaleDrafts?: Partial<Record<SiteLocaleCode, Record<string, unknown>>>;
+  onContentChange?: (content: Record<string, unknown>) => void;
   onSubmit?: (event: FormEvent<HTMLFormElement>) => boolean | void;
   children: ReactNode;
 }
@@ -24,6 +26,8 @@ export function PageContentFormShell({
   slug,
   content,
   locale = 'EN',
+  allLocaleDrafts,
+  onContentChange,
   onSubmit,
   children,
 }: PageContentFormShellProps) {
@@ -39,16 +43,26 @@ export function PageContentFormShell({
     router.refresh();
   }, [router, state.message, state.status]);
 
+  useEffect(() => {
+    onContentChange?.(content);
+  }, [content, onContentChange]);
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     if (onSubmit?.(event) === false) {
       event.preventDefault();
     }
   };
 
+  const draftsForSubmit = {
+    ...(allLocaleDrafts ?? {}),
+    [locale]: content,
+  };
+
   return (
     <form action={formAction} onSubmit={handleSubmit} className="flex flex-col gap-6">
       <input type="hidden" name="locale" value={locale} readOnly />
       <input type="hidden" name="contentJson" value={JSON.stringify(content)} readOnly />
+      <input type="hidden" name="allLocalesJson" value={JSON.stringify(draftsForSubmit)} readOnly />
       {children}
       {state.status === 'error' && state.message ? (
         <p className="rounded-md bg-pomegranate/10 px-3 py-2 text-sm text-pomegranate">{state.message}</p>
