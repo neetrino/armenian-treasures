@@ -51,6 +51,8 @@ interface Props {
   slug: LandingSlug;
   initial: Record<string, unknown>;
   locale: SiteLocaleCode;
+  allLocaleDrafts?: Partial<Record<SiteLocaleCode, Record<string, unknown>>>;
+  onContentChange?: (content: Record<string, unknown>) => void;
 }
 
 function parseLandingContent(slug: LandingSlug, initial: Record<string, unknown>): MutablePageContent {
@@ -91,7 +93,13 @@ function KhndzoreskGallerySection({
   );
 }
 
-export function LandingPageContentForm({ slug, initial, locale }: Props) {
+export function LandingPageContentForm({
+  slug,
+  initial,
+  locale,
+  allLocaleDrafts,
+  onContentChange,
+}: Props) {
   const [content, setContent] = useState<MutablePageContent>(() => parseLandingContent(slug, initial));
 
   const update = (patch: MutablePageContent): void => {
@@ -104,7 +112,13 @@ export function LandingPageContentForm({ slug, initial, locale }: Props) {
   const tickets = readArray<{ label: string; title: string; price: string; sub: string }>(content.tickets);
 
   return (
-    <PageContentFormShell slug={slug} content={content} locale={locale}>
+    <PageContentFormShell
+      slug={slug}
+      content={content}
+      locale={locale}
+      allLocaleDrafts={allLocaleDrafts}
+      onContentChange={onContentChange}
+    >
       <SectionVisibilityPanel
         sections={
           slug === 'khndzoresk'

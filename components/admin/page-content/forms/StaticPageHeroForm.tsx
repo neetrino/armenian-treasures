@@ -18,9 +18,17 @@ interface Props {
   slug: StaticHeroSlug;
   initial: Record<string, unknown>;
   locale: SiteLocaleCode;
+  allLocaleDrafts?: Partial<Record<SiteLocaleCode, Record<string, unknown>>>;
+  onContentChange?: (content: Record<string, unknown>) => void;
 }
 
-export function StaticPageHeroForm({ slug, initial, locale }: Props) {
+export function StaticPageHeroForm({
+  slug,
+  initial,
+  locale,
+  allLocaleDrafts,
+  onContentChange,
+}: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseStaticPageHeroContent(initial)),
   );
@@ -30,7 +38,13 @@ export function StaticPageHeroForm({ slug, initial, locale }: Props) {
   };
 
   return (
-    <PageContentFormShell slug={slug as PageContentSlug} content={content} locale={locale}>
+    <PageContentFormShell
+      slug={slug as PageContentSlug}
+      content={content}
+      locale={locale}
+      allLocaleDrafts={allLocaleDrafts}
+      onContentChange={onContentChange}
+    >
       <HeroBannerImageField
         value={readString(content.heroImage)}
         onChange={(heroImage) => update({ heroImage })}

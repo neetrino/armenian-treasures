@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 import { AdminFormTabs } from '@/components/admin/AdminFormTabs';
-import { SITE_LOCALE_DEFINITIONS, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { SITE_LOCALE_CODES, SITE_LOCALE_DEFINITIONS, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cn } from '@/lib/utils';
 
 interface TranslatableFieldsTabsProps {
@@ -37,12 +37,20 @@ export function TranslatableFieldsTabs({
         activeId={activeLocale}
         onChange={(id) => setActiveLocale(id as SiteLocaleCode)}
       />
-      <div
-        className="rounded-2xl border border-stone-200/70 bg-white/90 p-4 shadow-sm sm:p-5"
-        key={activeLocale}
-      >
-        {children(activeLocale)}
-      </div>
+      {SITE_LOCALE_CODES.map((locale) => (
+        <div
+          key={locale}
+          className={cn(
+            'rounded-2xl border border-stone-200/70 bg-white/90 p-4 shadow-sm sm:p-5',
+            locale !== activeLocale && 'hidden',
+          )}
+          // Keep inactive locales mounted so their inputs still submit with the form.
+          inert={locale !== activeLocale ? true : undefined}
+          aria-hidden={locale !== activeLocale}
+        >
+          {children(locale)}
+        </div>
+      ))}
     </div>
   );
 }

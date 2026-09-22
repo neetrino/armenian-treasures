@@ -26,9 +26,16 @@ import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 interface Props {
   initial: Record<string, unknown>;
   locale: SiteLocaleCode;
+  allLocaleDrafts?: Partial<Record<SiteLocaleCode, Record<string, unknown>>>;
+  onContentChange?: (content: Record<string, unknown>) => void;
 }
 
-export function DonationPageContentForm({ initial, locale }: Props) {
+export function DonationPageContentForm({
+  initial,
+  locale,
+  allLocaleDrafts,
+  onContentChange,
+}: Props) {
   const [content, setContent] = useState<MutablePageContent>(() =>
     asMutableContent(parseDonationPageContent(initial)),
   );
@@ -65,7 +72,13 @@ export function DonationPageContentForm({ initial, locale }: Props) {
   const trustItems = readArray<{ label: string }>(content.trustItems);
 
   return (
-    <PageContentFormShell slug="donation-page" content={content} locale={locale}>
+    <PageContentFormShell
+      slug="donation-page"
+      content={content}
+      locale={locale}
+      allLocaleDrafts={allLocaleDrafts}
+      onContentChange={onContentChange}
+    >
       <SectionVisibilityPanel
         sections={DONATION_SECTION_TOGGLES}
         visibility={content.sectionVisibility as Record<string, boolean | undefined> | undefined}
