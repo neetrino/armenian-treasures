@@ -28,7 +28,7 @@ export const PUBLIC_LAYOUT_PATHS = [
 
 export const PAGE_CONTENT_PUBLIC_PATHS: Record<PageContentSlug, readonly string[]> = {
   'donation-page': ['/donate'],
-  'partnership-page': ['/partnership'],
+  'partnership-page': ['/partnership', '/'],
   'cultural-portal-page': ['/culture'],
   'contacts-page': ['/contacts'],
   'projects-page': ['/projects'],

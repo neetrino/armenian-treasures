@@ -30,7 +30,7 @@ function PartnerShortcard({
   return (
     <Link href={href} className="partner-shortcard reveal">
       <div className="partner-shortcard__media">
-        {logo.type === 'image' ? (
+        {logo.type === 'image' && logo.src.trim() ? (
           <Image
             src={resolvePublicAssetUrl(logo.src)}
             alt={logo.alt}
@@ -41,7 +41,7 @@ function PartnerShortcard({
         ) : (
           <div className="partner-shortcard__placeholder">
             <PlaceholderIcon />
-            <span>{logo.label}</span>
+            <span>{logo.type === 'placeholder' ? logo.label : name}</span>
           </div>
         )}
       </div>

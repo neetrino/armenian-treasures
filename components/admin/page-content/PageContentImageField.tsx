@@ -17,6 +17,7 @@ import {
   type AdminImagePreviewLayout,
 } from '@/lib/admin/image-preview-layout';
 import { AdminManagedImagePreview } from '@/components/admin/AdminManagedImagePreview';
+import { cn } from '@/lib/utils';
 
 interface PageContentImageFieldProps {
   label: string;
@@ -25,6 +26,8 @@ interface PageContentImageFieldProps {
   hint?: string;
   /** `card` matches catalog cards (16:10). `banner` matches public page heroes. */
   layout?: AdminImagePreviewLayout;
+  /** `contain` keeps a full logo visible inside the frame. */
+  fit?: 'cover' | 'contain';
   folder?: AdminImageFolder;
   /** Required for `hero` folder uploads (defaults to `desktop` on the server if omitted). */
   variant?: AdminImageVariant;
@@ -38,6 +41,7 @@ export function PageContentImageField({
   onChange,
   hint,
   layout = 'banner',
+  fit = 'cover',
   folder = 'culture',
   variant,
 }: PageContentImageFieldProps) {
@@ -85,8 +89,13 @@ export function PageContentImageField({
       <Label htmlFor={inputId}>{label}</Label>
 
       {previewSrc ? (
-        <div className={getAdminImagePreviewContainerClass(layout, previewStyle)}>
-          <AdminManagedImagePreview src={previewSrc} previewStyle={previewStyle} />
+        <div
+          className={cn(
+            getAdminImagePreviewContainerClass(layout, previewStyle),
+            fit === 'contain' && 'bg-parchment-50',
+          )}
+        >
+          <AdminManagedImagePreview src={previewSrc} previewStyle={previewStyle} fit={fit} />
           <button
             type="button"
             onClick={() => onChange('')}
