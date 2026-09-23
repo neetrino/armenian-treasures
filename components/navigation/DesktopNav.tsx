@@ -21,7 +21,7 @@ export function DesktopNav({ cultureMegaMenu, projectsMenu, locale }: DesktopNav
   return (
     <nav
       aria-label={uiMessage(locale, 'primaryNav')}
-      className="relative z-10 hidden h-full min-w-0 flex-nowrap items-center justify-start gap-4 lg:ml-2 lg:flex xl:ml-4"
+      className="@container relative z-10 hidden h-full min-w-0 flex-1 flex-nowrap items-center justify-start gap-[clamp(0.35rem,0.8cqi,0.85rem)] overflow-x-clip lg:flex"
     >
       <CultureMegaMenu columns={cultureMegaMenu} locale={locale} />
       <ProjectsDropdown items={projectsMenu} locale={locale} />
