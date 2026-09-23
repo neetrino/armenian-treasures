@@ -40,15 +40,18 @@ function LeadStory({ post, locale }: { post: PublicBlogPostDTO; locale: SiteLoca
         className="home-news-editorial__lead-media"
         sizes="(max-width: 960px) 100vw, 640px"
       />
-      <p className="home-news-editorial__kicker">{newsCategory(post, locale)}</p>
-      <h3 className="home-news-editorial__lead-title">{post.title}</h3>
+      <p className="home-news-editorial__kicker font-cinzel">{newsCategory(post, locale)}</p>
+      <h3 className="home-news-editorial__lead-title font-cinzel">{post.title}</h3>
       {post.shortDescription.trim() ? (
-        <p className="home-news-editorial__excerpt">
+        <p className="home-news-editorial__excerpt font-display">
           {excerptFeaturedTreasureText(post.shortDescription, 140)}
         </p>
       ) : null}
       <span className="home-news-editorial__more">
-        {uiMessage(locale, 'homeBlogReadMore')} <span aria-hidden>→</span>
+        {uiMessage(locale, 'homeBlogReadMore')}
+        <span className="home-news-editorial__glyph" aria-hidden>
+          →
+        </span>
       </span>
     </Link>
   );
@@ -63,10 +66,10 @@ function SideStory({ post, locale }: { post: PublicBlogPostDTO; locale: SiteLoca
         sizes="(max-width: 960px) 152px, 280px"
       />
       <div className="home-news-editorial__row-copy">
-        <p className="home-news-editorial__kicker">{newsCategory(post, locale)}</p>
-        <h3 className="home-news-editorial__row-title">{post.title}</h3>
+        <p className="home-news-editorial__kicker font-cinzel">{newsCategory(post, locale)}</p>
+        <h3 className="home-news-editorial__row-title font-cinzel">{post.title}</h3>
         {post.shortDescription.trim() ? (
-          <p className="home-news-editorial__excerpt">
+          <p className="home-news-editorial__excerpt font-display">
             {excerptFeaturedTreasureText(post.shortDescription, 110)}
           </p>
         ) : null}
