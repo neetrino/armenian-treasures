@@ -128,6 +128,21 @@ export const CATALOG_MESSAGES = {
     'Photogrammétrie par drone',
     'Fotogrametria por drone',
   ),
+  tourGateTitle: row(
+    'Գրանցվեք՝ վիրտուալ շրջայցը բացելու համար',
+    'Register to open the virtual tour',
+    'Зарегистрируйтесь, чтобы открыть виртуальный тур',
+    'Inscrivez-vous pour ouvrir la visite virtuelle',
+    'Registe-se para abrir a visita virtual',
+  ),
+  tourGateLead: row(
+    '3D, Matterport և դրոնային շրջայցերը հասանելի են անվճար հաշիվ ստեղծելուց հետո։',
+    '3D, Matterport, and drone tours open after you create a free account.',
+    '3D, Matterport и дрон-туры открываются после создания бесплатного аккаунта.',
+    'Les visites 3D, Matterport et drone s’ouvrent après la création d’un compte gratuit.',
+    'As visitas 3D, Matterport e de drone abrem depois de criar uma conta gratuita.',
+  ),
+  tourGateClose: row('Փակել', 'Close', 'Закрыть', 'Fermer', 'Fechar'),
   location: row('Տեղադրություն', 'Location', 'Местоположение', 'Emplacement', 'Localização'),
   openMap: row('Բացել քարտեզը', 'Open map', 'Открыть карту', 'Ouvrir la carte', 'Abrir mapa'),
   openInMaps: row(

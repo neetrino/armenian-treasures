@@ -7,6 +7,7 @@ import { SelectField } from '@/components/forms/fields/SelectField';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { registerAction, type MemberRegisterActionState } from '@/app/(public)/register/actions';
+import { authPathWithNext } from '@/lib/auth/safe-return-path';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
@@ -14,9 +15,10 @@ const INITIAL: MemberRegisterActionState = { status: 'idle' };
 
 interface MemberRegisterFormProps {
   locale?: SiteLocaleCode;
+  returnTo?: string | null;
 }
 
-export function MemberRegisterForm({ locale = 'EN' }: MemberRegisterFormProps) {
+export function MemberRegisterForm({ locale = 'EN', returnTo = null }: MemberRegisterFormProps) {
   const [state, formAction, isPending] = useActionState(registerAction, INITIAL);
   const countrySelectOptions = useMemo(
     () => [
@@ -28,6 +30,7 @@ export function MemberRegisterForm({ locale = 'EN' }: MemberRegisterFormProps) {
 
   return (
     <form action={formAction} className="auth-form">
+      {returnTo ? <input type="hidden" name="next" value={returnTo} /> : null}
       <SelectField
         label={uiMessage(locale, 'country')}
         name="country"
@@ -94,7 +97,7 @@ export function MemberRegisterForm({ locale = 'EN' }: MemberRegisterFormProps) {
       </Button>
       <p className="auth-form-footer">
         {uiMessage(locale, 'haveAccount')}{' '}
-        <Link href="/login" className="auth-form-link">
+        <Link href={authPathWithNext('/login', returnTo)} className="auth-form-link">
           {uiMessage(locale, 'signIn')}
         </Link>
       </p>

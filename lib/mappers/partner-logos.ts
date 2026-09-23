@@ -10,7 +10,7 @@ export interface HighlightedPartnerLogo {
 type ImagePartner = PartnerCard & { logo: Extract<PartnerLogo, { type: 'image' }> };
 
 function isHighlightedPartner(partner: PartnerCard): partner is ImagePartner {
-  return !partner.future && partner.logo.type === 'image';
+  return !partner.future && partner.logo.type === 'image' && partner.logo.src.trim().length > 0;
 }
 
 export function collectHighlightedPartnerLogos(

@@ -1,49 +1,67 @@
+.home-partners-carousel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  overflow: hidden;
+  padding-block: 1rem;
+}
+
 .home-partners-logos {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
   gap: 0.75rem;
+  width: max-content;
+  animation: home-partners-marquee 42s linear infinite;
+}
+
+.home-partners-logos--offset {
+  animation-duration: 52s;
+}
+
+.home-partners-carousel:hover .home-partners-logos,
+.home-partners-carousel:focus-within .home-partners-logos {
+  animation-play-state: paused;
+}
+
+.home-partners-logos--static {
+  display: grid;
+  width: 100%;
+  grid-template-rows: repeat(2, 6.5rem);
+  grid-auto-flow: column;
+  grid-auto-columns: 9.5rem;
+  justify-content: safe center;
+  gap: 0.75rem;
+  padding-inline: 1.25rem;
+  overflow-x: auto;
+  animation: none;
 }
 
 .home-partners-logos__item {
   display: flex;
   height: 6.5rem;
   width: 9.5rem;
+  flex: 0 0 9.5rem;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid rgba(214, 184, 90, 0.22);
-  background: rgba(10, 10, 10, 0.72);
-  padding: 0.85rem 1rem;
-  transition:
-    border-color 240ms ease,
-    box-shadow 240ms ease,
-    transform 240ms ease,
-    background 240ms ease;
+  border: 0;
+  background: none;
+  padding: 0.35rem 0.5rem;
+  transition: transform 240ms ease;
 }
 
-.home-partners-logos__item img {
+.home-partners-logos__mark {
   max-height: 100%;
   max-width: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
-  filter: brightness(0.92) saturate(0.85);
-  transition:
-    filter 240ms ease,
-    transform 240ms ease;
 }
 
 .home-partners-logos__item:hover,
 .home-partners-logos__item:focus-visible {
-  border-color: rgba(214, 184, 90, 0.62);
-  background: rgba(18, 16, 10, 0.92);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(214, 184, 90, 0.18);
   transform: translateY(-3px);
-}
-
-.home-partners-logos__item:hover img,
-.home-partners-logos__item:focus-visible img {
-  filter: brightness(1.06) saturate(1);
-  transform: scale(1.04);
 }
 
 .home-partners-logos__item:focus-visible {
@@ -51,9 +69,19 @@
   outline-offset: 4px;
 }
 
+@keyframes home-partners-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .home-partners-logos__item,
-  .home-partners-logos__item img {
+  .home-partners-logos,
+  .home-partners-logos__item {
+    animation: none;
     transition: none;
     transform: none;
   }

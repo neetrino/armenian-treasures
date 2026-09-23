@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import { GatedEmbed } from '@/components/virtual-tour/GatedEmbed';
+import { GatedTourLink } from '@/components/virtual-tour/GatedTourLink';
 import type { KhndzoreskPageContent } from '@/lib/queries/page-content';
 import { hasTrimmedText, hasVirtualTourContent } from '@/lib/landing/landing-section-utils';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -33,13 +35,20 @@ export function KhndzoreskVirtualTour({ tours, locale = 'EN' }: KhndzoreskVirtua
       <div className="tour-grid">
         {hasFeatured ? (
           <div className="tour-main reveal">
-            <iframe
-              className="tour-embed"
-              src={featured.embed}
-              allowFullScreen
-              allow="xr-spatial-tracking"
+            <GatedEmbed
               title={uiMessage(locale, 'virtualTourTitleHripsime')}
-            />
+              frameClassName="tour-embed"
+              locale={locale}
+              returnHash="#virtual-tour"
+            >
+              <iframe
+                className="tour-embed"
+                src={featured.embed}
+                allowFullScreen
+                allow="xr-spatial-tracking"
+                title={uiMessage(locale, 'virtualTourTitleHripsime')}
+              />
+            </GatedEmbed>
             <div className="tour-label">
               <span className="tour-name">{featured.title}</span>
               <span className="tour-tag">{featured.tag}</span>
@@ -49,12 +58,12 @@ export function KhndzoreskVirtualTour({ tours, locale = 'EN' }: KhndzoreskVirtua
         {mini.length > 0 ? (
           <div className="tour-side">
             {mini.map((tour) => (
-            <a
+            <GatedTourLink
               key={tour.title}
               href={tour.href}
-              target="_blank"
-              rel="noopener noreferrer"
               className="tour-mini reveal"
+              locale={locale}
+              returnHash="#virtual-tour"
             >
               <Image
                 className="tour-mini-thumb"
@@ -70,7 +79,7 @@ export function KhndzoreskVirtualTour({ tours, locale = 'EN' }: KhndzoreskVirtua
                 <div className="tour-mini-title">{tour.title}</div>
                 <div className="tour-mini-sub">{tour.sub}</div>
               </div>
-            </a>
+            </GatedTourLink>
           ))}
           </div>
         ) : null}
@@ -98,14 +107,21 @@ export function KhndzoreskAerial({ aerial, locale = 'EN' }: KhndzoreskAerialProp
         Rotate, zoom, inspect every stone.
       </p>
       <div className="aerial-embed-wrap reveal">
-        <iframe
-          className="aerial-embed"
-          title="St. Hripsime church, Khndzoresk"
-          frameBorder={0}
-          allowFullScreen
-          allow="autoplay; fullscreen; xr-spatial-tracking"
-          src={aerial.embed}
-        />
+        <GatedEmbed
+          title={aerial.modelTitle}
+          frameClassName="aerial-embed"
+          locale={locale}
+          returnHash="#3d-aerial"
+        >
+          <iframe
+            className="aerial-embed"
+            title="St. Hripsime church, Khndzoresk"
+            frameBorder={0}
+            allowFullScreen
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            src={aerial.embed}
+          />
+        </GatedEmbed>
         <div className="aerial-label">
           <span className="aerial-badge">{uiMessage(locale, 'photogrammetry3d')}</span>
           <span className="aerial-title">{aerial.modelTitle}</span>
@@ -135,12 +151,19 @@ export function KhndzoreskPanorama({ panorama, locale = 'EN' }: KhndzoreskPanora
         village, and the mountains of Syunik.
       </p>
       <div className="pano-wrap reveal">
-        <iframe
-          className="pano-frame"
-          src={panorama.embed}
-          allowFullScreen
-          title="Aerial 360° Panorama — Khndzoresk"
-        />
+        <GatedEmbed
+          title={panorama.footerTitle}
+          frameClassName="pano-frame"
+          locale={locale}
+          returnHash="#panorama"
+        >
+          <iframe
+            className="pano-frame"
+            src={panorama.embed}
+            allowFullScreen
+            title="Aerial 360° Panorama — Khndzoresk"
+          />
+        </GatedEmbed>
         <div className="pano-footer">
           <span className="pano-title">{panorama.footerTitle}</span>
           <span className="aerial-badge tc">{uiMessage(locale, 'highestResolution')}</span>

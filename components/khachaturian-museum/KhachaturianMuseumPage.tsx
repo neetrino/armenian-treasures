@@ -64,7 +64,7 @@ export async function KhachaturianMuseumPage() {
 
         {isSectionEnabled(visibility, 'virtualTour') ? (
 
-          <KhachaturianMuseumVirtualTour virtualTour={content.virtualTour} />
+          <KhachaturianMuseumVirtualTour virtualTour={content.virtualTour} locale={locale} />
 
         ) : null}
 

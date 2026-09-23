@@ -398,6 +398,7 @@ export const HOME_MESSAGES = {
     'Leia a história completa da Armenian Treasures.',
   ),
   readArticle: row('Կարդալ հոդվածը', 'Read article', 'Читать статью', 'Lire l’article', 'Ler artigo'),
+  homeBlogReadMore: row('Կարդալ ավելին', 'Read more', 'Читать далее', 'Lire la suite', 'Ler mais'),
   highlightsTitle: row('ՊԱՏՄՈՒԹՅՈՒՆՆԵՐ, ՈՐ ԱՐԺԵ', 'STORIES WORTH', 'ИСТОРИИ, КОТОРЫЕ', 'RÉCITS À', 'HISTÓRIAS PARA'),
   highlightsAccent: row('ԲԱՑԱՀԱՅՏԵԼ', 'DISCOVERING', 'СТОИТ ОТКРЫТЬ', 'DÉCOUVRIR', 'DESCOBRIR'),
   highlightsSubtitle: row(

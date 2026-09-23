@@ -88,7 +88,7 @@ export function PartnershipPageContentForm({
 
       <PageContentSection
         title="Partner institutions"
-        description="Organised by category. Upload partner logos or use a text placeholder."
+        description="Add a partner, upload its logo, then save. The home page tints that logo blue."
       >
         {categories.map((category, catIndex) => (
           <div key={`cat-${catIndex}`} className="rounded-xl border border-bronze-200/40 bg-white p-4">
@@ -185,6 +185,7 @@ export function PartnershipPageContentForm({
                         <PageContentImageField
                           label="Partner logo"
                           layout="card"
+                          fit="contain"
                           value={partner.logo.src}
                           onChange={(src) => {
                             const next = [...categories];
@@ -252,16 +253,16 @@ export function PartnershipPageContentForm({
                         sector: '',
                         name: 'New partner',
                         desc: '',
-                        href: '/culture',
+                        href: '/partnership',
                         arrow: 'View Institution →',
-                        logo: { type: 'placeholder' as const, label: 'Partner logo' },
+                        logo: { type: 'image' as const, src: '', alt: 'New partner' },
                       },
                     ],
                   };
                   update({ categories: next });
                 }}
               >
-                Add partner to category
+                Add partner
               </Button>
             </div>
           </div>

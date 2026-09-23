@@ -1,6 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { GatedEmbed } from '@/components/virtual-tour/GatedEmbed';
+import { useVirtualTourUnlocked } from '@/components/virtual-tour/virtual-tour-access';
+import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { isSketchfabShortUrl, toTourEmbedSrc } from '@/lib/embed-urls';
 import {
   normalizeTourBlock,
@@ -31,13 +34,14 @@ export function CultureItemPublicTour({
   isFirst,
   locale = 'EN',
 }: CultureItemPublicTourProps) {
+  const unlocked = useVirtualTourUnlocked();
   const normalized = normalizeTourBlock(tour);
   const initialEmbed = normalized.url ? toTourEmbedSrc(normalized.url) : null;
   const [embedSrc, setEmbedSrc] = useState<string | null>(initialEmbed);
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (!normalized.url) return;
+    if (!unlocked || !normalized.url) return;
     const direct = toTourEmbedSrc(normalized.url);
     if (direct) {
       setEmbedSrc(direct);
@@ -76,7 +80,7 @@ export function CultureItemPublicTour({
       cancelled = true;
       controller.abort();
     };
-  }, [normalized.url]);
+  }, [normalized.url, unlocked]);
 
   if (!normalized.url) return null;
 
@@ -87,24 +91,34 @@ export function CultureItemPublicTour({
       <p className="sec-label">{uiMessage(locale, 'virtualExperience')}</p>
       <h2 className="sec-title">{title}</h2>
       <div className="tour-wrap catalog-tour-wide reveal">
-        {embedSrc ? (
-          <iframe
-            src={embedSrc}
-            title={title}
-            className="tour-embed"
-            allow="fullscreen; xr-spatial-tracking; autoplay"
-            allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        ) : failed ? (
-          <div className="tour-embed tour-embed--fallback">
-            <a href={normalized.url} target="_blank" rel="noreferrer" className="btn-teal">
-              {uiMessage(locale, 'open3dTour')}
-            </a>
-          </div>
-        ) : (
-          <div className="tour-embed tour-embed--loading" aria-busy="true" aria-label="Loading" />
-        )}
+        <GatedEmbed
+          title={title}
+          frameClassName="tour-embed"
+          locale={locale}
+          returnHash={isFirst ? '#tour' : undefined}
+          previewImage={
+            normalized.previewImage ? resolvePublicAssetUrl(normalized.previewImage) : undefined
+          }
+        >
+          {embedSrc ? (
+            <iframe
+              src={embedSrc}
+              title={title}
+              className="tour-embed"
+              allow="fullscreen; xr-spatial-tracking; autoplay"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          ) : failed ? (
+            <div className="tour-embed tour-embed--fallback">
+              <a href={normalized.url} target="_blank" rel="noreferrer" className="btn-teal">
+                {uiMessage(locale, 'open3dTour')}
+              </a>
+            </div>
+          ) : (
+            <div className="tour-embed tour-embed--loading" aria-busy="true" aria-label="Loading" />
+          )}
+        </GatedEmbed>
       </div>
     </div>
   );
