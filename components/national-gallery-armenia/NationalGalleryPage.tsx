@@ -70,7 +70,7 @@ export async function NationalGalleryPage() {
 
         {isSectionEnabled(visibility, 'virtualTour') ? (
 
-          <NationalGalleryVirtualTour virtualTour={content.virtualTour} />
+          <NationalGalleryVirtualTour virtualTour={content.virtualTour} locale={locale} />
 
         ) : null}
 

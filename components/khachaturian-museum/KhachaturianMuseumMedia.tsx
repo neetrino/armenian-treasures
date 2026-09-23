@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import { GatedEmbed } from '@/components/virtual-tour/GatedEmbed';
 import type { KhachaturianPageContent } from '@/lib/queries/page-content';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { hasNonEmptyArray, hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import {
   FilmMusicIcon,
@@ -57,8 +59,10 @@ export function KhachaturianMuseumWorks({ works }: KhachaturianMuseumWorksProps)
 
 export function KhachaturianMuseumVirtualTour({
   virtualTour,
+  locale = 'EN',
 }: {
   virtualTour: KhachaturianPageContent['virtualTour'];
+  locale?: SiteLocaleCode;
 }) {
   if (!hasTrimmedText(virtualTour.embed)) {
     return null;
@@ -73,13 +77,20 @@ export function KhachaturianMuseumVirtualTour({
         walkthrough — preserved digitally for the world.
       </p>
       <div className="tour-wrap reveal">
-        <iframe
-          className="tour-embed"
-          src={virtualTour.embed}
-          allowFullScreen
-          allow="xr-spatial-tracking"
-          title="Aram Khachaturian House-Museum Virtual Tour"
-        />
+        <GatedEmbed
+          title={virtualTour.title || 'Aram Khachaturian House-Museum Virtual Tour'}
+          frameClassName="tour-embed"
+          locale={locale}
+          returnHash="#virtual-tour"
+        >
+          <iframe
+            className="tour-embed"
+            src={virtualTour.embed}
+            allowFullScreen
+            allow="xr-spatial-tracking"
+            title="Aram Khachaturian House-Museum Virtual Tour"
+          />
+        </GatedEmbed>
         <div className="tour-label">
           <span className="tour-name">{virtualTour.title}</span>
           <span className="tour-tag">{virtualTour.tag}</span>

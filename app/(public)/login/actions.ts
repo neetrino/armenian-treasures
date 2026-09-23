@@ -7,6 +7,7 @@ import { signIn } from '@/lib/auth';
 import { isRateLimitAuthError } from '@/lib/auth/config';
 import { isAdminLoginEmail } from '@/lib/auth/is-admin-login-email';
 import { extractClientIp, getMemberLoginRateLimiter } from '@/lib/rate-limit';
+import { readFormReturnPath } from '@/lib/auth/safe-return-path';
 import { memberLoginSchema } from '@/lib/validation';
 
 export interface MemberLoginActionState {
@@ -82,5 +83,5 @@ export async function loginAction(
     throw error;
   }
 
-  redirect('/');
+  redirect(readFormReturnPath(formData) ?? '/');
 }

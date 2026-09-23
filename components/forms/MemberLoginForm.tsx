@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { Button } from '@/components/ui/Button';
 import { loginAction, type MemberLoginActionState } from '@/app/(public)/login/actions';
+import { authPathWithNext } from '@/lib/auth/safe-return-path';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
@@ -12,13 +13,15 @@ const INITIAL: MemberLoginActionState = { status: 'idle' };
 
 interface MemberLoginFormProps {
   locale?: SiteLocaleCode;
+  returnTo?: string | null;
 }
 
-export function MemberLoginForm({ locale = 'EN' }: MemberLoginFormProps) {
+export function MemberLoginForm({ locale = 'EN', returnTo = null }: MemberLoginFormProps) {
   const [state, formAction, isPending] = useActionState(loginAction, INITIAL);
 
   return (
     <form action={formAction} className="auth-form">
+      {returnTo ? <input type="hidden" name="next" value={returnTo} /> : null}
       <TextField
         label={uiMessage(locale, 'email')}
         name="email"
@@ -45,7 +48,7 @@ export function MemberLoginForm({ locale = 'EN' }: MemberLoginFormProps) {
       </Button>
       <p className="auth-form-footer">
         {uiMessage(locale, 'noAccount')}{' '}
-        <Link href="/register" className="auth-form-link">
+        <Link href={authPathWithNext('/register', returnTo)} className="auth-form-link">
           {uiMessage(locale, 'createOne')}
         </Link>
       </p>

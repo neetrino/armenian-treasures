@@ -9,6 +9,7 @@ import { hashPassword } from '@/lib/auth/hash-password';
 import { prisma } from '@/lib/db';
 import { extractClientIp, getMemberRegisterRateLimiter } from '@/lib/rate-limit';
 import { sanitizeUserText } from '@/lib/sanitize';
+import { authPathWithNext, readFormReturnPath } from '@/lib/auth/safe-return-path';
 import { memberRegisterSchema } from '@/lib/validation';
 
 export interface MemberRegisterActionState {
@@ -21,6 +22,7 @@ export async function registerAction(
   _prev: MemberRegisterActionState,
   formData: FormData,
 ): Promise<MemberRegisterActionState> {
+  const returnTo = readFormReturnPath(formData);
   const ip = extractClientIp(await headers());
   const rateCheck = await getMemberRegisterRateLimiter().check(`member-register:${ip}`);
   if (!rateCheck.allowed) {
@@ -84,10 +86,10 @@ export async function registerAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      redirect('/login');
+      redirect(authPathWithNext('/login', returnTo));
     }
     throw error;
   }
 
-  redirect('/');
+  redirect(returnTo ?? '/');
 }
