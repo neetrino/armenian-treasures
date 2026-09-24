@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, Cinzel_Decorative, Cormorant_Garamond, Inter, Noto_Serif_Armenian } from 'next/font/google';
 import localFont from 'next/font/local';
-import { ThemeInitScript } from '@/components/theme/ThemeInitScript';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { DEFAULT_SITE_THEME } from '@/lib/theme/site-theme';
 import { getSiteUrl } from '@/lib/site-url';
@@ -16,7 +15,7 @@ const kelvinch = localFont({
 });
 
 const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
   variable: '--font-cormorant',
@@ -38,7 +37,7 @@ const cinzelDeco = Cinzel_Decorative({
 });
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ['latin', 'cyrillic'],
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-inter',
   display: 'swap',
@@ -91,7 +90,6 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
       className={`scrollbar-none ${kelvinch.variable} ${cormorant.variable} ${cinzel.variable} ${cinzelDeco.variable} ${inter.variable} ${notoSerifArmenian.variable}`}
     >
       <body className="scrollbar-none min-h-screen antialiased">
-        <ThemeInitScript />
         {children}
       </body>
     </html>

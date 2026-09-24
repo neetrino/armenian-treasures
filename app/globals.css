@@ -503,6 +503,38 @@ html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
   letter-spacing: 0.04em;
 }
 
+/* Cinzel has no Cyrillic; its size-adjusted fallback draws overlapping glyphs. */
+html[lang='ru'] {
+  --font-cinzel: var(--font-cormorant);
+  --font-cinzel-deco: var(--font-cormorant);
+}
+
+html[lang='ru'] .font-cinzel,
+html[lang='ru'] .font-cinzel-deco,
+html[lang='ru'] [data-site-hero] h1,
+html[lang='ru'] .sec-title,
+html[lang='ru'] .khndzoresk-page h1,
+html[lang='ru'] .khndzoresk-page h2,
+html[lang='ru'] .blog-detail-title,
+html[lang='ru'] .blog-section-title,
+html[lang='ru'] .blog-card-title {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+html[lang='ru'] [data-site-hero] h1 {
+  font-size: clamp(2.15rem, 5.2vw, 4.35rem);
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+}
+
+html[lang='ru'] [data-site-hero] h1 + p {
+  font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+}
+
 html[lang='ru'] [data-site-header] nav[aria-label='Primary'] a,
 html[lang='ru'] [data-site-header] nav[aria-label='Primary'] button,
 html[lang='fr'] [data-site-header] nav[aria-label='Primary'] a,
