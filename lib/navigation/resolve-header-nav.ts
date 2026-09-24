@@ -31,7 +31,7 @@ export function resolveCultureMegaMenu(
   locale: SiteLocaleCode = 'EN',
 ): MegaMenuColumn[] {
   const columns = applyMenuHrefMap(buildCultureMegaMenuFromAtFeatures(locale), tree);
-  return mergeLiveChildrenIntoMegaMenu(columns, tree);
+  return mergeLiveChildrenIntoMegaMenu(columns, tree, locale);
 }
 
 export function resolveProjectsNavItems(locale: SiteLocaleCode = 'EN'): NavDropdownLink[] {

@@ -24,13 +24,16 @@ import {
   type HomeStat,
   type HomeTechCard,
 } from '@/lib/types/home-content';
-import { homeSectionsSchema, type HomeSections } from '@/lib/types/home-sections';
+import { blankHomeSections, homeSectionsSchema, type HomeSections } from '@/lib/types/home-sections';
+import { encodeLocaleDocument } from '@/lib/i18n/locale-document';
 import {
   buildTabErrorMap,
   decodeTranslatableText,
   type LocaleTextMap,
 } from '@/lib/i18n/translatable-content';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+
+type LocaleMap<T> = Partial<Record<SiteLocaleCode, T>>;
 
 const INITIAL: HomeContentFormState = { status: 'idle' };
 
@@ -57,14 +60,14 @@ export interface HomeContentFormInitial {
   primaryCtaUrl: string;
   secondaryCtaText: string;
   secondaryCtaUrl: string;
-  stats: HomeStat[];
+  stats: LocaleMap<HomeStat[]>;
   missionTitle: string;
   missionHighlight: string;
   missionText: string;
-  techCards: HomeTechCard[];
+  techCards: LocaleMap<HomeTechCard[]>;
   ctaTitle: string;
   ctaDescription: string;
-  sections: HomeSections;
+  sections: LocaleMap<HomeSections>;
 }
 
 interface Props {
@@ -75,9 +78,9 @@ export function HomeContentForm({ initial }: Props) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(saveHomeContentAction, INITIAL);
   const [activeTab, setActiveTab] = useState<TabId>('hero');
-  const [stats, setStats] = useState<HomeStat[]>(initial.stats);
-  const [techCards, setTechCards] = useState<HomeTechCard[]>(initial.techCards);
-  const [sections, setSections] = useState<HomeSections>(initial.sections);
+  const [stats, setStats] = useState<LocaleMap<HomeStat[]>>(initial.stats);
+  const [techCards, setTechCards] = useState<LocaleMap<HomeTechCard[]>>(initial.techCards);
+  const [sections, setSections] = useState<LocaleMap<HomeSections>>(initial.sections);
   const [clientStatsError, setClientStatsError] = useState<string | undefined>();
   const [clientTechError, setClientTechError] = useState<string | undefined>();
   const [clientSectionsError, setClientSectionsError] = useState<string | undefined>();
@@ -89,9 +92,9 @@ export function HomeContentForm({ initial }: Props) {
   }, [state.status, router]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    const statsError = validateHomeStatsClient(stats);
-    const techError = validateHomeTechCardsClient(techCards);
-    const sectionsResult = homeSectionsSchema.safeParse(sections);
+    const statsError = validateHomeStatsClient(stats.EN ?? []);
+    const techError = validateHomeTechCardsClient(techCards.EN ?? []);
+    const sectionsResult = homeSectionsSchema.safeParse(sections.EN);
 
     if (statsError || techError || !sectionsResult.success) {
       event.preventDefault();
@@ -135,9 +138,9 @@ export function HomeContentForm({ initial }: Props) {
 
   return (
     <form action={formAction} onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <input type="hidden" name="statsJson" value={JSON.stringify(stats)} readOnly />
-      <input type="hidden" name="techCardsJson" value={JSON.stringify(techCards)} readOnly />
-      <input type="hidden" name="sectionsJson" value={JSON.stringify(sections)} readOnly />
+      <input type="hidden" name="statsJson" value={JSON.stringify(encodeLocaleDocument(stats))} readOnly />
+      <input type="hidden" name="techCardsJson" value={JSON.stringify(encodeLocaleDocument(techCards))} readOnly />
+      <input type="hidden" name="sectionsJson" value={JSON.stringify(encodeLocaleDocument(sections))} readOnly />
 
       <AdminHelpCallout title="How this page works">
         Use the tabs below to edit each part of the homepage. Upload images where provided, then save once
@@ -250,8 +253,8 @@ export function HomeContentForm({ initial }: Props) {
         <>
           <AdminFormSection title="Hero statistics" description="Number counters shown below the hero banner.">
             <HomeStatsEditor
-              stats={stats}
-              onChange={setStats}
+              stats={stats[locale] ?? [{ value: '', label: '' }]}
+              onChange={(next) => setStats((current) => ({ ...current, [locale]: next }))}
               sectionError={statsSectionError}
               fieldErrors={state.fieldErrors}
             />
@@ -291,8 +294,8 @@ export function HomeContentForm({ initial }: Props) {
           description="Highlight cards for digital preservation tools and experiences."
         >
           <HomeTechCardsEditor
-            techCards={techCards}
-            onChange={setTechCards}
+            techCards={techCards[locale] ?? [{ title: '', description: '', icon: 'Sparkles' }]}
+            onChange={(next) => setTechCards((current) => ({ ...current, [locale]: next }))}
             sectionError={techSectionError}
             fieldErrors={state.fieldErrors}
           />
@@ -301,8 +304,8 @@ export function HomeContentForm({ initial }: Props) {
 
       {activeTab === 'sections' ? (
         <HomeSectionsEditor
-          sections={sections}
-          onChange={setSections}
+          sections={sections[locale] ?? blankHomeSections()}
+          onChange={(next) => setSections((current) => ({ ...current, [locale]: next }))}
           sectionError={sectionsSectionError}
         />
       ) : null}

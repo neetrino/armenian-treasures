@@ -39,6 +39,7 @@ export function mapProjectToCulturalPortalProject(
   const timeline = project.region ? `${project.category} · ${project.region}` : project.category;
 
   return {
+    id: project.id,
     status: statusMeta.status,
     statusLabel: statusMeta.statusLabel,
     icon: resolveProjectIcon(project.category),

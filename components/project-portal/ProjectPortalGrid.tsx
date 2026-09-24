@@ -12,8 +12,8 @@ export function ProjectPortalGrid({ projects, className, embedded = false }: Pro
   return (
     <div className={cn('project-portal', embedded && 'project-portal--embedded', className)}>
       <div className="proj-grid">
-        {projects.map((project) => (
-          <ProjectPortalCard key={project.title} project={project} />
+        {projects.map((project, index) => (
+          <ProjectPortalCard key={project.id ?? `${index}:${project.title}`} project={project} />
         ))}
       </div>
     </div>

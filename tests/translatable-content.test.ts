@@ -22,15 +22,27 @@ describe('resolveLocalizedText', () => {
 
   it('attributes unmarked Armenian plain strings to HY only', () => {
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HY')).toBe('ԽՆՁՈՐԵՍԿ');
-    expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HYW')).toBe('ԽՆՁՈՐԵՍԿ');
+    expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HYW')).toBe('');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'EN')).toBe('');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'RU')).toBe('');
   });
 
-  it('keeps unmarked Latin legacy fields shared across locales', () => {
+  it('keeps unmarked Latin text on English only', () => {
     expect(resolveLocalizedText('Syunik', 'EN')).toBe('Syunik');
-    expect(resolveLocalizedText('Syunik', 'HY')).toBe('Syunik');
-    expect(resolveLocalizedText('Syunik', 'RU')).toBe('Syunik');
-    expect(resolveLocalizedText('17th c.', 'HY')).toBe('17th c.');
+    expect(resolveLocalizedText('Syunik', 'HY')).toBe('');
+    expect(resolveLocalizedText('Syunik', 'RU')).toBe('');
+    expect(resolveLocalizedText('17th c.', 'EN')).toBe('17th c.');
+    expect(resolveLocalizedText('17th c.', 'HY')).toBe('');
+  });
+
+  it('splits identical copies that were saved into every language', () => {
+    const raw = encodeTranslatableText({
+      HY: 'TESOUROS',
+      EN: 'TESOUROS',
+      PT: 'TESOUROS',
+    });
+    expect(resolveLocalizedText(raw, 'EN')).toBe('TESOUROS');
+    expect(resolveLocalizedText(raw, 'HY')).toBe('');
+    expect(resolveLocalizedText(raw, 'PT')).toBe('');
   });
 });

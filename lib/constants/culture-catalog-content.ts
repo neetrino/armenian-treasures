@@ -6,6 +6,7 @@ import {
 import { EXTENDED_CULTURE_CATALOG_OVERRIDES } from '@/lib/constants/culture-catalog-overrides-extended';
 import { CULTURE_CATALOG_SUBCATEGORY_OVERRIDES } from '@/lib/constants/culture-catalog-subcategory-overrides';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import { uiMessage, uiMessageFormat } from '@/lib/i18n/ui-messages';
 
 export interface CultureCatalogFact {
@@ -318,6 +319,37 @@ function buildBaseContent(
   };
 }
 
+function localizedCatalogTitle(node: MenuNode, parent: MenuNode | undefined, locale: SiteLocaleCode): string {
+  const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
+  return cultureMenuLabel(locale, key) ?? cultureMenuLabel(locale, node.slug) ?? node.title;
+}
+
+function withCatalogTitle(content: CultureCatalogContent, englishName: string, title: string): CultureCatalogContent {
+  if (!englishName || englishName === title) return content;
+  const swap = (value: string) => value.split(englishName).join(title);
+  return {
+    ...content,
+    eyebrow: swap(content.eyebrow),
+    accent: swap(content.accent),
+    slogan: swap(content.slogan),
+    about: {
+      ...content.about,
+      label: swap(content.about.label),
+      title: swap(content.about.title),
+      description: swap(content.about.description),
+    },
+    items: {
+      ...content.items,
+      title: swap(content.items.title),
+      description: swap(content.items.description),
+    },
+    map: {
+      ...content.map,
+      title: swap(content.map.title),
+    },
+  };
+}
+
 export function resolveCultureCatalogContent(
   node: MenuNode,
   parent?: MenuNode,
@@ -325,10 +357,17 @@ export function resolveCultureCatalogContent(
 ): CultureCatalogContent {
   const locale = options?.locale ?? 'EN';
   const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
-  const base = buildBaseContent(node.title, node.description ?? '', parent?.title, options);
+  const title = localizedCatalogTitle(node, parent, locale);
+  const englishName = cultureMenuLabel('EN', key) ?? cultureMenuLabel('EN', node.slug) ?? '';
+  const parentTitle = parent ? localizedCatalogTitle(parent, undefined, locale) : undefined;
+  const base = buildBaseContent(title, node.description ?? '', parentTitle, options);
   const codeOverride = locale === 'EN' ? OVERRIDES[key] ?? OVERRIDES[node.slug] : undefined;
   const dbOverride = parseMenuCatalogContent(node.catalogContent);
-  const merged = mergeCultureCatalogLayers(base, codeOverride, dbOverride);
+  const merged = withCatalogTitle(
+    mergeCultureCatalogLayers(base, codeOverride, dbOverride),
+    englishName,
+    title,
+  );
   const adminHeroImage = dbOverride?.heroImage?.trim() || node.image?.trim();
 
   if (adminHeroImage) {

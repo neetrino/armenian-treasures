@@ -11,6 +11,7 @@ export const MENU_MESSAGES = {
     'Igrejas e mosteiros',
   ),
   menuCastles: row('Բերդեր', 'Castles', 'Крепости', 'Châteaux', 'Castelos'),
+  menuOrnaments: row('Նախշազարդ', 'Ornaments', 'Орнаменты', 'Ornements', 'Ornamentos'),
   menuMythsLegends: row(
     'Առասպելներ և լեգենդներ',
     'Myths & Legends',
@@ -73,7 +74,7 @@ export const MENU_MESSAGES = {
   menuDance: row('Պար', 'Dance', 'Танец', 'Danse', 'Dança'),
   menuFoodDrink: row('Խոհանոց', 'Food & Drink', 'Еда и напитки', 'Gastronomie', 'Comida e bebida'),
   menuPublications: row('Հրատարակություններ', 'Publications', 'Публикации', 'Publications', 'Publicações'),
-  menuArmaments: row('Զինամթերք', 'Armaments', 'Вооружение', 'Armement', 'Armamento'),
+  menuArmaments: row('Նախշազարդ', 'Armaments', 'Вооружение', 'Armement', 'Armamento'),
   menuHistoricalHighlights: row(
     'Պատմական ընտրյալներ',
     'Historical Highlights',
@@ -193,6 +194,8 @@ export const CULTURE_MENU_PATH_KEYS: Record<string, MenuMessageKey> = {
   churches: 'menuChurches',
   'architecture/castles': 'menuCastles',
   castles: 'menuCastles',
+  'architecture/ornaments': 'menuOrnaments',
+  ornaments: 'menuOrnaments',
   legends: 'menuMythsLegends',
   'legends/myths-and-gods': 'menuMythsGods',
   'myths-and-gods': 'menuMythsGods',

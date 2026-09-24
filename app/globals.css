@@ -452,18 +452,18 @@ html[lang='hyw'] .khndzoresk-page .hero h1,
   font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
-  line-height: 1.02 !important;
-  padding-block: 0.02em 0;
+  line-height: 1.25 !important;
+  padding-block: 0.12em;
   overflow: visible;
 }
 
 html[lang='hy'] .khndzoresk-page .hero h1 span,
 html[lang='hyw'] .khndzoresk-page .hero h1 span,
 .khndzoresk-page .hero h1 .hero-accent--hy {
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.06em !important;
   font-weight: 500 !important;
-  line-height: 1.05 !important;
-  padding-block: 0;
+  line-height: 1.35 !important;
+  padding-block: 0.08em;
   overflow: visible;
 }
 
@@ -501,6 +501,38 @@ html[lang='hyw'] [data-site-header] nav[aria-label='Primary'] .font-cinzel {
   font-family: var(--font-noto-serif-armenian), Georgia, serif;
   font-weight: 700;
   letter-spacing: 0.04em;
+}
+
+/* Cinzel has no Cyrillic; its size-adjusted fallback draws overlapping glyphs. */
+html[lang='ru'] {
+  --font-cinzel: var(--font-cormorant);
+  --font-cinzel-deco: var(--font-cormorant);
+}
+
+html[lang='ru'] .font-cinzel,
+html[lang='ru'] .font-cinzel-deco,
+html[lang='ru'] [data-site-hero] h1,
+html[lang='ru'] .sec-title,
+html[lang='ru'] .khndzoresk-page h1,
+html[lang='ru'] .khndzoresk-page h2,
+html[lang='ru'] .blog-detail-title,
+html[lang='ru'] .blog-section-title,
+html[lang='ru'] .blog-card-title {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+}
+
+html[lang='ru'] [data-site-hero] h1 {
+  font-size: clamp(2.15rem, 5.2vw, 4.35rem);
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+}
+
+html[lang='ru'] [data-site-hero] h1 + p {
+  font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+  letter-spacing: 0.08em;
+  line-height: 1.35;
 }
 
 html[lang='ru'] [data-site-header] nav[aria-label='Primary'] a,

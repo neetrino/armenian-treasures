@@ -55,17 +55,17 @@ function SubcategoryCatalogCard({
       )}
       data-category-icon={iconKey}
     >
-      {hasPhoto ? (
-        <span className="cat-card__hub-photo" aria-hidden />
-      ) : (
-        <div className="cat-media">
+      <div className="cat-media">
+        {hasPhoto ? (
+          <span className="cat-card__hub-photo" aria-hidden />
+        ) : (
           <CulturalCategoryIcon
             type={iconKey}
             withBadge={false}
             iconClassName="h-full w-full rounded-none object-cover"
           />
-        </div>
-      )}
+        )}
+      </div>
       <div className="cat-content cat-content--catalog">
         <div className="cat-card-title">{node.title}</div>
         {!isHub ? (

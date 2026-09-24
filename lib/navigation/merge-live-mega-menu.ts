@@ -1,4 +1,6 @@
 import { isFormRoute, resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import type { MegaMenuColumn, MegaMenuItem } from '@/lib/navigation/culture-mega-menu';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
 
@@ -14,30 +16,37 @@ function columnItemKeys(column: MegaMenuColumn): Set<string> {
   return keys;
 }
 
-function toExtraMegaMenuItem(parent: MenuNode, child: MenuNode): MegaMenuItem {
+function toExtraMegaMenuItem(
+  parent: MenuNode,
+  child: MenuNode,
+  locale: SiteLocaleCode,
+): MegaMenuItem {
+  const menuPath = `${parent.slug}/${child.slug}`;
   return {
-    label: child.title,
+    label: cultureMenuLabel(locale, menuPath) ?? cultureMenuLabel(locale, child.slug) ?? child.title,
     href: resolveMenuHref(child, parent),
     icon: resolveMenuIconKey(child.slug, parent.slug),
-    menuPath: `${parent.slug}/${child.slug}`,
+    menuPath,
   };
 }
 
 function collectMissingLiveItems(
   column: MegaMenuColumn,
   parent: MenuNode | undefined,
+  locale: SiteLocaleCode,
 ): MegaMenuItem[] {
   if (!parent) return [];
   const existing = columnItemKeys(column);
   return (parent.children ?? [])
     .filter((child) => child.isActive && !isFormRoute(child.routeType))
     .filter((child) => !existing.has(child.slug) && !existing.has(`${parent.slug}/${child.slug}`))
-    .map((child) => toExtraMegaMenuItem(parent, child));
+    .map((child) => toExtraMegaMenuItem(parent, child, locale));
 }
 
 function mergeLiveChildrenIntoColumn(
   column: MegaMenuColumn,
   tree: MenuNode[],
+  locale: SiteLocaleCode,
 ): MegaMenuColumn {
   const headingPath = column.headingMenuPath;
   if (!headingPath) return column;
@@ -45,6 +54,7 @@ function mergeLiveChildrenIntoColumn(
   const extras = collectMissingLiveItems(
     column,
     tree.find((node) => node.slug === headingPath),
+    locale,
   );
   if (extras.length === 0) return column;
 
@@ -55,6 +65,7 @@ function mergeLiveChildrenIntoColumn(
 export function mergeLiveChildrenIntoMegaMenu(
   columns: MegaMenuColumn[],
   tree: MenuNode[],
+  locale: SiteLocaleCode = 'EN',
 ): MegaMenuColumn[] {
-  return columns.map((column) => mergeLiveChildrenIntoColumn(column, tree));
+  return columns.map((column) => mergeLiveChildrenIntoColumn(column, tree, locale));
 }
