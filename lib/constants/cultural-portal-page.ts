@@ -133,6 +133,7 @@ export type CulturalPortalProjectIcon =
   | 'archaeology';
 
 export interface CulturalPortalProject {
+  id?: string;
   status: CulturalPortalProjectStatus;
   statusLabel: string;
   icon: CulturalPortalProjectIcon;

@@ -159,6 +159,41 @@ export function buildDefaultHomeSections(): HomeSections {
   };
 }
 
+const STRUCTURAL_KEYS = new Set([
+  'icon',
+  'badgeTone',
+  'variant',
+  'color',
+  'number',
+  'ctaUrl',
+  'href',
+  'iconSrc',
+  'sourceHref',
+  'cardBackgroundColor',
+  'cardBackgroundImage',
+]);
+
+function blankCopyValue(value: unknown, key?: string): unknown {
+  if (typeof value === 'string') {
+    if (key && STRUCTURAL_KEYS.has(key)) return value;
+    if (value.startsWith('/') || value.startsWith('http')) return value;
+    return '';
+  }
+  if (Array.isArray(value)) return value.map((entry) => blankCopyValue(entry));
+  if (value && typeof value === 'object') {
+    const next: Record<string, unknown> = {};
+    for (const [childKey, child] of Object.entries(value)) {
+      next[childKey] = blankCopyValue(child, childKey);
+    }
+    return next;
+  }
+  return value;
+}
+
+export function blankHomeSections(template: HomeSections = buildDefaultHomeSections()): HomeSections {
+  return blankCopyValue(template) as HomeSections;
+}
+
 export function normalizeHomeSections(value: unknown): HomeSections {
   const parsed = homeSectionsSchema.safeParse(value);
   if (parsed.success) return parsed.data;

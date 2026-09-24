@@ -6,6 +6,7 @@ import { logQueryFallback } from '@/lib/observability/log-query-fallback';
 import { toPublicHomeContent, type PublicHomeContentDTO } from '@/lib/dto';
 import { DEFAULT_SITE_LOCALE, getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { uiMessage, type UiMessageKey } from '@/lib/i18n/ui-messages';
 import {
   buildDefaultHomeSections,
   normalizeHomeSections,
@@ -63,29 +64,35 @@ function localizedHomeContentFallback(_locale: SiteLocaleCode): PublicHomeConten
   return HOME_CONTENT_FALLBACK;
 }
 
+function catalogOrAdmin(value: string, locale: SiteLocaleCode, key: UiMessageKey): string {
+  const trimmed = value.trim();
+  if (trimmed) return trimmed;
+  if (locale === 'EN') return trimmed;
+  return uiMessage(locale, key);
+}
+
 function applyHomeContentFallback(
   content: PublicHomeContentDTO,
-  _locale: SiteLocaleCode,
+  locale: SiteLocaleCode,
 ): PublicHomeContentDTO {
   const fallback = HOME_CONTENT_FALLBACK;
   return {
     ...content,
-    // Keep admin locale strings as-is (empty means not translated yet — never invent copy).
-    heroBadge: content.heroBadge,
-    heroTitle: content.heroTitle,
-    heroHighlight: content.heroHighlight,
-    heroSubtitle: content.heroSubtitle,
-    heroTagline: content.heroTagline,
-    heroDescription: content.heroDescription,
-    primaryCtaText: content.primaryCtaText,
+    heroBadge: catalogOrAdmin(content.heroBadge, locale, 'heroBadge'),
+    heroTitle: catalogOrAdmin(content.heroTitle, locale, 'heroTitle'),
+    heroHighlight: catalogOrAdmin(content.heroHighlight, locale, 'heroHighlight'),
+    heroSubtitle: catalogOrAdmin(content.heroSubtitle, locale, 'heroSubtitle'),
+    heroTagline: catalogOrAdmin(content.heroTagline, locale, 'heroTagline'),
+    heroDescription: catalogOrAdmin(content.heroDescription, locale, 'heroDescription'),
+    primaryCtaText: catalogOrAdmin(content.primaryCtaText, locale, 'exploreArmenianHeritage'),
     primaryCtaUrl: content.primaryCtaUrl.trim() || fallback.primaryCtaUrl,
-    secondaryCtaText: content.secondaryCtaText,
+    secondaryCtaText: catalogOrAdmin(content.secondaryCtaText, locale, 'supportMission'),
     secondaryCtaUrl: content.secondaryCtaUrl.trim() || fallback.secondaryCtaUrl,
-    missionTitle: content.missionTitle,
-    missionHighlight: content.missionHighlight,
-    missionText: content.missionText,
-    ctaTitle: content.ctaTitle,
-    ctaDescription: content.ctaDescription,
+    missionTitle: catalogOrAdmin(content.missionTitle, locale, 'missionTitle'),
+    missionHighlight: catalogOrAdmin(content.missionHighlight, locale, 'missionHighlight'),
+    missionText: catalogOrAdmin(content.missionText, locale, 'missionText'),
+    ctaTitle: catalogOrAdmin(content.ctaTitle, locale, 'ctaTitle'),
+    ctaDescription: catalogOrAdmin(content.ctaDescription, locale, 'ctaDescription'),
     stats: normalizeHomeStats(content.stats.length > 0 ? content.stats : fallback.stats),
     techCards: normalizeHomeTechCards(
       content.techCards.length > 0 ? content.techCards : fallback.techCards,

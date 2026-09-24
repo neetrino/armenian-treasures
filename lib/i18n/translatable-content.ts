@@ -56,20 +56,23 @@ export function inferLocaleFromScript(text: string): SiteLocaleCode | null {
   return null;
 }
 
+function ownerLocale(value: string): SiteLocaleCode {
+  return inferLocaleFromScript(value) ?? DEFAULT_LOCALE;
+}
+
 function decodeUnmarkedText(value: string): LocaleTextMap {
-  // Armenian / Cyrillic unmarked strings stay language-bound (avoids HY under EN/RU).
-  if (/[\u0530-\u058F]/.test(value)) {
-    return { HY: value, HYW: value };
-  }
-  if (/[\u0400-\u04FF]/.test(value)) {
-    return { RU: value };
-  }
-  // Latin / numeric / mixed legacy fields (region, period, …) were historically shared.
-  const shared: LocaleTextMap = {};
-  for (const code of SITE_LOCALE_CODES) {
-    shared[code] = value;
-  }
-  return shared;
+  return { [ownerLocale(value)]: value };
+}
+
+/** Identical copies were fanned out from one legacy string. Keep that string on one language. */
+function isolateIdenticalCopies(map: LocaleTextMap): LocaleTextMap {
+  const populated = SITE_LOCALE_CODES.map((locale) => map[locale]).filter(
+    (entry): entry is string => Boolean(entry),
+  );
+  if (populated.length < 2) return map;
+  const first = populated[0];
+  if (!first || !populated.every((entry) => entry === first)) return map;
+  return { [ownerLocale(first)]: first };
 }
 
 export function decodeTranslatableText(
@@ -79,20 +82,17 @@ export function decodeTranslatableText(
   const value = raw?.trim();
   if (!value) return {};
   const fromPayload = parsePayload(value);
-  if (fromPayload) return fromPayload;
+  if (fromPayload) return isolateIdenticalCopies(fromPayload);
   return decodeUnmarkedText(value);
 }
 
 export function encodeTranslatableText(
   map: LocaleTextMap,
-  fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
+  _fallbackLocale: SiteLocaleCode = DEFAULT_LOCALE,
 ): string {
   const cleanMap = toCleanMap(map);
   const populatedLocales = SITE_LOCALE_CODES.filter((locale) => Boolean(cleanMap[locale]));
   if (populatedLocales.length === 0) return '';
-  if (populatedLocales.length === 1 && populatedLocales[0] === fallbackLocale) {
-    return cleanMap[fallbackLocale] ?? '';
-  }
   const payload: StoredTranslatablePayload = {
     [TRANSLATABLE_MARKER]: true,
     values: cleanMap,

@@ -26,8 +26,8 @@ export async function UpcomingProjectsGrid() {
   return (
     <Stagger className="project-portal project-portal--embedded">
       <div className="proj-grid">
-        {portalProjects.map((project) => (
-          <StaggerItem key={project.title} className="h-full">
+        {portalProjects.map((project, index) => (
+          <StaggerItem key={project.id ?? `${index}:${project.title}`} className="h-full">
             <ProjectPortalCard project={project} className="h-full" />
           </StaggerItem>
         ))}

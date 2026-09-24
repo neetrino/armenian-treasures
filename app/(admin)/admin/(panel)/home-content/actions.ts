@@ -25,7 +25,8 @@ import {
   pickDefaultLocaleText,
   readLocalizedTextFromFormData,
 } from '@/lib/i18n/translatable-content';
-import { SITE_LOCALE_CODES } from '@/lib/i18n/locale-config';
+import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { decodeLocaleDocument, encodeLocaleDocument } from '@/lib/i18n/locale-document';
 
 const SINGLETON_ID = 'home-content-singleton';
 
@@ -40,31 +41,45 @@ function normalizeOptionalImage(value: string | undefined): string | null {
   return trimmed ? trimmed : null;
 }
 
-function parseStatsJson(raw: string | null): HomeStat[] {
-  if (!raw) return normalizeHomeStats(HOME_CONTENT_FALLBACK.stats);
+function parseJson(raw: string | null): unknown {
+  if (!raw) return null;
   try {
-    return normalizeHomeStats(JSON.parse(raw));
+    return JSON.parse(raw);
   } catch {
-    return normalizeHomeStats(HOME_CONTENT_FALLBACK.stats);
+    return null;
   }
 }
 
-function parseTechCardsJson(raw: string | null): HomeTechCard[] {
-  if (!raw) return normalizeHomeTechCards(HOME_CONTENT_FALLBACK.techCards);
-  try {
-    return normalizeHomeTechCards(JSON.parse(raw));
-  } catch {
-    return normalizeHomeTechCards(HOME_CONTENT_FALLBACK.techCards);
-  }
+function filledStats(items: HomeStat[]): HomeStat[] | null {
+  const filled = items.filter((item) => item.value.trim() && item.label.trim());
+  return filled.length > 0 ? filled : null;
 }
 
-function parseSectionsJson(raw: string | null): HomeSections {
-  if (!raw) return normalizeHomeSections(HOME_CONTENT_FALLBACK.sections);
-  try {
-    return normalizeHomeSections(JSON.parse(raw));
-  } catch {
-    return normalizeHomeSections(HOME_CONTENT_FALLBACK.sections);
+function filledTechCards(items: HomeTechCard[]): HomeTechCard[] | null {
+  const filled = items.filter((item) => item.title.trim() && item.description.trim());
+  return filled.length > 0 ? filled : null;
+}
+
+function filledSections(sections: HomeSections): HomeSections | null {
+  return sections.culturalPortal.title.trim() ? sections : null;
+}
+
+function localeDocuments<T>(
+  raw: string | null,
+  normalize: (value: unknown) => T,
+  keep: (value: T) => T | null,
+  fallback: T,
+): Partial<Record<SiteLocaleCode, T>> {
+  const decoded = decodeLocaleDocument(parseJson(raw), normalize);
+  const kept: Partial<Record<SiteLocaleCode, T>> = {};
+  for (const locale of SITE_LOCALE_CODES) {
+    const value = decoded[locale];
+    if (!value) continue;
+    const next = keep(value);
+    if (next) kept[locale] = next;
   }
+  if (!kept.EN) kept.EN = fallback;
+  return kept;
 }
 
 function getPreservedFields(existing: HomeContent | null) {
@@ -163,6 +178,25 @@ export async function saveHomeContentAction(
   const ctaTitleI18n = readLocalizedOrPreserved(formData, 'ctaTitle', preserved.ctaTitle);
   const ctaDescriptionI18n = readLocalizedOrPreserved(formData, 'ctaDescription', preserved.ctaDescription);
 
+  const statsByLocale = localeDocuments(
+    formData.get('statsJson')?.toString() ?? null,
+    normalizeHomeStats,
+    filledStats,
+    normalizeHomeStats(HOME_CONTENT_FALLBACK.stats),
+  );
+  const techCardsByLocale = localeDocuments(
+    formData.get('techCardsJson')?.toString() ?? null,
+    normalizeHomeTechCards,
+    filledTechCards,
+    normalizeHomeTechCards(HOME_CONTENT_FALLBACK.techCards),
+  );
+  const sectionsByLocale = localeDocuments(
+    formData.get('sectionsJson')?.toString() ?? null,
+    normalizeHomeSections,
+    filledSections,
+    normalizeHomeSections(HOME_CONTENT_FALLBACK.sections),
+  );
+
   const payload = {
     ...preserved,
     heroBadge: pickDefaultLocaleText(heroBadgeI18n),
@@ -182,9 +216,9 @@ export async function saveHomeContentAction(
     missionText: pickDefaultLocaleText(missionTextI18n),
     ctaTitle: pickDefaultLocaleText(ctaTitleI18n),
     ctaDescription: pickDefaultLocaleText(ctaDescriptionI18n),
-    stats: parseStatsJson(formData.get('statsJson')?.toString() ?? null),
-    techCards: parseTechCardsJson(formData.get('techCardsJson')?.toString() ?? null),
-    sections: parseSectionsJson(formData.get('sectionsJson')?.toString() ?? null),
+    stats: statsByLocale.EN ?? normalizeHomeStats(HOME_CONTENT_FALLBACK.stats),
+    techCards: techCardsByLocale.EN ?? normalizeHomeTechCards(HOME_CONTENT_FALLBACK.techCards),
+    sections: sectionsByLocale.EN ?? normalizeHomeSections(HOME_CONTENT_FALLBACK.sections),
   };
 
   const parsed = homeContentSchema.safeParse(payload);
@@ -230,9 +264,9 @@ export async function saveHomeContentAction(
     ctaDescription: encodeTranslatableText(ctaDescriptionI18n),
     heroImage: normalizeOptionalImage(parsed.data.heroImage),
     heroMobileImage: normalizeOptionalImage(parsed.data.heroMobileImage),
-    sections: normalizeHomeSections(parsed.data.sections),
-    stats: parsed.data.stats as Prisma.InputJsonValue,
-    techCards: parsed.data.techCards as Prisma.InputJsonValue,
+    sections: encodeLocaleDocument(sectionsByLocale) as unknown as Prisma.InputJsonValue,
+    stats: encodeLocaleDocument(statsByLocale) as unknown as Prisma.InputJsonValue,
+    techCards: encodeLocaleDocument(techCardsByLocale) as unknown as Prisma.InputJsonValue,
   };
 
   await prisma.homeContent.upsert({

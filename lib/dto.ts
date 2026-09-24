@@ -15,6 +15,8 @@ import {
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
+import { localizedHomeSections, localizedHomeStats, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
+import { resolveLocaleDocument } from '@/lib/i18n/locale-document';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
 import { hydrateCultureItemMedia, parseCultureItemMedia, firstTourUrl, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
@@ -426,9 +428,9 @@ export function toPublicHomeContent(
     missionText: resolveLocalizedText(row.missionText, locale),
     ctaTitle: resolveLocalizedText(row.ctaTitle, locale),
     ctaDescription: resolveLocalizedText(row.ctaDescription, locale),
-    stats: normalizeHomeStats(stats),
-    techCards: normalizeHomeTechCards(techCards),
-    sections: normalizeHomeSections(sections),
+    stats: resolveLocaleDocument(stats, locale, normalizeHomeStats) ?? (locale === 'EN' ? normalizeHomeStats(stats) : localizedHomeStats(locale)),
+    techCards: resolveLocaleDocument(techCards, locale, normalizeHomeTechCards) ?? (locale === 'EN' ? normalizeHomeTechCards(techCards) : localizedHomeTechCards(locale)),
+    sections: resolveLocaleDocument(sections, locale, normalizeHomeSections) ?? (locale === 'EN' ? normalizeHomeSections(sections) : localizedHomeSections(locale)),
   };
 }
 
