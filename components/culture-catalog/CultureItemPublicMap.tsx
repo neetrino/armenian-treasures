@@ -22,11 +22,15 @@ export async function CultureItemPublicMap({
   locale = 'EN',
 }: CultureItemPublicMapProps) {
   const link = mapUrl?.trim() ?? '';
-  const coords = await resolvePublicMapCoordinates({ latitude, longitude, mapUrl: link });
+  const coords = await resolvePublicMapCoordinates({
+    latitude,
+    longitude,
+    mapUrl: link,
+    locationName,
+  });
   const externalHref = link && isExternalMapLink(link) ? link : null;
 
-  // Detail page: render a map whenever coordinates or a maps link exist.
-  if (!coords && !externalHref) return null;
+  if (!coords) return null;
 
   const label = locationName?.trim() || uiMessage(locale, 'openMap');
 
@@ -34,22 +38,9 @@ export async function CultureItemPublicMap({
     <div className="catalog-item-media-block">
       <p className="sec-label">{uiMessage(locale, 'location')}</p>
       <h2 className="sec-title">{label}</h2>
-      {coords ? (
-        <div className="tour-wrap catalog-map-embed reveal">
-          <CultureItemDetailMapLazy latitude={coords.latitude} longitude={coords.longitude} />
-        </div>
-      ) : externalHref ? (
-        <div className="tour-wrap catalog-map-embed reveal">
-          <iframe
-            title={label}
-            src={`https://www.google.com/maps?q=${encodeURIComponent(externalHref)}&output=embed`}
-            className="tour-embed"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
-        </div>
-      ) : null}
+      <div className="tour-wrap catalog-map-embed reveal">
+        <CultureItemDetailMapLazy latitude={coords.latitude} longitude={coords.longitude} />
+      </div>
       {externalHref ? (
         <a
           href={externalHref}

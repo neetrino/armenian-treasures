@@ -42,6 +42,21 @@ export function parseMapCoordinatesFromUrl(raw: string): ParsedMapCoordinates | 
   return readPair(plainMatch?.[1], plainMatch?.[2]);
 }
 
+export function placeQueryFromMapUrl(raw: string): string | null {
+  const value = raw.trim();
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    const query = url.searchParams.get('q') ?? url.searchParams.get('query');
+    if (query && !parseMapCoordinatesFromUrl(query)) return query.replace(/\+/g, ' ').trim() || null;
+    const place = url.pathname.match(/\/(?:place|search)\/([^/@]+)/i);
+    if (!place?.[1]) return null;
+    const name = decodeURIComponent(place[1]).replace(/\+/g, ' ').trim();
+    return name || null;
+  } catch {
+    return null;
+  }
+}
 export function isExternalMapLink(raw: string): boolean {
   const value = raw.trim();
   if (!value) return false;

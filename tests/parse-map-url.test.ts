@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isExternalMapLink, parseMapCoordinatesFromUrl, resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
+import { isExternalMapLink, parseMapCoordinatesFromUrl, placeQueryFromMapUrl, resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
 
 describe('parseMapCoordinatesFromUrl', () => {
   it('reads Google Maps @lat,lng', () => {
@@ -28,6 +28,12 @@ describe('parseMapCoordinatesFromUrl', () => {
       latitude: 40.1422,
       longitude: 44.8181,
     });
+  });
+
+  it('reads a place name from a Google Maps link', () => {
+    expect(
+      placeQueryFromMapUrl('https://www.google.com/maps/place/Tatev+Monastery/'),
+    ).toBe('Tatev Monastery');
   });
 
   it('rejects empty or out-of-range values', () => {
