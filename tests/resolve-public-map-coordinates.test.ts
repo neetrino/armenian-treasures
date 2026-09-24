@@ -44,6 +44,26 @@ describe('resolvePublicMapCoordinates', () => {
     ).resolves.toEqual({ latitude: 39.5024893, longitude: 46.4322088 });
   });
 
+  it('geocodes a Google place link onto coordinates', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: string) => {
+        if (String(input).includes('nominatim.openstreetmap.org')) {
+          return { ok: true, json: async () => [{ lat: '39.3793', lon: '46.2502' }] };
+        }
+        return { url: input };
+      }),
+    );
+
+    await expect(
+      resolvePublicMapCoordinates({
+        latitude: null,
+        longitude: null,
+        mapUrl: 'https://www.google.com/maps/place/Tatev+Monastery/',
+      }),
+    ).resolves.toEqual({ latitude: 39.3793, longitude: 46.2502 });
+  });
+
   it('does not fall back to default Yerevan coordinates', async () => {
     await expect(
       resolvePublicMapCoordinates({

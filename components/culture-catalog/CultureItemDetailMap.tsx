@@ -31,13 +31,26 @@ export function CultureItemDetailMap({ latitude, longitude }: CultureItemDetailM
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
+    const container = containerRef.current;
     const start: L.LatLngExpression = [latitude, longitude];
-    const map = L.map(containerRef.current, { scrollWheelZoom: false }).setView(start, 12);
+    const map = L.map(container, {
+      scrollWheelZoom: true,
+      touchZoom: true,
+      zoomControl: true,
+      zoomSnap: 0.25,
+      wheelPxPerZoomLevel: 40,
+    }).setView(start, 12);
     L.tileLayer(TILE_URL, { attribution: '© OpenStreetMap contributors' }).addTo(map);
     L.marker(start, { icon: createDetailPinIcon() }).addTo(map);
     mapRef.current = map;
+
+    const zoomFromWheel = (event: WheelEvent): void => {
+      event.preventDefault();
+    };
+    container.addEventListener('wheel', zoomFromWheel, { passive: false });
     window.requestAnimationFrame(() => map.invalidateSize());
     return () => {
+      container.removeEventListener('wheel', zoomFromWheel);
       map.remove();
       mapRef.current = null;
     };
