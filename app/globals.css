@@ -452,18 +452,18 @@ html[lang='hyw'] .khndzoresk-page .hero h1,
   font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
   font-weight: 700 !important;
   letter-spacing: 0.02em !important;
-  line-height: 1.02 !important;
-  padding-block: 0.02em 0;
+  line-height: 1.25 !important;
+  padding-block: 0.12em;
   overflow: visible;
 }
 
 html[lang='hy'] .khndzoresk-page .hero h1 span,
 html[lang='hyw'] .khndzoresk-page .hero h1 span,
 .khndzoresk-page .hero h1 .hero-accent--hy {
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.06em !important;
   font-weight: 500 !important;
-  line-height: 1.05 !important;
-  padding-block: 0;
+  line-height: 1.35 !important;
+  padding-block: 0.08em;
   overflow: visible;
 }
 

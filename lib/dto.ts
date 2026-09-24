@@ -187,9 +187,10 @@ function resolvePublicMenuTitle(
   const localized = resolveLocalizedText(raw, locale).trim();
   const english = resolveLocalizedText(raw, 'EN').trim();
   const fromCode = cultureMenuLabel(locale, slug);
+  const englishCatalog = cultureMenuLabel('EN', slug);
   if (locale === 'EN') return localized || fromCode || '';
-  if (localized && localized !== english) return localized;
-  return fromCode || localized || english;
+  if (fromCode && (!localized || localized === english || localized === englishCatalog)) return fromCode;
+  return localized || fromCode || english;
 }
 
 export function toPublicMenuItem(

@@ -57,6 +57,20 @@ describe('resolveCultureMegaMenu', () => {
     });
   });
 
+  it('translates the live Ornaments item in Armenian', () => {
+    const columns = resolveCultureMegaMenu(
+      architectureTree([
+        node({ id: 'ornaments', slug: 'ornaments', title: 'Ornaments', order: 3 }),
+      ]),
+      'HY',
+    );
+
+    const ornaments = columns
+      .find((column) => column.heading === 'Ճարտարապետություն')
+      ?.items.find((item) => item.menuPath === 'architecture/ornaments');
+    expect(ornaments?.label).toBe('Նախշազարդ');
+  });
+
   it('does not duplicate sheet items or include form routes', () => {
     const columns = resolveCultureMegaMenu(
       architectureTree([
