@@ -20,7 +20,7 @@ describe('ui chrome translations', () => {
   });
 
   it('uses shorter Armenian labels in the desktop header', () => {
-    expect(headerChromeLabel('HY', 'culturalPortal')).toBe('Պորտալ');
+    expect(headerChromeLabel('HY', 'culturalPortal')).toBe('Մշակութային պորտալ');
     expect(headerPrimaryLinkLabel('/map', 'HY')).toBe('Քարտեզ');
     expect(headerPrimaryLinkLabel('/highlights', 'HY')).toBe('Ընտրյալ');
     expect(headerChromeLabel('HY', 'aboutUs')).toBe('Մեր մասին');
@@ -28,7 +28,9 @@ describe('ui chrome translations', () => {
   });
 
   it('uses compact header labels for long locales', () => {
-    expect(headerChromeLabel('RU', 'culturalPortal')).toBe('Портал');
+    expect(headerChromeLabel('RU', 'culturalPortal')).toBe('Культурный портал');
+    expect(headerChromeLabel('FR', 'culturalPortal')).toBe('Portail culturel');
+    expect(headerChromeLabel('PT', 'culturalPortal')).toBe('Portal cultural');
     expect(headerChromeLabel('RU', 'upcomingProjects')).toBe('Проекты');
     expect(headerChromeLabel('RU', 'donate')).toBe('Донат');
     expect(headerPrimaryLinkLabel('/donate', 'RU')).toBe('Донат');

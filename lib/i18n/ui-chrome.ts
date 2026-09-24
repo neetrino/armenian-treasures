@@ -46,7 +46,6 @@ export function chromeLabel(locale: SiteLocaleCode, key: UiChromeKey): string {
 }
 
 const HEADER_HY: Partial<Record<UiChromeKey, string>> = {
-  culturalPortal: 'Պորտալ',
   upcomingProjects: 'Ծրագրեր',
   heritageMap: 'Քարտեզ',
   partnership: 'Գործընկերներ',
@@ -58,7 +57,6 @@ const HEADER_HY: Partial<Record<UiChromeKey, string>> = {
 /** Compact header labels so long locales (RU/FR/PT) do not collide in the nav bar. */
 const HEADER_SHORT: Partial<Record<Exclude<SiteLocaleCode, 'EN' | 'HY' | 'HYW'>, Partial<Record<UiChromeKey, string>>>> = {
   RU: {
-    culturalPortal: 'Портал',
     upcomingProjects: 'Проекты',
     heritageMap: 'Карта',
     partnership: 'Партнёры',
@@ -68,7 +66,6 @@ const HEADER_SHORT: Partial<Record<Exclude<SiteLocaleCode, 'EN' | 'HY' | 'HYW'>,
     aboutUs: 'О нас',
   },
   FR: {
-    culturalPortal: 'Portail',
     upcomingProjects: 'Projets',
     heritageMap: 'Carte',
     partnership: 'Partenaires',
@@ -78,7 +75,6 @@ const HEADER_SHORT: Partial<Record<Exclude<SiteLocaleCode, 'EN' | 'HY' | 'HYW'>,
     aboutUs: 'À propos',
   },
   PT: {
-    culturalPortal: 'Portal',
     upcomingProjects: 'Projetos',
     heritageMap: 'Mapa',
     partnership: 'Parceria',
