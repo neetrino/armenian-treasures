@@ -96,21 +96,32 @@
 }
 
 .khndzoresk-page .cat-card--hub {
-  min-height: clamp(280px, 32vw, 380px);
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .khndzoresk-page .cat-card--hub .cat-media {
-  flex-basis: 78%;
+  flex: none;
+  width: 100%;
+  aspect-ratio: 1;
 }
 
 .khndzoresk-page .cat-card--hub .cat-content--catalog {
+  flex: none;
+  width: 100%;
+  min-width: 0;
   padding: 18px 16px 22px;
   justify-content: center;
 }
 
 .khndzoresk-page .cat-card--hub .cat-card-title {
+  max-width: 100%;
   font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.25;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .khndzoresk-page .cat-card.cat-card--hub-photo,
@@ -119,23 +130,15 @@
   background-image: none;
 }
 
+.khndzoresk-page .cat-card--hub-photo .cat-media {
+  background: #0a0805;
+}
+
 .khndzoresk-page .cat-card__hub-photo {
   position: absolute;
   inset: 0;
   background: var(--hub-card-bg-image) center / cover no-repeat;
-  opacity: 0.4;
   pointer-events: none;
-}
-
-.khndzoresk-page .cat-card--hub-photo .cat-content--catalog {
-  position: relative;
-  z-index: 1;
-  background: transparent;
-}
-
-.khndzoresk-page .cat-card--hub-photo .cat-card-title {
-  color: var(--gold);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
 }
 
 /* Keep /culture subcategory cards image-first, but allow full text visibility. */
@@ -145,18 +148,6 @@
 
 .khndzoresk-page .cat-card--catalog .cat-media {
   flex-basis: 72%;
-}
-
-.khndzoresk-page .cat-card--catalog[data-category-icon='castles'] .cat-media img {
-  object-fit: contain;
-  object-position: center;
-  transform: scale(0.9);
-}
-
-.khndzoresk-page .cat-card--catalog[data-category-icon='castles']:hover .cat-media img {
-  object-fit: contain;
-  object-position: center;
-  transform: scale(0.94);
 }
 
 .khndzoresk-page .cat-card--catalog .cat-content--catalog {
@@ -1197,6 +1188,7 @@
 }
 
 .khndzoresk-page .cat-grid--hub .cat-card--hub {
-  max-width: 320px;
-  justify-self: center;
+  width: 100%;
+  min-width: 0;
+  justify-self: stretch;
 }
