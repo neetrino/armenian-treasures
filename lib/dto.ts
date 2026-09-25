@@ -14,7 +14,7 @@ import {
 } from '@/lib/types/home-content';
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
-import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
+import { cultureMenuLabel, isUntranslatedMenuTitle } from '@/lib/i18n/messages/menu';
 import { localizedHomeSections, localizedHomeStats, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
 import { resolveLocaleDocument } from '@/lib/i18n/locale-document';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
@@ -189,7 +189,7 @@ function resolvePublicMenuTitle(
   const fromCode = cultureMenuLabel(locale, slug);
   const englishCatalog = cultureMenuLabel('EN', slug);
   if (locale === 'EN') return localized || fromCode || '';
-  if (fromCode && (!localized || localized === english || localized === englishCatalog)) return fromCode;
+  if (fromCode && isUntranslatedMenuTitle(localized, english, englishCatalog ?? '')) return fromCode;
   return localized || fromCode || english;
 }
 

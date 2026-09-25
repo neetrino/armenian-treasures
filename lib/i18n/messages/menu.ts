@@ -258,6 +258,27 @@ export const PROJECT_MENU_KEYS: Record<string, MenuMessageKey> = {
   'global-diaspora-network': 'projectGlobalDiaspora',
 };
 
+const MENU_TITLE_LOOKALIKES = /[ՕօОо]/g;
+
+function foldMenuTitle(value: string): string {
+  return value.replace(MENU_TITLE_LOOKALIKES, 'o').toLowerCase();
+}
+
+/** True when stored text is empty or still the English catalog name (including Օ/O lookalikes). */
+export function isUntranslatedMenuTitle(
+  localized: string,
+  english: string,
+  englishCatalog: string,
+): boolean {
+  if (!localized) return true;
+  if (localized === english || localized === englishCatalog) return true;
+  const folded = foldMenuTitle(localized);
+  if (english && folded === foldMenuTitle(english)) return true;
+  if (englishCatalog && folded === foldMenuTitle(englishCatalog)) return true;
+  const catalog = foldMenuTitle(englishCatalog);
+  return catalog === 'armaments' && (folded === 'ornaments' || folded === 'ormaments');
+}
+
 export function cultureMenuLabel(locale: SiteLocaleCode, pathOrSlug: string): string | null {
   const key = CULTURE_MENU_PATH_KEYS[pathOrSlug];
   if (!key) return null;
