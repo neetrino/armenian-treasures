@@ -1,12 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { TextField } from '@/components/forms/fields/TextField';
 import { SelectField } from '@/components/forms/fields/SelectField';
+import { AdminLocaleAwareTextField } from '@/components/forms/fields/AdminLocaleAwareTextField';
 import { CULTURE_MAP_TYPE_OPTIONS } from '@/lib/admin/enum-labels';
 import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
-import { decodeTranslatableText } from '@/lib/i18n/translatable-content';
-import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface AdminLocationMapFieldProps {
   locationNameEncoded?: string;
@@ -18,15 +17,6 @@ interface AdminLocationMapFieldProps {
   fieldErrors?: Record<string, string>;
   onMapUrlChange: (value: string) => void;
   onAddressChange: (value: string) => void;
-}
-
-function sharedLocationName(encoded: string | undefined): string {
-  const values = decodeTranslatableText(encoded ?? '');
-  for (const code of SITE_LOCALE_CODES) {
-    const value = values[code]?.trim();
-    if (value) return value;
-  }
-  return '';
 }
 
 export function AdminLocationMapField({
@@ -41,22 +31,16 @@ export function AdminLocationMapField({
   onAddressChange,
 }: AdminLocationMapFieldProps) {
   const parsed = parseMapCoordinatesFromUrl(mapUrl);
-  const [locationName, setLocationName] = useState(() => sharedLocationName(locationNameEncoded));
 
   return (
     <div className="flex flex-col gap-5">
       <div className="grid gap-5 sm:grid-cols-2">
-        {SITE_LOCALE_CODES.map((code) =>
-          code === activeLocale ? null : (
-            <input key={code} type="hidden" name={`locationName.${code}`} value={locationName} readOnly />
-          ),
-        )}
-        <TextField
+        <AdminLocaleAwareTextField
           label="Location name"
-          name={`locationName.${activeLocale}`}
-          value={locationName}
-          onChange={(event) => setLocationName(event.target.value)}
-          hint="Shared for all languages."
+          name="locationName"
+          encodedValue={locationNameEncoded}
+          activeLocale={activeLocale}
+          hint="This language only. Switch the language tab to set another name."
           error={fieldErrors?.locationName}
         />
         <TextField
