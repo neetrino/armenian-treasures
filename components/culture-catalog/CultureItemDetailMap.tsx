@@ -1,60 +1,62 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { bindMapWheelZoom } from '@/components/map/bind-map-wheel-zoom';
+import { makeHeritageMarkerIcon } from '@/components/map/LeafletMap';
+import { MapWheelZoomHint } from '@/components/map/MapWheelZoomHint';
+import type { PublicCultureItemDTO } from '@/lib/dto';
+import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 interface CultureItemDetailMapProps {
   latitude: number;
   longitude: number;
+  mapType?: PublicCultureItemDTO['mapType'];
+  locale?: SiteLocaleCode;
 }
 
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-function createDetailPinIcon(): L.DivIcon {
-  return L.divIcon({
-    className: 'culture-detail-pin-marker',
-    html: `<span style="display:flex;width:28px;height:36px;align-items:flex-end;justify-content:center;filter:drop-shadow(0 2px 4px rgba(15,23,42,0.35));">
-      <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M14 34s10-12.2 10-20A10 10 0 1 0 4 14c0 7.8 10 20 10 20Z" fill="#7E1C26"/>
-        <circle cx="14" cy="14" r="4.25" fill="#F6EFD9"/>
-      </svg>
-    </span>`,
-    iconSize: [28, 36],
-    iconAnchor: [14, 34],
-  });
-}
-
-export function CultureItemDetailMap({ latitude, longitude }: CultureItemDetailMapProps) {
+export function CultureItemDetailMap({
+  latitude,
+  longitude,
+  mapType,
+  locale = 'EN',
+}: CultureItemDetailMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const [wheelZoomActive, setWheelZoomActive] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
     const container = containerRef.current;
+    if (!container || mapRef.current) return;
     const start: L.LatLngExpression = [latitude, longitude];
     const map = L.map(container, {
-      scrollWheelZoom: true,
+      scrollWheelZoom: false,
       touchZoom: true,
-      zoomControl: true,
+      zoomControl: false,
+      attributionControl: false,
       zoomSnap: 0.25,
       wheelPxPerZoomLevel: 40,
     }).setView(start, 12);
-    L.tileLayer(TILE_URL, { attribution: '© OpenStreetMap contributors' }).addTo(map);
-    L.marker(start, { icon: createDetailPinIcon() }).addTo(map);
+    L.tileLayer(TILE_URL, { attribution: '' }).addTo(map);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.marker(start, { icon: makeHeritageMarkerIcon(mapType ?? null, true) }).addTo(map);
     mapRef.current = map;
-
-    const zoomFromWheel = (event: WheelEvent): void => {
-      event.preventDefault();
-    };
-    container.addEventListener('wheel', zoomFromWheel, { passive: false });
+    const unbindWheelZoom = bindMapWheelZoom(map, container, setWheelZoomActive);
     window.requestAnimationFrame(() => map.invalidateSize());
     return () => {
-      container.removeEventListener('wheel', zoomFromWheel);
+      unbindWheelZoom();
       map.remove();
       mapRef.current = null;
     };
-  }, [latitude, longitude]);
+  }, [latitude, longitude, mapType]);
 
-  return <div ref={containerRef} className="map-embed" />;
+  return (
+    <div className="relative h-full w-full">
+      <div ref={containerRef} className="map-embed" />
+      <MapWheelZoomHint active={wheelZoomActive} locale={locale} />
+    </div>
+  );
 }

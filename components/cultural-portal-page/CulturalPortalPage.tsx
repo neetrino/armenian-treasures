@@ -73,11 +73,12 @@ async function CulturalPortalDeferredSections({
   const loadDonors = isSectionEnabled(visibility, 'donors');
   const loadAbout = isSectionEnabled(visibility, 'about');
 
-  const [mapItems, projects, donators, about] = await Promise.all([
+  const [mapItems, projects, donators, about, locale] = await Promise.all([
     isSectionEnabled(visibility, 'map') ? getMapItems() : Promise.resolve([]),
     loadProjects ? getPublishedProjects() : Promise.resolve([]),
     loadDonors ? getPublicDonators() : Promise.resolve([]),
     loadAbout ? getAboutContent() : Promise.resolve(null),
+    getCurrentSiteLocale(),
   ]);
 
   const donorGroups = loadDonors ? groupDonatorsForHomeSection(donators) : [];
@@ -96,6 +97,7 @@ async function CulturalPortalDeferredSections({
           title={mapSection.title}
           description={mapSection.description}
           items={mapItems}
+          locale={locale}
         />
       ) : null}
       {loadProjects && portalProjects.length > 0 ? (

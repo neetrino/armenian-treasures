@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
+import { bindMapWheelZoom } from '@/components/map/bind-map-wheel-zoom';
+import { MapWheelZoomHint } from '@/components/map/MapWheelZoomHint';
 
 interface LeafletMapProps {
   items: PublicCultureItemDTO[];
@@ -118,7 +120,10 @@ function iconNodeToSvg(iconNode: MarkerIconNode[], color: string, selected: bool
   </svg>`;
 }
 
-function makeIcon(mapType: PublicCultureItemDTO['mapType'], selected: boolean): L.DivIcon {
+export function makeHeritageMarkerIcon(
+  mapType: PublicCultureItemDTO['mapType'],
+  selected: boolean,
+): L.DivIcon {
   const marker = resolveMarkerStyle(mapType);
   const icon = iconNodeToSvg(marker.icon, marker.color, selected);
   const size = selected ? 30 : 26;
@@ -153,13 +158,11 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
   const [wheelZoomActive, setWheelZoomActive] = useState(false);
   const armeniaLabel = uiMessage(locale, 'armenia');
   const mapAriaLabel = uiMessage(locale, 'interactiveHeritageMapAria');
-  const clickToZoomHint = uiMessage(locale, 'mapClickToZoom');
-  const scrollToZoomHint = uiMessage(locale, 'mapScrollToZoom');
   const markerIcons = useMemo(() => {
     const icons = new Map<string, L.DivIcon>();
     for (const item of mappableItems(items)) {
       const isSelected = selectedId === item.id;
-      icons.set(item.id, makeIcon(item.mapType, isSelected));
+      icons.set(item.id, makeHeritageMarkerIcon(item.mapType, isSelected));
     }
     return icons;
   }, [items, selectedId]);
@@ -185,40 +188,10 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     markersLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
-
-    const activateWheelZoom = (): void => {
-      map.scrollWheelZoom.enable();
-      setWheelZoomActive(true);
-    };
-
-    const deactivateWheelZoom = (): void => {
-      map.scrollWheelZoom.disable();
-      setWheelZoomActive(false);
-    };
-
-    const handleMapClick = (): void => {
-      activateWheelZoom();
-    };
-
-    const handleDocumentClick = (event: MouseEvent): void => {
-      if (container.contains(event.target as Node)) return;
-      deactivateWheelZoom();
-    };
-
-    const handleKeyDown = (event: KeyboardEvent): void => {
-      if (event.key !== 'Escape') return;
-      deactivateWheelZoom();
-      container.blur();
-    };
-
-    container.addEventListener('click', handleMapClick);
-    document.addEventListener('click', handleDocumentClick);
-    document.addEventListener('keydown', handleKeyDown);
+    const unbindWheelZoom = bindMapWheelZoom(map, container, setWheelZoomActive);
 
     return () => {
-      container.removeEventListener('click', handleMapClick);
-      document.removeEventListener('click', handleDocumentClick);
-      document.removeEventListener('keydown', handleKeyDown);
+      unbindWheelZoom();
       map.remove();
       mapRef.current = null;
       markersLayerRef.current = null;
@@ -235,7 +208,9 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
     for (const item of mappableItems(items)) {
       const lat = item.latitude!;
       const lng = item.longitude!;
-      const marker = L.marker([lat, lng], { icon: markerIcons.get(item.id) ?? makeIcon(item.mapType, false) }).addTo(layer);
+      const marker = L.marker([lat, lng], {
+        icon: markerIcons.get(item.id) ?? makeHeritageMarkerIcon(item.mapType, false),
+      }).addTo(layer);
       marker.bindPopup(
         `<strong>${escapeHtml(item.title)}</strong><br /><small>${escapeHtml(item.region ?? armeniaLabel)}</small>`,
       );
@@ -262,21 +237,7 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
         aria-label={mapAriaLabel}
         tabIndex={0}
       />
-      {!wheelZoomActive ? (
-        <div
-          className="pointer-events-none absolute bottom-4 left-1/2 z-[500] max-w-[min(calc(100%-2rem),20rem)] -translate-x-1/2 rounded-full border border-white/15 bg-slate-950/75 px-4 py-2 text-center text-[11px] uppercase tracking-[0.18em] text-slate-200 shadow-lg backdrop-blur-sm"
-          aria-hidden
-        >
-          {clickToZoomHint}
-        </div>
-      ) : (
-        <div
-          className="pointer-events-none absolute bottom-4 left-1/2 z-[500] -translate-x-1/2 rounded-full border border-heritage-teal/35 bg-slate-950/80 px-3 py-1.5 text-[10px] uppercase tracking-[0.16em] text-heritage-teal shadow-lg backdrop-blur-sm"
-          aria-hidden
-        >
-          {scrollToZoomHint}
-        </div>
-      )}
+      <MapWheelZoomHint active={wheelZoomActive} locale={locale} />
     </div>
   );
 }

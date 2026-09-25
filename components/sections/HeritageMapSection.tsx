@@ -1,9 +1,10 @@
 import { MapPanel } from '@/components/map/MapPanel';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { getMapItems } from '@/lib/queries/culture-items';
 import type { HomeSectionContentProps } from '@/lib/queries/home';
 
 export async function HeritageMapSection(_props: HomeSectionContentProps) {
-  const items = await getMapItems();
+  const [items, locale] = await Promise.all([getMapItems(), getCurrentSiteLocale()]);
 
   return (
     <section
@@ -13,7 +14,7 @@ export async function HeritageMapSection(_props: HomeSectionContentProps) {
     >
       <div className="relative z-10 mx-auto w-full max-w-[90rem]">
         <div className="heritage-map-embed">
-          <MapPanel items={items} embedToolbar />
+          <MapPanel items={items} embedToolbar locale={locale} />
         </div>
       </div>
     </section>

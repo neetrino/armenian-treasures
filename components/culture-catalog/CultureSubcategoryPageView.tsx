@@ -9,7 +9,7 @@ import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import { buildCatalogSearchForm } from '@/lib/culture-catalog/catalog-filter-options';
 import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries';
 import type { CatalogSearchFilters } from '@/lib/culture-catalog/catalog-search-params';
-import { filterMappableItems } from '@/lib/mappers/culture-catalog-page';
+import { resolveMappableCatalogItems } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -22,7 +22,7 @@ interface CultureSubcategoryPageViewProps {
   locale?: SiteLocaleCode;
 }
 
-export function CultureSubcategoryPageView({
+export async function CultureSubcategoryPageView({
   parent,
   subcategory,
   items,
@@ -31,7 +31,7 @@ export function CultureSubcategoryPageView({
 }: CultureSubcategoryPageViewProps) {
   const content = resolveCultureCatalogContent(subcategory, parent, { locale });
   const visibility = content.sectionVisibility;
-  const mapItems = filterMappableItems(items);
+  const mapItems = await resolveMappableCatalogItems(items);
   const visibleItems = filterCatalogItems(items, filters);
   const searchForm =
     items.length > 0
@@ -66,6 +66,7 @@ export function CultureSubcategoryPageView({
             title={content.map.title}
             description={content.map.description}
             items={mapItems}
+            locale={locale}
           />
         ) : null}
         {visibility.entries ? (

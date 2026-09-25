@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { bindMapWheelZoom } from '@/components/map/bind-map-wheel-zoom';
+import { MapWheelZoomHint } from '@/components/map/MapWheelZoomHint';
 import { DEFAULT_MAP_COORDINATES } from '@/lib/culture-item-media';
 
 interface AdminPinMapProps {
@@ -39,6 +41,7 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
   const mapRef = useRef<L.Map | null>(null);
   const markerRef = useRef<L.Marker | null>(null);
   const onChangeRef = useRef(onChange);
+  const [wheelZoomActive, setWheelZoomActive] = useState(false);
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -50,7 +53,7 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
     const startLat = latitude ?? DEFAULT_MAP_COORDINATES.latitude;
     const startLng = longitude ?? DEFAULT_MAP_COORDINATES.longitude;
     const start: L.LatLngExpression = [startLat, startLng];
-    const map = L.map(containerRef.current).setView(start, 12);
+    const map = L.map(containerRef.current, { scrollWheelZoom: false, touchZoom: true }).setView(start, 12);
     L.tileLayer(TILE_URL, { attribution: '© OpenStreetMap contributors' }).addTo(map);
     const marker = L.marker(start, { draggable: true, icon: createAdminPinIcon() }).addTo(map);
 
@@ -65,6 +68,7 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
 
     mapRef.current = map;
     markerRef.current = marker;
+    const unbindWheelZoom = bindMapWheelZoom(map, containerRef.current, setWheelZoomActive);
 
     // Persist the visible pin into the form. Without this, Save stores null coords
     // even though the admin map shows a default Yerevan pin.
@@ -87,6 +91,7 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
     observer.observe(containerRef.current);
 
     return () => {
+      unbindWheelZoom();
       observer.disconnect();
       map.remove();
       mapRef.current = null;
@@ -103,9 +108,12 @@ export function AdminPinMap({ latitude, longitude, onChange }: AdminPinMapProps)
   }, [latitude, longitude]);
 
   return (
-    <div
-      ref={containerRef}
-      className="h-72 min-h-[18rem] w-full overflow-hidden rounded-xl border border-stone-200"
-    />
+    <div className="relative h-72 min-h-[18rem] w-full">
+      <div
+        ref={containerRef}
+        className="h-full w-full overflow-hidden rounded-xl border border-stone-200"
+      />
+      <MapWheelZoomHint active={wheelZoomActive} />
+    </div>
   );
 }

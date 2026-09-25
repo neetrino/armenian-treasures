@@ -8,6 +8,7 @@ import { resolveCultureItemSectionOrder } from '@/lib/admin/culture-item-editor-
 import type { CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { CultureItemMediaContent } from '@/lib/culture-item-media';
+import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 
@@ -19,6 +20,7 @@ interface CultureItemMediaSectionsProps {
   mapUrl?: string | null;
   latitude?: number | null;
   longitude?: number | null;
+  mapType?: PublicCultureItemDTO['mapType'];
   locale?: SiteLocaleCode;
 }
 
@@ -30,6 +32,7 @@ export function CultureItemMediaSections({
   mapUrl,
   latitude,
   longitude,
+  mapType,
   locale = 'EN',
 }: CultureItemMediaSectionsProps) {
   const sectionOrder = resolveCultureItemSectionOrder(media.sectionOrder);
@@ -47,6 +50,7 @@ export function CultureItemMediaSections({
           mapUrl={mapUrl}
           latitude={latitude}
           longitude={longitude}
+          mapType={mapType}
           locale={locale}
         />
       ))}
@@ -67,6 +71,7 @@ function CultureItemMediaSection({
   mapUrl,
   latitude,
   longitude,
+  mapType,
   locale = 'EN',
 }: CultureItemMediaSectionProps) {
   switch (sectionId) {
@@ -82,6 +87,7 @@ function CultureItemMediaSection({
           locationName={locationName}
           latitude={latitude}
           longitude={longitude}
+          mapType={mapType}
           locale={locale}
         />
       );

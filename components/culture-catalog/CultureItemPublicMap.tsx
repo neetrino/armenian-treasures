@@ -1,6 +1,7 @@
 import { CultureItemDetailMapLazy } from '@/components/culture-catalog/CultureItemDetailMapLazy';
 import { isExternalMapLink } from '@/lib/culture-catalog/parse-map-url';
 import { resolvePublicMapCoordinates } from '@/lib/culture-catalog/resolve-public-map-coordinates';
+import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 
@@ -11,6 +12,7 @@ interface CultureItemPublicMapProps {
   locationName?: string | null;
   latitude?: number | null;
   longitude?: number | null;
+  mapType?: PublicCultureItemDTO['mapType'];
   locale?: SiteLocaleCode;
 }
 
@@ -19,6 +21,7 @@ export async function CultureItemPublicMap({
   locationName,
   latitude,
   longitude,
+  mapType,
   locale = 'EN',
 }: CultureItemPublicMapProps) {
   const link = mapUrl?.trim() ?? '';
@@ -39,8 +42,20 @@ export async function CultureItemPublicMap({
       <p className="sec-label">{uiMessage(locale, 'location')}</p>
       <h2 className="sec-title">{label}</h2>
       <div className="tour-wrap catalog-map-embed reveal">
-        <CultureItemDetailMapLazy latitude={coords.latitude} longitude={coords.longitude} />
+        <CultureItemDetailMapLazy
+          latitude={coords.latitude}
+          longitude={coords.longitude}
+          mapType={mapType}
+          locale={locale}
+        />
       </div>
+      <p className="catalog-map-attribution">
+        Map tiles ©{' '}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+          OpenStreetMap
+        </a>{' '}
+        contributors
+      </p>
       {externalHref ? (
         <a
           href={externalHref}

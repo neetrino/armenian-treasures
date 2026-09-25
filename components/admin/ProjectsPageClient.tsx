@@ -4,10 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'reac
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
-import { AdminModal } from '@/components/admin/AdminModal';
-import { AdminSheet } from '@/components/admin/AdminSheet';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
-import { ProjectForm } from '@/components/admin/ProjectForm';
 import { InlineRaisedAmountCell } from '@/components/admin/InlineRaisedAmountCell';
 import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
 import { StatusPill } from '@/components/ui/StatusPill';
@@ -48,8 +45,6 @@ interface ProjectsPageClientProps {
 
 export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
   const router = useRouter();
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingRow, setEditingRow] = useState<Row | null>(null);
   const [raisedById, setRaisedById] = useState<Record<string, number>>(() =>
     Object.fromEntries(rows.map((row) => [row.id, row.raisedAmount])),
   );
@@ -58,16 +53,8 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
     setRaisedById(Object.fromEntries(rows.map((row) => [row.id, row.raisedAmount])));
   }, [rows]);
 
-  const openCreateModal = useCallback(() => setIsCreateModalOpen(true), []);
-  const closeCreateModal = useCallback(() => setIsCreateModalOpen(false), []);
-  const openEditModal = useCallback((row: Row) => setEditingRow(row), []);
-  const closeEditModal = useCallback(() => setEditingRow(null), []);
-
-  const handleModalSuccess = useCallback(() => {
-    setIsCreateModalOpen(false);
-    setEditingRow(null);
-    router.refresh();
-  }, [router]);
+  const openCreatePage = useCallback(() => router.push('/admin/projects/new'), [router]);
+  const openEditPage = useCallback((row: Row) => router.push(`/admin/projects/${row.id}`), [router]);
 
   const handleDelete = useCallback(
     async (id: string) => {
@@ -80,9 +67,9 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
   const handleEditClick = useCallback(
     (event: MouseEvent<HTMLButtonElement>, row: Row) => {
       event.stopPropagation();
-      openEditModal(row);
+      openEditPage(row);
     },
-    [openEditModal],
+    [openEditPage],
   );
 
   const handleRaisedSaved = useCallback((id: string, raisedAmount: number) => {
@@ -159,7 +146,7 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
         description="Funding campaigns shown on the public /projects page."
         size="wide"
         actions={
-          <Button type="button" variant="primary" onClick={openCreateModal}>
+          <Button type="button" variant="primary" onClick={openCreatePage}>
             <Plus size={14} aria-hidden /> Add project
           </Button>
         }
@@ -168,33 +155,9 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
           columns={columns}
           rows={rows}
           getRowId={(row) => row.id}
-          onRowClick={openEditModal}
+          onRowClick={openEditPage}
         />
       </AdminPageShell>
-      {isCreateModalOpen ? (
-        <AdminModal eyebrow="Projects" title="Create project" onClose={closeCreateModal} maxWidthClass="max-w-3xl">
-          <ProjectForm mode="create" onSuccess={handleModalSuccess} onCancel={closeCreateModal} />
-        </AdminModal>
-      ) : null}
-      {editingRow ? (
-        <AdminSheet
-          open={editingRow !== null}
-          onClose={closeEditModal}
-          eyebrow="Projects"
-          title="Edit project"
-          description={editingRow.title}
-          size="2xl"
-        >
-          <ProjectForm
-            key={editingRow.id}
-            mode="edit"
-            itemId={editingRow.id}
-            initial={editingRow.editInitial}
-            onSuccess={handleModalSuccess}
-            onCancel={closeEditModal}
-          />
-        </AdminSheet>
-      ) : null}
     </>
   );
 }
