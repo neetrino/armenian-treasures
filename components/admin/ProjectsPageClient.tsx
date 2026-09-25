@@ -1,17 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Pencil, Plus } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
-import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { InlineRaisedAmountCell } from '@/components/admin/InlineRaisedAmountCell';
 import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
+import { SortableAdminList } from '@/components/admin/SortableAdminList';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { Button } from '@/components/ui/Button';
-import { deleteProjectAction } from '@/app/(admin)/admin/(panel)/projects/actions';
+import { deleteProjectAction, reorderProjectsAction } from '@/app/(admin)/admin/(panel)/projects/actions';
 import type { AdminContext } from '@/lib/auth/require-admin';
-import { formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 
 interface ProjectFormInitial {
   title: string;
@@ -64,100 +64,98 @@ export function ProjectsPageClient({ user, rows }: ProjectsPageClientProps) {
     [router],
   );
 
-  const handleEditClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, row: Row) => {
-      event.stopPropagation();
-      openEditPage(row);
-    },
-    [openEditPage],
-  );
-
   const handleRaisedSaved = useCallback((id: string, raisedAmount: number) => {
     setRaisedById((prev) => ({ ...prev, [id]: raisedAmount }));
   }, []);
 
-  const columns: AdminTableColumn<Row>[] = useMemo(
-    () => [
-      {
-        key: 'title',
-        header: 'Project',
-        cell: (row) => (
-          <div>
-            <p className="font-medium text-ink">{row.title}</p>
-            <p className="text-xs text-ink-muted">
-              {row.category}
-              {row.region ? ` · ${row.region}` : ''}
-            </p>
-          </div>
-        ),
-      },
-      { key: 'status', header: 'Status', cell: (row) => <StatusPill status={row.status} /> },
-      {
-        key: 'raised',
-        header: 'Raised',
-        cell: (row) => (
-          <InlineRaisedAmountCell
-            projectId={row.id}
-            value={raisedById[row.id] ?? row.raisedAmount}
-            onSaved={(amount) => handleRaisedSaved(row.id, amount)}
-          />
-        ),
-      },
-      {
-        key: 'goal',
-        header: 'Goal',
-        cell: (row) => (
-          <span className="text-xs text-ink-soft">{formatCurrency(row.goalAmount)}</span>
-        ),
-      },
-      {
-        key: 'actions',
-        header: 'Actions',
-        align: 'right',
-        cell: (row) => (
-          <div className="flex items-center justify-end gap-1">
-            <button
-              type="button"
-              aria-label="Edit project"
-              onClick={(event) => handleEditClick(event, row)}
-              className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-soft transition hover:bg-stone-100 hover:text-ink"
-            >
-              <Pencil size={14} aria-hidden />
-            </button>
-            <DeleteIconButton
-              action={handleDelete}
-              id={row.id}
-              ariaLabel="Delete project"
-              confirmMessage={`Delete “${row.title}”? This cannot be undone.`}
-            />
-          </div>
-        ),
-      },
-    ],
-    [handleEditClick, handleRaisedSaved, raisedById, handleDelete],
-  );
-
   return (
-    <>
-      <AdminPageShell
-        user={user}
-        topbarTitle="Projects"
-        title="Projects"
-        description="Funding campaigns shown on the public /projects page."
-        size="wide"
-        actions={
-          <Button type="button" variant="primary" onClick={openCreatePage}>
-            <Plus size={14} aria-hidden /> Add project
-          </Button>
-        }
-      >
-        <AdminTable
-          columns={columns}
-          rows={rows}
-          getRowId={(row) => row.id}
-          onRowClick={openEditPage}
-        />
-      </AdminPageShell>
-    </>
+    <AdminPageShell
+      user={user}
+      topbarTitle="Projects"
+      title="Projects"
+      description="Funding campaigns on /projects. Drag a row to change the public order."
+      size="wide"
+      actions={
+        <Button type="button" variant="primary" onClick={openCreatePage}>
+          <Plus size={14} aria-hidden /> Add project
+        </Button>
+      }
+    >
+      <SortableAdminList
+        items={rows}
+        persist={reorderProjectsAction}
+        empty="No projects yet."
+        renderItem={(row, handle, overlay) => (
+          <ProjectSortableRow
+            row={row}
+            handle={handle}
+            overlay={overlay}
+            raised={raisedById[row.id] ?? row.raisedAmount}
+            onEdit={() => openEditPage(row)}
+            onDelete={handleDelete}
+            onRaisedSaved={(amount) => handleRaisedSaved(row.id, amount)}
+          />
+        )}
+      />
+    </AdminPageShell>
+  );
+}
+
+interface ProjectSortableRowProps {
+  row: Row;
+  handle: ReactNode;
+  overlay: boolean;
+  raised: number;
+  onEdit: () => void;
+  onDelete: (id: string) => Promise<void>;
+  onRaisedSaved: (amount: number) => void;
+}
+
+function ProjectSortableRow({
+  row,
+  handle,
+  overlay,
+  raised,
+  onEdit,
+  onDelete,
+  onRaisedSaved,
+}: ProjectSortableRowProps) {
+  return (
+    <div
+      className={cn(
+        'flex items-center gap-3 rounded-2xl border border-stone-200/80 bg-white px-3 py-3 shadow-sm sm:px-4',
+        overlay && 'shadow-lg ring-1 ring-bronze-300/40',
+      )}
+    >
+      {handle}
+      <button type="button" onClick={onEdit} className="min-w-0 flex-1 text-left">
+        <p className="truncate font-medium text-ink">{row.title}</p>
+        <p className="truncate text-xs text-ink-muted">
+          {row.category}
+          {row.region ? ` · ${row.region}` : ''}
+        </p>
+      </button>
+      <StatusPill status={row.status} />
+      <InlineRaisedAmountCell projectId={row.id} value={raised} onSaved={onRaisedSaved} />
+      <span className="hidden text-xs text-ink-soft sm:inline">{formatCurrency(row.goalAmount)}</span>
+      {overlay ? null : (
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            aria-label="Edit project"
+            onClick={onEdit}
+            className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-soft transition hover:bg-stone-100 hover:text-ink"
+          >
+            <Pencil size={14} aria-hidden />
+          </button>
+          <DeleteIconButton
+            action={onDelete}
+            id={row.id}
+            ariaLabel="Delete project"
+            confirmMessage={`Delete “${row.title}”? This cannot be undone.`}
+          />
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,22 +1,16 @@
 'use client';
 
-import Image from 'next/image';
-import { useCallback, useEffect, useMemo, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Pencil, Plus, ExternalLink } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminPanelCard } from '@/components/admin/AdminPanelCard';
-import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
-import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
-import { Badge } from '@/components/ui/Badge';
-import { StatusPill } from '@/components/ui/StatusPill';
+import { CultureItemsSortableList, type CultureItemListRow } from '@/components/admin/CultureItemsSortableList';
 import { ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { AdminPagination } from '@/components/admin/AdminPagination';
-import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { deleteCultureItemAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
-import { resolveCultureItemHref } from '@/lib/culture-item-url';
 import type { AdminContext } from '@/lib/auth/require-admin';
 
 interface MenuOption {
@@ -24,22 +18,9 @@ interface MenuOption {
   title: string;
 }
 
-interface Row {
-  id: string;
-  title: string;
-  slug: string;
-  region: string | null;
-  periodLabel: string | null;
-  showOnMap: boolean;
-  order: number;
-  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  image: string | null;
-  menuPath: string;
-}
-
 interface CultureItemsPageClientProps {
   user: AdminContext;
-  rows: Row[];
+  rows: CultureItemListRow[];
   menuOptions: MenuOption[];
   pagination: {
     page: number;
@@ -48,30 +29,6 @@ interface CultureItemsPageClientProps {
     pageSize: number;
     query?: string;
   };
-}
-
-const FALLBACK_CULTURE_ENTRY_IMAGE = resolvePublicAssetUrl('/images/culture/card-heritage.webp');
-
-interface CultureItemThumbProps {
-  src?: string | null;
-  alt: string;
-}
-
-function CultureItemThumb({ src, alt }: CultureItemThumbProps) {
-  const initialSrc = src?.trim() ? resolvePublicAssetUrl(src.trim()) : FALLBACK_CULTURE_ENTRY_IMAGE;
-  const [imageSrc, setImageSrc] = useState(initialSrc);
-
-  return (
-    <Image
-      src={imageSrc}
-      alt={alt}
-      width={40}
-      height={40}
-      className="h-full w-full object-cover"
-      unoptimized
-      onError={() => setImageSrc(FALLBACK_CULTURE_ENTRY_IMAGE)}
-    />
-  );
 }
 
 function buildCultureItemsHref(query?: string, page?: number): string {
@@ -124,7 +81,7 @@ export function CultureItemsPageClient({
     return rows.filter((row) => row.menuPath === categoryFilter);
   }, [rows, categoryFilter]);
 
-  const openEditPage = useCallback((row: Row) => {
+  const openEditPage = useCallback((row: CultureItemListRow) => {
     router.push(cultureItemEditHref(row.id));
   }, [router]);
 
@@ -138,97 +95,6 @@ export function CultureItemsPageClient({
     },
     [router],
   );
-
-  const handleEditClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, row: Row) => {
-      event.stopPropagation();
-      openEditPage(row);
-    },
-    [openEditPage],
-  );
-
-  const columns: AdminTableColumn<Row>[] = [
-    {
-      key: 'image',
-      header: '',
-      width: '64px',
-      cell: (row) => (
-        <div className="h-10 w-10 overflow-hidden rounded-md bg-stone-100">
-          <CultureItemThumb src={row.image} alt={row.title} />
-        </div>
-      ),
-    },
-    {
-      key: 'title',
-      header: 'Title',
-      cell: (row) => (
-        <div className="flex flex-col">
-          <span className="font-medium text-ink">{row.title}</span>
-          <span className="text-xs text-ink-muted">/{row.slug}</span>
-        </div>
-      ),
-    },
-    {
-      key: 'menu',
-      header: 'Menu path',
-      cell: (row) => <span className="text-xs text-ink-soft">{row.menuPath}</span>,
-    },
-    {
-      key: 'region',
-      header: 'Region · Period',
-      cell: (row) => (
-        <span className="text-xs text-ink-muted">
-          {row.region ?? '—'}
-          {row.periodLabel ? ` · ${row.periodLabel}` : ''}
-        </span>
-      ),
-    },
-    { key: 'status', header: 'Status', cell: (row) => <StatusPill status={row.status} /> },
-    {
-      key: 'showOnMap',
-      header: 'On map',
-      cell: (row) => (row.showOnMap ? <Badge tone="green">Visible</Badge> : <Badge>—</Badge>),
-    },
-    {
-      key: 'actions',
-      header: 'Actions',
-      align: 'right',
-      cell: (row) => (
-        <div
-          className="flex items-center justify-end gap-1"
-          data-admin-row-action
-          onClick={(event) => event.stopPropagation()}
-          onKeyDown={(event) => event.stopPropagation()}
-        >
-          {row.status === 'PUBLISHED' ? (
-            <a
-              href={resolveCultureItemHref(row.slug)}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View public page for ${row.title}`}
-              className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-soft transition hover:bg-stone-100 hover:text-ink"
-            >
-              <ExternalLink size={14} aria-hidden />
-            </a>
-          ) : null}
-          <button
-            type="button"
-            aria-label="Edit culture item"
-            onClick={(event) => handleEditClick(event, row)}
-            className="inline-flex items-center justify-center rounded-md p-1.5 text-ink-soft transition hover:bg-stone-100 hover:text-ink"
-          >
-            <Pencil size={14} aria-hidden />
-          </button>
-          <DeleteIconButton
-            action={handleDelete}
-            id={row.id}
-            ariaLabel="Delete culture item"
-            confirmMessage={`Are you sure you want to delete “${row.title}”? This cannot be undone.`}
-          />
-        </div>
-      ),
-    },
-  ];
 
   const tableEmpty =
     pagination.total === 0
@@ -245,7 +111,7 @@ export function CultureItemsPageClient({
         user={user}
         topbarTitle="Culture items"
         title="Culture items"
-        description="Curate the entries shown inside the Culture Portal. Items are grouped by their menu path."
+        description="Curate Culture Portal entries. Drag a row inside its category to change the public order."
         size="wide"
         actions={
           <ButtonLink href={CULTURE_ITEM_CREATE_HREF} variant="primary">
@@ -286,12 +152,11 @@ export function CultureItemsPageClient({
             </div>
           </div>
         </AdminPanelCard>
-        <AdminTable
-          columns={columns}
+        <CultureItemsSortableList
           rows={filteredRows}
-          getRowId={(row) => row.id}
           empty={tableEmpty}
-          onRowClick={openEditPage}
+          onEdit={openEditPage}
+          onDelete={handleDelete}
         />
         <div className="px-6 pb-6">
           <AdminPagination

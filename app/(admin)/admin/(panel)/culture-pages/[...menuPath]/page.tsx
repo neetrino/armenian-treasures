@@ -66,7 +66,7 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
   const entryRows = managesGridCards
     ? await prisma.cultureItem.findMany({
         where: { menuItemId: match.node.id },
-        orderBy: [{ createdAt: 'desc' }, { order: 'asc' }],
+        orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
       })
     : [];
   const featuredById = await fetchFeaturedHomeByIds(entryRows.map((row) => row.id));

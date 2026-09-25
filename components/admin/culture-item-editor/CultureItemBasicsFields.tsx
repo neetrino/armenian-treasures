@@ -53,14 +53,6 @@ export function CultureItemBasicsFields({
         hint='e.g. "9th c." or "782 BC"'
         error={fieldErrors?.periodLabel}
       />
-      <TextField
-        label="Order"
-        name="order"
-        type="number"
-        min={0}
-        defaultValue={initial?.order ?? 0}
-        error={fieldErrors?.order}
-      />
     </div>
   );
 }

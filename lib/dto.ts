@@ -17,7 +17,7 @@ import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-conf
 import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import { localizedHomeSections, localizedHomeStats, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
 import { resolveLocaleDocument } from '@/lib/i18n/locale-document';
-import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
+import { resolveLocalizedText, resolveSharedFieldText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
 import { hydrateCultureItemMedia, parseCultureItemMedia, firstTourUrl, type CultureGalleryBlock, type CultureItemMediaContent } from '@/lib/culture-item-media';
 import { mediaForLocale, parseMediaByLocale } from '@/lib/culture-item-media-locale';
@@ -236,7 +236,7 @@ export function toPublicCultureItem(
     shortDescription: resolveLocalizedText(row.shortDescription, locale) || null,
     menuItemId: row.menuItemId,
     region: resolveLocalizedText(row.region, locale) || null,
-    locationName: resolveLocalizedText(row.locationName, locale) || null,
+    locationName: resolveSharedFieldText(row.locationName, locale) || null,
     periodLabel: resolveLocalizedText(row.periodLabel, locale) || null,
     yearLabel: resolveLocalizedText(row.yearLabel, locale) || null,
     century: row.century,

@@ -6,7 +6,9 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateCareersCache } from '@/lib/cache/revalidation';
-import { careerSchema } from '@/lib/validation';
+import { nextSortIndex } from '@/lib/admin/next-sort-index';
+import { sameIdSet } from '@/lib/admin/same-id-set';
+import { careerSchema, listReorderSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -71,7 +73,9 @@ export async function createCareerAction(_p: CareerFormState, formData: FormData
   await requireAdmin();
   const parsed = parseForm(formData);
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
-  await prisma.career.create({ data: parsed.data });
+  const maxOrder = await prisma.career.aggregate({ _max: { order: true } });
+  const { order: _order, ...fields } = parsed.data;
+  await prisma.career.create({ data: { ...fields, order: nextSortIndex(maxOrder._max.order) } });
   revalidate();
   return { status: 'success' };
 }
@@ -84,9 +88,33 @@ export async function updateCareerAction(
   await requireAdmin();
   const parsed = parseForm(formData);
   if (!parsed.ok) return { status: 'error', fieldErrors: parsed.errors, message: 'Please correct the form.' };
-  await prisma.career.update({ where: { id }, data: parsed.data });
+  const { order: _order, ...fields } = parsed.data;
+  await prisma.career.update({ where: { id }, data: fields });
   revalidate();
   redirect('/admin/careers');
+}
+
+export type ListReorderResult = { ok: true } | { ok: false; message: string };
+
+export async function reorderCareersAction(orderedIds: string[]): Promise<ListReorderResult> {
+  await requireAdmin();
+  const parsed = listReorderSchema.safeParse({ order: orderedIds });
+  if (!parsed.success) return { ok: false, message: 'Invalid reorder payload.' };
+
+  const rows = await prisma.career.findMany({ select: { id: true } });
+  if (!sameIdSet(rows.map((row) => row.id), orderedIds)) {
+    return { ok: false, message: 'Order must include every role.' };
+  }
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) => prisma.career.update({ where: { id }, data: { order: index } })),
+    );
+    revalidate();
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Could not save order. Please try again.' };
+  }
 }
 
 export async function deleteCareerAction(id: string): Promise<AdminDeleteResult> {

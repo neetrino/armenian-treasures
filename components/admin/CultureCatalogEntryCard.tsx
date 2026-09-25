@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import type { ReactNode } from 'react';
 import { Box, MapPin, Pencil, Trash2 } from 'lucide-react';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { CultureCatalogEntryAdmin } from '@/lib/admin/culture-catalog-entry';
@@ -12,6 +13,8 @@ interface CultureCatalogEntryCardProps {
   onEdit: () => void;
   onDelete?: () => void;
   deleteDisabled?: boolean;
+  dragHandle?: ReactNode;
+  overlay?: boolean;
 }
 
 export function CultureCatalogEntryCard({
@@ -20,6 +23,8 @@ export function CultureCatalogEntryCard({
   onEdit,
   onDelete,
   deleteDisabled = false,
+  dragHandle,
+  overlay = false,
 }: CultureCatalogEntryCardProps) {
   const cardNumber = String(index + 1).padStart(2, '0');
   const imageSrc = entry.image
@@ -41,8 +46,18 @@ export function CultureCatalogEntryCard({
       className={cn(
         'group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-stone-800/80 bg-[#0f1419] text-left shadow-lg transition duration-300 hover:-translate-y-1 hover:border-bronze-500/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1419]',
         isDraft && 'opacity-80 ring-1 ring-amber-400/40',
+        overlay && 'shadow-xl ring-1 ring-bronze-400/50',
       )}
     >
+      {dragHandle ? (
+        <span
+          className="absolute left-3 top-3 z-20"
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
+          {dragHandle}
+        </span>
+      ) : null}
       <div className="relative aspect-[16/10] overflow-hidden bg-stone-900">
         <Image
           src={imageSrc}

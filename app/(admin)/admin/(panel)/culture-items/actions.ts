@@ -24,9 +24,12 @@ import {
   mergeSharedTours,
   mergeSharedVideos,
   parseMediaByLocale,
+  shareMapAddress,
   sliceLocaleMedia,
+  type CultureItemLocaleMedia,
 } from '@/lib/culture-item-media-locale';
 import { isSiteLocaleCode, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { nextCultureItemOrder } from '@/app/(admin)/admin/(panel)/culture-items/reorder-action';
 import { parseMapCoordinatesFromUrl } from '@/lib/culture-catalog/parse-map-url';
 import { cultureItemSchema } from '@/lib/validation';
 import type { Prisma } from '@prisma/client';
@@ -141,16 +144,18 @@ function withLocaleMedia(
     ]),
   );
   const enBlocks = byLocale.EN?.blocks ?? (locale === 'EN' ? media.blocks : []);
-  const enAddress = byLocale.EN?.address ?? (locale === 'EN' ? media.address : '');
+  const sharedByLocale = shareMapAddress(
+    byLocale as Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+    activeSlice.address,
+  );
   return {
     ...media,
-    // Root stays EN-canonical only — never copy active (HY/RU) text into root when EN is empty.
-    address: enAddress,
+    address: activeSlice.address,
     blocks: enBlocks,
     tours: media.tours,
     videos: media.videos,
     gallery: media.gallery,
-    byLocale,
+    byLocale: sharedByLocale,
   };
 }
 
@@ -317,7 +322,9 @@ export async function createCultureItemAction(
       message: 'Slug must be unique.',
     };
   }
-  const created = await prisma.cultureItem.create({ data: parsed.data });
+  const { order: _ignored, ...data } = parsed.data;
+  const order = await nextCultureItemOrder(data.menuItemId);
+  const created = await prisma.cultureItem.create({ data: { ...data, order } });
   await persistCultureItemFeaturedHome(created.id, parsed.featuredOnHome, parsed.featuredOrder);
   await revalidateCultureItem([parsed.data.slug], [parsed.data.menuItemId]);
   return { status: 'success', itemId: created.id };
@@ -352,17 +359,22 @@ export async function updateCultureItemAction(
       message: 'Slug must be unique.',
     };
   }
-  await prisma.cultureItem.update({ where: { id }, data: parsed.data });
+  const { order: _ignored, ...fields } = parsed.data;
+  const data =
+    current && current.menuItemId !== fields.menuItemId
+      ? { ...fields, order: await nextCultureItemOrder(fields.menuItemId) }
+      : fields;
+  await prisma.cultureItem.update({ where: { id }, data });
   await persistCultureItemFeaturedHome(id, parsed.featuredOnHome, parsed.featuredOrder);
 
-  await deleteReplacedManagedImage(current?.image, parsed.data.image);
-  await deleteReplacedManagedImage(current?.coverImage, parsed.data.coverImage);
-  await deleteReplacedManagedImage(current?.cardBackgroundImage, parsed.data.cardBackgroundImage);
-  await cleanupReplacedGalleryImages(current?.galleryImages ?? [], parsed.data.galleryImages);
+  await deleteReplacedManagedImage(current?.image, data.image);
+  await deleteReplacedManagedImage(current?.coverImage, data.coverImage);
+  await deleteReplacedManagedImage(current?.cardBackgroundImage, data.cardBackgroundImage);
+  await cleanupReplacedGalleryImages(current?.galleryImages ?? [], data.galleryImages);
 
-  const slugs = new Set<string>([parsed.data.slug]);
+  const slugs = new Set<string>([data.slug]);
   if (current?.slug) slugs.add(current.slug);
-  const menuItemIds = [parsed.data.menuItemId];
+  const menuItemIds = [data.menuItemId];
   if (current?.menuItemId) menuItemIds.push(current.menuItemId);
   await revalidateCultureItem([...slugs], menuItemIds);
   return { status: 'success' };

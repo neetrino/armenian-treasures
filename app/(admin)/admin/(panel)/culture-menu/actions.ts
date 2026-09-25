@@ -12,6 +12,7 @@ import {
 import { revalidateCultureMenuCache } from '@/lib/cache/revalidation';
 import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
+import { nextSortIndex } from '@/lib/admin/next-sort-index';
 import { cultureMenuItemSchema, cultureMenuReorderSchema } from '@/lib/validation';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
 import {
@@ -170,7 +171,13 @@ export async function createMenuItemAction(
       message: 'Slug must be unique within siblings.',
     };
   }
-  await prisma.cultureMenuItem.create({ data });
+  const maxOrder = await prisma.cultureMenuItem.aggregate({
+    where: { parentId: data.parentId },
+    _max: { order: true },
+  });
+  await prisma.cultureMenuItem.create({
+    data: { ...data, order: nextSortIndex(maxOrder._max.order) },
+  });
   await revalidate();
   return { status: 'success' };
 }
@@ -209,7 +216,23 @@ export async function updateMenuItemAction(
       message: 'Please correct the form.',
     };
   }
-  await prisma.cultureMenuItem.update({ where: { id }, data });  await revalidate();
+  const current = await prisma.cultureMenuItem.findUnique({
+    where: { id },
+    select: { order: true, parentId: true },
+  });
+  if (!current) {
+    return { status: 'error', message: 'Menu item not found.' };
+  }
+  let order = current.order;
+  if (current.parentId !== data.parentId) {
+    const maxOrder = await prisma.cultureMenuItem.aggregate({
+      where: { parentId: data.parentId },
+      _max: { order: true },
+    });
+    order = nextSortIndex(maxOrder._max.order);
+  }
+  await prisma.cultureMenuItem.update({ where: { id }, data: { ...data, order } });
+  await revalidate();
   redirect('/admin/culture-menu');
 }
 

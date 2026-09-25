@@ -68,10 +68,10 @@ async function AdminCultureItemsPage(props: PageProps) {
     region: getAdminLocaleValue(i.region) || null,
     periodLabel: getAdminLocaleValue(i.periodLabel) || null,
     showOnMap: i.showOnMap,
-    order: i.order,
     status: i.status,
     image: i.image,
     menuPath: menuMap.get(i.menuItemId) ?? '—',
+    menuItemId: i.menuItemId,
   }));
 
   const menuOptions = menuItems.map((m) => ({
