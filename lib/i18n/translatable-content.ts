@@ -109,24 +109,6 @@ export function resolveLocalizedText(
   return map[locale]?.trim() ?? '';
 }
 
-/** Shared fields such as a map address: show this language, otherwise any saved value. */
-export function resolveSharedFieldText(
-  raw: string | null | undefined,
-  locale: SiteLocaleCode,
-): string {
-  const value = raw?.trim();
-  if (!value) return '';
-  const payload = parsePayload(value);
-  const map = payload ?? decodeUnmarkedText(value);
-  const own = map[locale]?.trim();
-  if (own) return own;
-  for (const code of SITE_LOCALE_CODES) {
-    const candidate = map[code]?.trim();
-    if (candidate) return candidate;
-  }
-  return '';
-}
-
 export function getAdminLocaleValue(
   raw: string | null | undefined,
   locale: SiteLocaleCode = DEFAULT_LOCALE,
