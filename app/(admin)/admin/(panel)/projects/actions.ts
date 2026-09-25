@@ -5,7 +5,9 @@ import { prisma } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { revalidateProjectsCache } from '@/lib/cache/revalidation';
 import { deleteReplacedManagedImage } from '@/lib/uploads/cleanup-replaced-image';
-import { projectSchema } from '@/lib/validation';
+import { nextSortIndex } from '@/lib/admin/next-sort-index';
+import { sameIdSet } from '@/lib/admin/same-id-set';
+import { listReorderSchema, projectSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -91,7 +93,9 @@ export async function createProjectAction(_p: ProjectFormState, formData: FormDa
   if (existing) {
     return { status: 'error', fieldErrors: { slug: 'Slug already exists' }, message: 'Duplicate slug.' };
   }
-  await prisma.project.create({ data: parsed.data });
+  const maxOrder = await prisma.project.aggregate({ _max: { order: true } });
+  const { order: _order, ...fields } = parsed.data;
+  await prisma.project.create({ data: { ...fields, order: nextSortIndex(maxOrder._max.order) } });
   revalidate();
   return { status: 'success' };
 }
@@ -109,7 +113,8 @@ export async function updateProjectAction(
     return { status: 'error', fieldErrors: { slug: 'Slug already exists' }, message: 'Duplicate slug.' };
   }
   const current = await prisma.project.findUnique({ where: { id }, select: { image: true } });
-  await prisma.project.update({ where: { id }, data: parsed.data });
+  const { order: _order, ...fields } = parsed.data;
+  await prisma.project.update({ where: { id }, data: fields });
   await deleteReplacedManagedImage(current?.image, parsed.data.image);
   revalidate();
   return { status: 'success' };
@@ -142,6 +147,29 @@ export async function deleteProjectAction(id: string): Promise<void> {
   await prisma.project.delete({ where: { id } });
   await deleteReplacedManagedImage(row?.image, null);
   revalidate();
+}
+
+export type ListReorderResult = { ok: true } | { ok: false; message: string };
+
+export async function reorderProjectsAction(orderedIds: string[]): Promise<ListReorderResult> {
+  await requireAdmin();
+  const parsed = listReorderSchema.safeParse({ order: orderedIds });
+  if (!parsed.success) return { ok: false, message: 'Invalid reorder payload.' };
+
+  const rows = await prisma.project.findMany({ select: { id: true } });
+  if (!sameIdSet(rows.map((row) => row.id), orderedIds)) {
+    return { ok: false, message: 'Order must include every project.' };
+  }
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) => prisma.project.update({ where: { id }, data: { order: index } })),
+    );
+    revalidate();
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Could not save order. Please try again.' };
+  }
 }
 
 export async function toggleProjectPublishedAction(id: string, isPublished: boolean): Promise<void> {

@@ -98,7 +98,6 @@ export function CareerForm({ mode, itemId, initial, onSuccess, onCancel }: Props
       </TranslatableFieldsTabs>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField label="Order" name="order" type="number" min={0} defaultValue={initial?.order ?? 0} />
         <TextField label="Apply URL" name="applyUrl" defaultValue={initial?.applyUrl ?? ''} error={state.fieldErrors?.applyUrl} />
         <TextField label="Apply email" name="applyEmail" type="email" defaultValue={initial?.applyEmail ?? ''} error={state.fieldErrors?.applyEmail} />
         <label className="flex items-center gap-2 pt-6 text-sm text-ink-soft">

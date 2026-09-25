@@ -12,7 +12,6 @@ import {
   isCultureCatalogPagePath,
 } from '@/lib/admin/culture-catalog-pages';
 import { findCultureMenuItemByPath } from '@/lib/admin/find-menu-by-path';
-import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { resolveMenuHref } from '@/lib/culture-menu';
 import { prisma } from '@/lib/db';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
@@ -60,9 +59,6 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
         })
       : [];
   const hasSubcategories = subcategoryRows.length > 0;
-  const resolvedContent = resolveCultureCatalogContent(match.node, match.parent, {
-    hasSubcategories,
-  });
   const managesGridCards =
     match.node.routeType === 'SUBCATEGORY' ||
     (match.node.routeType === 'CATEGORY' && !hasSubcategories);
@@ -70,7 +66,7 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
   const entryRows = managesGridCards
     ? await prisma.cultureItem.findMany({
         where: { menuItemId: match.node.id },
-        orderBy: [{ createdAt: 'desc' }, { order: 'asc' }],
+        orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
       })
     : [];
   const featuredById = await fetchFeaturedHomeByIds(entryRows.map((row) => row.id));
@@ -117,8 +113,6 @@ async function AdminCultureCatalogPageEditPage(props: PageProps) {
           menuItemId={match.node.id}
           menuPath={menuPath}
           pageLabel={navItem?.label ?? match.node.title}
-          resolvedContent={resolvedContent}
-          catalogContent={match.node.catalogContent}
           entries={entries}
           subpageLinks={subpageLinks}
           managesGridCards={managesGridCards}

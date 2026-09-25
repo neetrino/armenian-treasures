@@ -136,7 +136,6 @@ export function ProjectForm({ mode, itemId, initial, onSuccess, onCancel }: Prop
           defaultValue={initial?.status ?? 'UPCOMING'}
           error={state.fieldErrors?.status}
         />
-        <TextField label="Order" name="order" type="number" min={0} defaultValue={initial?.order ?? 0} />
         <div className="sm:col-span-2">
           <AdminImageDropzoneField
             label="Card background"

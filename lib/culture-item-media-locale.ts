@@ -86,6 +86,37 @@ export function parseMediaByLocale(raw: unknown): Partial<Record<SiteLocaleCode,
   return byLocale;
 }
 
+export function shareMapAddress(
+  map: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+  address: string,
+): Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>> {
+  const next = { ...map };
+  for (const code of SITE_LOCALE_CODES) {
+    const existing = next[code];
+    next[code] = existing
+      ? { ...existing, address }
+      : { address, blocks: [], tours: [], videos: [], gallery: [] };
+  }
+  return next;
+}
+
+export function resolveSharedMapAddress(
+  media: CultureItemMediaContent,
+  byLocale: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+  locale: SiteLocaleCode,
+): string {
+  const candidates = [
+    byLocale[locale]?.address,
+    media.address,
+    ...SITE_LOCALE_CODES.map((code) => byLocale[code]?.address),
+  ];
+  for (const value of candidates) {
+    const trimmed = value?.trim() ?? '';
+    if (trimmed) return trimmed;
+  }
+  return '';
+}
+
 export function mediaForLocale(
   media: CultureItemMediaContent,
   byLocale: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
@@ -96,7 +127,7 @@ export function mediaForLocale(
   if (!slice) {
     return {
       ...media,
-      address: '',
+      address: resolveSharedMapAddress(media, byLocale, locale),
       blocks: [],
       tours: media.tours.map((tour) => ({ ...tour, title: '' })),
       videos: media.videos.map((video) => ({ ...video, title: '' })),
@@ -108,7 +139,7 @@ export function mediaForLocale(
   const galleryById = new Map(slice.gallery.map((item) => [item.id, item]));
   return {
     ...media,
-    address: slice.address,
+    address: resolveSharedMapAddress(media, byLocale, locale),
     blocks: slice.blocks,
     tours: media.tours.map((tour) => ({
       ...tour,

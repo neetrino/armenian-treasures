@@ -24,7 +24,6 @@ async function AdminBlogCategoriesPage() {
         id: row.id,
         title: getAdminLocaleValue(row.title),
         slug: row.slug,
-        order: row.order,
         postCount: row._count.posts,
       }))}
     />

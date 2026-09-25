@@ -137,14 +137,6 @@ export function CultureMenuForm({
           defaultValue={initial?.routeType ?? 'CATEGORY'}
           error={state.fieldErrors?.routeType}
         />
-        <TextField
-          label="Order"
-          name="order"
-          type="number"
-          min={0}
-          defaultValue={initial?.order ?? 0}
-          error={state.fieldErrors?.order}
-        />
         <AdminImageDropzoneField
           label="Card / fallback hero image"
           name="image"

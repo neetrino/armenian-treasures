@@ -16,6 +16,7 @@ import {
   cleanupReplacedGalleryImages,
   deleteReplacedManagedImage,
 } from '@/lib/uploads/cleanup-replaced-image';
+import { nextCultureItemOrder } from '@/app/(admin)/admin/(panel)/culture-items/reorder-action';
 import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { persistCultureItemFeaturedHome } from '@/lib/queries/featured-home-sql';
 import { catalogContentFromFormFields } from '@/lib/types/culture-catalog-content';
@@ -178,7 +179,6 @@ export async function saveCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
-      order: data.order,
       status: data.status as ContentStatus,
     },
   });
@@ -264,7 +264,7 @@ export async function createCultureCatalogEntryAction(
       galleryImages: data.galleryImages,
       cardBackgroundImage: data.cardBackgroundImage || null,
       tourUrl: data.tourUrl || null,
-      order: data.order,
+      order: await nextCultureItemOrder(menuItemId),
       status: data.status as ContentStatus,
       itemType: 'MONUMENT',
     },

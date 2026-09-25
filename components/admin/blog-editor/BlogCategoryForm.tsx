@@ -111,14 +111,6 @@ export function BlogCategoryForm({ mode, itemId, initial }: BlogCategoryFormProp
           hint="Used in public blog tabs. One slug for every language."
           error={state.fieldErrors?.slug}
         />
-        <TextField
-          label="Order"
-          name="order"
-          type="number"
-          min={0}
-          defaultValue={initial?.order ?? 0}
-          error={state.fieldErrors?.order}
-        />
       </div>
 
       {state.status === 'error' && state.message ? (

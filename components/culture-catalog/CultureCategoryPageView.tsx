@@ -14,7 +14,7 @@ import type { MenuNode } from '@/lib/culture-menu';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
-  filterMappableItems,
+  resolveMappableCatalogItems,
   resolveCultureCatalogHubDescription,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -61,7 +61,7 @@ function CultureCategoryHubPage({
   );
 }
 
-function CultureCategoryLeafPage({
+async function CultureCategoryLeafPage({
   category,
   items,
   filters,
@@ -79,7 +79,7 @@ function CultureCategoryLeafPage({
     ...content.statLabels,
     regions: uiMessage(locale, 'totalEntries'),
   });
-  const mapItems = filterMappableItems(items);
+  const mapItems = await resolveMappableCatalogItems(items);
   const aboutContent = visibility.facts ? content.about : { ...content.about, facts: [] };
   const searchForm =
     items.length > 0
@@ -122,6 +122,7 @@ function CultureCategoryLeafPage({
             title={content.map.title}
             description={content.map.description}
             items={mapItems}
+            locale={locale}
           />
         ) : null}
       </LandingSectionStack>

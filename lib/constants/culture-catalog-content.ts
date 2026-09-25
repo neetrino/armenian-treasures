@@ -1,7 +1,8 @@
 import type { MenuNode } from '@/lib/culture-menu';
+import { decodeCatalogDocuments } from '@/lib/admin/catalog-section-document';
 import {
   mergeCultureCatalogLayers,
-  parseMenuCatalogContent,
+  type MenuCatalogContentOverride,
 } from '@/lib/types/culture-catalog-content';
 import { EXTENDED_CULTURE_CATALOG_OVERRIDES } from '@/lib/constants/culture-catalog-overrides-extended';
 import { CULTURE_CATALOG_SUBCATEGORY_OVERRIDES } from '@/lib/constants/culture-catalog-subcategory-overrides';
@@ -324,6 +325,22 @@ function localizedCatalogTitle(node: MenuNode, parent: MenuNode | undefined, loc
   return cultureMenuLabel(locale, key) ?? cultureMenuLabel(locale, node.slug) ?? node.title;
 }
 
+function catalogOverrideForLocale(
+  raw: unknown,
+  locale: SiteLocaleCode,
+): MenuCatalogContentOverride | null {
+  const docs = decodeCatalogDocuments(raw);
+  const current = docs[locale];
+  if (!current) return null;
+  const shared = docs.EN;
+  if (!shared || locale === 'EN') return current;
+  return {
+    ...current,
+    heroImage: current.heroImage ?? shared.heroImage,
+    sectionVisibility: { ...shared.sectionVisibility, ...current.sectionVisibility },
+  };
+}
+
 function withCatalogTitle(content: CultureCatalogContent, englishName: string, title: string): CultureCatalogContent {
   if (!englishName || englishName === title) return content;
   const swap = (value: string) => value.split(englishName).join(title);
@@ -362,7 +379,7 @@ export function resolveCultureCatalogContent(
   const parentTitle = parent ? localizedCatalogTitle(parent, undefined, locale) : undefined;
   const base = buildBaseContent(title, node.description ?? '', parentTitle, options);
   const codeOverride = locale === 'EN' ? OVERRIDES[key] ?? OVERRIDES[node.slug] : undefined;
-  const dbOverride = parseMenuCatalogContent(node.catalogContent);
+  const dbOverride = catalogOverrideForLocale(node.catalogContent, locale);
   const merged = withCatalogTitle(
     mergeCultureCatalogLayers(base, codeOverride, dbOverride),
     englishName,

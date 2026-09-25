@@ -6,7 +6,9 @@ import { requireAdmin } from '@/lib/auth/require-admin';
 import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
-import { blogCategorySchema } from '@/lib/validation';
+import { nextSortIndex } from '@/lib/admin/next-sort-index';
+import { sameIdSet } from '@/lib/admin/same-id-set';
+import { blogCategorySchema, listReorderSchema } from '@/lib/validation';
 import {
   encodeTranslatableText,
   pickDefaultLocaleText,
@@ -78,7 +80,10 @@ export async function createBlogCategoryAction(
     };
   }
 
-  const created = await prisma.blogCategory.create({ data: parsed.data });
+  const maxOrder = await prisma.blogCategory.aggregate({ _max: { order: true } });
+  const created = await prisma.blogCategory.create({
+    data: { ...parsed.data, order: nextSortIndex(maxOrder._max.order) },
+  });
   revalidateBlogPostsCache();
   return { status: 'success', itemId: created.id };
 }
@@ -108,9 +113,33 @@ export async function updateBlogCategoryAction(
     }
   }
 
-  await prisma.blogCategory.update({ where: { id }, data: parsed.data });
+  const { order: _order, ...fields } = parsed.data;
+  await prisma.blogCategory.update({ where: { id }, data: fields });
   revalidateBlogPostsCache();
   return { status: 'success', itemId: id };
+}
+
+export type ListReorderResult = { ok: true } | { ok: false; message: string };
+
+export async function reorderBlogCategoriesAction(orderedIds: string[]): Promise<ListReorderResult> {
+  await requireAdmin();
+  const parsed = listReorderSchema.safeParse({ order: orderedIds });
+  if (!parsed.success) return { ok: false, message: 'Invalid reorder payload.' };
+
+  const rows = await prisma.blogCategory.findMany({ select: { id: true } });
+  if (!sameIdSet(rows.map((row) => row.id), orderedIds)) {
+    return { ok: false, message: 'Order must include every category.' };
+  }
+
+  try {
+    await prisma.$transaction(
+      orderedIds.map((id, index) => prisma.blogCategory.update({ where: { id }, data: { order: index } })),
+    );
+    revalidateBlogPostsCache();
+    return { ok: true };
+  } catch {
+    return { ok: false, message: 'Could not save order. Please try again.' };
+  }
 }
 
 export async function deleteBlogCategoryAction(id: string): Promise<AdminDeleteResult> {

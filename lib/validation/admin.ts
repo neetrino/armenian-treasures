@@ -91,6 +91,10 @@ export const teamMemberReorderSchema = z.object({
   order: z.array(z.string().min(1)).min(1),
 });
 
+export const listReorderSchema = z.object({
+  order: z.array(z.string().min(1)).min(1),
+});
+
 export const cultureItemSchema = z.object({
   title: z.string().trim().min(2).max(140),
   slug: z

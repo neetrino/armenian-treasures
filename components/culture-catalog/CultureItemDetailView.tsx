@@ -88,6 +88,7 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
               mapUrl={item.mapUrl}
               latitude={item.latitude}
               longitude={item.longitude}
+              mapType={item.mapType}
               locale={locale}
             />
           </div>

@@ -97,7 +97,20 @@ describe('culture item locale media', () => {
     expect(parsed.HY?.blocks[0]?.title).toBe('\u053d\u0546\u0541\u0548\u0550\u0535\u054d\u053f');
     expect(parsed.EN).toBeUndefined();
     expect(mediaForLocale(hyLegacy, parsed, 'EN').blocks).toEqual([]);
-    expect(mediaForLocale(hyLegacy, parsed, 'EN').address).toBe('');
+    expect(mediaForLocale(hyLegacy, parsed, 'EN').address).toBe('\u053d\u0576\u0571\u0578\u0580\u0565\u057d\u056f');
+  });
+
+  it('uses another language address when the current one is empty', () => {
+    const english = {
+      ...parseCultureItemMedia(null),
+      address: 'Syunik',
+      blocks: [],
+    };
+    const byLocale = {
+      EN: sliceLocaleMedia(english),
+      HY: { ...emptyTextLocaleMedia(sliceLocaleMedia(english)), address: '' },
+    };
+    expect(mediaForLocale(english, byLocale, 'HY').address).toBe('Syunik');
   });
 
   it('keeps address independent per locale', () => {

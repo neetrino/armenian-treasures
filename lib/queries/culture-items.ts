@@ -1,7 +1,10 @@
 import { unstable_cache } from 'next/cache';
+import type { CultureItem, CultureMenuItem, MapType } from '@prisma/client';
 import { prisma } from '@/lib/db';
+import { resolvePublicMapCoordinates } from '@/lib/culture-catalog/resolve-public-map-coordinates';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 import {
   toPublicCultureItem,
   toPublicCultureItemDetail,
@@ -112,31 +115,61 @@ export async function getCultureItemDetailBySlugForPreview(
   }
 }
 
-async function fetchMapItems(locale: SiteLocaleCode): Promise<PublicCultureItemDTO[]> {
-  try {
-    const rows = await prisma.cultureItem.findMany({
-      where: {
-        showOnMap: true,
-        status: 'PUBLISHED',
-        latitude: { not: null },
-        longitude: { not: null },
-      },
-      orderBy: { title: 'asc' },
-    });
-    return rows.map((row) => toPublicCultureItem(row, locale));
-  } catch {
-    return [];
-  }
+type MapItemRow = CultureItem & { menuItem: Pick<CultureMenuItem, 'slug'> };
+
+function mapTypeFromMenu(row: MapItemRow): MapType | null {
+  if (row.mapType) return row.mapType;
+  if (row.menuItem.slug === 'churches') return 'CHURCH';
+  return null;
 }
 
-const getMapItemsCached = unstable_cache(fetchMapItems, ['culture-map-items'], {
+async function toPublicMapItem(
+  row: MapItemRow,
+  locale: SiteLocaleCode,
+): Promise<PublicCultureItemDTO | null> {
+  const coords = await resolvePublicMapCoordinates({
+    latitude: row.latitude,
+    longitude: row.longitude,
+    mapUrl: row.mapUrl,
+    locationName: getAdminLocaleValue(row.locationName, locale),
+  });
+  if (!coords) return null;
+  const item = toPublicCultureItem(row, locale);
+  return {
+    ...item,
+    title: item.title.trim() || getAdminLocaleValue(row.title, locale),
+    mapType: item.mapType ?? mapTypeFromMenu(row),
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+  };
+}
+
+async function fetchMapRows(): Promise<MapItemRow[]> {
+  return prisma.cultureItem.findMany({
+    where: { showOnMap: true, status: 'PUBLISHED' },
+    include: { menuItem: { select: { slug: true } } },
+    orderBy: { title: 'asc' },
+  });
+}
+
+const getMapRowsCached = unstable_cache(fetchMapRows, ['culture-map-rows'], {
   tags: ['culture-items'],
   revalidate: 60,
 });
 
 export async function getMapItems(): Promise<PublicCultureItemDTO[]> {
   const locale = await getCurrentSiteLocale();
-  return getMapItemsCached(locale);
+  const rows = await getMapRowsCached();
+  const items = await Promise.all(
+    rows.map(async (row) => {
+      try {
+        return await toPublicMapItem(row, locale);
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return items.filter((item): item is PublicCultureItemDTO => item !== null);
 }
 
 async function fetchPublishedCultureItems(

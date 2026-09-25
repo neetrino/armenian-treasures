@@ -24,6 +24,7 @@ import {
   mergeSharedTours,
   mergeSharedVideos,
   parseMediaByLocale,
+  shareMapAddress,
   sliceLocaleMedia,
   syncSharedLocaleMedia,
   type CultureItemLocaleMedia,
@@ -146,9 +147,10 @@ export function CultureItemForm({
       const next = { ...current, ...patch };
       setMediaByLocale((map) => {
         const withActive = { ...map, [activeLocale]: sliceLocaleMedia(next) };
+        const stamped = patch.address !== undefined ? shareMapAddress(withActive, next.address) : withActive;
         if (patch.tours || patch.videos || patch.gallery) {
           return syncSharedLocaleMedia(
-            withActive,
+            stamped,
             {
               tours: next.tours,
               videos: next.videos,
@@ -157,7 +159,7 @@ export function CultureItemForm({
             activeLocale,
           );
         }
-        return withActive;
+        return stamped;
       });
       return next;
     });
@@ -174,20 +176,22 @@ export function CultureItemForm({
       const nextSlice = saved[nextLocale] ?? emptyTextLocaleMedia(template);
       saved[nextLocale] = {
         ...nextSlice,
+        address: media.address,
         tours: mergeSharedTours(media.tours, nextSlice.tours, nextLocale),
         videos: mergeSharedVideos(media.videos, nextSlice.videos, nextLocale),
         gallery: mergeSharedGallery(media.gallery, nextSlice.gallery, nextLocale),
       };
-      const resolved = saved[nextLocale]!;
+      const shared = shareMapAddress(saved, media.address);
+      const resolved = shared[nextLocale]!;
       setMedia((current) => ({
         ...current,
-        address: resolved.address,
+        address: current.address,
         blocks: resolved.blocks,
         tours: resolved.tours,
         videos: resolved.videos,
         gallery: resolved.gallery,
       }));
-      return saved;
+      return shared;
     });
     setActiveLocale(nextLocale);
     setIsSaved(false);
