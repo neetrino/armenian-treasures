@@ -194,6 +194,7 @@ export const CULTURE_MENU_PATH_KEYS: Record<string, MenuMessageKey> = {
   churches: 'menuChurches',
   'architecture/castles': 'menuCastles',
   castles: 'menuCastles',
+  'architecture/armaments': 'menuArmaments',
   'architecture/ornaments': 'menuOrnaments',
   ornaments: 'menuOrnaments',
   legends: 'menuMythsLegends',

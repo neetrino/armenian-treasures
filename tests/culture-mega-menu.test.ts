@@ -49,6 +49,7 @@ describe('resolveCultureMegaMenu', () => {
     expect(architecture?.items.map((item) => item.label)).toEqual([
       'Churches & Monasteries',
       'Castles',
+      'Armaments',
       'Ornaments',
     ]);
     expect(architecture?.items.at(-1)).toMatchObject({
@@ -88,7 +89,7 @@ describe('resolveCultureMegaMenu', () => {
     const labels = columns.find((column) => column.heading === 'Architecture')?.items.map(
       (item) => item.label,
     );
-    expect(labels).toEqual(['Churches & Monasteries', 'Castles']);
+    expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Armaments']);
   });
 
   it('keeps AT Features item order when no extra children exist', () => {
