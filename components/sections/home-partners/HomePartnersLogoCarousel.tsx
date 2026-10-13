@@ -1,9 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { TintedPartnerLogo } from '@/components/sections/home-partners/TintedPartnerLogo';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -62,7 +62,15 @@ function PartnerLogoLink({
       aria-hidden={duplicate || undefined}
       tabIndex={duplicate ? -1 : undefined}
     >
-      <TintedPartnerLogo src={resolvePublicAssetUrl(logo.src)} alt={duplicate ? '' : logo.alt} />
+      <span className="home-partners-logos__frame">
+        <Image
+          src={resolvePublicAssetUrl(logo.src)}
+          alt={duplicate ? '' : logo.alt}
+          fill
+          sizes="152px"
+          className="home-partners-logos__mark"
+        />
+      </span>
     </Link>
   );
 }

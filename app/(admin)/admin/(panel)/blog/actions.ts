@@ -8,7 +8,8 @@ import type { AdminDeleteResult } from '@/lib/admin/action-result';
 import { runAdminDelete } from '@/lib/admin/action-result';
 import { parseFeaturedHomeFields } from '@/lib/admin/featured-home-fields';
 import { revalidateBlogPostsCache } from '@/lib/cache/revalidation';
-import { persistBlogPostFeaturedHome, fetchFeaturedBlogByIds } from '@/lib/queries/featured-blog-sql';
+import { planFeaturedHomeToggle } from '@/lib/blog-featured-home';
+import { persistBlogPostFeaturedHome, listHomepageFeaturedBlogs } from '@/lib/queries/featured-blog-sql';
 import { blogPostSchema } from '@/lib/validation';
 import {
   encodeDescriptionHtmlFromBlocks,
@@ -104,6 +105,14 @@ function revalidate(slugs: string[] = []): void {
   revalidateBlogPostsCache(slugs);
 }
 
+async function featuredSlotMessage(postId: string | null, featuredOnHome: boolean): Promise<string | null> {
+  if (!featuredOnHome) return null;
+  const featured = await listHomepageFeaturedBlogs();
+  const plan = planFeaturedHomeToggle(featured, postId ?? 'new-post');
+  if (plan.type !== 'needs-replace') return null;
+  return 'The homepage already has 4 stories. Unstar one in the blog list before adding another.';
+}
+
 export async function createBlogPostAction(_p: BlogFormState, formData: FormData): Promise<BlogFormState> {
   await requireAdmin();
   const parsed = await parseForm(formData);
@@ -117,6 +126,9 @@ export async function createBlogPostAction(_p: BlogFormState, formData: FormData
       message: 'Duplicate slug.',
     };
   }
+
+  const slotMessage = await featuredSlotMessage(null, parsed.featured.featuredOnHome);
+  if (slotMessage) return { status: 'error', message: slotMessage };
 
   const created = await prisma.blogPost.create({ data: parsed.data });
   await persistBlogPostFeaturedHome(created.id, parsed.featured.featuredOnHome, parsed.featured.featuredOrder);
@@ -149,6 +161,9 @@ export async function updateBlogPostAction(
     }
   }
 
+  const slotMessage = await featuredSlotMessage(id, parsed.featured.featuredOnHome);
+  if (slotMessage) return { status: 'error', message: slotMessage };
+
   await prisma.blogPost.update({ where: { id }, data: parsed.data });
   await persistBlogPostFeaturedHome(id, parsed.featured.featuredOnHome, parsed.featured.featuredOrder);
   revalidate([current.slug, parsed.data.slug]);
@@ -164,22 +179,51 @@ export async function deleteBlogPostAction(id: string): Promise<AdminDeleteResul
   });
 }
 
+export type FeaturedToggleResult =
+  | { ok: true; featuredOnHome: boolean }
+  | { ok: false; code: 'replace'; message: string }
+  | { ok: false; message: string };
+
 export async function toggleBlogPostFeaturedHomeAction(
   id: string,
-): Promise<{ ok: true; featuredOnHome: boolean } | { ok: false; message: string }> {
+  replaceId?: string,
+): Promise<FeaturedToggleResult> {
   await requireAdmin();
   const post = await prisma.blogPost.findUnique({ where: { id }, select: { id: true, slug: true } });
-  if (!post) {
-    return { ok: false, message: 'Post not found.' };
+  if (!post) return { ok: false, message: 'Post not found.' };
+
+  const featured = await listHomepageFeaturedBlogs();
+  const plan = planFeaturedHomeToggle(featured, id, replaceId);
+  if (plan.type === 'needs-replace') {
+    return { ok: false, code: 'replace', message: 'Choose which homepage story to replace.' };
   }
 
-  const current = (await fetchFeaturedBlogByIds([id])).get(id);
-  const featuredOnHome = !(current?.featuredOnHome ?? false);
-  await persistBlogPostFeaturedHome(
-    id,
-    featuredOnHome,
-    featuredOnHome ? (current?.featuredOrder ?? 5) : null,
-  );
-  revalidate(post.slug ? [post.slug] : []);
-  return { ok: true, featuredOnHome };
+  const slugs = await applyFeaturedHomePlan(id, post.slug, plan);
+  revalidate(slugs);
+  return { ok: true, featuredOnHome: plan.type !== 'off' };
+}
+
+async function applyFeaturedHomePlan(
+  id: string,
+  slug: string,
+  plan: Exclude<ReturnType<typeof planFeaturedHomeToggle>, { type: 'needs-replace' }>,
+): Promise<string[]> {
+  const slugs = [slug];
+  if (plan.type === 'off') {
+    await persistBlogPostFeaturedHome(id, false, null);
+    return slugs;
+  }
+  if (plan.type === 'on') {
+    await persistBlogPostFeaturedHome(id, true, plan.featuredOrder);
+    return slugs;
+  }
+
+  const replaced = await prisma.blogPost.findUnique({
+    where: { id: plan.replaceId },
+    select: { slug: true },
+  });
+  if (replaced?.slug) slugs.push(replaced.slug);
+  await persistBlogPostFeaturedHome(plan.replaceId, false, null);
+  await persistBlogPostFeaturedHome(id, true, plan.featuredOrder);
+  return slugs;
 }

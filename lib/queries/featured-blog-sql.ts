@@ -12,6 +12,24 @@ interface FeaturedHomeRow {
   featuredOrder: number | null;
 }
 
+export interface HomepageFeaturedBlogSlot {
+  id: string;
+  featuredOrder: number | null;
+}
+
+export async function listHomepageFeaturedBlogs(): Promise<HomepageFeaturedBlogSlot[]> {
+  try {
+    return await prisma.$queryRaw<HomepageFeaturedBlogSlot[]>`
+      SELECT id, "featuredOrder"
+      FROM "BlogPost"
+      WHERE "featuredOnHome" = true
+      ORDER BY "featuredOrder" ASC NULLS LAST, "publishedAt" DESC, "createdAt" DESC
+    `;
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchHomepageFeaturedBlogIds(limit: number): Promise<string[]> {
   try {
     const featured = await prisma.$queryRaw<FeaturedIdRow[]>`

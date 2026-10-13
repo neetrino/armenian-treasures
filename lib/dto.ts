@@ -15,6 +15,7 @@ import {
 import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-sections';
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel, isUntranslatedMenuTitle } from '@/lib/i18n/messages/menu';
+import { ornamentMenuTitle } from '@/lib/i18n/ornament-label';
 import { localizedHomeSections, localizedHomeStats, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
 import { resolveLocaleDocument } from '@/lib/i18n/locale-document';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
@@ -188,6 +189,8 @@ function resolvePublicMenuTitle(
   const english = resolveLocalizedText(raw, 'EN').trim();
   const fromCode = cultureMenuLabel(locale, slug);
   const englishCatalog = cultureMenuLabel('EN', slug);
+  const ornamentTitle = ornamentMenuTitle(locale, slug, localized);
+  if (ornamentTitle) return ornamentTitle;
   if (locale === 'EN') return localized || fromCode || '';
   if (fromCode && isUntranslatedMenuTitle(localized, english, englishCatalog ?? '')) return fromCode;
   return localized || fromCode || english;

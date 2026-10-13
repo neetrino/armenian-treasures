@@ -20,6 +20,7 @@ import {
   galleryUrlsFromMedia,
 } from '@/lib/culture-item-media';
 import {
+  mergeSharedDescriptionBlocks,
   mergeSharedGallery,
   mergeSharedTours,
   mergeSharedVideos,
@@ -132,6 +133,10 @@ function withLocaleMedia(
       slice
         ? {
             ...slice,
+            blocks: mergeSharedDescriptionBlocks(
+              media.blocks,
+              code === locale ? media.blocks : slice.blocks,
+            ),
             tours: mergeSharedTours(media.tours, code === locale ? media.tours : slice.tours, code as SiteLocaleCode),
             videos: mergeSharedVideos(media.videos, code === locale ? media.videos : slice.videos, code as SiteLocaleCode),
             gallery: mergeSharedGallery(

@@ -20,12 +20,14 @@ import { hydrateCultureItemMedia, type CultureItemMediaContent } from '@/lib/cul
 import {
   emptyTextLocaleMedia,
   mediaForLocale,
+  mergeSharedDescriptionBlocks,
   mergeSharedGallery,
   mergeSharedTours,
   mergeSharedVideos,
   parseMediaByLocale,
   shareMapAddress,
   sliceLocaleMedia,
+  syncSharedDescriptionBlocks,
   syncSharedLocaleMedia,
   type CultureItemLocaleMedia,
 } from '@/lib/culture-item-media-locale';
@@ -148,18 +150,14 @@ export function CultureItemForm({
       setMediaByLocale((map) => {
         const withActive = { ...map, [activeLocale]: sliceLocaleMedia(next) };
         const stamped = patch.address !== undefined ? shareMapAddress(withActive, next.address) : withActive;
-        if (patch.tours || patch.videos || patch.gallery) {
-          return syncSharedLocaleMedia(
-            stamped,
-            {
-              tours: next.tours,
-              videos: next.videos,
-              gallery: next.gallery,
-            },
-            activeLocale,
-          );
-        }
-        return stamped;
+        const sharedMedia = patch.tours || patch.videos || patch.gallery
+          ? syncSharedLocaleMedia(
+              stamped,
+              { tours: next.tours, videos: next.videos, gallery: next.gallery },
+              activeLocale,
+            )
+          : stamped;
+        return patch.blocks ? syncSharedDescriptionBlocks(sharedMedia, next.blocks) : sharedMedia;
       });
       return next;
     });
@@ -177,11 +175,15 @@ export function CultureItemForm({
       saved[nextLocale] = {
         ...nextSlice,
         address: media.address,
+        blocks: mergeSharedDescriptionBlocks(media.blocks, nextSlice.blocks),
         tours: mergeSharedTours(media.tours, nextSlice.tours, nextLocale),
         videos: mergeSharedVideos(media.videos, nextSlice.videos, nextLocale),
         gallery: mergeSharedGallery(media.gallery, nextSlice.gallery, nextLocale),
       };
-      const shared = shareMapAddress(saved, media.address);
+      const shared = shareMapAddress(
+        syncSharedDescriptionBlocks(saved, media.blocks),
+        media.address,
+      );
       const resolved = shared[nextLocale]!;
       setMedia((current) => ({
         ...current,

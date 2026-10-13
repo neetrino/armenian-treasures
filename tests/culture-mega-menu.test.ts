@@ -50,7 +50,7 @@ describe('resolveCultureMegaMenu', () => {
       'Churches & Monasteries',
       'Castles',
       'Armaments',
-      'Ornaments',
+      'Ornament',
     ]);
     expect(architecture?.items.at(-1)).toMatchObject({
       href: '/culture/architecture/ornaments',
@@ -69,7 +69,7 @@ describe('resolveCultureMegaMenu', () => {
     const ornaments = columns
       .find((column) => column.heading === 'Ճարտարապետություն')
       ?.items.find((item) => item.menuPath === 'architecture/ornaments');
-    expect(ornaments?.label).toBe('Նախշազարդ');
+    expect(ornaments?.label).toBe('Զարդանախշեր');
   });
 
   it('does not duplicate sheet items or include form routes', () => {

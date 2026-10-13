@@ -149,7 +149,6 @@ export function localizedPartnershipPageContent(locale: SiteLocaleCode): Partner
     'catGovernment',
     'catReligious',
     'catMuseums',
-    'catEducation',
     'catFoundations',
     'catTechnology',
   ] as const;

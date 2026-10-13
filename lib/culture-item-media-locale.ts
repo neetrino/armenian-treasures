@@ -123,7 +123,7 @@ export function mediaForLocale(
   locale: SiteLocaleCode,
 ): CultureItemMediaContent {
   const slice = byLocale[locale];
-  // URLs / structure stay on the shared root; titles / captions / blocks are locale-strict.
+  // Tour, video, and gallery URLs stay on the shared root. Description images do too.
   if (!slice) {
     return {
       ...media,
@@ -140,7 +140,7 @@ export function mediaForLocale(
   return {
     ...media,
     address: resolveSharedMapAddress(media, byLocale, locale),
-    blocks: slice.blocks,
+    blocks: withSharedDescriptionImages(media, byLocale, slice.blocks),
     tours: media.tours.map((tour) => ({
       ...tour,
       title: localeOwnsMediaText(toursById.get(tour.id)?.title ?? '', locale),
@@ -166,6 +166,52 @@ export function localeOwnsMediaText(text: string, locale: SiteLocaleCode): strin
   if (/[\u0530-\u058F]/.test(trimmed) && locale !== 'HY' && locale !== 'HYW') return '';
   if (/[\u0400-\u04FF]/.test(trimmed) && locale !== 'RU') return '';
   return trimmed;
+}
+
+function blockImage(blocks: CultureDescriptionBlock[] | undefined, blockId: string): string {
+  return blocks?.find((item) => item.id === blockId)?.image.trim() ?? '';
+}
+
+function withSharedDescriptionImages(
+  media: CultureItemMediaContent,
+  byLocale: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+  blocks: CultureDescriptionBlock[],
+): CultureDescriptionBlock[] {
+  return blocks.map((block) => {
+    const fromLocale = SITE_LOCALE_CODES.map((code) => blockImage(byLocale[code]?.blocks, block.id)).find(Boolean);
+    const image = blockImage(media.blocks, block.id) || fromLocale || '';
+    return !image || image === block.image ? block : { ...block, image };
+  });
+}
+
+export function mergeSharedDescriptionBlocks(
+  shared: CultureDescriptionBlock[],
+  localized: CultureDescriptionBlock[] | undefined,
+): CultureDescriptionBlock[] {
+  const byId = new Map((localized ?? []).map((block) => [block.id, block]));
+  return shared.map((block) => {
+    const existing = byId.get(block.id);
+    return {
+      ...block,
+      title: existing?.title ?? '',
+      subtitle: existing?.subtitle ?? '',
+      body: existing?.body ?? '',
+      caption: existing?.caption ?? '',
+    };
+  });
+}
+
+export function syncSharedDescriptionBlocks(
+  map: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
+  shared: CultureDescriptionBlock[],
+): Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>> {
+  const next = { ...map };
+  for (const code of SITE_LOCALE_CODES) {
+    const existing = next[code];
+    if (!existing) continue;
+    next[code] = { ...existing, blocks: mergeSharedDescriptionBlocks(shared, existing.blocks) };
+  }
+  return next;
 }
 
 export function mergeSharedTours(

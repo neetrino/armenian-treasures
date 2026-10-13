@@ -86,7 +86,12 @@ export function HomeNewsEditorial({ lead, side, locale }: HomeNewsEditorialProps
     <div className={cn('home-news-editorial', side.length === 0 && 'home-news-editorial--solo')}>
       <LeadStory post={lead} locale={locale} />
       {side.length > 0 ? (
-        <div className="home-news-editorial__side">
+        <div
+          className={cn(
+            'home-news-editorial__side',
+            side.length === 2 && 'home-news-editorial__side--stacked',
+          )}
+        >
           {side.map((post) => (
             <SideStory key={post.id} post={post} locale={locale} />
           ))}
