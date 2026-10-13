@@ -114,21 +114,6 @@ export const PARTNERSHIP_CATEGORIES: PartnerCategory[] = [
     ],
   },
   {
-    label: 'Educational & Innovation Partners',
-    row: 'partner-row-1',
-    partners: [
-      {
-        sector: 'Innovation & Creative Education',
-        name: 'TUMO Center for Creative Technologies',
-        desc: "TUMO is the most celebrated educational innovation in modern Armenia — a free after-school programme teaching digital arts, technology, and creative skills to thousands of young Armenians annually, with centres now on three continents. This partnership embeds Armenian cultural heritage directly into TUMO's cutting-edge digital curriculum, giving the next generation both the tools and the subject matter to become stewards of their own civilisation.",
-        href: '/culture',
-        arrow: 'View Institution →',
-        wide: true,
-        logo: LOGO('partner-06.webp', 'TUMO Center for Creative Technologies', true),
-      },
-    ],
-  },
-  {
     label: 'Foundations & Pan-Armenian Organisations',
     row: 'partner-row-3',
     partners: [
@@ -175,6 +160,15 @@ export const PARTNERSHIP_CATEGORIES: PartnerCategory[] = [
     ],
   },
 ];
+
+export function withoutTumoPartners(categories: readonly PartnerCategory[]): PartnerCategory[] {
+  return categories
+    .map((category) => ({
+      ...category,
+      partners: category.partners.filter((partner) => !partner.name.toLowerCase().includes('tumo')),
+    }))
+    .filter((category) => category.partners.length > 0);
+}
 
 export const PARTNERSHIP_SECTORS = [
   'Government & Public Institution',

@@ -2,9 +2,8 @@ import '@/components/sections/home-news/home-news-editorial.css';
 import { HomeNewsEditorial } from '@/components/sections/home-news/HomeNewsEditorial';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import { uiMessage } from '@/lib/i18n/ui-messages';
+import { HOME_NEWS_POST_COUNT } from '@/lib/blog-featured-home';
 import { getFeaturedBlogPosts } from '@/lib/queries/blogs';
-
-const HOME_NEWS_POST_COUNT = 4;
 
 export async function HomeNewsFeedSection() {
   const [posts, locale] = await Promise.all([

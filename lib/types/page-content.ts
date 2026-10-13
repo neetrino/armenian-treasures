@@ -14,6 +14,7 @@ import {
 import {
   PARTNERSHIP_CATEGORIES,
   PARTNERSHIP_STATS,
+  withoutTumoPartners,
 } from '@/lib/constants/partnership-page';
 import {
   CULTURAL_PORTAL_PAGE,
@@ -296,7 +297,8 @@ export function parseDonationPageContent(value: unknown): DonationPageContent {
 export function parsePartnershipPageContent(value: unknown): PartnershipPageContent {
   const defaults = buildDefaultPartnershipPageContent();
   if (typeof value === 'object' && value !== null) {
-    return { ...defaults, ...(value as Partial<PartnershipPageContent>) };
+    const merged = { ...defaults, ...(value as Partial<PartnershipPageContent>) };
+    return { ...merged, categories: withoutTumoPartners(merged.categories) };
   }
   return defaults;
 }

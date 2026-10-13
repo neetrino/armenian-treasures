@@ -51,11 +51,14 @@
   transition: transform 240ms ease;
 }
 
+.home-partners-logos__frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .home-partners-logos__mark {
-  max-height: 100%;
-  max-width: 100%;
-  width: auto;
-  height: auto;
   object-fit: contain;
 }
 

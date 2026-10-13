@@ -2,22 +2,20 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useMemo, useState, useTransition } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ExternalLink, Pencil, Plus, Search, Star } from 'lucide-react';
+import { ExternalLink, Pencil, Plus, Search } from 'lucide-react';
+import { BlogFeaturedStar } from '@/components/admin/BlogFeaturedStar';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { Badge } from '@/components/ui/Badge';
 import { ButtonLink } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
-import {
-  deleteBlogPostAction,
-  toggleBlogPostFeaturedHomeAction,
-} from '@/app/(admin)/admin/(panel)/blog/actions';
+import { deleteBlogPostAction } from '@/app/(admin)/admin/(panel)/blog/actions';
+import { HOME_NEWS_POST_COUNT } from '@/lib/blog-featured-home';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
-import { cn } from '@/lib/utils';
 import type { AdminContext } from '@/lib/auth/require-admin';
 
 interface Row {
@@ -36,60 +34,14 @@ interface BlogsPageClientProps {
   rows: Row[];
 }
 
-function FeaturedHomeStarButton({
-  postId,
-  featuredOnHome,
-  title,
-}: {
-  postId: string;
-  featuredOnHome: boolean;
-  title: string;
-}) {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [active, setActive] = useState(featuredOnHome);
-
-  useEffect(() => {
-    setActive(featuredOnHome);
-  }, [featuredOnHome]);
-
-  return (
-    <button
-      type="button"
-      data-admin-row-action
-      disabled={pending}
-      aria-pressed={active}
-      aria-label={active ? `Remove “${title}” from homepage` : `Show “${title}” on homepage`}
-      title={active ? 'Shown on homepage' : 'Show on homepage'}
-      className={cn(
-        'inline-flex h-8 w-8 items-center justify-center rounded-md transition',
-        active
-          ? 'text-bronze-500 hover:bg-bronze-50'
-          : 'text-stone-300 hover:bg-stone-100 hover:text-bronze-400',
-        pending && 'opacity-60',
-      )}
-      onClick={() => {
-        startTransition(async () => {
-          const previous = active;
-          setActive(!previous);
-          const result = await toggleBlogPostFeaturedHomeAction(postId);
-          if (!result.ok) {
-            setActive(previous);
-            return;
-          }
-          setActive(result.featuredOnHome);
-          router.refresh();
-        });
-      }}
-    >
-      <Star size={16} aria-hidden className={active ? 'fill-current' : undefined} />
-    </button>
-  );
-}
-
 export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
   const router = useRouter();
   const [query, setQuery] = useState('');
+
+  const featuredPosts = rows
+    .filter((row) => row.featuredOnHome)
+    .map((row) => ({ id: row.id, title: row.title }));
+  const featuredCount = featuredPosts.length;
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -107,10 +59,11 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
       width: '4.5rem',
       align: 'center',
       cell: (row) => (
-        <FeaturedHomeStarButton
+        <BlogFeaturedStar
           postId={row.id}
           featuredOnHome={row.featuredOnHome}
           title={row.title}
+          featuredPosts={featuredPosts}
         />
       ),
     },
@@ -192,7 +145,11 @@ export function BlogsPageClient({ user, rows }: BlogsPageClientProps) {
       user={user}
       topbarTitle="Blog"
       title="Blog posts"
-      description="Articles shown on /blog. Star a post to show it in Stories from the Heritage Community on the homepage."
+      description={
+        featuredCount > HOME_NEWS_POST_COUNT
+          ? `The homepage shows 4 stories. ${featuredCount} posts are starred — unstar the extras, or star a new one and choose which story it replaces.`
+          : 'Star up to 4 posts for the homepage: one large card and three smaller ones. A fifth star asks which story to replace.'
+      }
       actions={
         <ButtonLink href="/admin/blog/new" variant="primary">
           <Plus size={14} aria-hidden /> New post

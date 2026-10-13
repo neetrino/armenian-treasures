@@ -3,6 +3,7 @@ import { emptyDescriptionBlock, parseCultureItemMedia } from '@/lib/culture-item
 import {
   emptyTextLocaleMedia,
   mediaForLocale,
+  mergeSharedDescriptionBlocks,
   parseMediaByLocale,
   sliceLocaleMedia,
   syncSharedLocaleMedia,
@@ -160,5 +161,35 @@ describe('culture item locale media', () => {
     expect(synced.HY?.tours[0]?.url).toContain('skfb.ly');
     expect(synced.EN?.tours[0]?.title).toBe('');
     expect(synced.EN?.tours[0]?.url).toContain('skfb.ly');
+  });
+
+  it('shows a description image from another locale without copying its text', () => {
+    const image = '/uploads/david.webp';
+    const english = {
+      ...parseCultureItemMedia(null),
+      blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'David', body: 'English', image }],
+    };
+    const byLocale = {
+      EN: sliceLocaleMedia(english),
+      HY: {
+        ...emptyTextLocaleMedia(sliceLocaleMedia(english)),
+        blocks: [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Դավիթ', body: 'Հայերեն', image: '', caption: '' }],
+      },
+    };
+
+    const hy = mediaForLocale(english, byLocale, 'HY').blocks[0];
+    expect(hy?.image).toBe(image);
+    expect(hy?.body).toBe('Հայերեն');
+    expect(mediaForLocale(english, byLocale, 'EN').blocks[0]?.body).toBe('English');
+  });
+
+  it('clears a shared description image without dropping the other locale text', () => {
+    const merged = mergeSharedDescriptionBlocks(
+      [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'David', body: 'English', image: '' }],
+      [{ ...emptyDescriptionBlock(), id: 'block-1', title: 'Դավիթ', body: 'Հայերեն', image: '/old.webp' }],
+    );
+    expect(merged[0]?.image).toBe('');
+    expect(merged[0]?.body).toBe('Հայերեն');
+    expect(merged[0]?.title).toBe('Դավիթ');
   });
 });

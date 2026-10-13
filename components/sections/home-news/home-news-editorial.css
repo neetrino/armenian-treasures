@@ -169,6 +169,11 @@
   gap: 1.35rem;
 }
 
+.home-news-editorial__side--stacked {
+  justify-content: flex-start;
+  gap: 1.35rem;
+}
+
 .home-news-editorial__row {
   display: flex;
   align-items: center;
