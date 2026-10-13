@@ -84,9 +84,12 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
 
   return (
     <div className="flex flex-col gap-6">
-      {!embedToolbar ? (
-        <MapFilterBar filter={filter} onFilterChange={handleFilterChange} locale={locale} />
-      ) : null}
+      <MapFilterBar
+        filter={filter}
+        onFilterChange={handleFilterChange}
+        locale={locale}
+        overlay={embedToolbar}
+      />
 
       <div
         className={cn(
@@ -115,15 +118,7 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
         >
           {embedToolbar ? (
             <div className="pointer-events-none absolute inset-0 z-[400]">
-              <div className="pointer-events-auto absolute inset-x-3 top-3">
-                <MapFilterBar
-                  filter={filter}
-                  onFilterChange={handleFilterChange}
-                  locale={locale}
-                  overlay
-                />
-              </div>
-              <div className="pointer-events-auto absolute bottom-3 left-3 right-3 top-[4.75rem] w-auto sm:right-auto sm:w-[min(calc(100%-1.5rem),22rem)]">
+              <div className="pointer-events-auto absolute bottom-3 left-3 right-3 top-3 w-auto sm:right-auto sm:w-[min(calc(100%-1.5rem),22rem)]">
                 <MapSiteListPanel
                   items={visible}
                   locale={locale}
