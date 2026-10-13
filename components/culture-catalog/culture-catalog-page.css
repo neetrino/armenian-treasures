@@ -657,18 +657,21 @@
 }
 
 .khndzoresk-page .catalog-detail-card--with-media .catalog-detail-card__media {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: auto;
   width: 100%;
   height: auto;
   min-height: 0;
-  max-height: min(42rem, 78vh);
+  max-height: none;
   align-self: start;
   position: sticky;
   top: 6rem;
 }
 
 .khndzoresk-page .catalog-detail-card--with-media .catalog-detail-card__media img {
-  object-position: center top;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
 }
 
 .khndzoresk-page .catalog-detail-card--with-media .catalog-detail-card__body {
@@ -699,9 +702,11 @@
   }
 
   .khndzoresk-page .catalog-detail-card--with-media .catalog-detail-card__media {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: auto;
     min-height: 0;
     height: auto;
+    max-height: none;
+    position: static;
   }
 
   .khndzoresk-page .catalog-detail-card .about-body h2,

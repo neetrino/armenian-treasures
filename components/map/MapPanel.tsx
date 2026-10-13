@@ -3,8 +3,7 @@
 import { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Castle, Church, Landmark, MapPin, Mountain, Sparkles } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
@@ -29,25 +28,8 @@ const LeafletMap = dynamic(
 interface MapPanelProps {
   items: PublicCultureItemDTO[];
   locale?: SiteLocaleCode;
-  /** Home map: filters + site list overlaid on the map viewport. */
+  /** Filters sit above the map. Search is overlaid on the map. */
   embedToolbar?: boolean;
-}
-
-const MAP_TYPE_ICONS: Record<string, LucideIcon> = {
-  MONASTERY: Church,
-  CHURCH: Church,
-  CHAPEL: Church,
-  FORTRESS: Castle,
-  SETTLEMENT: Mountain,
-  MUSEUM: Landmark,
-  MEMORIAL: Landmark,
-  KHACHKAR: Sparkles,
-  OTHER: Sparkles,
-};
-
-function resolveMapItemIcon(mapType: PublicCultureItemDTO['mapType']): LucideIcon {
-  if (!mapType) return MapPin;
-  return MAP_TYPE_ICONS[mapType] ?? MapPin;
 }
 
 export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPanelProps) {
@@ -78,8 +60,10 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
     setSelectedId(null);
   };
 
-  const handleSelectItem = (id: string): void => {
+  const handleSuggestionSelect = (id: string): void => {
+    const match = visible.find((item) => item.id === id);
     setSelectedId(id);
+    if (match) setSearchQuery(match.title);
   };
 
   return (
@@ -99,13 +83,11 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
       >
         {!embedToolbar ? (
           <MapSiteListPanel
-            items={visible}
+            suggestions={searchQuery.trim() ? visible : []}
             locale={locale}
-            activeId={activeId}
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}
-            onSelect={handleSelectItem}
-            resolveIcon={resolveMapItemIcon}
+            onSelect={handleSuggestionSelect}
           />
         ) : null}
 
@@ -118,17 +100,14 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
         >
           {embedToolbar ? (
             <div className="pointer-events-none absolute inset-0 z-[400]">
-              <div className="pointer-events-auto absolute bottom-3 left-3 right-3 top-3 w-auto sm:right-auto sm:w-[min(calc(100%-1.5rem),22rem)]">
+              <div className="pointer-events-auto absolute inset-x-2 top-2 w-auto sm:inset-x-auto sm:left-3 sm:top-3 sm:w-[min(calc(100%-1.5rem),22rem)]">
                 <MapSiteListPanel
-                  items={visible}
+                  suggestions={searchQuery.trim() ? visible : []}
                   locale={locale}
-                  activeId={activeId}
                   searchQuery={searchQuery}
                   onSearchChange={handleSearchChange}
-                  onSelect={handleSelectItem}
-                  resolveIcon={resolveMapItemIcon}
+                  onSelect={handleSuggestionSelect}
                   overlay
-                  className="h-full"
                 />
               </div>
             </div>

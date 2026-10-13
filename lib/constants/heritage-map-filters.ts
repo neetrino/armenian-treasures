@@ -1,6 +1,7 @@
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { searchTextMatches } from '@/lib/search/fold-search-text';
 
 export type HeritageMapFilterValue =
   | 'ALL'
@@ -77,7 +78,7 @@ export function filterMapItemsBySearch(
       item.mapType?.replaceAll('_', ' '),
     ];
 
-    return searchable.some((value) => value?.toLowerCase().includes(normalized));
+    return searchable.some((value) => (value ? searchTextMatches(value, normalized) : false));
   });
 }
 
