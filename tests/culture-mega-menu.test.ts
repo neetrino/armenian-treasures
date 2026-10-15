@@ -49,8 +49,7 @@ describe('resolveCultureMegaMenu', () => {
     expect(architecture?.items.map((item) => item.label)).toEqual([
       'Churches & Monasteries',
       'Castles',
-      'Armaments',
-      'Ornament',
+      'Ornaments',
     ]);
     expect(architecture?.items.at(-1)).toMatchObject({
       href: '/culture/architecture/ornaments',
@@ -72,6 +71,24 @@ describe('resolveCultureMegaMenu', () => {
     expect(ornaments?.label).toBe('Զարդանախշեր');
   });
 
+  it('does not list Architecture Armaments beside Ornaments', () => {
+    const columns = resolveCultureMegaMenu(
+      architectureTree([
+        node({ id: 'armaments', slug: 'armaments', title: 'Armaments', order: 4 }),
+      ]),
+    );
+
+    const labels = columns
+      .find((column) => column.heading === 'Architecture')
+      ?.items.map((item) => item.label);
+    expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Ornaments']);
+    expect(
+      columns
+        .find((column) => column.heading === 'Art & Culture')
+        ?.items.some((item) => item.label === 'Armaments'),
+    ).toBe(true);
+  });
+
   it('does not duplicate sheet items or include form routes', () => {
     const columns = resolveCultureMegaMenu(
       architectureTree([
@@ -89,7 +106,7 @@ describe('resolveCultureMegaMenu', () => {
     const labels = columns.find((column) => column.heading === 'Architecture')?.items.map(
       (item) => item.label,
     );
-    expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Armaments']);
+    expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Ornaments']);
   });
 
   it('keeps AT Features item order when no extra children exist', () => {

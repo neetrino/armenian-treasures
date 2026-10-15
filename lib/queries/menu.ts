@@ -20,7 +20,7 @@ async function fetchActiveMenu(locale: SiteLocaleCode): Promise<PublicCultureMen
 
 const getActiveMenuItemsCached = unstable_cache(
   fetchActiveMenu,
-  ['culture-menu-active'],
+  ['culture-menu-items'],
   { tags: ['culture-menu'], revalidate: 60 },
 );
 

@@ -13,8 +13,9 @@ describe('isUntranslatedMenuTitle', () => {
   });
 
   it('replaces stale ornament labels and keeps a custom title', () => {
-    expect(ornamentMenuTitle('EN', 'ornaments', 'Artnament')).toBe('Ornament');
-    expect(ornamentMenuTitle('EN', 'architecture/ornaments', 'Ornaments')).toBe('Ornament');
+    expect(ornamentMenuTitle('EN', 'ornaments', 'Artnament')).toBe('Ornaments');
+    expect(ornamentMenuTitle('EN', 'ornaments', 'Օrmaments')).toBe('Ornaments');
+    expect(ornamentMenuTitle('EN', 'architecture/ornaments', 'Ornaments')).toBe('Ornaments');
     expect(ornamentMenuTitle('HY', 'ornaments', 'Նախշազարդ')).toBe('Զարդանախշեր');
     expect(ornamentMenuTitle('EN', 'ornaments', 'Stone patterns')).toBeNull();
     expect(ornamentMenuTitle('EN', 'castles', 'Artnament')).toBeNull();
