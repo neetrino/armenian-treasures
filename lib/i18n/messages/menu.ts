@@ -11,7 +11,7 @@ export const MENU_MESSAGES = {
     'Igrejas e mosteiros',
   ),
   menuCastles: row('Բերդեր', 'Castles', 'Крепости', 'Châteaux', 'Castelos'),
-  menuOrnaments: row('Զարդանախշեր', 'Ornament', 'Орнаменты', 'Ornements', 'Ornamentos'),
+  menuOrnaments: row('Զարդանախշեր', 'Ornaments', 'Орнаменты', 'Ornements', 'Ornamentos'),
   menuMythsLegends: row(
     'Առասպելներ և լեգենդներ',
     'Myths & Legends',

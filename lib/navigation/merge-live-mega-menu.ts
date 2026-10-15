@@ -30,6 +30,10 @@ function toExtraMegaMenuItem(
   };
 }
 
+function isOrnamentsAlias(parentSlug: string, childSlug: string): boolean {
+  return parentSlug === 'architecture' && childSlug === 'armaments';
+}
+
 function collectMissingLiveItems(
   column: MegaMenuColumn,
   parent: MenuNode | undefined,
@@ -39,6 +43,7 @@ function collectMissingLiveItems(
   const existing = columnItemKeys(column);
   return (parent.children ?? [])
     .filter((child) => child.isActive && !isFormRoute(child.routeType))
+    .filter((child) => !isOrnamentsAlias(parent.slug, child.slug))
     .filter((child) => !existing.has(child.slug) && !existing.has(`${parent.slug}/${child.slug}`))
     .map((child) => toExtraMegaMenuItem(parent, child, locale));
 }
