@@ -5,6 +5,15 @@ interface CultureCatalogAboutProps {
   content: CultureCatalogContent['about'];
 }
 
+function aboutParagraphs(paragraphs: string[]): string[] {
+  return paragraphs.flatMap((paragraph) =>
+    paragraph
+      .split(/\n{2,}/)
+      .map((part) => part.trim())
+      .filter(Boolean),
+  );
+}
+
 function hasAboutContent(content: CultureCatalogContent['about']): boolean {
   return (
     hasTrimmedText(content.description) ||
@@ -29,7 +38,7 @@ export function CultureCatalogAbout({ content }: CultureCatalogAboutProps) {
       <p className="sec-desc">{content.description}</p>
       <div className="about-split">
         <div className="about-body reveal">
-          {content.paragraphs.map((paragraph) => (
+          {aboutParagraphs(content.paragraphs).map((paragraph) => (
             <p key={paragraph.slice(0, 40)}>{paragraph}</p>
           ))}
           {content.extraHeading ? <h3>{content.extraHeading}</h3> : null}

@@ -1,7 +1,6 @@
 import { LandingHero, type LandingHeroCta } from '@/components/landing/LandingHero';
 import type { LandingBreadcrumbSegment } from '@/components/landing/LandingBreadcrumb';
 import { CulturePortalLandingBreadcrumb } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
-import { CULTURE_CATALOG_DEFAULT_HERO_IMAGE } from '@/lib/constants/culture-catalog-content';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 
 export type CultureCatalogLandingHeroCta = LandingHeroCta;
@@ -13,7 +12,9 @@ interface CultureCatalogLandingHeroProps {
   slogan?: string;
   description?: string;
   breadcrumb: LandingBreadcrumbSegment[];
+  heroImage?: string;
   ctas?: CultureCatalogLandingHeroCta[];
+  showEyebrow?: boolean;
 }
 
 export function CultureCatalogLandingHero({
@@ -23,9 +24,12 @@ export function CultureCatalogLandingHero({
   slogan,
   description,
   breadcrumb,
+  heroImage,
   ctas = [],
+  showEyebrow = false,
 }: CultureCatalogLandingHeroProps) {
-  const imageUrl = resolvePublicAssetUrl(CULTURE_CATALOG_DEFAULT_HERO_IMAGE);
+  const trimmedHero = heroImage?.trim();
+  const imageUrl = trimmedHero ? resolvePublicAssetUrl(trimmedHero) : null;
 
   return (
     <LandingHero
@@ -36,6 +40,7 @@ export function CultureCatalogLandingHero({
       subtitle={description ?? ''}
       heroImage={imageUrl}
       ctas={ctas}
+      showEyebrow={showEyebrow}
       heroClassName="culture-catalog-hero"
       breadcrumb={<CulturePortalLandingBreadcrumb segments={breadcrumb} />}
     />

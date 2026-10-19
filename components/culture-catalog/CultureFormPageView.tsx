@@ -2,7 +2,10 @@ import type { ReactNode } from 'react';
 import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
-import { resolveCultureCatalogFormContent } from '@/lib/constants/culture-catalog-content';
+import {
+  CULTURE_CATALOG_DEFAULT_HERO_IMAGE,
+  resolveCultureCatalogFormContent,
+} from '@/lib/constants/culture-catalog-content';
 import type { MenuNode } from '@/lib/culture-menu';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -33,6 +36,7 @@ export function CultureFormPageView({
   return (
     <CultureCatalogShell>
       <CultureCatalogLandingHero
+        heroImage={CULTURE_CATALOG_DEFAULT_HERO_IMAGE}
         title={title}
         eyebrow={content.eyebrow}
         accent={content.accent}
