@@ -1,8 +1,8 @@
 import { LandingHero, type LandingHeroCta } from '@/components/landing/LandingHero';
 import type { LandingBreadcrumbSegment } from '@/components/landing/LandingBreadcrumb';
 import { CulturePortalLandingBreadcrumb } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
+import { CULTURE_CATALOG_DEFAULT_HERO_IMAGE } from '@/lib/constants/culture-catalog-content';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
-import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 
 export type CultureCatalogLandingHeroCta = LandingHeroCta;
 
@@ -13,7 +13,6 @@ interface CultureCatalogLandingHeroProps {
   slogan?: string;
   description?: string;
   breadcrumb: LandingBreadcrumbSegment[];
-  heroImage?: string;
   ctas?: CultureCatalogLandingHeroCta[];
 }
 
@@ -24,10 +23,9 @@ export function CultureCatalogLandingHero({
   slogan,
   description,
   breadcrumb,
-  heroImage,
   ctas = [],
 }: CultureCatalogLandingHeroProps) {
-  const imageUrl = hasTrimmedText(heroImage) ? resolvePublicAssetUrl(heroImage!) : null;
+  const imageUrl = resolvePublicAssetUrl(CULTURE_CATALOG_DEFAULT_HERO_IMAGE);
 
   return (
     <LandingHero

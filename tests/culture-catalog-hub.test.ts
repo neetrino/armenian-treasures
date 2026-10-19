@@ -40,21 +40,21 @@ describe('culture catalog hub description', () => {
 });
 
 describe('culture catalog hero image', () => {
-  it('uses the menu card image as the page hero fallback', () => {
+  it('uses the shared catalog hero instead of the menu card image', () => {
     const content = resolveCultureCatalogContent(
       node({ image: '/images/culture/churches.webp' }),
       node({ id: 'parent', title: 'Architecture', slug: 'architecture' }),
     );
-    expect(content.heroImage).toBe('/images/culture/churches.webp');
+    expect(content.heroImage).toBe('/images/hero/universal-page-hero.png');
   });
 
-  it('prefers catalogContent.heroImage over the card image', () => {
+  it('keeps the shared catalog hero when a custom hero is stored', () => {
     const content = resolveCultureCatalogContent(
       node({
         image: '/images/culture/card.webp',
         catalogContent: { heroImage: '/images/culture/hero.webp' },
       }),
     );
-    expect(content.heroImage).toBe('/images/culture/hero.webp');
+    expect(content.heroImage).toBe('/images/hero/universal-page-hero.png');
   });
 });

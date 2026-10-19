@@ -27,7 +27,6 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
   const menu = item.menuItem;
   const parent = menu?.parent ?? null;
   const description = item.shortDescription ?? item.description ?? '';
-  const heroImage = item.coverImage?.trim() || undefined;
 
   const breadcrumb = parent && menu
     ? [
@@ -66,7 +65,6 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
         accent={item.periodLabel?.trim() || item.region?.trim() || ''}
         slogan={item.region?.trim() || undefined}
         description={hasTrimmedText(description) ? description : undefined}
-        heroImage={heroImage}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         ctas={[
           { label: uiMessage(locale, 'viewDetails'), href: '#detail', variant: 'gold' },
