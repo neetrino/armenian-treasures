@@ -35,7 +35,7 @@ interface MapPanelProps {
 export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPanelProps) {
   const [filter, setFilter] = useState<HeritageMapFilterValue>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedId, setSelectedId] = useState<string | null>(items[0]?.id ?? null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const mapViewportRef = useRef<HTMLDivElement>(null);
 
   const visible = useMemo(() => {
@@ -45,10 +45,10 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
 
   const activeId = useMemo(() => {
     if (selectedId && visible.some((item) => item.id === selectedId)) return selectedId;
-    return visible[0]?.id ?? null;
+    return null;
   }, [visible, selectedId]);
 
-  const selected = visible.find((item) => item.id === activeId) ?? visible[0] ?? null;
+  const selected = visible.find((item) => item.id === activeId) ?? null;
 
   const handleFilterChange = (next: HeritageMapFilterValue): void => {
     setFilter(next);
