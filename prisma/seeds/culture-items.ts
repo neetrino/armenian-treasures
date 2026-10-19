@@ -757,28 +757,6 @@ const ITEMS: SeedItem[] = [
     description:
       'A new generation of independent companies — HighFest, Goris, the Yerevan Fringe — reinventing Armenian theatre with international guests.',
   },
-  // Heritage / Armaments
-  {
-    slug: 'urartian-bronze',
-    title: 'Urartian bronze',
-    menuPath: 'heritage/armaments',
-    description:
-      'Bronze helmets, shields and ritual weapons of the Urartu kingdom (9th–6th c. BC), the technological summit of the Iron-Age highlands.',
-  },
-  {
-    slug: 'medieval-armour',
-    title: 'Medieval armour',
-    menuPath: 'heritage/armaments',
-    description:
-      'Bagratid and Cilician scale armour, helmets and sabres, recorded in chronicles and the carved knights of monastery friezes.',
-  },
-  {
-    slug: 'karabakh-dagger',
-    title: 'Karabakh dagger',
-    menuPath: 'heritage/armaments',
-    description:
-      'The kindjal of Karabakh and Lori — wootz blades, niello sheaths and the silversmith craft of nineteenth-century mountain villages.',
-  },
   // Heritage / Publications
   {
     slug: 'urbatagirk-1512',

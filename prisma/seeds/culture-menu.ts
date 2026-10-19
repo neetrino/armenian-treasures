@@ -183,8 +183,7 @@ const TREE: TopNode[] = [
       { slug: 'sculpting', title: 'Sculptors', order: 7, routeType: 'SUBCATEGORY' },
       { slug: 'dance', title: 'Dance', order: 8, routeType: 'SUBCATEGORY' },
       { slug: 'theatre', title: 'Theatre', order: 9, routeType: 'SUBCATEGORY' },
-      { slug: 'armaments', title: 'Armaments', order: 10, routeType: 'SUBCATEGORY' },
-      { slug: 'publications', title: 'Publications', order: 11, routeType: 'SUBCATEGORY' },
+      { slug: 'publications', title: 'Publications', order: 10, routeType: 'SUBCATEGORY' },
     ],
   },
 ];

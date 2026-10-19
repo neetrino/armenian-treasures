@@ -166,12 +166,6 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'heritage/publications',
         fallbackHref: '/culture/heritage/publications',
       },
-      {
-        label: 'Armaments',
-        icon: 'armaments',
-        menuPath: 'heritage/armaments',
-        fallbackHref: '/culture/heritage/armaments',
-      },
     ],
   },
   {

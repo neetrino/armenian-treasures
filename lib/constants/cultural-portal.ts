@@ -169,12 +169,6 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
     href: '/culture/heritage/theatre',
   }),
   withIconSource({
-    icon: 'armaments',
-    title: 'Armaments',
-    description: 'Military history & weapons of the ages',
-    href: '/culture/heritage/armaments',
-  }),
-  withIconSource({
     icon: 'publications',
     title: 'Publications',
     description: 'Manuscripts, journals & scholarly works',
