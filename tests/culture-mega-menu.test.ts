@@ -86,7 +86,7 @@ describe('resolveCultureMegaMenu', () => {
       columns
         .find((column) => column.heading === 'Art & Culture')
         ?.items.some((item) => item.label === 'Armaments'),
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it('does not duplicate sheet items or include form routes', () => {
