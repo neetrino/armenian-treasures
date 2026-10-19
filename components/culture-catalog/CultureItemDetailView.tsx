@@ -7,6 +7,7 @@ import { CultureItemMediaSections } from '@/components/culture-catalog/CultureIt
 import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import { firstTourUrl } from '@/lib/culture-item-media';
+import { CULTURE_CATALOG_DEFAULT_HERO_IMAGE } from '@/lib/constants/culture-catalog-content';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -56,6 +57,7 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
   return (
     <CultureCatalogShell>
       <CultureCatalogLandingHero
+        heroImage={CULTURE_CATALOG_DEFAULT_HERO_IMAGE}
         title={item.title}
         eyebrow={
           parent

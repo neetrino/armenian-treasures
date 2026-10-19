@@ -45,16 +45,24 @@ describe('culture catalog hero image', () => {
       node({ image: '/images/culture/churches.webp' }),
       node({ id: 'parent', title: 'Architecture', slug: 'architecture' }),
     );
-    expect(content.heroImage).toBe('/images/hero/universal-page-hero.png');
+    expect(content.heroImage).toBeUndefined();
   });
 
-  it('keeps the shared catalog hero when a custom hero is stored', () => {
+  it('keeps copy empty until it is saved in admin', () => {
+    const content = resolveCultureCatalogContent(node({}));
+    expect(content.eyebrow).toBe('');
+    expect(content.accent).toBe('');
+    expect(content.slogan).toBe('');
+    expect(content.about.title).toBe('');
+  });
+
+  it('uses the admin hero banner when one is stored', () => {
     const content = resolveCultureCatalogContent(
       node({
         image: '/images/culture/card.webp',
         catalogContent: { heroImage: '/images/culture/hero.webp' },
       }),
     );
-    expect(content.heroImage).toBe('/images/hero/universal-page-hero.png');
+    expect(content.heroImage).toBe('/images/culture/hero.webp');
   });
 });

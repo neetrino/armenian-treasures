@@ -18,10 +18,54 @@ interface LeafletMapProps {
   locale?: SiteLocaleCode;
 }
 
-const ARMENIA_CENTER: [number, number] = [40.1, 44.95];
+const ARMENIA_CENTER: [number, number] = [40.07, 45.04];
+const ARMENIA_BOUNDS = L.latLngBounds([38.84, 43.45], [41.3, 46.63]);
 const TILE_ATTRIBUTION = '© OpenStreetMap contributors';
 const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const SELECTED_ITEM_ZOOM = 18;
+
+function showArmenia(map: L.Map, animate: boolean): void {
+  map.fitBounds(ARMENIA_BOUNDS, { padding: [28, 28], animate });
+}
+
+function bindCountryView(
+  map: L.Map,
+  container: HTMLElement,
+  selectedIdRef: { current: string | null },
+  userMovedRef: { current: boolean },
+): () => void {
+  let programmatic = false;
+  const fit = (animate: boolean) => {
+    programmatic = true;
+    showArmenia(map, animate);
+    window.setTimeout(() => {
+      programmatic = false;
+    }, 0);
+  };
+  const onDrag = () => {
+    userMovedRef.current = true;
+  };
+  const onZoom = () => {
+    if (!programmatic) userMovedRef.current = true;
+  };
+  map.on('dragstart', onDrag);
+  map.on('zoomstart', onZoom);
+  map.invalidateSize();
+  fit(false);
+  const observer = new ResizeObserver(() => {
+    const box = container.getBoundingClientRect();
+    if (userMovedRef.current || selectedIdRef.current) return;
+    if (box.width < 160 || box.height < 160) return;
+    map.invalidateSize();
+    fit(false);
+  });
+  observer.observe(container);
+  return () => {
+    observer.disconnect();
+    map.off('dragstart', onDrag);
+    map.off('zoomstart', onZoom);
+  };
+}
 
 function mappableItems(items: PublicCultureItemDTO[]): PublicCultureItemDTO[] {
   return items.filter(
@@ -69,6 +113,9 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
   const mapRef = useRef<L.Map | null>(null);
   const markersLayerRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
+  const selectedIdRef = useRef(selectedId);
+  const userMovedRef = useRef(false);
+  const hadSelectionRef = useRef(false);
   const [wheelZoomActive, setWheelZoomActive] = useState(false);
   const [markerZoom, setMarkerZoom] = useState(7);
   const armeniaLabel = uiMessage(locale, 'armenia');
@@ -84,7 +131,8 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
 
   useEffect(() => {
     onSelectRef.current = onSelect;
-  }, [onSelect]);
+    selectedIdRef.current = selectedId;
+  }, [onSelect, selectedId]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -103,9 +151,11 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     markersLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
+    const unbindCountry = bindCountryView(map, container, selectedIdRef, userMovedRef);
     const unbindWheelZoom = bindMapWheelZoom(map, container, setWheelZoomActive);
 
     return () => {
+      unbindCountry();
       unbindWheelZoom();
       map.remove();
       mapRef.current = null;
@@ -142,11 +192,20 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !selectedId) return;
+    if (!map) return;
+
+    if (!selectedId) {
+      if (!hadSelectionRef.current) return;
+      hadSelectionRef.current = false;
+      userMovedRef.current = false;
+      showArmenia(map, true);
+      return;
+    }
 
     const item = mappableItems(items).find((entry) => entry.id === selectedId);
     if (!item) return;
 
+    hadSelectionRef.current = true;
     map.flyTo([item.latitude!, item.longitude!], SELECTED_ITEM_ZOOM, { duration: 0.8 });
   }, [selectedId, items]);
 

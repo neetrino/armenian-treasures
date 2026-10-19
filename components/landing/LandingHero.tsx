@@ -21,6 +21,7 @@ interface LandingHeroProps {
   ctas?: LandingHeroCta[];
   heroClassName?: string;
   breadcrumb?: ReactNode;
+  showEyebrow?: boolean;
   locale?: SiteLocaleCode;
 }
 
@@ -68,10 +69,12 @@ export function LandingHero({
   ctas = [],
   heroClassName = 'cultural-portal-hero',
   breadcrumb,
+  showEyebrow = false,
 }: LandingHeroProps) {
   const titleIsArmenian = containsArmenianScript(title);
   const accentIsArmenian = containsArmenianScript(accent);
   const sloganIsArmenian = Boolean(slogan && containsArmenianScript(slogan));
+  const eyebrowVisible = Boolean(eyebrow.trim()) && (showEyebrow || !breadcrumb);
 
   return (
     <div className={cn('hero', heroClassName)} data-site-hero>
@@ -81,7 +84,7 @@ export function LandingHero({
       <div className="hero-grain" />
       <LandingHeroCornerOrnament />
       <div className="hero-content">
-        {breadcrumb || !eyebrow.trim() ? null : (
+        {eyebrowVisible ? (
           <p
             className={cn(
               'hero-eyebrow reveal',
@@ -90,7 +93,7 @@ export function LandingHero({
           >
             {eyebrow}
           </p>
-        )}
+        ) : null}
         <h1 className={cn('reveal', titleIsArmenian && 'hero-title--hy')}>
           {title}
           {accent.trim() ? (
