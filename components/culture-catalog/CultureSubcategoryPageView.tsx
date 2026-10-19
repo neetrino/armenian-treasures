@@ -46,7 +46,6 @@ export async function CultureSubcategoryPageView({
           eyebrow={content.eyebrow}
           accent={content.accent}
           slogan={content.slogan}
-          heroImage={content.heroImage}
           breadcrumb={buildCultureCatalogBreadcrumb(subcategory, parent)}
           ctas={[
             ...(visibility.map

@@ -60,7 +60,7 @@ export interface CultureCatalogContent {
   };
 }
 
-const DEFAULT_HERO_IMAGE = '/images/technology/section-heritage-bg.webp';
+const DEFAULT_HERO_IMAGE = '/images/hero/universal-page-hero.png';
 
 const OVERRIDES: Record<string, Partial<CultureCatalogContent>> = {
   architecture: {
@@ -385,14 +385,7 @@ export function resolveCultureCatalogContent(
     englishName,
     title,
   );
-  const adminHeroImage = dbOverride?.heroImage?.trim() || node.image?.trim();
-
-  if (adminHeroImage) {
-    return { ...merged, heroImage: adminHeroImage };
-  }
-
-  const { heroImage: _removed, ...withoutHeroImage } = merged;
-  return withoutHeroImage;
+  return { ...merged, heroImage: DEFAULT_HERO_IMAGE };
 }
 
 export function resolveCultureCatalogFormContent(

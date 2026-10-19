@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { bindMapWheelZoom } from '@/components/map/bind-map-wheel-zoom';
-import { makeHeritageMarkerIcon } from '@/components/map/LeafletMap';
+import { makeHeritageMarkerIcon } from '@/components/map/heritage-marker-icon';
 import { MapWheelZoomHint } from '@/components/map/MapWheelZoomHint';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';

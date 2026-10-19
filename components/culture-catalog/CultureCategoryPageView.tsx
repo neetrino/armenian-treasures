@@ -95,7 +95,6 @@ async function CultureCategoryLeafPage({
           accent={content.accent}
           slogan={content.slogan}
           description={category.description ?? content.about.description}
-          heroImage={content.heroImage}
           breadcrumb={buildCultureCatalogBreadcrumb(category)}
           ctas={
             visibility.entries

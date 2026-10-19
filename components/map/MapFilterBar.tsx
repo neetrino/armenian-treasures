@@ -1,6 +1,6 @@
 'use client';
 
-import { Castle, Church, Landmark, MapPin, Mountain, Sparkles } from 'lucide-react';
+import { Amphora, Castle, Church, Columns3, Compass, Landmark } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -10,14 +10,18 @@ import {
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 
-const FILTER_ICONS: Record<HeritageMapFilterValue, LucideIcon> = {
-  ALL: MapPin,
-  RELIGIOUS: Church,
-  MONUMENTS: Castle,
-  MUSEUMS: Landmark,
-  SETTLEMENTS: Mountain,
-  OTHER: Sparkles,
-};
+const HERITAGE_FILTER_CATEGORIES: { value: HeritageMapFilterValue; icon: LucideIcon }[] = [
+  { value: 'ALL', icon: Compass },
+  { value: 'RELIGIOUS', icon: Church },
+  { value: 'MONUMENTS', icon: Columns3 },
+  { value: 'MUSEUMS', icon: Landmark },
+  { value: 'SETTLEMENTS', icon: Castle },
+  { value: 'OTHER', icon: Amphora },
+];
+
+function heritageFilterIcon(value: HeritageMapFilterValue): LucideIcon {
+  return HERITAGE_FILTER_CATEGORIES.find((category) => category.value === value)?.icon ?? Compass;
+}
 
 interface MapFilterBarProps {
   filter: HeritageMapFilterValue;
@@ -44,7 +48,7 @@ export function MapFilterBar({
       aria-label={uiMessage(locale, 'filterSitesByCategory')}
     >
       {filterOptions.map((option) => {
-        const Icon = FILTER_ICONS[option.value];
+        const Icon = heritageFilterIcon(option.value);
         const active = filter === option.value;
         return (
           <button
@@ -63,7 +67,13 @@ export function MapFilterBar({
                   : 'border-stone-200/80 bg-white/80 text-ink-soft hover:border-heritage-teal/40 hover:text-heritage-teal',
             )}
           >
-            <Icon size={14} aria-hidden /> {option.label}
+            <Icon
+              size={18}
+              strokeWidth={active ? 1.9 : 1.65}
+              className="shrink-0"
+              aria-hidden="true"
+            />
+            {option.label}
           </button>
         );
       })}
