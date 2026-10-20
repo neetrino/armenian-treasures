@@ -41,28 +41,7 @@ export const PRIMARY_LINKS: PrimaryLink[] = [
   },
 ];
 
-export const PROJECTS_MENU: NavDropdownLink[] = [
-  {
-    id: 'digital-archive',
-    href: '/projects',
-    label: 'Digital Archive',
-  },
-  {
-    id: 'documentary-series',
-    href: '/projects',
-    label: 'Documentary Series',
-  },
-  {
-    id: 'education-programme',
-    href: '/projects',
-    label: 'Education Programme',
-  },
-  {
-    id: 'global-diaspora-network',
-    href: '/projects',
-    label: 'Global Diaspora Network',
-  },
-];
+export const PROJECTS_MENU: NavDropdownLink[] = [];
 
 export const ABOUT_MENU: NavDropdownLink[] = [
   { href: '/about/mission', label: 'Mission' },
