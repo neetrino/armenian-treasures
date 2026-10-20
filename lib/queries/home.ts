@@ -142,7 +142,7 @@ const getHomeContentCachedByLocale = unstable_cache(
       : localizedHomeContentFallback(locale);
     return resolveHomeContentAssets(content, locale);
   },
-  ['home-content'],
+  ['home-content-locale-stats'],
   { tags: ['home-content'], revalidate: 60 },
 );
 
