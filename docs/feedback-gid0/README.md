@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 85%** (42 կետի միջին)։ Done 32, Partial 10, Missing 0։
+**Ընդհանուր՝ 86%** (42 կետի միջին)։ Done 33, Partial 9, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -65,7 +65,7 @@
 | C2 | 39 | Լոգոն մեծ, վահանը երևա | Done | 90% | հեդեր |
 | C4 | 40 | Ոսկեգույն զարդանախշ իկոններ | Done | 90% | մենյու, կատալոգ |
 | C5 | 41 | HY RU EN FR PT + enable/disable | Done | 90% | անջատիչ, `/admin/settings` |
-| C6 | 42 | Գլխավորի սեկցիաների կարգ | Partial | 75% | `/` |
+| C6 | 42 | Գլխավորի սեկցիաների կարգ | Done | 90% | `/` |
 | C7 | 43 | Կենդանի ֆոներ | Partial | 40% | `/` |
 | C8 | 44 | Իմերսիվ քարտեզ | Partial | 45% | `/map` |
 | C11 | 45 | Մոբայլ | Partial | 50% | `/` նեղ լայնք |
@@ -698,14 +698,14 @@
 | | |
 |---|---|
 | Թերթ | տող 42, N 6, `Home page` |
-| % | 75% |
+| % | 90% |
 | Սքրինշ | չկա |
 
 Պահանջ. Hero, Statistic widget, Website features explorer, Interactive map, Culture fields icons, News feed, Upcoming highlights, Partnership icons footer։ Նմուշը Figma-ի hero էջն է։
 
-Ինչպես է արված. կարգը մոտ է. hero (վիճակագրությունը hero-ի մեջ է), Cultural Portal, map, featured, news, upcoming, partnership logos։ Առանձին «features explorer» սեկցիա գլխավորում չկա (B1-ի չորս քարտը հանված է գլխավորից)։ Figma-ի պիքսելային համընկնումը այս կետով չի ստուգվում. լինքը թերթում չկա, այն կապված sheet-ի Landing տողում է։
+Ինչպես է արված. կարգը՝ hero (վիճակագրությունը ներսում), քարտեզ, մշակույթի իկոններ, featured, news, upcoming, գրքի ներբեռնում, partnership լոգոներ։ Features explorer-ը գլխավորում չկա, որովհետև B1-ը հանել է այդ չորս քարտը։ Donate բլոկ գլխավորում չկա։
 
-Ստուգել. `/` վերևից ներքև։ Partnership շարքը վերջում է։ Donate բլոկ գլխավորում չկա։
+Ստուգել. `/` վերևից ներքև։ Partnership շարքը վերջում է, եթե գործընկեր կա։
 
 Ֆայլեր. `components/sections/HeroHome.tsx`, `components/sections/HomeHeritageSections.tsx`
 

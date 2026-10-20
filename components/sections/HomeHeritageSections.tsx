@@ -5,6 +5,7 @@ import { FeaturedTreasuresSection } from '@/components/sections/FeaturedTreasure
 import { HeritageMapSection } from '@/components/sections/HeritageMapSection';
 import { HomeNewsFeedSection } from '@/components/sections/HomeNewsFeedSection';
 import { UpcomingProjectsSection } from '@/components/sections/UpcomingProjectsSection';
+import { HomePartnersLogosSection } from '@/components/sections/HomePartnersLogosSection';
 import {
   HERITAGE_DOWNLOADS_HOME_VISIBLE,
   HeritageDownloadSection,
@@ -17,13 +18,13 @@ export async function HomeHeritageSections() {
 
   return (
     <div className="relative isolate overflow-hidden bg-black">
-      {/* Feedback order: Cultural Portal → Map → Featured Treasures → News → Projects */}
-      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
-        <CulturalPortalSection home={home} />
-      </Suspense>
-      <div className="heritage-section-divider my-2" aria-hidden />
+      {/* C6: map, culture icons, featured, news, upcoming, then the partnership footer. */}
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[16rem]" />}>
         <HeritageMapSection home={home} />
+      </Suspense>
+      <div className="heritage-section-divider my-2" aria-hidden />
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
+        <CulturalPortalSection home={home} />
       </Suspense>
       <div className="heritage-section-divider my-2" aria-hidden />
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[20rem]" />}>
@@ -43,6 +44,9 @@ export async function HomeHeritageSections() {
           <HeritageDownloadSection locale={locale} />
         </>
       ) : null}
+      <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[12rem]" />}>
+        <HomePartnersLogosSection home={home} />
+      </Suspense>
     </div>
   );
 }
