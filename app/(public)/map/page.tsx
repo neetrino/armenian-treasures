@@ -34,7 +34,7 @@ async function HeritageMapPage() {
       />
 
       <div className="relative z-10 mx-auto w-full max-w-[90rem] px-3 pb-12 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
-        <header className="mb-8 max-w-[43.75rem] text-left">
+        <header className="mb-4 max-w-[43.75rem] text-left">
           <p className="mb-[14px] font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">
             {uiMessage(locale, 'heritageMap')}
           </p>
@@ -74,7 +74,7 @@ async function HeritageMapPage() {
         </header>
 
         <div className="heritage-map-embed">
-          <MapPanel items={items} embedToolbar locale={locale} />
+          <MapPanel items={items} embedToolbar fillViewport locale={locale} />
         </div>
       </div>
     </div>

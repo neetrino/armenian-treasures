@@ -28,11 +28,18 @@ const LeafletMap = dynamic(
 interface MapPanelProps {
   items: PublicCultureItemDTO[];
   locale?: SiteLocaleCode;
-  /** Filters sit above the map. Search is overlaid on the map. */
+  /** Search and filters sit on the map. */
   embedToolbar?: boolean;
+  /** Map page: use the remaining viewport height. */
+  fillViewport?: boolean;
 }
 
-export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPanelProps) {
+export function MapPanel({
+  items,
+  locale = 'EN',
+  embedToolbar = false,
+  fillViewport = false,
+}: MapPanelProps) {
   const [filter, setFilter] = useState<HeritageMapFilterValue>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -68,12 +75,9 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
 
   return (
     <div className="flex flex-col gap-6">
-      <MapFilterBar
-        filter={filter}
-        onFilterChange={handleFilterChange}
-        locale={locale}
-        overlay={embedToolbar}
-      />
+      {embedToolbar ? null : (
+        <MapFilterBar filter={filter} onFilterChange={handleFilterChange} locale={locale} />
+      )}
 
       <div
         className={cn(
@@ -95,12 +99,24 @@ export function MapPanel({ items, locale = 'EN', embedToolbar = false }: MapPane
           ref={mapViewportRef}
           className={cn(
             'relative overflow-hidden rounded-2xl border border-stone-200/70 bg-stone-100 shadow-card',
-            embedToolbar ? 'h-[min(78vh,720px)] lg:h-[min(82vh,860px)]' : 'h-[420px] lg:h-[640px]',
+            embedToolbar
+              ? fillViewport
+                ? 'h-[calc(100dvh-14rem)] min-h-[32rem]'
+                : 'h-[min(78vh,720px)] lg:h-[min(82vh,860px)]'
+              : 'h-[420px] lg:h-[640px]',
           )}
         >
           {embedToolbar ? (
-            <div className="pointer-events-none absolute inset-0 z-[400]">
-              <div className="pointer-events-auto absolute inset-x-2 top-2 w-auto sm:inset-x-auto sm:left-3 sm:top-3 sm:w-[min(calc(100%-1.5rem),22rem)]">
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-[400] flex flex-col gap-2 p-2 sm:p-3">
+              <div className="pointer-events-auto">
+                <MapFilterBar
+                  filter={filter}
+                  onFilterChange={handleFilterChange}
+                  locale={locale}
+                  overlay
+                />
+              </div>
+              <div className="pointer-events-auto w-full sm:w-[min(100%,22rem)]">
                 <MapSiteListPanel
                   suggestions={searchQuery.trim() ? visible : []}
                   locale={locale}
