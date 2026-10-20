@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { PartnerLogo } from '@/lib/constants/partnership-page';
-import { hasPartnershipCategories } from '@/lib/landing/landing-section-utils';
 import { getPartnershipPageContent } from '@/lib/queries/page-content';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -56,11 +55,13 @@ function PartnerShortcard({
 export async function PartnershipShowcase({ locale }: { locale: SiteLocaleCode }) {
   const { categories } = await getPartnershipPageContent();
 
-  if (!hasPartnershipCategories(categories)) {
+  const partners = categories
+    .flatMap((category) => category.partners)
+    .filter((partner) => partner.name.trim().length > 0);
+
+  if (partners.length === 0) {
     return null;
   }
-
-  const partners = categories.flatMap((category) => category.partners);
 
   return (
     <div className="partners-outer" id="partners">
@@ -73,9 +74,6 @@ export async function PartnershipShowcase({ locale }: { locale: SiteLocaleCode }
           <div className="sec-title" style={{ textAlign: 'center' }}>
             {uiMessage(locale, 'ourPartners')}
           </div>
-          <p className="sec-desc" style={{ margin: '0 auto', textAlign: 'center' }}>
-            {uiMessage(locale, 'partnerShowcaseDescription')}
-          </p>
         </div>
         <div className="partner-shortcard-grid">
           {partners.map((partner) => (
