@@ -17,7 +17,7 @@ export interface MegaMenuColumn {
   items: MegaMenuItem[];
 }
 
-/** AT Features sheet — 6 columns, 26 navigable culture destinations. */
+/** Linked AT Features sheet — 6 columns. */
 export const CULTURE_MEGA_MENU: MegaMenuColumn[] = buildCultureMegaMenuFromAtFeatures();
 
 export function flattenCultureMegaMenu(columns: MegaMenuColumn[] = CULTURE_MEGA_MENU): MegaMenuItem[] {

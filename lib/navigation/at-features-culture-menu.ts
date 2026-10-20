@@ -43,15 +43,21 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'architecture/ornaments',
         fallbackHref: '/culture/architecture/ornaments',
       },
+      {
+        label: 'Museums',
+        icon: 'museums',
+        menuPath: 'heritage/museums',
+        fallbackHref: '/culture/heritage/museums',
+      },
     ],
   },
   {
-    heading: 'Myths & Legends',
+    heading: 'Myths & Gods',
     headingMenuPath: 'legends',
     fallbackHeadingHref: '/culture/legends',
     items: [
       {
-        label: 'Myths & Gods',
+        label: 'Mythology',
         icon: 'mythology',
         menuPath: 'legends/myths-and-gods',
         fallbackHref: '/culture/legends/myths-and-gods',
@@ -62,21 +68,15 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'legends/legends-and-heroes',
         fallbackHref: '/culture/legends/legends-and-heroes',
       },
-      {
-        label: 'Epic',
-        icon: 'legends',
-        menuPath: 'legends/epic',
-        fallbackHref: '/culture/legends/epic',
-      },
     ],
   },
   {
-    heading: 'People',
+    heading: 'Icons of History',
     headingMenuPath: 'people',
     fallbackHeadingHref: '/culture/people',
     items: [
       {
-        label: 'Icons of History',
+        label: 'Kings & Dynasties',
         icon: 'kingsAndDynasties',
         menuPath: 'people/icons-of-history',
         fallbackHref: '/culture/people/icons-of-history',
@@ -125,17 +125,18 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         fallbackHref: '/culture/heritage/taraz',
       },
       {
-        label: 'Carpets',
+        label: 'Carpets & Textile Arts',
         icon: 'carpets',
         menuPath: 'heritage/carpets',
         fallbackHref: '/culture/heritage/carpets',
       },
-      {
-        label: 'Museums',
-        icon: 'museums',
-        menuPath: 'heritage/museums',
-        fallbackHref: '/culture/heritage/museums',
-      },
+    ],
+  },
+  {
+    heading: 'More Culture',
+    headingMenuPath: 'more-culture',
+    fallbackHeadingHref: '/culture',
+    items: [
       {
         label: 'Sculptors',
         icon: 'sculptors',
@@ -166,6 +167,12 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'heritage/publications',
         fallbackHref: '/culture/heritage/publications',
       },
+      {
+        label: 'Armaments',
+        icon: 'armaments',
+        menuPath: 'heritage/armaments',
+        fallbackHref: '/culture/heritage/armaments',
+      },
     ],
   },
   {
@@ -174,7 +181,7 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
     fallbackHeadingHref: '/culture/history',
     items: [
       {
-        label: 'Historical Events & Turning Points',
+        label: 'Historical Events',
         icon: 'history',
         menuPath: 'history/historical-events',
         fallbackHref: '/culture/history/historical-events',

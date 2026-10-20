@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 83%** (42 կետի միջին)։ Done 31, Partial 11, Missing 0։
+**Ընդհանուր՝ 83%** (42 կետի միջին)։ Done 29, Partial 13, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -17,8 +17,8 @@
 
 | Կետ | Այս թերթը ասում է | Ինչն է գերակա հիմա |
 |---|---|---|
-| B3 | Art & Culture-ը խառնել More Culture-ի հետ | Մենյուն հիմա մեկ սյուն է։ Կապված sheet-ը ([AT Features](https://docs.google.com/spreadsheets/d/1Ynvib2KnK9PnUw0-Zny1rBPEUQtFFV_eTQYSf9kH-80/edit)) դրանք առանձին է պահում |
-| B4 | Museums-ը Architecture-ից տեղափոխել Art & Culture | Կապված sheet-ում Museums-ը Architecture-ի տակ է։ Կոդում այն Art & Culture սյան մեջ է |
+| B3 | Art & Culture-ը խառնել More Culture-ի հետ | C1-ից հետո մենյուն կապված sheet-ն է։ More Culture-ը նորից առանձին սյուն է |
+| B4 | Museums-ը Architecture-ից տեղափոխել Art & Culture | C1-ից հետո մենյուում Museums-ը Architecture-ի տակ է։ Հասցեն մնում է `/culture/heritage/museums` |
 | B2 և C6 | B2-ը հանում է partnership-ը գլխավորից, C6-ը ուզում է Partnership Icons Footer | Գլխավորում partnership շարքը կա, donation սեկցիա չկա |
 | B22 | Newsletter-ը թաքցնել միայն մուտք գործածներին | Բլոկը գլխավորից հանված է բոլորի համար |
 
@@ -41,11 +41,11 @@
 | A9 | 10 | Կողքի բլոկը հանել, փիրուզը մեղմել | Done | 90% | հոդված |
 | B1 | 15 | Հանել 4 feature քարտը | Done | 95% | `/`, `/virtual-museum` |
 | B2 | 16 | Գլխավորի կառուցվածք | Done | 90% | `/` |
-| B3 | 17 | Art & Culture + More Culture | Done | 90% | մենյու |
-| B4 | 18 | Museums → Art & Culture | Done | 95% | մենյու, `/culture/heritage/museums` |
+| B3 | 17 | Art & Culture + More Culture | Partial | 40% | մենյու |
+| B4 | 18 | Museums → Art & Culture | Partial | 60% | մենյու, `/culture/heritage/museums` |
 | B5 | 19 | Ենթաբաժնի էջ՝ առանց նկարագրության | Done | 95% | `/culture/heritage` |
 | B6 | 20 | User-ը ոչինչ չավելացնի | Done | 95% | `/culture/submit` 404 |
-| B7 | 21 | Epic | Done | 90% | `/culture/legends/epic` |
+| B7 | 21 | Epic | Partial | 70% | `/culture/legends/epic` |
 | B8 | 22 | Upcoming գումարները խմբագրելի | Done | 90% | `/admin/projects`, `/projects` |
 | B9 | 23 | Why it matters + ամսական/տարեկան | Done | 95% | `/donate` |
 | B10 | 24 | 1000 / 5000 / 10000 + սերտիֆիկատ | Done | 95% | `/donate` |
@@ -61,7 +61,7 @@
 | B20 | 34 | Patron wall-ի փոխարեն սերտիֆիկատ | Done | 95% | `/donate` |
 | B21 | 35 | Բլոգ՝ 3 highlighted + ժամանակագրություն | Done | 95% | `/blog` |
 | B22 | 36 | Newsletter-ը գրանցվածներին չերևա | Done | 90% | `/` մուտքով և առանց |
-| C1 | 38 | Մենյու ըստ կապված sheet-ի | Partial | 65% | հեդերի Culture |
+| C1 | 38 | Մենյու ըստ կապված sheet-ի | Done | 90% | հեդերի Culture |
 | C2 | 39 | Լոգոն մեծ, վահանը երևա | Partial | 70% | հեդեր |
 | C4 | 40 | Ոսկեգույն զարդանախշ իկոններ | Partial | 50% | մենյու, կատալոգ |
 | C5 | 41 | HY RU EN FR PT + enable/disable | Partial | 70% | անջատիչ, `/admin/settings` |
@@ -278,16 +278,16 @@
 | | |
 |---|---|
 | Թերթ | տող 17, N 3, `mix` |
-| % | 90% |
+| % | 40% |
 | Սքրինշ | չկա |
 
 Պահանջ. art & culture-ը խառնել more culture բաժնի հետ։
 
-Ինչպես է արված. մենյուի `Art & Culture` սյունը ներառում է Paintings, Music, Writers, Taraz, Carpets, և նաև Museums, Sculptors, Theatre, Dance, Food & Drink, Publications։ Առանձին More Culture սյուն չկա։
+Ինչպես է արված. C1-ը գերակա է։ More Culture-ը նորից առանձին սյուն է, Art & Culture-ում մնացել են Paintings, Music, Writers, Taraz, Carpets & Textile Arts։
 
-Ստուգել. հեդեր → Culture։ More Culture առանձին վերնագիր չկա, այդ կետերը Art & Culture-ի տակ են։
+Ստուգել. հեդեր → Culture։ More Culture առանձին վերնագիր կա։
 
-Զգուշություն. C1-ի կապված sheet-ը More Culture-ն առանձին սյուն է ուզում։ Այս կետը և C1-ը միասին 100% չեն կարող լինել։
+Զգուշություն. այս կետը և C1-ը միասին 100% չեն կարող լինել։ Մենյուն հետևում է կապված sheet-ին։
 
 Ֆայլեր. `lib/navigation/at-features-culture-menu.ts`
 
@@ -296,16 +296,14 @@
 | | |
 |---|---|
 | Թերթ | տող 18, N 4, `add` |
-| % | 95% |
+| % | 60% |
 | Սքրինշ | չկա |
 
 Պահանջ. Museums-ը հանել Architecture-ից և դնել Art & Culture։
 
-Ինչպես է արված. Museums-ը Art & Culture սյան մեջ է և բացվում է `/culture/heritage/museums`։ Հին `/culture/museums` հասցեն վերահղվում է այդ էջ։
+Ինչպես է արված. էջը մնում է `/culture/heritage/museums`, և `/culture/museums` վերահղվում է այնտեղ։ C1-ից հետո մենյուի սյունը նորից Architecture-ն է։
 
-Ստուգել. մենյուում Museums-ը Architecture-ի տակ չէ։ Բացել `/culture/heritage/museums` և `/culture/museums` (վերահղում)։
-
-Զգուշություն. կապված sheet-ում Museums-ը Architecture-ի տակ է։
+Ստուգել. `/culture/heritage/museums` բացվում է։ Մենյուում Museums-ը Architecture-ի տակ է, ոչ թե Art & Culture-ի։
 
 Ֆայլեր. `lib/navigation/at-features-culture-menu.ts`
 
@@ -350,14 +348,14 @@
 | | |
 |---|---|
 | Թերթ | տող 21, N 7, `add` |
-| % | 90% |
+| % | 70% |
 | Սքրինշ | չկա |
 
 Պահանջ. Myths & Legends-ում ավելացնել epic։
 
-Ինչպես է արված. մենյուում `Epic` կետն է, route `/culture/legends/epic`։
+Ինչպես է արված. էջը `/culture/legends/epic` մնում է։ C1-ի կապված sheet-ում Epic կետ չկա, դրա համար մենյուից հանված է։
 
-Ստուգել. հեդեր → Myths & Legends → Epic, ապա `/culture/legends/epic`։ Էջը 404 չէ։
+Ստուգել. `/culture/legends/epic` 404 չէ։ Culture մենյուում Epic չկա։
 
 Ֆայլեր. `lib/navigation/at-features-culture-menu.ts`
 
@@ -622,7 +620,7 @@
 | | |
 |---|---|
 | Թերթ | տող 38, N 1, `Menu Bar` |
-| % | 65% |
+| % | 90% |
 | Սքրինշ | `screenshots/c1-menu.png` դատարկ շերտ է (20px), բովանդակություն չունի |
 
 Պահանջ. մենյուն վերցնել միայն [այս կառուցվածքից](https://docs.google.com/spreadsheets/d/1Ynvib2KnK9PnUw0-Zny1rBPEUQtFFV_eTQYSf9kH-80/edit)։ Կարգը խախտված է, մի մասը վերանվանված է, մի մասը հանված։
@@ -637,11 +635,11 @@
 - Historical Highlights. Historical Events, Capitals, Battles & Wars, Christian Heritage, Chronicles & Manuscripts, Monuments & Landmarks, Traditions
 - Առանձին. Heritage Map, Upcoming Projects, Partnership, Donation, About us (Mission, Team, Career, Contact)
 
-Ինչպես է արված. `at-features-culture-menu.ts` վեց սյուն չունի։ More Culture-ը խառնված է Art & Culture-ին (B3), Museums-ը Architecture-ից դուրս է (B4), ավելացված է Epic (B7) և Ornaments։ Armaments չկա։ People սյունը կապված sheet-ի «Icons of History» խմբի փոխարեն է։
+Ինչպես է արված. Culture մենյուն վեց սյուն է՝ sheet-ի կարգով և անուններով։ Museums-ը Architecture-ում է, հասցեն `/culture/heritage/museums`։ Ornaments-ը մնում է Castles-ից հետո, որովհետև 09.10 թերթն է դա պահանջում։ Epic-ը մենյուում չէ։ Վերևի շարքում Blog-ը և Highlights-ը մնում են, որովհետև ավելի ուշ թերթերն ունեն այդ էջերը։
 
-Ստուգել. հեդերի Culture մենյուն կողք կողքի դնել կապված sheet-ի հետ։
+Ստուգել. հեդեր → Culture։ Վեց սյուն, Museums-ը Architecture-ում, Armaments-ը More Culture-ում, Epic չկա։
 
-Ֆայլեր. `lib/navigation/at-features-culture-menu.ts`, `components/navigation/CultureMegaMenu.tsx`
+Ֆայլեր. `lib/navigation/at-features-culture-menu.ts`, `lib/navigation/merge-live-mega-menu.ts`
 
 ### C2 — Լոգո
 
