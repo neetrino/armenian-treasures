@@ -10,9 +10,10 @@ import {
   HeritageDownloadSection,
 } from '@/components/sections/HeritageDownloadSection';
 import { HomeSectionGridFallback } from '@/components/sections/HomeSectionGridFallback';
+import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 
 export async function HomeHeritageSections() {
-  const home = await getHomeContent();
+  const [home, locale] = await Promise.all([getHomeContent(), getCurrentSiteLocale()]);
 
   return (
     <div className="relative isolate overflow-hidden bg-black">
@@ -39,7 +40,7 @@ export async function HomeHeritageSections() {
       {HERITAGE_DOWNLOADS_HOME_VISIBLE ? (
         <>
           <div className="heritage-section-divider my-2" aria-hidden />
-          <HeritageDownloadSection />
+          <HeritageDownloadSection locale={locale} />
         </>
       ) : null}
     </div>
