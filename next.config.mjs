@@ -60,6 +60,15 @@ const nextConfig = {
     'sharp',
   ],
   turbopack: {},
+  async redirects() {
+    return [
+      {
+        source: '/culture/museums',
+        destination: '/culture/heritage/museums',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

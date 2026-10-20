@@ -223,6 +223,7 @@ export const CULTURE_MENU_PATH_KEYS: Record<string, MenuMessageKey> = {
   'heritage/carpets': 'menuCarpets',
   carpets: 'menuCarpets',
   museums: 'menuMuseums',
+  'heritage/museums': 'menuMuseums',
   'heritage/sculpting': 'menuSculptors',
   sculpting: 'menuSculptors',
   'heritage/theatre': 'menuTheatre',

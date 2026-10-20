@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 73%** (42 կետի միջին)։ Done 16, Partial 26, Missing 0։
+**Ընդհանուր՝ 73%** (42 կետի միջին)։ Done 17, Partial 25, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -42,7 +42,7 @@
 | B1 | 15 | Հանել 4 feature քարտը | Done | 95% | `/`, `/virtual-museum` |
 | B2 | 16 | Գլխավորի կառուցվածք | Done | 90% | `/` |
 | B3 | 17 | Art & Culture + More Culture | Done | 90% | մենյու |
-| B4 | 18 | Museums → Art & Culture | Partial | 85% | մենյու, `/culture/museums` |
+| B4 | 18 | Museums → Art & Culture | Done | 95% | մենյու, `/culture/heritage/museums` |
 | B5 | 19 | Ենթաբաժնի էջ՝ առանց նկարագրության | Done | 95% | `/culture/heritage` |
 | B6 | 20 | User-ը ոչինչ չավելացնի | Partial | 60% | `/culture/submit` |
 | B7 | 21 | Epic | Done | 90% | `/culture/legends/epic` |
@@ -296,14 +296,14 @@
 | | |
 |---|---|
 | Թերթ | տող 18, N 4, `add` |
-| % | 85% |
+| % | 95% |
 | Սքրինշ | չկա |
 
 Պահանջ. Museums-ը հանել Architecture-ից և դնել Art & Culture։
 
-Ինչպես է արված. Architecture սյունում են Churches & Monasteries, Castles, Ornaments։ Museums-ը Art & Culture սյան մեջ է, route-ը դեռ `/culture/museums` է, ոչ թե `/culture/heritage/museums`։
+Ինչպես է արված. Museums-ը Art & Culture սյան մեջ է և բացվում է `/culture/heritage/museums`։ Հին `/culture/museums` հասցեն վերահղվում է այդ էջ։
 
-Ստուգել. մենյուում Museums-ը Architecture-ի տակ չէ։ Բացել `/culture/museums`։
+Ստուգել. մենյուում Museums-ը Architecture-ի տակ չէ։ Բացել `/culture/heritage/museums` և `/culture/museums` (վերահղում)։
 
 Զգուշություն. կապված sheet-ում Museums-ը Architecture-ի տակ է։
 

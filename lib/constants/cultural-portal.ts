@@ -88,7 +88,7 @@ export const CULTURAL_PORTAL_CATEGORIES: CulturalPortalCategory[] = [
     icon: 'museums',
     title: 'Museums',
     description: 'National collections & diaspora galleries',
-    href: '/culture/museums',
+    href: '/culture/heritage/museums',
   }),
   withIconSource({
     icon: 'kings',

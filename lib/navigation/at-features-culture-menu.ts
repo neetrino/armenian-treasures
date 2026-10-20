@@ -133,8 +133,8 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
       {
         label: 'Museums',
         icon: 'museums',
-        menuPath: 'museums',
-        fallbackHref: '/culture/museums',
+        menuPath: 'heritage/museums',
+        fallbackHref: '/culture/heritage/museums',
       },
       {
         label: 'Sculptors',
