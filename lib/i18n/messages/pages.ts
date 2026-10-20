@@ -15,6 +15,8 @@ export const PAGE_MESSAGES = {
     'Journal de la fondation',
     'Jornal da fundação',
   ),
+  blogHighlights: row('Առանձնացված', 'Highlighted', 'Избранное', 'À la une', 'Em destaque'),
+  blogChronology: row('Թարմացումներ', 'Updates', 'Обновления', 'Actualités', 'Atualizações'),
   noArticlesYet: row(
     'Դեռ հրապարակված հոդվածներ չկան։',
     'No articles published yet.',

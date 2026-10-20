@@ -7,7 +7,9 @@ import { BlogGrid } from '@/components/blog/BlogGrid';
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { filterBlogPostsByCategory } from '@/lib/blog-filters';
+import { BLOG_HIGHLIGHT_COUNT, splitBlogHighlights } from '@/lib/blog-highlights';
 import {
+  getFeaturedBlogPosts,
   getPublishedBlogCategories,
   getPublishedBlogPosts,
 } from '@/lib/queries/blogs';
@@ -35,14 +37,16 @@ function firstParam(value: string | string[] | undefined): string {
 async function BlogPage(props: PageProps) {
   const searchParams = await props.searchParams;
   const categorySlug = firstParam(searchParams.category);
-  const [posts, categories, locale] = await Promise.all([
+  const [posts, categories, locale, featured] = await Promise.all([
     getPublishedBlogPosts(),
     getPublishedBlogCategories(),
     getCurrentSiteLocale(),
+    getFeaturedBlogPosts(BLOG_HIGHLIGHT_COUNT),
   ]);
   const knownCategory = categories.some((category) => category.slug === categorySlug);
   const activeSlug = knownCategory ? categorySlug : '';
   const visiblePosts = filterBlogPostsByCategory(posts, activeSlug);
+  const { highlights, updates } = splitBlogHighlights(visiblePosts, featured);
 
   return (
     <HeritageLandingShell>
@@ -63,7 +67,7 @@ async function BlogPage(props: PageProps) {
       <section id="blog-posts" className="blog-page-section">
         <div className="blog-page-inner">
           <BlogCategoryTabs categories={categories} activeSlug={activeSlug} locale={locale} />
-          <BlogGrid posts={visiblePosts} locale={locale} />
+          <BlogGrid highlights={highlights} updates={updates} locale={locale} />
         </div>
       </section>
     </HeritageLandingShell>
