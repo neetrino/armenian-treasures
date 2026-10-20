@@ -116,7 +116,7 @@
   line-height: 1.28 !important;
   letter-spacing: 0.03em !important;
   text-transform: uppercase !important;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   line-clamp: 2;

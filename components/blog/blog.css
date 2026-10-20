@@ -212,7 +212,7 @@
 
 .blog-card__title {
   margin: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   font-family: var(--font-cinzel), serif;
   font-size: 1.125rem;
   font-weight: 600;
@@ -223,7 +223,7 @@
 .blog-card__excerpt {
   margin: 0;
   flex: 1;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   font-family: var(--font-display), serif;
   font-size: 0.95rem;
   line-height: 1.6;

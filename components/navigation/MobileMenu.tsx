@@ -154,7 +154,7 @@ export function MobileMenu({
                         <Link
                           href={column.headingHref}
                           onClick={close}
-                          className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
+                          className="min-w-0 font-cinzel text-[11px] font-extrabold uppercase leading-snug tracking-[0.08em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
                         >
                           {column.heading}
                         </Link>
@@ -186,10 +186,10 @@ export function MobileMenu({
                               <Link
                                 href={item.href}
                                 onClick={close}
-                                className={cn(mobileLinkClass(pathname, item.href), 'flex items-center gap-2')}
+                                className={cn(mobileLinkClass(pathname, item.href), 'flex min-w-0 items-center gap-2')}
                               >
-                                <CultureOrnamentalIcon iconKey={item.icon} size={16} className="h-4 w-4" />
-                                {item.label}
+                                <CultureOrnamentalIcon iconKey={item.icon} size={16} className="h-4 w-4 shrink-0" />
+                                <span className="min-w-0 break-words">{item.label}</span>
                               </Link>
                             </li>
                           ))}

@@ -121,7 +121,7 @@
   font-size: clamp(18px, 2vw, 24px);
   line-height: 1.25;
   text-align: center;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .khndzoresk-page .cat-card.cat-card--hub-photo,
@@ -640,7 +640,7 @@
   letter-spacing: 0.02em;
   margin-bottom: 10px;
   line-height: 1.2;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   hyphens: auto;
 }
 
