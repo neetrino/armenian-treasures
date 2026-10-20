@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 73%** (42 կետի միջին)։ Done 17, Partial 25, Missing 0։
+**Ընդհանուր՝ 74%** (42 կետի միջին)։ Done 18, Partial 24, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -44,7 +44,7 @@
 | B3 | 17 | Art & Culture + More Culture | Done | 90% | մենյու |
 | B4 | 18 | Museums → Art & Culture | Done | 95% | մենյու, `/culture/heritage/museums` |
 | B5 | 19 | Ենթաբաժնի էջ՝ առանց նկարագրության | Done | 95% | `/culture/heritage` |
-| B6 | 20 | User-ը ոչինչ չավելացնի | Partial | 60% | `/culture/submit` |
+| B6 | 20 | User-ը ոչինչ չավելացնի | Done | 95% | `/culture/submit` 404 |
 | B7 | 21 | Epic | Done | 90% | `/culture/legends/epic` |
 | B8 | 22 | Upcoming գումարները խմբագրելի | Done | 90% | `/admin/projects`, `/projects` |
 | B9 | 23 | Why it matters + ամսական/տարեկան | Partial | 65% | `/donate` |
@@ -332,18 +332,18 @@
 | | |
 |---|---|
 | Թերթ | տող 20, N 6, `remove` |
-| % | 60% |
+| % | 95% |
 | Սքրինշ | ![Suggest an entry](./screenshots/b6-remove-user-add.png) |
 
 Պահանջ. օգտատերը ոչինչ ավելացնելու հնարավորություն չունենա, բոլոր add հնարավորությունները հանել։
 
 Սքրինշ. «Know a monastery or church…» և կոճակ `SUGGEST AN ENTRY`։
 
-Ինչպես է արված. հոդվածի ներքևի կոճակը հիմա «հետ կատալոգ» է, ոչ թե suggest։ Public route-երը մնացել են. `/culture/submit` և `/culture/[categorySlug]/new` (ենթակատալոգ առաջարկելու ձև)։
+Ինչպես է արված. հանրային ավելացնելու էջերը հանված են։ `/culture/submit` և `/culture/[categorySlug]/new` այլևս չեն բացվում։ Ադմինի նյութ ավելացնելը մնում է։
 
-Ստուգել. կատալոգում `SUGGEST AN ENTRY` չկա։ Ուղիղ բացել `/culture/submit` և `/culture/architecture/new`։ Եթե ձևը բացվում է, կետը բաց է։
+Ստուգել. կատալոգում `SUGGEST AN ENTRY` չկա։ `/culture/submit` և `/culture/architecture/new` 404 են։
 
-Ֆայլեր. `app/(public)/culture/submit/page.tsx`, `app/(public)/culture/[categorySlug]/new/page.tsx`
+Ֆայլեր. հանրային submit և `new` էջերը հանված են։ Ադմինը մնում է `/admin/culture-items/new`։
 
 ### B7 — Epic
 
