@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 81%** (42 կետի միջին)։ Done 29, Partial 13, Missing 0։
+**Ընդհանուր՝ 82%** (42 կետի միջին)։ Done 30, Partial 12, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -58,7 +58,7 @@
 | B17 | 31 | Գործընկերների քարտեր, ոչ շրջան | Done | 95% | `/partnership` |
 | B18 | 32 | Գրքի ներբեռնում | Done | 90% | `/#downloads` |
 | B19 | 33 | Featured treasures խառը դասավորություն | Done | 95% | `/#` featured |
-| B20 | 34 | Patron wall-ի փոխարեն սերտիֆիկատ | Partial | 45% | `/donate` |
+| B20 | 34 | Patron wall-ի փոխարեն սերտիֆիկատ | Done | 95% | `/donate` |
 | B21 | 35 | Բլոգ՝ 3 highlighted + ժամանակագրություն | Partial | 35% | `/blog` |
 | B22 | 36 | Newsletter-ը գրանցվածներին չերևա | Done | 90% | `/` մուտքով և առանց |
 | C1 | 38 | Մենյու ըստ կապված sheet-ի | Partial | 65% | հեդերի Culture |
@@ -566,18 +566,18 @@
 | | |
 |---|---|
 | Թերթ | տող 34, N 20, `subscription` |
-| % | 45% |
+| % | 95% |
 | Սքրինշ | ![Patron wall](./screenshots/b20-subscription.png) |
 
 Պահանջ. հանել այս հատվածը։ Դնել երեք նկարի տեղ, որտեղ ադմինը դնում է սերտիֆիկատի շաբլոնները, և բլոկ, որտեղ օգտատերը լրացնում է տվյալները։
 
 Սքրինշ. `PATRON WALL` / `THOSE WHO ALREADY SUSTAIN`, Gold / Silver / Bronze ցանկերով։
 
-Ինչպես է արված. սերտիֆիկատի երեք տեղը և ձևը կան վճարման բլոկի տակ (B10)։ Patron wall-ը դեռ ռենդերվում է, եթե `patronWall` սեկցիան միացված է։ Սքրինշի բլոկը հանված չէ։
+Ինչպես է արված. Patron wall-ը `/donate`-ից հանված է։ Սերտիֆիկատի երեք տեղը և ձևը մնում են վճարման բլոկի տակ։
 
-Ստուգել. `/donate`։ Եթե «Those who already sustain» երևում է, կետը բաց է։ Սերտիֆիկատի երեք տեղը պետք է մնա։
+Ստուգել. `/donate`։ «Those who already sustain» չկա։ Սերտիֆիկատի երեք տեղը կա։
 
-Ֆայլեր. `components/donation-page/DonationPage.tsx`, `components/donation-page/DonationPatronWall.tsx`
+Ֆայլեր. `components/donation-page/DonationPage.tsx`, `components/donation-page/DonationEngine.tsx`
 
 ### B21 — Բլոգի վերևի երեքը և ժամանակագրությունը
 
