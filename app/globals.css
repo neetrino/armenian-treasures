@@ -244,6 +244,26 @@
     );
   }
 
+  .hero-bg-base img {
+    transform-origin: center center;
+    animation: hero-photo-drift 28s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-photo-drift {
+    from {
+      transform: scale(1.04);
+    }
+    to {
+      transform: scale(1.1) translate3d(-1.5%, -1%, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bg-base img {
+      animation: none;
+    }
+  }
+
   .hero-bg-fallback-overlay {
     background: linear-gradient(
       to bottom,
