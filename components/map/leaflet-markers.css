@@ -1,0 +1,45 @@
+.leaflet-div-icon.at-marker {
+  background: transparent;
+  border: 0;
+}
+
+.at-marker span {
+  transform-origin: center bottom;
+  transition: transform 180ms ease;
+}
+
+.at-marker:hover span {
+  transform: translateY(-4px);
+}
+
+.at-marker--selected::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 16px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(227, 176, 58, 0.5);
+  transform: translateX(-50%);
+  animation: at-pin-ring 1.6s ease-out infinite;
+}
+
+@keyframes at-pin-ring {
+  from {
+    opacity: 0.7;
+    transform: translateX(-50%) scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-marker:hover span,
+  .at-marker--selected::after {
+    animation: none;
+    transform: none;
+  }
+}
