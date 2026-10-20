@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import { CultureOrnamentalIcon } from '@/components/icons/CultureOrnamentalIcon';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import {
   PRIMARY_LINKS,
@@ -185,8 +186,9 @@ export function MobileMenu({
                               <Link
                                 href={item.href}
                                 onClick={close}
-                                className={mobileLinkClass(pathname, item.href)}
+                                className={cn(mobileLinkClass(pathname, item.href), 'flex items-center gap-2')}
                               >
+                                <CultureOrnamentalIcon iconKey={item.icon} size={16} className="h-4 w-4" />
                                 {item.label}
                               </Link>
                             </li>

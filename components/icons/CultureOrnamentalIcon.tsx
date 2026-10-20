@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { CULTURAL_PORTAL_ICON_SOURCES } from '@/lib/constants/cultural-portal-icon-sources';
 import type { CulturalPortalIconKey } from '@/lib/constants/cultural-portal';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
+import { resolveMenuLucideIcon } from '@/lib/navigation/menu-icons';
 import { cn } from '@/lib/utils';
 
 interface CultureOrnamentalIconProps {
@@ -23,7 +24,16 @@ export function CultureOrnamentalIcon({
   size = 16,
 }: CultureOrnamentalIconProps) {
   const src = resolveIconSrc(iconKey);
-  if (!src) return null;
+  if (!src) {
+    const Icon = resolveMenuLucideIcon(iconKey);
+    return (
+      <Icon
+        className={cn('h-4 w-4 shrink-0 text-heritage-gold', className)}
+        aria-hidden
+        strokeWidth={1.6}
+      />
+    );
+  }
   const resolvedSrc = resolvePublicAssetUrl(src);
 
   return (
