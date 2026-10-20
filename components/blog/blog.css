@@ -196,7 +196,7 @@
   isolation: isolate;
   width: 100%;
   overflow-x: clip;
-  background: #090909;
+  background: #000;
   color: #d4c89a;
 }
 
@@ -206,10 +206,7 @@
   margin: 0 auto;
   max-width: min(1240px, 100%);
   padding: clamp(3rem, 6vw, 5rem) clamp(1.25rem, 3vw, 2rem) clamp(5rem, 10vw, 7rem);
-  background:
-    radial-gradient(ellipse 85% 45% at 50% 0%, rgba(42, 191, 191, 0.045), transparent 58%),
-    radial-gradient(ellipse 60% 35% at 12% 72%, rgba(201, 168, 76, 0.035), transparent 55%),
-    #090909;
+  background: #000;
 }
 
 .blog-detail-article::before {

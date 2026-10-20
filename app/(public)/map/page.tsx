@@ -23,16 +23,7 @@ async function HeritageMapPage() {
   const portalLabel = uiMessage(locale, 'culturalPortal');
 
   return (
-    <div className="relative isolate overflow-hidden bg-surface">
-      <div
-        className="pointer-events-none absolute inset-0 bg-heritage-radial opacity-[var(--surface-radial-opacity)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-hero-diamond-grid opacity-[var(--surface-grid-opacity)]"
-        aria-hidden
-      />
-
+    <div className="relative isolate overflow-hidden bg-black">
       <div className="relative z-10 mx-auto w-full max-w-[90rem] px-3 pb-12 pt-6 sm:px-4 sm:pb-16 sm:pt-8">
         <header className="mb-4 max-w-[43.75rem] text-left">
           <p className="mb-[14px] font-cinzel text-[10px] font-extrabold uppercase tracking-[0.34em] text-heritage-teal">

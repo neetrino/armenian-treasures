@@ -15,24 +15,7 @@ export async function HomeHeritageSections() {
   const home = await getHomeContent();
 
   return (
-    <div className="relative isolate overflow-hidden bg-surface">
-      <div
-        className="pointer-events-none absolute inset-0 bg-heritage-radial opacity-[var(--surface-radial-opacity)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-heritage-teal-glow opacity-[var(--surface-glow-opacity)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-hero-diamond-grid opacity-[var(--surface-grid-opacity)]"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(214,184,90,0.03)_0%,transparent_18%,transparent_82%,rgba(214,184,90,0.025)_100%)]"
-        aria-hidden
-      />
-
+    <div className="relative isolate overflow-hidden bg-black">
       {/* Feedback order: Cultural Portal → Map → Featured Treasures → News → Projects */}
       <Suspense fallback={<HomeSectionGridFallback minHeightClass="min-h-[18rem]" />}>
         <CulturalPortalSection home={home} />
