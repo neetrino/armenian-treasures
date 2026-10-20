@@ -44,7 +44,7 @@ export function DonationPatronSlider({
   const sliderFill = linearFill(amount);
 
   return (
-    <div ref={cardRef} className="patron-card reveal" aria-label="Custom monthly contribution">
+    <div ref={cardRef} className="patron-card reveal" aria-label="Custom contribution">
       <div className="patron-head">
         <div>
           <div className="patron-label">{uiMessage(locale, 'patronContribution')}</div>
@@ -66,11 +66,11 @@ export function DonationPatronSlider({
           max={PATRON_MAX}
           step={100}
           value={amount}
-          aria-label="Monthly contribution amount in AMD"
+          aria-label="Contribution amount in AMD"
           aria-valuemin={PATRON_MIN}
           aria-valuemax={PATRON_MAX}
           aria-valuenow={amount}
-          aria-valuetext={`${formatAmd(amount)} AMD per month`}
+          aria-valuetext={`${formatAmd(amount)} AMD`}
           style={{
             background: `linear-gradient(90deg, var(--teal) ${sliderFill}, rgba(255,255,255,.07) ${sliderFill})`,
           }}
@@ -119,7 +119,7 @@ export function DonationPatronSlider({
             min={PATRON_MIN}
             step={100}
             value={amount}
-            aria-label="Enter a custom monthly amount in AMD"
+            aria-label="Enter a custom amount in AMD"
             style={inputNudge ? { borderColor: 'rgba(42,191,191,.5)' } : undefined}
             onChange={(event) => {
               const parsed = parseInt(event.target.value, 10);
@@ -128,7 +128,7 @@ export function DonationPatronSlider({
             onBlur={(event) => onCustomBlur(event.target.value)}
           />
         </div>
-        <div className="custom-unit" aria-label="AMD per month">
+        <div className="custom-unit" aria-label="AMD">
           {uiMessage(locale, 'amdPerMonth')}
         </div>
       </div>

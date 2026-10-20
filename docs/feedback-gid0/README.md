@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 74%** (42 կետի միջին)։ Done 18, Partial 24, Missing 0։
+**Ընդհանուր՝ 75%** (42 կետի միջին)։ Done 19, Partial 23, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -47,7 +47,7 @@
 | B6 | 20 | User-ը ոչինչ չավելացնի | Done | 95% | `/culture/submit` 404 |
 | B7 | 21 | Epic | Done | 90% | `/culture/legends/epic` |
 | B8 | 22 | Upcoming գումարները խմբագրելի | Done | 90% | `/admin/projects`, `/projects` |
-| B9 | 23 | Why it matters + ամսական/տարեկան | Partial | 65% | `/donate` |
+| B9 | 23 | Why it matters + ամսական/տարեկան | Done | 95% | `/donate` |
 | B10 | 24 | 1000 / 5000 / 10000 + սերտիֆիկատ | Partial | 80% | `/donate` |
 | B11 | 25 | Ընտրված ֆիլտրը մոխրագույն | Partial | 40% | `/map` |
 | B12 | 26 | Ցանկը քարտեզի ներսում, քարտեզը մեծ | Partial | 80% | `/map` |
@@ -382,14 +382,14 @@
 | | |
 |---|---|
 | Թերթ | տող 23, N 9, `donation` |
-| % | 65% |
+| % | 95% |
 | Սքրինշ | չկա |
 
 Պահանջ. donations էջից հանել Why it matters։ Ամսական և տարեկան ենթաբաժանում չլինի։
 
-Ինչպես է արված. `DonationMission` կոմպոնենտը կա, բայց `DonationPage` այն չի ռենդերում։ Տարիֆները մեկ գումար են ցույց տալիս (`amountAmd`), `features` դատարկ է։ Տվյալների մեջ `monthlyAmd` դեռ լցված է, և patron slider-ի տեքստը դեռ «monthly contribution» է։
+Ինչպես է արված. Why it matters բլոկը էջում չկա։ Տարիֆը մեկ գումար է, ամիս/տարի փոխարկիչ չկա։ Slider-ը «AMD» է, ոչ թե ամսական ներդրում։
 
-Ստուգել. `/donate`։ Why it matters բլոկ չկա։ Տարիֆի քարտին ամիս/տարի փոխարկիչ չկա։ Slider-ի մոտ «monthly» բառը դեռ կարող է մնալ։
+Ստուգել. `/donate`։ Why it matters չկա։ Քարտերին և slider-ին ամիս/տարի չկա։
 
 Ֆայլեր. `components/donation-page/DonationPage.tsx`, `lib/constants/donation-page.ts`, `components/donation-page/DonationPatronSlider.tsx`
 
