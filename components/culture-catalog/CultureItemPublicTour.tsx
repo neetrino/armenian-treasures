@@ -22,6 +22,7 @@ interface CultureItemPublicTourProps {
 const TOUR_TYPE_MESSAGE: Record<CultureTourType, UiMessageKey> = {
   LIDAR: 'tourTypeLidar',
   SCAN_3D: 'tourTypeScan3d',
+  MATTERPORT: 'tourTypeMatterport',
   DRONE: 'tourTypeDrone',
 };
 

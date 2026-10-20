@@ -46,7 +46,7 @@ const catalogEntrySchema = z.object({
   region: optionalText(120),
   periodLabel: optionalText(80),
   image: optionalText(500),
-  galleryImages: z.array(z.string().trim().max(500)).max(20).default([]),
+  galleryImages: z.array(z.string().trim().max(500)).default([]),
   cardBackgroundImage: optionalText(500),
   featuredOnHome: z.boolean().default(false),
   featuredOrder: z.number().int().min(1).max(5).optional().nullable(),

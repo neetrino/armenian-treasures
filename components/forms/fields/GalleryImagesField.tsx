@@ -22,7 +22,7 @@ export function GalleryImagesField({
   label = 'Gallery images',
   name = 'galleryImages',
   defaultValue = [],
-  maxImages = 20,
+  maxImages,
   error,
 }: GalleryImagesFieldProps) {
   const inputId = useId();
@@ -44,7 +44,7 @@ export function GalleryImagesField({
     }
 
     setUrls((current) => {
-      if (current.length >= maxImages) {
+      if (maxImages !== undefined && current.length >= maxImages) {
         setUploadError(`Maximum ${maxImages} gallery images.`);
         return current;
       }
@@ -58,7 +58,7 @@ export function GalleryImagesField({
 
   const addUrlRow = () => {
     setUrls((current) => {
-      if (current.length >= maxImages) return current;
+      if (maxImages !== undefined && current.length >= maxImages) return current;
       return [...current, ''];
     });
   };
@@ -114,7 +114,7 @@ export function GalleryImagesField({
         </div>
       ))}
 
-      {urls.length < maxImages ? (
+      {maxImages === undefined || urls.length < maxImages ? (
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"

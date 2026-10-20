@@ -1,11 +1,7 @@
 import { ABOUT_MENU, PRIMARY_LINKS } from '@/components/navigation/primary-links';
 import { isArmenianLocale, type SiteLocaleCode } from '@/lib/i18n/locale-config';
-
-type ChromeRow = Record<SiteLocaleCode, string>;
-
-function row(hy: string, en: string, ru: string, fr: string, pt: string): ChromeRow {
-  return { HY: hy, HYW: hy, EN: en, RU: ru, FR: fr, PT: pt };
-}
+import { row } from '@/lib/i18n/message-row';
+import { toClassicalArmenian } from '@/lib/i18n/western-armenian';
 
 const NAV = {
   culturalPortal: row('Մշակութային պորտալ', 'Cultural Portal', 'Культурный портал', 'Portail culturel', 'Portal cultural'),
@@ -86,6 +82,10 @@ const HEADER_SHORT: Partial<Record<Exclude<SiteLocaleCode, 'EN' | 'HY' | 'HYW'>,
 };
 
 export function headerChromeLabel(locale: SiteLocaleCode, key: UiChromeKey): string {
+  if (locale === 'HYW') {
+    const shortLabel = HEADER_HY[key];
+    if (shortLabel) return toClassicalArmenian(shortLabel);
+  }
   if (isArmenianLocale(locale)) {
     const shortLabel = HEADER_HY[key];
     if (shortLabel) return shortLabel;

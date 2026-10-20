@@ -9,10 +9,13 @@ import {
 } from '@/lib/culture-item-media';
 import { isCultureItemEditorSectionId, type CultureItemEditorSectionId } from '@/lib/admin/culture-item-editor-sections';
 
+/** Stops a forged form from looping forever. Editors never hit this. */
+const MEDIA_ROW_SAFETY_CAP = 500;
+
 function readCount(formData: FormData, name: string): number {
   const raw = Number(formData.get(name)?.toString() ?? '0');
   if (!Number.isFinite(raw)) return 0;
-  return Math.max(0, Math.min(30, Math.trunc(raw)));
+  return Math.max(0, Math.min(MEDIA_ROW_SAFETY_CAP, Math.trunc(raw)));
 }
 
 function read(formData: FormData, name: string): string {
@@ -20,7 +23,8 @@ function read(formData: FormData, name: string): string {
 }
 
 function readTourType(value: string): CultureTourType {
-  if (value === 'SCAN_3D' || value === 'MODEL_3D' || value === 'MATTERPORT') return 'SCAN_3D';
+  if (value === 'MATTERPORT') return 'MATTERPORT';
+  if (value === 'SCAN_3D' || value === 'MODEL_3D') return 'SCAN_3D';
   if (value === 'DRONE') return 'DRONE';
   return 'LIDAR';
 }

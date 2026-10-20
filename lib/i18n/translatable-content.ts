@@ -1,4 +1,5 @@
 import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { toClassicalArmenian } from '@/lib/i18n/western-armenian';
 
 const TRANSLATABLE_MARKER = '__at_i18n_v1';
 const DEFAULT_LOCALE: SiteLocaleCode = 'EN';
@@ -104,9 +105,13 @@ export function resolveLocalizedText(
   raw: string | null | undefined,
   locale: SiteLocaleCode,
 ): string {
-  // Strict: never fall back to another locale. Missing translation stays empty.
+  // Strict for every locale except Western Armenian, which uses Eastern copy in classical spelling.
   const map = decodeTranslatableText(raw);
-  return map[locale]?.trim() ?? '';
+  const direct = map[locale]?.trim() ?? '';
+  if (direct) return direct;
+  if (locale !== 'HYW') return '';
+  const eastern = map.HY?.trim() ?? '';
+  return eastern ? toClassicalArmenian(eastern) : '';
 }
 
 export function getAdminLocaleValue(

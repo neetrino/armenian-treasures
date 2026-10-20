@@ -35,7 +35,7 @@ export const CULTURE_ITEM_EDITOR_SECTIONS: Record<
     id: 'map',
     number: 3,
     title: 'Map',
-    description: 'Location name, address, and a public map link.',
+    description: 'Optional. The article map appears only when a map link or coordinates are saved.',
   },
   tours: {
     id: 'tours',

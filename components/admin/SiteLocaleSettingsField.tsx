@@ -22,8 +22,8 @@ export function SiteLocaleSettingsField({ defaultEnabled }: SiteLocaleSettingsFi
     <fieldset className="flex flex-col gap-3">
       <legend className="font-display text-sm font-semibold text-ink">Enabled site languages</legend>
       <p className="text-sm text-muted-foreground">
-        Control which locales appear in the public language switcher. Only English has live
-        translations today — other locales show a safe &quot;Soon&quot; state until copy ships.
+        Control which locales appear in the public language switcher. Western Armenian uses
+        classical orthography. An empty Western field shows the Eastern text in that spelling.
       </p>
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {SITE_LOCALE_CODES.map((code) => (

@@ -4,7 +4,6 @@ import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureC
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { toLandingBreadcrumbSegments } from '@/components/culture-catalog/CulturePortalLandingBreadcrumb';
 import { CultureItemMediaSections } from '@/components/culture-catalog/CultureItemMediaSections';
-import { hasTrimmedText } from '@/lib/landing/landing-section-utils';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import { firstTourUrl } from '@/lib/culture-item-media';
 import type { PublicCultureItemDetailDTO } from '@/lib/dto';
@@ -26,7 +25,6 @@ function formatEnumLabel(value: string): string {
 export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetailViewProps) {
   const menu = item.menuItem;
   const parent = menu?.parent ?? null;
-  const description = item.shortDescription ?? item.description ?? '';
 
   const breadcrumb = parent && menu
     ? [
@@ -65,7 +63,6 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
         }
         accent={item.periodLabel?.trim() || item.region?.trim() || ''}
         slogan={item.region?.trim() || undefined}
-        description={hasTrimmedText(description) ? description : undefined}
         breadcrumb={toLandingBreadcrumbSegments(breadcrumb)}
         ctas={[
           { label: uiMessage(locale, 'viewDetails'), href: '#detail', variant: 'gold' },
@@ -75,7 +72,7 @@ export function CultureItemDetailView({ item, locale = 'EN' }: CultureItemDetail
           { label: uiMessage(locale, 'backToCatalog'), href: backHref, variant: 'outline' },
         ]}
       />
-      {stats.length > 0 ? <CulturalPortalStatsBar stats={stats} /> : null}
+      {stats.length > 0 ? <CulturalPortalStatsBar stats={stats} quiet /> : null}
       <LandingSectionStack>
         <section id="detail" className="catalog-detail-section">
           <div className="catalog-detail-main">

@@ -404,6 +404,19 @@ export async function deleteCultureItemAction(id: string): Promise<AdminDeleteRe
   });
 }
 
+export async function toggleCultureItemHomeShortcutAction(
+  id: string,
+  featuredOnHome: boolean,
+): Promise<void> {
+  await requireAdmin();
+  const item = await prisma.cultureItem.findUnique({
+    where: { id },
+    select: { slug: true, menuItemId: true },
+  });
+  await persistCultureItemFeaturedHome(id, featuredOnHome, featuredOnHome ? 5 : null);
+  await revalidateCultureItem(item?.slug ? [item.slug] : [], item?.menuItemId ? [item.menuItemId] : []);
+}
+
 export async function toggleCultureItemMapAction(id: string, showOnMap: boolean): Promise<void> {
   await requireAdmin();
   const item = await prisma.cultureItem.findUnique({

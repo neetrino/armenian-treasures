@@ -115,7 +115,7 @@ export const cultureItemSchema = z.object({
   image: optionalShortString,
   coverImage: optionalShortString,
   cardBackgroundImage: optionalShortString,
-  galleryImages: z.array(z.string()).max(20).default([]),
+  galleryImages: z.array(z.string()).default([]),
   tourUrl: optionalUrl,
   videoUrl: optionalUrl,
   latitude: z.number().min(-90).max(90).optional().nullable(),

@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 67%** (42 կետի միջին)։ Done 6, Partial 36, Missing 0։
+**Ընդհանուր՝ 73%** (42 կետի միջին)։ Done 16, Partial 26, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -32,18 +32,18 @@
 |---|---:|---|---|---:|---|
 | A1 | 2 | Քարտի տառատեսակ | Done | 90% | `/culture/item/[slug]` |
 | A2 | 3 | Քարտի subtitle | Done | 90% | `/culture/architecture/churches` |
-| A3 | 4 | Արևմտահայերեն | Partial | 55% | լեզվի անջատիչ, `/admin/settings` |
-| A4 | 5 | Անսահմանափակ մեդիա լինքեր | Partial | 85% | `/admin/culture-items/[id]`, հոդված |
-| A5 | 6 | Քարտեզը թաքցնել, եթե դատարկ է | Partial | 85% | հոդված առանց կոորդինատի |
-| A6 | 7 | Ենթաէջ → գլխավորի shortcut | Partial | 75% | `/`, `/admin/culture-items/[id]` |
-| A7 | 8 | Հանել նմանատիպ հատվածը | Partial | 60% | հոդված |
-| A8 | 9 | Նկարագրությունը միայն ներքևում | Partial | 35% | `/culture/item/[slug]` |
-| A9 | 10 | Կողքի բլոկը հանել, փիրուզը մեղմել | Partial | 65% | հոդված |
-| B1 | 15 | Հանել 4 feature քարտը | Partial | 80% | `/`, `/virtual-museum` |
-| B2 | 16 | Գլխավորի կառուցվածք | Partial | 70% | `/` |
+| A3 | 4 | Արևմտահայերեն | Done | 90% | լեզվի անջատիչ, `/admin/settings` |
+| A4 | 5 | Անսահմանափակ մեդիա լինքեր | Done | 95% | `/admin/culture-items/[id]`, հոդված |
+| A5 | 6 | Քարտեզը թաքցնել, եթե դատարկ է | Done | 95% | հոդված առանց կոորդինատի |
+| A6 | 7 | Ենթաէջ → գլխավորի shortcut | Done | 95% | `/`, `/admin/culture-items` |
+| A7 | 8 | Հանել նմանատիպ հատվածը | Done | 95% | հոդված |
+| A8 | 9 | Նկարագրությունը միայն ներքևում | Done | 95% | `/culture/item/[slug]` |
+| A9 | 10 | Կողքի բլոկը հանել, փիրուզը մեղմել | Done | 90% | հոդված |
+| B1 | 15 | Հանել 4 feature քարտը | Done | 95% | `/`, `/virtual-museum` |
+| B2 | 16 | Գլխավորի կառուցվածք | Done | 90% | `/` |
 | B3 | 17 | Art & Culture + More Culture | Done | 90% | մենյու |
 | B4 | 18 | Museums → Art & Culture | Partial | 85% | մենյու, `/culture/museums` |
-| B5 | 19 | Ենթաբաժնի էջ՝ առանց նկարագրության | Partial | 75% | `/culture/heritage` |
+| B5 | 19 | Ենթաբաժնի էջ՝ առանց նկարագրության | Done | 95% | `/culture/heritage` |
 | B6 | 20 | User-ը ոչինչ չավելացնի | Partial | 60% | `/culture/submit` |
 | B7 | 21 | Epic | Done | 90% | `/culture/legends/epic` |
 | B8 | 22 | Upcoming գումարները խմբագրելի | Done | 90% | `/admin/projects`, `/projects` |
@@ -118,122 +118,122 @@
 | | |
 |---|---|
 | Թերթ | տող 4, `language` |
-| % | 55% |
+| % | 90% |
 | Սքրինշ | ![HY RU EN FR PT անջատիչ](./screenshots/a3-language.png) |
 
 Պահանջ. ավելացնել արևմտահայերենը։
 
-Սքրինշում անջատիչն է `HY · RU · EN · FR · PT`, ընտրված է EN։ Արևմտահայերենի կոճակ այս կտրվածքում չկա։
+Սքրինշում անջատիչն է `HY · RU · EN · FR · PT`, ընտրված է EN։ Արևմտահայերենն այդ կտրվածքում չկար։
 
-Ինչպես է արված. `HYW` կա `SITE_LOCALE_CODES`-ում, ադմինի լեզուների ցանկում և անջատիչում, եթե միացված է։ UI տողերը հայերենի պատճենն են. `lib/i18n/message-row.ts` ուղղակի հայերենը կրկնում է արևմտահայերենի համար։ Առանձին ուղղագրություն դեռ չկա։
+Ինչպես է արված. `HYW` կա լեզուների ցանկում և միացված է կայքի կարգավորումներում (`HY, HYW, EN, RU, FR, PT`)։ Անջատիչում կոդը `HYW` է, էջի լեզուն `hyw`։ Ինտերֆեյսի տեքստը դասական ուղղագրությամբ է (`և` → `եւ`, `ություն` → `ութիւն`, `Սյունիք` → `Սիւնիք`)։ Եթե նյութի արևմտահայերեն դաշտը դատարկ է, ցույց է տրվում արևելահայերենը նույն ուղղագրությամբ։ Ադմինը կարող է առանձին լրացնել Western դաշտը, և այդ տեքստը մնում է ինչպես գրված է։
 
-Ստուգել. հեդերի անջատիչը և `/admin/settings`։ `HYW` միացնելուց հետո կայքը բացվում է, բայց տեքստը արևելահայերեն է մնում։
+Ստուգել. հեդերի անջատիչից ընտրել `HYW`, բացել `/`։ Մենյուում պետք է լինի `Նուիրատվութիւն`, ոչ թե `Նվիրատվություն`։ `HY` ընտրելիս արևելահայերենը մնում է առաջվանը։ Ադմին՝ `/admin/settings` և նյութի `ARM (W)` ներդիրը։
 
-Ֆայլեր. `lib/i18n/locale-config.ts`, `lib/i18n/message-row.ts`, `components/navigation/LanguageSelector.tsx`
+Ֆայլեր. `lib/i18n/western-armenian.ts`, `lib/i18n/message-row.ts`, `lib/i18n/translatable-content.ts`
 
 ### A4 — Լինքեր առանց քանակի սահմանի
 
 | | |
 |---|---|
 | Թերթ | տող 5, `links` |
-| % | 85% |
+| % | 95% |
 | Սքրինշ | չկա |
 
 Պահանջ. քարտում լինի drone, Matterport, map, YouTube։ Քանակի սահման չլինի. որքան նկար, վիդեո, վիրտուալ տուր կամ դրոն պետք է, այնքան ավելացվի։
 
-Ինչպես է արված. մեդիան `mediaContent` JSON-ում է՝ `tours[]`, `videos[]`, `gallery[]`, առանց քանակի կտրվածքի ռենդերում։ Քարտեզը առանձին `mapUrl` / կոորդինատ է։ Չորս ֆիքսված անունով դաշտ չկա. ադմինը ավելացնում է տուր կամ վիդեո և լրացնում URL։ Դատարկ բլոկը էջում չի դուրս գալիս։
+Ինչպես է արված. տուրի տեսակներն են LiDAR, 3D, Matterport, Drone։ Վիդեոն ընդունում է YouTube, Vimeo կամ MP4։ Քարտեզը `mapUrl` է։ Նկարները, տուրերը և վիդեոները ցուցակ են, առանց 20 կամ 30 հատի կտրվածքի։ Դատարկ տողը էջում չի դուրս գալիս։
 
-Ստուգել. `/admin/culture-items/[id]` ավելացնել երկու տուր և երկու վիդեո, պահպանել, բացել `/culture/item/[slug]`։ Երկուսն էլ երևում են `#tour` և վիդեո բլոկում։
+Ստուգել. `/admin/culture-items/[id]` ավելացնել Matterport և Drone տուր, երկու YouTube վիդեո, պահպանել, բացել `/culture/item/[slug]`։ Բոլորը երևում են։
 
-Ֆայլեր. `lib/culture-item-media.ts`, `components/culture-catalog/CultureItemMediaSections.tsx`
+Ֆայլեր. `lib/culture-item-media.ts`, `lib/admin/culture-item-media-form.ts`, `components/culture-catalog/CultureItemPublicTour.tsx`
 
 ### A5 — Քարտեզ միայն եթե լրացված է
 
 | | |
 |---|---|
 | Թերթ | տող 6, `map` |
-| % | 85% |
+| % | 95% |
 | Սքրինշ | չկա |
 
 Պահանջ. բոլոր քարտերը կարողանան քարտեզ ունենալ։ Եթե ադմինը չլրացնի, էջում չերևա։
 
-Ինչպես է արված. `CultureItemPublicMap` կոորդինատ չլուծելիս `null` է վերադարձնում, բլոկը չի նկարվում։ `showOnMap` առանձին դրոշ է ժառանգության քարտեզի pin-ի համար, հոդվածի բլոկը դրան չի նայում. բավարար է լրացված կոորդինատը կամ map URL-ից կորզված կետը։
+Ինչպես է արված. ամեն նյութ ունի Map բաժին։ Առանց map link-ի և կոորդինատի Location բլոկը չի նկարվում։ Լրացված արտաքին հղումը երևում է նույնիսկ եթե կետը չի կորզվում։ `showOnMap` միայն ժառանգության քարտեզի pin-ն է։
 
-Ստուգել. հոդված առանց map URL և կոորդինատի՝ Location բլոկ չկա։ Լրացնելուց հետո բլոկը երևում է։ `/map`-ում pin-ը երևում է միայն `showOnMap` միացրածներին։
+Ստուգել. հոդված առանց map URL-ի՝ Location բլոկ չկա։ Լրացնելուց հետո բլոկը երևում է։ `/map`-ում pin-ը միայն նշվածներինն է։
 
-Ֆայլեր. `components/culture-catalog/CultureItemPublicMap.tsx`, `prisma/schema.prisma` (`mapUrl`, `showOnMap`)
+Ֆայլեր. `components/culture-catalog/CultureItemPublicMap.tsx`, `components/admin/culture-item-editor/AdminLocationMapField.tsx`
 
 ### A6 — Ենթաէջը գլխավորի shortcut
 
 | | |
 |---|---|
 | Թերթ | տող 7, `home page` |
-| % | 75% |
+| % | 95% |
 | Սքրինշ | ![Stories worth discovering](./screenshots/a6-home-shortcut.png) |
 
 Պահանջ. ենթաէջերում լինի կոճակ, որով ադմինը միացնում է նյութը, և այն գլխավորում երևա shortcut-ով։
 
 Սքրինշը գլխավորի `STORIES WORTH DISCOVERING` շարքն է. երեք քարտ նկարով, տարեթվով և վերնագրով։
 
-Ինչպես է արված. մշակութային նյութն ունի `featuredOnHome` և `featuredOrder`։ Նույն դրոշը կա նաև բլոգի գրառման վրա։ Գլխավորի featured բլոկը վերցնում է միացված նյութերը։ Առանձին «shortcut կոճակ» ենթակատալոգի էջի վրա չկա. միացումը ադմինի ձևի մեջ է։
+Ինչպես է արված. `/admin/culture-items` ցանկում ամեն նյութ ունի `Home` / `On home` կոճակ։ Խմբագրիչում նույն դրոշը `Home shortcut` է, կարգը 1–5։ Հրապարակված նյութը գլխավորի Stories շարքում է։ Անջատելը հանում է այն։
 
-Ստուգել. `/admin/culture-items/[id]` միացնել featured, տալ կարգ, բացել `/`։ Քարտը հայտնվում է featured շարքում։ Անջատելուց հետո անհետանում է։
+Ստուգել. `/admin/culture-items` սեղմել `Home` հրապարակված նյութի վրա, բացել `/`։ Քարտը Stories շարքում է։ `On home` նորից սեղմելը հանում է այն։
 
-Ֆայլեր. `components/sections/FeaturedTreasuresSection.tsx`, `components/admin/CultureItemForm.tsx`
+Ֆայլեր. `components/admin/CultureItemsSortableList.tsx`, `app/(admin)/admin/(panel)/culture-items/actions.ts`
 
 ### A7 — Հանել նմանատիպ հատվածը
 
 | | |
 |---|---|
 | Թերթ | տող 8 |
-| % | 60% |
+| % | 95% |
 | Սքրինշ | ![Կտրված ցանկ՝ ARCHITECTURAL FORM](./screenshots/a7-remove-similar.png) |
 
 Պահանջ. «հեռացնել նմանատիպ հատվածները»։
 
 Սքրինշը բարակ կտրվածք է. երևում է `ARCHITECTURAL FORM` և տակը ցանկի տողեր։ Հոդվածի կողքի կամ ներքևի կրկնվող բլոկ է, ոչ թե ամբողջ էջ։
 
-Ինչպես է արված. հոդվածի էջում նմանատիպ նյութերի շարք չկա, վերջում միայն հետ գնալու հղում է։ Related բլոկը մնացել է երեք առանձին լենդինգում՝ Խնձորեսկ, Ազգային պատկերասրահ, Խաչատրյանի թանգարան, և անջատվում է այդ էջի section visibility-ով։
+Ինչպես է արված. հոդվածի էջում related շարք չկա։ Նույն բլոկը հանված է նաև `/khndzoresk`, `/national-gallery-armenia` և `/khachaturian-museum` էջերից։
 
-Ստուգել. `/culture/item/[slug]` վերջում related ցանկ չկա։ `/khndzoresk`, `/national-gallery-armenia`, `/khachaturian-museum` դեռ կարող են related ունենալ։
+Ստուգել. այդ երեք էջերի վերջում related ցանկ չկա։ `/culture/item/[slug]` վերջում միայն հետ գնալու հղումն է։
 
-Ֆայլեր. `components/culture-catalog/CultureItemDetailView.tsx`, `lib/landing/landing-section-visibility.ts`
+Ֆայլեր. `components/khndzoresk/KhndzoreskPage.tsx`, `components/national-gallery-armenia/NationalGalleryPage.tsx`, `components/khachaturian-museum/KhachaturianMuseumPage.tsx`
 
 ### A8 — Նկարագրությունը միայն ներքևում
 
 | | |
 |---|---|
 | Թերթ | տող 9 |
-| % | 35% |
+| % | 95% |
 | Սքրինշ | ![Պարբերություն լանդշաֆտի վրա](./screenshots/a8-description-under-title.png) |
 
 Պահանջ. նկարագրությունը վերնագրի տակ էլ է երևում։ Հանել այդը, թող մնա միայն ներքևինը։
 
 Սքրինշում վերնագրի տակ երկար պարբերություն է՝ լեռների նկարի վրա։
 
-Ինչպես է արված. `CultureItemDetailView` hero-ին դեռ փոխանցում է `shortDescription ?? description`։ Նույն տեքստը կարող է կրկնվել նաև ներքևի մեդիա բլոկներում։ Վերևի կրկնօրինակը հանված չէ։
+Ինչպես է արված. hero-ին նկարագրություն այլևս չի փոխանցվում։ Տեքստը մնում է ներքևի description բլոկներում։
 
-Ստուգել. `/culture/item/[slug]`։ Եթե hero-ի տակ և էջի մարմնում նույն պարբերությունն է, կետը բաց է։
+Ստուգել. `/culture/item/[slug]`։ Վերնագրի տակ, նկարի վրա, երկար պարբերություն չկա։ Նույն տեքստը էջի մարմնում է։
 
-Ֆայլեր. `components/culture-catalog/CultureItemDetailView.tsx` (մոտ տող 68, `description={...}`)
+Ֆայլեր. `components/culture-catalog/CultureItemDetailView.tsx`
 
 ### A9 — Կողքի բլոկը հանել, փիրուզը մեղմել
 
 | | |
 |---|---|
 | Թերթ | տող 10 |
-| % | 65% |
+| % | 90% |
 | Սքրինշ | ![Փիրուզ մետա և կողքի takeaways](./screenshots/a9-turquoise-type.png) |
 
 Պահանջ. նկարի կողքի հատվածը հանել, մնա միայն փիրուզագույն շարքը։ Տառատեսակը շատ կոպիտ է. ավելի նուրբ և մի քիչ փոքր, որ աչք չծակի։
 
 Սքրինշում վերևում փիրուզով `Արագածոտն · 9-րդ դար · MONUMENT · YES` է, տակը վերնագիր, նկար, և աջ կողմում `KEY TAKEAWAYS`։
 
-Ինչպես է արված. հոդվածում կողքի takeaways սյուն չկա։ Վիճակագրության շարքը (`CulturalPortalStatsBar`) դեռ ցույց է տալիս region, period, type, եթե լրացված են։ Տառի չափն ու հաստությունը սքրինշի «նուրբ և փոքր» պահանջին առանձին չի հարմարեցվել։
+Ինչպես է արված. հոդվածում կողքի takeaways սյուն չկա։ Մետա շարքը մնում է, բայց հոդվածի վրա տառը 18px է և 500 հաստություն, առանց փիրուզ շողքի։ Մյուս էջերի վիճակագրությունը չի փոխվել։
 
-Ստուգել. `/culture/item/[slug]` desktop։ Նկարի աջում takeaways չկա։ Վերևի մետա շարքի տառը համեմատել սքրինշի փիրուզի հետ։
+Ստուգել. `/culture/item/[slug]` desktop։ Աջում takeaways չկա։ Փիրուզ թվերը ավելի մանր են, քան կատալոգի էջի վիճակագրությունը։
 
-Ֆայլեր. `components/culture-catalog/CultureItemDetailView.tsx`, `components/cultural-portal-page/CulturalPortalStatsBar.tsx`
+Ֆայլեր. `components/culture-catalog/CultureItemDetailView.tsx`, `components/culture-catalog/culture-catalog-page.css`
 
 ---
 
@@ -244,30 +244,30 @@
 | | |
 |---|---|
 | Թերթ | տող 15, N 1, `remove` |
-| % | 80% |
+| % | 95% |
 | Սքրինշ | ![3D Virtual Tours և մյուս քարտերը](./screenshots/b1-remove-section.png) |
 
 Պահանջ. «այս հատվածը հանում ենք»։
 
 Սքրինշը չորս քարտ է. `3D VIRTUAL TOURS`, `3D ARTEFACT EXPLORER`, `IMMERSIVE GALLERIES`, `LIVE HERITAGE EVENTS`։
 
-Ինչպես է արված. գլխավորի `HomeHeritageSections` այս ցանցը չի ներառում։ Նույն քարտերը մնացել են `/virtual-museum` էջում (`VirtualMuseumFeatureGrid`)։
+Ինչպես է արված. չորս քարտը չկա ոչ գլխավորում, ոչ `/virtual-museum` էջում։ Էջում մնում են վերնագիրը և կոճակը։
 
-Ստուգել. `/` վրա այս չորս քարտը չկա։ `/virtual-museum` վրա կան։
+Ստուգել. `/` և `/virtual-museum`։ `3D VIRTUAL TOURS` քարտը չկա։
 
-Ֆայլեր. `components/sections/HomeHeritageSections.tsx`, `components/sections/virtual-museum/VirtualMuseumFeatureGrid.tsx`
+Ֆայլեր. `components/sections/VirtualMuseumSection.tsx`
 
 ### B2 — Գլխավորի կառուցվածք
 
 | | |
 |---|---|
 | Թերթ | տող 16, N 2, `structure` |
-| % | 70% |
+| % | 90% |
 | Սքրինշ | չկա |
 
 Պահանջ. Cultural Portal, map, Featured Treasures (ադմինը որոշի կարգը, աբստրակտ ոճ), blog, upcoming projects, log in միայն չգրանցվածներին։ Partnership և donation սեկցիաները գլխավորից հանել։
 
-Ինչպես է արված. գլխավորի կարգը՝ Cultural Portal → Map → Featured Treasures → News → Upcoming → Partnership logos։ Donation սեկցիա գլխավորում չկա։ Partnership շարքը մնացել է (տես C6, որը հենց դա է ուզում)։ Featured-ը `featuredOnHome` + `featuredOrder` է։ Hero-ի երկրորդ կոճակը թաքնվում է, եթե օգտատերը մուտք է գործել և կոճակը տանում է `/login` կամ `/register`։ Առանձին login սեկցիա չկա։
+Ինչպես է արված. գլխավորի կարգը՝ Cultural Portal → Map → Featured Treasures → News → Upcoming։ Partnership և donation սեկցիաները գլխավորից հանված են։ Featured-ը `featuredOnHome` + `featuredOrder` է։ Hero-ի երկրորդ կոճակը թաքնվում է, եթե օգտատերը մուտք է գործել և կոճակը տանում է `/login` կամ `/register`։
 
 Ստուգել. `/` սքրոլով անցնել սեկցիաները։ Մուտք գործած վիճակում hero-ի login կոճակը չկա, եթե այդ կոճակի հղումը login/register է։ `/donate` գլխավորի մեջտեղում չի նստած։
 
@@ -314,16 +314,16 @@
 | | |
 |---|---|
 | Թերթ | տող 19, N 5, `page` |
-| % | 75% |
+| % | 95% |
 | Սքրինշ | ![Heroes, Myths խորագիր և աջի ցանկ](./screenshots/b5-subcategory-page.png) |
 
 Պահանջ. ենթաբաժին բացելիս, օրինակ Art & Culture, երևան միայն իր ենթաբաժինները՝ մեծ, իրարից առանձնացված, առանց նկարագրության։
 
 Սքրինշում ձախում `HEROES, MYTHS & ORAL MEMORY` է և ներքևում պարբերություն, աջում ենթակետերի ցանկ։
 
-Ինչպես է արված. կատեգորիայի hub-ը `CultureCatalogSubcategoryGrid` `variant="hub"` է։ Քարտերի վրա նկարագրություն չի դրվում (`isHub` ճյուղ)։ Բաժնի վերնագրի տակ `content.description` դեռ կարող է երևալ։
+Ինչպես է արված. կատեգորիայի hub-ը մեծ քարտեր է, առանց քարտի պարբերության և առանց վերնագրի տակի ներածական տեքստի։
 
-Ստուգել. `/culture/heritage` և `/culture/legends`։ Քարտերը մեծ են, քարտի վրա պարբերություն չկա։ Վերնագրի տակ ներածական տեքստը դեռ կարող է լինել։
+Ստուգել. `/culture/heritage` և `/culture/legends`։ Երևում են միայն ենթաբաժնի քարտերը, առանց նկարագրության։
 
 Ֆայլեր. `components/culture-catalog/CultureCategoryPageView.tsx`, `components/culture-catalog/CultureCatalogSubcategoryGrid.tsx`
 

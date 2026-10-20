@@ -1,5 +1,4 @@
 import { HeritageCtaButton } from '@/components/ui/HeritageCtaButton';
-import { VirtualMuseumFeatureGrid } from '@/components/sections/virtual-museum/VirtualMuseumFeatureGrid';
 import { VIRTUAL_MUSEUM_CONTAINER_CLASS } from '@/components/sections/virtual-museum/heritage-feature-icon-styles';
 import { ImmersiveTechBadgeIcon } from '@/components/sections/virtual-museum/VirtualMuseumIcons';
 import { HomeSectionHeader } from '@/components/sections/shared/HomeSectionHeader';
@@ -56,7 +55,6 @@ export async function VirtualMuseumSection({
           description={virtualMuseum.description}
           className="mb-12 max-w-[46rem]"
         />
-        <VirtualMuseumFeatureGrid home={home} />
 
         <div className="relative z-10 mt-14 flex justify-center sm:mt-[3.75rem]">
           <HeritageCtaButton

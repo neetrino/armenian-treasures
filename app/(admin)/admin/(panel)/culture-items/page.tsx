@@ -68,6 +68,7 @@ async function AdminCultureItemsPage(props: PageProps) {
     region: getAdminLocaleValue(i.region) || null,
     periodLabel: getAdminLocaleValue(i.periodLabel) || null,
     showOnMap: i.showOnMap,
+    featuredOnHome: i.featuredOnHome,
     status: i.status,
     image: i.image,
     menuPath: menuMap.get(i.menuItemId) ?? '—',

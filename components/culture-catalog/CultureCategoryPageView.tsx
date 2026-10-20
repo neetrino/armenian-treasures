@@ -15,7 +15,6 @@ import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import {
   buildCultureCatalogCategoryStats,
   resolveMappableCatalogItems,
-  resolveCultureCatalogHubDescription,
 } from '@/lib/mappers/culture-catalog-page';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
@@ -48,11 +47,7 @@ function CultureCategoryHubPage({
         content={{
           ...content.items,
           label: content.about.label,
-          description: resolveCultureCatalogHubDescription(
-            category.description,
-            content.about.description,
-            content.items.description,
-          ),
+          description: '',
         }}
         variant="hub"
         locale={locale}

@@ -8,7 +8,7 @@ import { NationalGalleryArtists } from '@/components/national-gallery-armenia/Na
 
 import { NationalGalleryExhibitions } from '@/components/national-gallery-armenia/NationalGalleryExhibitions';
 
-import { NationalGalleryRelated, NationalGalleryVisit } from '@/components/national-gallery-armenia/NationalGalleryFooterSections';
+import { NationalGalleryVisit } from '@/components/national-gallery-armenia/NationalGalleryFooterSections';
 
 import { NationalGalleryGallery } from '@/components/national-gallery-armenia/NationalGalleryGallery';
 
@@ -84,7 +84,6 @@ export async function NationalGalleryPage() {
 
         {isSectionEnabled(visibility, 'visit') ? <NationalGalleryVisit tickets={content.tickets} /> : null}
 
-        {isSectionEnabled(visibility, 'related') ? <NationalGalleryRelated related={content.related} /> : null}
 
 
       </LandingSectionStack>

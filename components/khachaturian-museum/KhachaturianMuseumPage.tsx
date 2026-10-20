@@ -4,7 +4,7 @@ import { KhachaturianMuseumBiography, KhachaturianMuseumStatsBar } from '@/compo
 
 import { KhachaturianMuseumAudio } from '@/components/khachaturian-museum/KhachaturianMuseumAudio';
 
-import { KhachaturianMuseumRelated, KhachaturianMuseumVisit } from '@/components/khachaturian-museum/KhachaturianMuseumFooterSections';
+import { KhachaturianMuseumVisit } from '@/components/khachaturian-museum/KhachaturianMuseumFooterSections';
 
 import { KhachaturianMuseumGallery } from '@/components/khachaturian-museum/KhachaturianMuseumGallery';
 
@@ -80,7 +80,6 @@ export async function KhachaturianMuseumPage() {
 
         {isSectionEnabled(visibility, 'visit') ? <KhachaturianMuseumVisit /> : null}
 
-        {isSectionEnabled(visibility, 'related') ? <KhachaturianMuseumRelated related={content.related} /> : null}
 
 
       </LandingSectionStack>

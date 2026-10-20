@@ -160,7 +160,7 @@ export function CultureItemEditorMetaBar({
           />
           <CultureItemEditorToggle
             name="featuredOnHome"
-            label="Featured Highlight"
+            label="Home shortcut"
             defaultChecked={featuredOnHome}
             onChange={setHighlightOn}
           />
@@ -214,7 +214,7 @@ export function CultureItemEditorMetaBar({
             name="featuredOrder"
             options={FEATURED_ORDER_OPTIONS}
             defaultValue={String(featuredOrder ?? 5)}
-            hint="Used when the homepage featured toggle is on. Keep slots unique."
+            hint="Order in the homepage Stories row. Keep slots unique."
             error={featuredOrderError}
           />
         </div>
