@@ -12,6 +12,7 @@ import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config
 
 interface CultureItemEditorMetaBarProps {
   title?: string;
+  subtitle?: string;
   shortDescription?: string;
   statusDefault: string;
   featuredOnCatalog?: boolean;
@@ -35,8 +36,8 @@ const FEATURED_ORDER_OPTIONS = [
   { value: '5', label: '5 — last card' },
 ];
 
-function localeHasContent(title: string, shortDescription: string): boolean {
-  return title.trim().length > 0 || shortDescription.trim().length > 0;
+function localeHasContent(title: string, subtitle: string, shortDescription: string): boolean {
+  return title.trim().length > 0 || subtitle.trim().length > 0 || shortDescription.trim().length > 0;
 }
 
 function valueFor(values: LocaleTextMap, locale: SiteLocaleCode): string {
@@ -53,6 +54,7 @@ function patchLocaleMap(
 
 export function CultureItemEditorMetaBar({
   title = '',
+  subtitle = '',
   shortDescription = '',
   statusDefault,
   featuredOnCatalog = false,
@@ -72,6 +74,7 @@ export function CultureItemEditorMetaBar({
   const setActiveLocale = onLocaleChange ?? setInternalLocale;
   const [highlightOn, setHighlightOn] = useState(featuredOnHome);
   const [titleValues, setTitleValues] = useState<LocaleTextMap>(() => decodeTranslatableText(title));
+  const [subtitleValues, setSubtitleValues] = useState<LocaleTextMap>(() => decodeTranslatableText(subtitle));
   const [shortDescriptionValues, setShortDescriptionValues] = useState<LocaleTextMap>(() =>
     decodeTranslatableText(shortDescription),
   );
@@ -81,13 +84,21 @@ export function CultureItemEditorMetaBar({
   }, [title]);
 
   useEffect(() => {
+    setSubtitleValues(decodeTranslatableText(subtitle));
+  }, [subtitle]);
+
+  useEffect(() => {
     setShortDescriptionValues(decodeTranslatableText(shortDescription));
   }, [shortDescription]);
 
   const completedLocales = Object.fromEntries(
     SITE_LOCALE_CODES.map((code) => [
       code,
-      localeHasContent(valueFor(titleValues, code), valueFor(shortDescriptionValues, code)),
+      localeHasContent(
+        valueFor(titleValues, code),
+        valueFor(subtitleValues, code),
+        valueFor(shortDescriptionValues, code),
+      ),
     ]),
   ) as Partial<Record<SiteLocaleCode, boolean>>;
 
@@ -95,11 +106,15 @@ export function CultureItemEditorMetaBar({
     const next = Object.fromEntries(
       SITE_LOCALE_CODES.map((code) => [
         code,
-        localeHasContent(valueFor(titleValues, code), valueFor(shortDescriptionValues, code)),
+        localeHasContent(
+          valueFor(titleValues, code),
+          valueFor(subtitleValues, code),
+          valueFor(shortDescriptionValues, code),
+        ),
       ]),
     ) as Partial<Record<SiteLocaleCode, boolean>>;
     onCompletedLocalesChange?.(next);
-  }, [titleValues, shortDescriptionValues, onCompletedLocalesChange]);
+  }, [titleValues, subtitleValues, shortDescriptionValues, onCompletedLocalesChange]);
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-stone-200/80 bg-white p-4 shadow-sm sm:p-5">
@@ -108,6 +123,7 @@ export function CultureItemEditorMetaBar({
         return (
           <div key={code} className="hidden" aria-hidden>
             <input type="hidden" name={`title.${code}`} value={valueFor(titleValues, code)} readOnly />
+            <input type="hidden" name={`subtitle.${code}`} value={valueFor(subtitleValues, code)} readOnly />
             <input
               type="hidden"
               name={`shortDescription.${code}`}
@@ -163,19 +179,32 @@ export function CultureItemEditorMetaBar({
           }
           error={fieldErrors?.[`title.${activeLocale}`]}
         />
-        <TextareaField
-          key={`shortDescription-${activeLocale}`}
-          label="Short description"
-          name={`shortDescription.${activeLocale}`}
-          rows={2}
-          value={valueFor(shortDescriptionValues, activeLocale)}
+        <TextField
+          key={`subtitle-${activeLocale}`}
+          label="Subtitle"
+          name={`subtitle.${activeLocale}`}
+          value={valueFor(subtitleValues, activeLocale)}
+          hint="Shown under the title on catalog cards."
           onChange={(event) =>
-            setShortDescriptionValues((current) =>
-              patchLocaleMap(current, activeLocale, event.target.value),
-            )
+            setSubtitleValues((current) => patchLocaleMap(current, activeLocale, event.target.value))
           }
-          error={fieldErrors?.[`shortDescription.${activeLocale}`]}
+          error={fieldErrors?.[`subtitle.${activeLocale}`]}
         />
+        <div className="sm:col-span-2">
+          <TextareaField
+            key={`shortDescription-${activeLocale}`}
+            label="Short description"
+            name={`shortDescription.${activeLocale}`}
+            rows={2}
+            value={valueFor(shortDescriptionValues, activeLocale)}
+            onChange={(event) =>
+              setShortDescriptionValues((current) =>
+                patchLocaleMap(current, activeLocale, event.target.value),
+              )
+            }
+            error={fieldErrors?.[`shortDescription.${activeLocale}`]}
+          />
+        </div>
       </div>
 
       {highlightOn ? (

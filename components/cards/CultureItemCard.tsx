@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Box, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
 import { Card } from '@/components/ui/Card';
-import { firstBlockBody } from '@/lib/culture-item-media';
+import { firstBlockBody, firstBlockSubtitle } from '@/lib/culture-item-media';
 import { stripRichText } from '@/lib/rich-text';
 import { cn } from '@/lib/utils';
 import type { PublicCultureItemDTO } from '@/lib/dto';
@@ -27,6 +27,8 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
       firstBlockBody(item.media)?.trim() ||
       '',
   );
+  const subtitle = stripRichText(item.subtitle?.trim() || firstBlockSubtitle(item.media) || '');
+  const cardSubtitle = subtitle === excerpt ? '' : subtitle;
   const imageElement = (
     <div className="aspect-[4/3] w-full">
       <Image
@@ -70,6 +72,9 @@ export function CultureItemCard({ item, href, className }: CultureItemCardProps)
         ) : (
           <h3 className="font-display text-xl text-ink">{item.title}</h3>
         )}
+        {cardSubtitle ? (
+          <p className="font-display text-sm italic leading-snug text-ink-soft">{cardSubtitle}</p>
+        ) : null}
         {excerpt ? (
           <p className="text-sm leading-relaxed text-ink-soft line-clamp-3">{excerpt}</p>
         ) : null}

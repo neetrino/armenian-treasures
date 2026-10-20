@@ -237,3 +237,8 @@ export function firstVideoUrl(media: CultureItemMediaContent): string | null {
 export function firstBlockBody(media: CultureItemMediaContent): string | null {
   return media.blocks.find((block) => block.body)?.body ?? null;
 }
+
+export function firstBlockSubtitle(media: CultureItemMediaContent): string | null {
+  const subtitle = media.blocks.find((block) => block.subtitle.trim())?.subtitle.trim() ?? '';
+  return subtitle || null;
+}

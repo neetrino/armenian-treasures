@@ -1,0 +1,1 @@
+ALTER TABLE "CultureItem" ADD COLUMN IF NOT EXISTS "subtitle" TEXT;

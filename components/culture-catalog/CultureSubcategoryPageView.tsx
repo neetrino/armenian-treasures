@@ -1,6 +1,5 @@
 import { CulturalPortalMap } from '@/components/cultural-portal-page/CulturalPortalMap';
 import { CulturalPortalStatsBar } from '@/components/cultural-portal-page/CulturalPortalStatsBar';
-import { CultureCatalogAbout } from '@/components/culture-catalog/CultureCatalogAbout';
 import { CultureCatalogLandingHero } from '@/components/culture-catalog/CultureCatalogLandingHero';
 import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCatalogItemGrid';
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
@@ -79,13 +78,11 @@ function SubcategorySections({
   searchForm: ReturnType<typeof buildCatalogSearchForm> | undefined;
 }) {
   const visibility = content.sectionVisibility;
-  const about = visibility.facts ? content.about : { ...content.about, facts: [] };
   return (
     <>
       {visibility.stats ? (
         <CulturalPortalStatsBar stats={buildCultureCatalogStats(items, content.statLabels)} />
       ) : null}
-      {visibility.about ? <CultureCatalogAbout content={about} /> : null}
       <LandingSectionStack>
         {visibility.map ? (
           <CulturalPortalMap

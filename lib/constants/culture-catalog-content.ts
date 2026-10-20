@@ -333,6 +333,25 @@ function emptyCatalogContent(): CultureCatalogContent {
   };
 }
 
+function fillBlankStatLabels(content: CultureCatalogContent, locale: SiteLocaleCode): CultureCatalogContent {
+  const labels = content.statLabels;
+  const entries = labels.entries.trim();
+  const regions = labels.regions.trim();
+  const third = labels.third.trim();
+  const fourth = labels.fourth.trim();
+  if (entries && regions && third && fourth) return content;
+
+  return {
+    ...content,
+    statLabels: {
+      entries: entries || uiMessage(locale, 'statEntries'),
+      regions: regions || uiMessage(locale, 'statRegions'),
+      third: third || uiMessage(locale, 'statPeriods'),
+      fourth: fourth || uiMessage(locale, 'stat3dTours'),
+    },
+  };
+}
+
 function localizedCatalogTitle(node: MenuNode, parent: MenuNode | undefined, locale: SiteLocaleCode): string {
   const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
   return cultureMenuLabel(locale, key) ?? cultureMenuLabel(locale, node.slug) ?? node.title;
@@ -396,7 +415,7 @@ export function resolveCultureCatalogContent(
     title,
   );
   const adminHero = dbOverride?.heroImage?.trim();
-  return { ...merged, heroImage: adminHero || undefined };
+  return fillBlankStatLabels({ ...merged, heroImage: adminHero || undefined }, locale);
 }
 
 export function resolveCultureCatalogFormContent(

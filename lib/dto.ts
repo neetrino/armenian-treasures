@@ -63,6 +63,7 @@ export interface PublicCultureItemDTO {
   slug: string;
   description: string | null;
   shortDescription: string | null;
+  subtitle: string | null;
   menuItemId: string;
   region: string | null;
   locationName: string | null;
@@ -237,6 +238,7 @@ export function toPublicCultureItem(
     slug: row.slug,
     description: resolveLocalizedText(row.description, locale) || null,
     shortDescription: resolveLocalizedText(row.shortDescription, locale) || null,
+    subtitle: resolveLocalizedText(row.subtitle, locale) || null,
     menuItemId: row.menuItemId,
     region: resolveLocalizedText(row.region, locale) || null,
     locationName: resolveLocalizedText(row.locationName, locale) || null,

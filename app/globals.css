@@ -457,6 +457,28 @@ html[lang='hyw'] .khndzoresk-page .hero h1,
   overflow: visible;
 }
 
+/* Cinzel has no Armenian. Cards keep Cinzel for Latin and use Noto Serif Armenian per glyph. */
+.card-title--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.35 !important;
+}
+
+.card-meta--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: none !important;
+}
+
+.card-body--hy {
+  font-family: var(--font-noto-serif-armenian), var(--font-kelvinch), Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
 html[lang='hy'] .khndzoresk-page .hero h1 span,
 html[lang='hyw'] .khndzoresk-page .hero h1 span,
 .khndzoresk-page .hero h1 .hero-accent--hy {

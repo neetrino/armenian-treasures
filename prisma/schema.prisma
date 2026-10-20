@@ -131,6 +131,7 @@ model CultureItem {
   slug             String          @unique
   description      String?         @db.Text
   shortDescription String?
+  subtitle         String?
   menuItemId       String
   menuItem         CultureMenuItem @relation(fields: [menuItemId], references: [id], onDelete: Restrict)
   region           String?

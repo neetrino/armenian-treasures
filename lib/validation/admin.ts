@@ -105,6 +105,7 @@ export const cultureItemSchema = z.object({
     .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase letters, numbers and hyphens'),
   description: z.string().trim().max(8000).optional().or(z.literal('')),
   shortDescription: optionalShortString,
+  subtitle: optionalShortString,
   menuItemId: z.string().min(1, 'Pick a menu item'),
   region: optionalShortString,
   locationName: optionalShortString,
