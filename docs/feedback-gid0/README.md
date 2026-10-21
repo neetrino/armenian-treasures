@@ -5,7 +5,7 @@
 
 Տոկոսը պահանջի դեմ կոդի վիճակն է։ Շեմը՝ Done ≥ 90%, Partial 15–89%, Missing 0–14%։
 
-**Ընդհանուր՝ 90%** (42 կետի միջին)։ Done 36, Partial 6, Missing 0։
+**Ընդհանուր՝ 90%** (42 կետի միջին)։ Done 37, Partial 5, Missing 0։
 
 Սքրինշոթները այս թղթապանակի `screenshots/`-ում են, կապված իրենց տողին։ Google-ի ներկառուցված նկարի հղումը ժամանակավոր է, դրա համար ֆայլերը պահված են տեղում։ Որոշ նկար թերթում կտրված է բջջի բարձրությամբ. նկարագրությունը հենվում է տեսանելի մասի վրա։
 
@@ -71,7 +71,7 @@
 | C11 | 45 | Մոբայլ | Done | 90% | `/` նեղ լայնք |
 | C12 | 46 | Բաժինների կապը | Done | 90% | `/culture/architecture/churches` |
 | C13 | 47 | News feed | Done | 90% | `/`, `/blog`, `/admin/blog` |
-| C14 | 48 | Գրանցում | Partial | 75% | `/register`, `/admin/users` |
+| C14 | 48 | Գրանցում | Done | 90% | `/register`, `/admin/users` |
 
 ---
 
@@ -794,16 +794,16 @@
 | | |
 |---|---|
 | Թերթ | տող 48, `add registration section` |
-| % | 75% |
+| % | 90% |
 | Սքրինշ | չկա |
 
 Պահանջ. գրանցում, որ օգտատերերին հետևեն և հանգանակության outreach անեն։
 
-Ինչպես է արված. `/register`, `/login`, `/profile` կան։ Ադմինը տեսնում է օգտատերերին `/admin/users` և անդամի նվիրատվությունները `/admin/member-donations`։ Էլփոստով outreach-ի ավտոմատ շղթա չկա։
+Ինչպես է արված. `/register`, `/login`, `/profile` կան։ Ադմինը տեսնում է օգտատերերին `/admin/users` և անդամի նվիրատվությունները `/admin/member-donations`։ Նույն էջում երևում է քանի գրանցված դեռ չի նվիրաբերել, և նրանց էլփոստները մեկ սեղմումով պատճենվում են։ Նամակը ուղարկվում է ադմինի սեփական փոստից. կայքում փոստի ծառայություն միացված չէ։
 
-Ստուգել. `/register` ստեղծել հաշիվ, մտնել `/profile`։ Ադմինում `/admin/users` նոր տողը երևում է։
+Ստուգել. `/register` ստեղծել հաշիվ, մտնել `/profile`։ Ադմինում `/admin/users` նոր տողը երևում է, «Copy emails for outreach» պատճենում է դեռ չնվիրաբերածների հասցեները։
 
-Ֆայլեր. `app/(public)/register/page.tsx`, `app/(admin)/admin/(panel)/users/page.tsx`
+Ֆայլեր. `app/(public)/register/page.tsx`, `app/(admin)/admin/(panel)/users/page.tsx`, `components/admin/MemberOutreachCopy.tsx`
 
 ---
 
