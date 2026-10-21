@@ -244,7 +244,8 @@
     );
   }
 
-  .hero-bg-base img {
+  .hero-bg-base img,
+  .hero-img-overlay {
     transform-origin: center center;
     animation: hero-photo-drift 28s ease-in-out infinite alternate;
   }
@@ -259,7 +260,8 @@
   }
 
   @media (max-width: 767px), (prefers-reduced-motion: reduce) {
-    .hero-bg-base img {
+    .hero-bg-base img,
+    .hero-img-overlay {
       animation: none;
     }
   }
