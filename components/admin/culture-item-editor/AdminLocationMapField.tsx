@@ -74,7 +74,7 @@ export function AdminLocationMapField({
             defaultChecked={showOnMap ?? false}
             className="h-4 w-4 rounded border-stone-300 text-pomegranate focus:ring-pomegranate/30"
           />
-          Show on public page and heritage map
+          Show pin on the heritage map
         </label>
       </div>
       <input type="hidden" name="latitude" value={parsed ? String(parsed.latitude) : ''} />

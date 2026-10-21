@@ -30,6 +30,8 @@ describe('culture item locale media', () => {
     expect(mediaForLocale(english, parsed, 'EN').blocks[0]?.body).toBe('English body');
     expect(mediaForLocale(english, parsed, 'HY').blocks[0]?.body).toBe('Հայերեն');
     expect(mediaForLocale(english, parsed, 'HY').blocks[0]?.title).toBe('Տաթև');
+    expect(mediaForLocale(english, parsed, 'HYW').blocks[0]?.title).toBe('Տաթեւ');
+    expect(mediaForLocale(english, parsed, 'HYW').blocks[0]?.body).toBe('Հայերեն');
   });
 
   it('does not invent EN from root when only HY exists in byLocale', () => {
@@ -51,6 +53,8 @@ describe('culture item locale media', () => {
     expect(mediaForLocale(hyOnly, parsed, 'HY').blocks[0]?.body).toBe('հայերեն');
     expect(mediaForLocale(hyOnly, parsed, 'EN').blocks).toEqual([]);
     expect(mediaForLocale(hyOnly, parsed, 'RU').blocks).toEqual([]);
+    expect(mediaForLocale(hyOnly, parsed, 'HYW').blocks[0]?.title).toBe('Տաթեւ');
+    expect(mediaForLocale(hyOnly, parsed, 'HYW').blocks[0]?.body).toBe('հայերեն');
   });
 
   it('keeps shared tours on root when resolving locale blocks', () => {

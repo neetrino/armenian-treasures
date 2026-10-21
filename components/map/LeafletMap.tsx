@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import '@/components/map/leaflet-markers.css';
 import type { PublicCultureItemDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
@@ -147,7 +148,10 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
       attributionControl: false,
     });
 
-    L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION }).addTo(map);
+    L.tileLayer(TILE_URL, {
+      attribution: TILE_ATTRIBUTION,
+      className: 'at-map-tiles',
+    }).addTo(map);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     markersLayerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -213,7 +217,7 @@ export function LeafletMap({ items, selectedId, onSelect, locale = 'EN' }: Leafl
     <div className="relative h-full w-full">
       <div
         ref={containerRef}
-        className="z-0 h-full w-full"
+        className="at-heritage-map z-0 h-full w-full"
         role="application"
         aria-label={mapAriaLabel}
         tabIndex={0}

@@ -6,6 +6,7 @@ export interface CultureItemFormInitial {
   slug: string;
   description: string;
   shortDescription: string;
+  subtitle: string;
   menuItemId: string;
   region: string;
   locationName: string;
@@ -39,6 +40,7 @@ export function toCultureItemFormInitial(
     slug: item.slug,
     description: item.description ?? '',
     shortDescription: item.shortDescription ?? '',
+    subtitle: item.subtitle ?? '',
     menuItemId: item.menuItemId,
     region: item.region ?? '',
     locationName: item.locationName ?? '',

@@ -22,7 +22,7 @@ export function CultureItemFeaturedFields({
   featuredOnCatalog = false,
   featuredOrder = 5,
   featuredOrderError,
-  label = 'Featured Highlight',
+  label = 'Home shortcut',
   showCatalogToggle = true,
 }: CultureItemFeaturedFieldsProps) {
   return (
@@ -52,7 +52,7 @@ export function CultureItemFeaturedFields({
         name="featuredOrder"
         options={FEATURED_ORDER_OPTIONS}
         defaultValue={String(featuredOrder ?? 5)}
-        hint="Used when the homepage featured toggle is on. Keep slots unique."
+        hint="Order in the homepage Stories row. Keep slots unique."
         error={featuredOrderError}
       />
     </div>

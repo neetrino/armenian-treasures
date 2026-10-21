@@ -15,6 +15,7 @@ function item(partial: Partial<PublicCultureItemDTO>): PublicCultureItemDTO {
     slug: partial.slug ?? 'tatev-monastery',
     description: null,
     shortDescription: null,
+    subtitle: null,
     menuItemId: 'menu',
     region: partial.region ?? 'Syunik',
     locationName: null,

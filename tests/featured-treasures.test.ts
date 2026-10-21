@@ -25,6 +25,7 @@ function item(index: number): PublicCultureItemDetailDTO {
     slug: `story-${index}`,
     description: null,
     shortDescription: `Short ${index}`,
+    subtitle: null,
     menuItemId: 'menu',
     region: 'Syunik',
     locationName: null,

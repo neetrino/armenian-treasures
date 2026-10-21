@@ -28,6 +28,7 @@ function LogoMark({ isDark, compact }: { isDark: boolean; compact?: boolean }) {
             : 'max-h-16 sm:max-h-[4.5rem]',
         )}
         priority
+        loading="eager"
       />
     );
   }

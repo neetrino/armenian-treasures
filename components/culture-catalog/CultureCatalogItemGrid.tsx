@@ -4,13 +4,15 @@ import { Box, MapPin } from 'lucide-react';
 import { CatalogSearchForm } from '@/components/search/CatalogSearchForm';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
-import { firstBlockBody } from '@/lib/culture-item-media';
+import { firstBlockBody, firstBlockSubtitle } from '@/lib/culture-item-media';
 import { stripRichText } from '@/lib/rich-text';
 import type { CultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import type { CatalogSearchFormModel } from '@/lib/culture-catalog/catalog-filter-options';
 import type { PublicCultureItemDTO } from '@/lib/dto';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { uiMessage } from '@/lib/i18n/ui-messages';
+import { cn } from '@/lib/utils';
 
 interface CultureCatalogItemGridProps {
   items: PublicCultureItemDTO[];
@@ -22,6 +24,7 @@ interface CultureCatalogItemGridProps {
 
 function catalogItemCardCopy(item: PublicCultureItemDTO): {
   regionLabel: string;
+  subtitle: string;
   excerpt: string;
 } {
   const regionLabel =
@@ -35,7 +38,8 @@ function catalogItemCardCopy(item: PublicCultureItemDTO): {
       firstBlockBody(item.media)?.trim() ||
       '',
   );
-  return { regionLabel, excerpt };
+  const subtitle = stripRichText(item.subtitle?.trim() || firstBlockSubtitle(item.media) || '');
+  return { regionLabel, subtitle: subtitle === excerpt ? '' : subtitle, excerpt };
 }
 
 function CatalogItemCard({
@@ -51,7 +55,9 @@ function CatalogItemCard({
   const imageSrc = item.image
     ? resolvePublicAssetUrl(item.image)
     : resolvePublicAssetUrl('/images/placeholder.svg');
-  const { regionLabel, excerpt } = catalogItemCardCopy(item);
+  const { regionLabel, subtitle, excerpt } = catalogItemCardCopy(item);
+  const metaIsArmenian =
+    containsArmenianScript(regionLabel) || containsArmenianScript(item.periodLabel ?? '');
 
   return (
     <Link href={href} className="catalog-item-card reveal">
@@ -74,7 +80,7 @@ function CatalogItemCard({
         </span>
       </div>
       <div className="catalog-item-card__body">
-        <div className="catalog-item-card__meta">
+        <div className={cn('catalog-item-card__meta', metaIsArmenian && 'card-meta--hy')}>
           {regionLabel ? (
             <span className="catalog-item-card__region">
               <MapPin size={11} aria-hidden /> {regionLabel}
@@ -84,8 +90,19 @@ function CatalogItemCard({
             <span className="catalog-item-card__period">{item.periodLabel}</span>
           ) : null}
         </div>
-        <h3 className="catalog-item-card__title">{item.title}</h3>
-        {excerpt ? <p className="catalog-item-card__excerpt">{excerpt}</p> : null}
+        <h3 className={cn('catalog-item-card__title', containsArmenianScript(item.title) && 'card-title--hy')}>
+          {item.title}
+        </h3>
+        {subtitle ? (
+          <p className={cn('catalog-item-card__subtitle', containsArmenianScript(subtitle) && 'card-body--hy')}>
+            {subtitle}
+          </p>
+        ) : null}
+        {excerpt ? (
+          <p className={cn('catalog-item-card__excerpt', containsArmenianScript(excerpt) && 'card-body--hy')}>
+            {excerpt}
+          </p>
+        ) : null}
         <span className="catalog-item-card__cta">{uiMessage(locale, 'exploreArrow')}</span>
       </div>
     </Link>

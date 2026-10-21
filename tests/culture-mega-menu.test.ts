@@ -51,9 +51,9 @@ describe('resolveCultureMegaMenu', () => {
       'Castles',
       'Ornaments',
     ]);
-    expect(architecture?.items.at(-1)).toMatchObject({
+    expect(architecture?.items.find((item) => item.menuPath === 'architecture/ornaments')).toMatchObject({
       href: '/culture/architecture/ornaments',
-      menuPath: 'architecture/ornaments',
+      label: 'Ornaments',
     });
   });
 
@@ -71,22 +71,16 @@ describe('resolveCultureMegaMenu', () => {
     expect(ornaments?.label).toBe('Զարդանախշեր');
   });
 
-  it('does not list Architecture Armaments beside Ornaments', () => {
+  it('does not list Armaments in the menu', () => {
     const columns = resolveCultureMegaMenu(
       architectureTree([
         node({ id: 'armaments', slug: 'armaments', title: 'Armaments', order: 4 }),
       ]),
     );
 
-    const labels = columns
-      .find((column) => column.heading === 'Architecture')
-      ?.items.map((item) => item.label);
-    expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Ornaments']);
-    expect(
-      columns
-        .find((column) => column.heading === 'Art & Culture')
-        ?.items.some((item) => item.label === 'Armaments'),
-    ).toBe(false);
+    expect(columns.some((column) => column.items.some((item) => item.label === 'Armaments'))).toBe(
+      false,
+    );
   });
 
   it('does not duplicate sheet items or include form routes', () => {
@@ -109,10 +103,62 @@ describe('resolveCultureMegaMenu', () => {
     expect(labels).toEqual(['Churches & Monasteries', 'Castles', 'Ornaments']);
   });
 
-  it('keeps AT Features item order when no extra children exist', () => {
-    const art = resolveCultureMegaMenu([]).find((column) => column.heading === 'Art & Culture');
-    const labels = art?.items.map((item) => item.label) ?? [];
-    expect(labels.indexOf('Museums')).toBeGreaterThan(labels.indexOf('Carpets'));
-    expect(labels.indexOf('Museums')).toBeLessThan(labels.indexOf('Sculptors'));
+  it('follows the linked sheet columns', () => {
+    const columns = resolveCultureMegaMenu([
+      node({
+        id: 'legends',
+        slug: 'legends',
+        title: 'Legends',
+        routeType: 'CATEGORY',
+        children: [
+          node({ id: 'epic', slug: 'epic', title: 'Epic', order: 3 }),
+        ],
+      }),
+      node({
+        id: 'heritage',
+        slug: 'heritage',
+        title: 'Art & Culture',
+        routeType: 'CATEGORY',
+        children: [
+          node({ id: 'museums', slug: 'museums', title: 'Museums', order: 12 }),
+        ],
+      }),
+    ]);
+
+    expect(columns.map((column) => column.heading)).toEqual([
+      'Architecture',
+      'Myths & Gods',
+      'Icons of History',
+      'Art & Culture',
+      'Historical Highlights',
+    ]);
+    expect(columns.find((column) => column.heading === 'Myths & Gods')?.items.map((item) => item.label)).toEqual([
+      'Mythology',
+      'Legendaries & Heroes',
+      'Epic',
+    ]);
+    expect(columns.find((column) => column.heading === 'Icons of History')?.items[0]?.label).toBe(
+      'Kings & Dynasties',
+    );
+    expect(columns.find((column) => column.heading === 'Art & Culture')?.items.map((item) => item.label)).toEqual([
+      'Paintings',
+      'Music',
+      'Writers',
+      'Taraz',
+      'Carpets & Textile Arts',
+      'Museums',
+      'Sculptors',
+      'Theatre',
+      'Dance',
+      'Food & Drink',
+      'Publications',
+    ]);
+    const myths = columns.find((column) => column.heading === 'Myths & Gods');
+    expect(myths?.items.find((item) => item.label === 'Epic')).toMatchObject({
+      href: '/culture/legends/epic',
+    });
+    expect(columns.find((column) => column.heading === 'Architecture')?.items.some((item) => item.label === 'Museums')).toBe(
+      false,
+    );
   });
 });

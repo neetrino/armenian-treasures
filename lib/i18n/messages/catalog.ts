@@ -121,6 +121,7 @@ export const CATALOG_MESSAGES = {
     'Scan 3D',
     'Digitalização 3D',
   ),
+  tourTypeMatterport: row('Matterport', 'Matterport', 'Matterport', 'Matterport', 'Matterport'),
   tourTypeDrone: row(
     'Դրոնային ֆոտոգրամետրիա',
     'Drone Photogrammetry',

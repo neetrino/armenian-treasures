@@ -60,7 +60,7 @@ export const DONATION_PAGE = {
   metadata: {
     title: 'Become a Heritage Guardian — Armenian Treasures',
     description:
-      'Every month your support activates the digitization, preservation, and global sharing of Armenian cultural heritage. Choose your level.',
+      'Your support activates the digitization, preservation, and global sharing of Armenian cultural heritage. Choose your level.',
   },
   breadcrumb: 'Donate',
   hero: {
@@ -69,10 +69,10 @@ export const DONATION_PAGE = {
     titleLine2: 'Heritage Guardian',
     accent: 'Keep the Heritage Alive',
     subtitle:
-      "For centuries, Armenia's monasteries, churches, and sacred landmarks have stood as silent witnesses to our faith and identity. Your monthly patronage keeps the digitization engine running — ensuring these stories outlast our century.",
+      "For centuries, Armenia's monasteries, churches, and sacred landmarks have stood as silent witnesses to our faith and identity. Your patronage keeps the digitization engine running — ensuring these stories outlast our century.",
     badges: [
       { label: 'Active since 2024', icon: 'clock' as const },
-      { label: '1,247+ monthly patrons', icon: 'star' as const },
+      { label: '1,247+ patrons', icon: 'star' as const },
       { label: 'Non-profit · Tax-deductible', icon: 'check' as const },
     ],
   },
@@ -80,7 +80,7 @@ export const DONATION_PAGE = {
     label: 'Why It Matters',
     title: 'What Your Patronage Activates',
     description:
-      'Monthly patronage is not a donation in the classical sense. It is a recurring vote that says: this culture deserves to be remembered.',
+      'Patronage is a vote that says: this culture deserves to be remembered.',
   },
   engine: {
     narrative: {
@@ -121,7 +121,7 @@ export const DONATION_PAGE = {
     label: 'Patron Wall',
     title: 'Those Who Already Sustain',
     description:
-      'Monthly patrons whose contributions keep the digitization cycle running — listed by stewardship tier.',
+      'Patrons whose contributions keep the digitization cycle running — listed by stewardship tier.',
     ctaLabel: 'Join the Patron Wall',
   },
   quote: {
@@ -133,7 +133,7 @@ export const DONATION_PAGE = {
 export const DONATION_STATS: DonationStat[] = [
   { target: 4280, suffix: '+', label: 'Artifacts Digitized' },
   { target: 216, suffix: '+', label: 'Heritage Sites Mapped' },
-  { target: 1247, suffix: '+', label: 'Monthly Patrons' },
+  { target: 1247, suffix: '+', label: 'Patrons' },
   { target: 84, suffix: '+', label: 'Countries Reached' },
   { target: 832, suffix: '+', label: 'Manuscripts Archived' },
 ];

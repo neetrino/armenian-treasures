@@ -247,6 +247,7 @@ export function CultureItemForm({
       <CultureItemEditorMetaBar
         title={initial?.title ?? ''}
         shortDescription={initial?.shortDescription ?? ''}
+        subtitle={initial?.subtitle ?? ''}
         statusDefault={initial?.status ?? 'DRAFT'}
         featuredOnCatalog={initial?.featuredOnCatalog ?? false}
         featuredOnHome={initial?.featuredOnHome ?? false}

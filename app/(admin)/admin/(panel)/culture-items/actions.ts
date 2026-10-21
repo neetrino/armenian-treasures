@@ -175,6 +175,7 @@ function parseForm(formData: FormData):
   const titleI18n = readLocalizedTextFromFormData(formData, 'title');
   const descriptionI18n = readLocalizedTextFromFormData(formData, 'description');
   const shortDescriptionI18n = readLocalizedTextFromFormData(formData, 'shortDescription');
+  const subtitleI18n = readLocalizedTextFromFormData(formData, 'subtitle');
   const regionI18n = readLocalizedTextFromFormData(formData, 'region');
   const locationNameI18n = readLocalizedTextFromFormData(formData, 'locationName');
   const periodLabelI18n = readLocalizedTextFromFormData(formData, 'periodLabel');
@@ -202,6 +203,7 @@ function parseForm(formData: FormData):
         : media.blocks,
     }) || '',
     shortDescription: pickDefaultLocaleText(shortDescriptionI18n),
+    subtitle: pickDefaultLocaleText(subtitleI18n),
     menuItemId: formData.get('menuItemId')?.toString() ?? '',
     region: pickDefaultLocaleText(regionI18n),
     locationName: pickDefaultLocaleText(locationNameI18n),
@@ -232,7 +234,8 @@ function parseForm(formData: FormData):
       const path =
         basePath === 'title' ||
         basePath === 'description' ||
-        basePath === 'shortDescription'
+        basePath === 'shortDescription' ||
+        basePath === 'subtitle'
           ? `${basePath}.EN`
           : basePath;
       if (!errors[path]) errors[path] = issue.message;
@@ -245,6 +248,7 @@ function parseForm(formData: FormData):
       titleI18n,
       descriptionI18n,
       shortDescriptionI18n,
+      subtitleI18n,
       regionI18n,
       locationNameI18n,
       periodLabelI18n,
@@ -261,6 +265,7 @@ function toData(
     titleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     descriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     shortDescriptionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
+    subtitleI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     regionI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     locationNameI18n: ReturnType<typeof readLocalizedTextFromFormData>;
     periodLabelI18n: ReturnType<typeof readLocalizedTextFromFormData>;
@@ -281,6 +286,7 @@ function toData(
         return enBody ? encodeTranslatableText({ EN: enBody }) : '';
       })(),
     shortDescription: encodeTranslatableText(i18n.shortDescriptionI18n) || null,
+    subtitle: encodeTranslatableText(i18n.subtitleI18n) || null,
     menuItemId: input.menuItemId,
     region: encodeTranslatableText(i18n.regionI18n) || null,
     locationName: encodeTranslatableText(i18n.locationNameI18n) || null,
@@ -396,6 +402,19 @@ export async function deleteCultureItemAction(id: string): Promise<AdminDeleteRe
     await prisma.cultureItem.delete({ where: { id } });
     await revalidateCultureItem(item.slug ? [item.slug] : [], item.menuItemId ? [item.menuItemId] : []);
   });
+}
+
+export async function toggleCultureItemHomeShortcutAction(
+  id: string,
+  featuredOnHome: boolean,
+): Promise<void> {
+  await requireAdmin();
+  const item = await prisma.cultureItem.findUnique({
+    where: { id },
+    select: { slug: true, menuItemId: true },
+  });
+  await persistCultureItemFeaturedHome(id, featuredOnHome, featuredOnHome ? 5 : null);
+  await revalidateCultureItem(item?.slug ? [item.slug] : [], item?.menuItemId ? [item.menuItemId] : []);
 }
 
 export async function toggleCultureItemMapAction(id: string, showOnMap: boolean): Promise<void> {

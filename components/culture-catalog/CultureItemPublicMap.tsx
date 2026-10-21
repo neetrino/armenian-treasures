@@ -33,7 +33,7 @@ export async function CultureItemPublicMap({
   });
   const externalHref = link && isExternalMapLink(link) ? link : null;
 
-  if (!coords) return null;
+  if (!coords && !externalHref) return null;
 
   const label = locationName?.trim() || uiMessage(locale, 'openMap');
 
@@ -41,21 +41,25 @@ export async function CultureItemPublicMap({
     <div className="catalog-item-media-block">
       <p className="sec-label">{uiMessage(locale, 'location')}</p>
       <h2 className="sec-title">{label}</h2>
-      <div className="tour-wrap catalog-map-embed reveal">
-        <CultureItemDetailMapLazy
-          latitude={coords.latitude}
-          longitude={coords.longitude}
-          mapType={mapType}
-          locale={locale}
-        />
-      </div>
-      <p className="catalog-map-attribution">
-        Map tiles ©{' '}
-        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
-          OpenStreetMap
-        </a>{' '}
-        contributors
-      </p>
+      {coords ? (
+        <>
+          <div className="tour-wrap catalog-map-embed reveal">
+            <CultureItemDetailMapLazy
+              latitude={coords.latitude}
+              longitude={coords.longitude}
+              mapType={mapType}
+              locale={locale}
+            />
+          </div>
+          <p className="catalog-map-attribution">
+            Map tiles ©{' '}
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">
+              OpenStreetMap
+            </a>{' '}
+            contributors
+          </p>
+        </>
+      ) : null}
       {externalHref ? (
         <a
           href={externalHref}

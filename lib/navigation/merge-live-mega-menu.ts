@@ -3,6 +3,7 @@ import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import type { MegaMenuColumn, MegaMenuItem } from '@/lib/navigation/culture-mega-menu';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
+import { isRetiredCultureSlug } from '@/lib/culture-routes';
 
 function columnItemKeys(column: MegaMenuColumn): Set<string> {
   const keys = new Set<string>();
@@ -34,24 +35,37 @@ function isOrnamentsAlias(parentSlug: string, childSlug: string): boolean {
   return parentSlug === 'architecture' && childSlug === 'armaments';
 }
 
+/** Armaments is removed. Epic stays in Myths & Gods. */
+const SHEET_OMITTED_SLUGS = new Set(['armaments']);
+
 function collectMissingLiveItems(
   column: MegaMenuColumn,
   parent: MenuNode | undefined,
   locale: SiteLocaleCode,
+  listed: Set<string>,
 ): MegaMenuItem[] {
   if (!parent) return [];
-  const existing = columnItemKeys(column);
   return (parent.children ?? [])
     .filter((child) => child.isActive && !isFormRoute(child.routeType))
     .filter((child) => !isOrnamentsAlias(parent.slug, child.slug))
-    .filter((child) => !existing.has(child.slug) && !existing.has(`${parent.slug}/${child.slug}`))
+    .filter((child) => !SHEET_OMITTED_SLUGS.has(child.slug) && !isRetiredCultureSlug(child.slug))
+    .filter((child) => !listed.has(child.slug) && !listed.has(`${parent.slug}/${child.slug}`))
     .map((child) => toExtraMegaMenuItem(parent, child, locale));
+}
+
+function listedMenuKeys(columns: MegaMenuColumn[]): Set<string> {
+  const listed = new Set<string>();
+  for (const column of columns) {
+    for (const key of columnItemKeys(column)) listed.add(key);
+  }
+  return listed;
 }
 
 function mergeLiveChildrenIntoColumn(
   column: MegaMenuColumn,
   tree: MenuNode[],
   locale: SiteLocaleCode,
+  listed: Set<string>,
 ): MegaMenuColumn {
   const headingPath = column.headingMenuPath;
   if (!headingPath) return column;
@@ -60,6 +74,7 @@ function mergeLiveChildrenIntoColumn(
     column,
     tree.find((node) => node.slug === headingPath),
     locale,
+    listed,
   );
   if (extras.length === 0) return column;
 
@@ -72,5 +87,6 @@ export function mergeLiveChildrenIntoMegaMenu(
   tree: MenuNode[],
   locale: SiteLocaleCode = 'EN',
 ): MegaMenuColumn[] {
-  return columns.map((column) => mergeLiveChildrenIntoColumn(column, tree, locale));
+  const listed = listedMenuKeys(columns);
+  return columns.map((column) => mergeLiveChildrenIntoColumn(column, tree, locale, listed));
 }

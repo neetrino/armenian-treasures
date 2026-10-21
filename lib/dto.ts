@@ -7,7 +7,6 @@
  */
 import { normalizeAboutPillars, type AboutPillar } from '@/lib/types/about-content';
 import {
-  normalizeHomeStats,
   normalizeHomeTechCards,
   type HomeStat,
   type HomeTechCard,
@@ -16,7 +15,8 @@ import { normalizeHomeSections, type HomeSections } from '@/lib/types/home-secti
 import { parseEnabledLocales, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel, isUntranslatedMenuTitle } from '@/lib/i18n/messages/menu';
 import { ornamentMenuTitle } from '@/lib/i18n/ornament-label';
-import { localizedHomeSections, localizedHomeStats, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
+import { localizedHomeSections, localizedHomeTechCards } from '@/lib/i18n/home-fallbacks';
+import { resolvePublicHomeStats } from '@/lib/i18n/home-stats';
 import { resolveLocaleDocument } from '@/lib/i18n/locale-document';
 import { resolveLocalizedText } from '@/lib/i18n/translatable-content';
 import { resolveStoredMapUrl } from '@/lib/culture-catalog/parse-map-url';
@@ -63,6 +63,7 @@ export interface PublicCultureItemDTO {
   slug: string;
   description: string | null;
   shortDescription: string | null;
+  subtitle: string | null;
   menuItemId: string;
   region: string | null;
   locationName: string | null;
@@ -237,6 +238,7 @@ export function toPublicCultureItem(
     slug: row.slug,
     description: resolveLocalizedText(row.description, locale) || null,
     shortDescription: resolveLocalizedText(row.shortDescription, locale) || null,
+    subtitle: resolveLocalizedText(row.subtitle, locale) || null,
     menuItemId: row.menuItemId,
     region: resolveLocalizedText(row.region, locale) || null,
     locationName: resolveLocalizedText(row.locationName, locale) || null,
@@ -432,7 +434,7 @@ export function toPublicHomeContent(
     missionText: resolveLocalizedText(row.missionText, locale),
     ctaTitle: resolveLocalizedText(row.ctaTitle, locale),
     ctaDescription: resolveLocalizedText(row.ctaDescription, locale),
-    stats: resolveLocaleDocument(stats, locale, normalizeHomeStats) ?? (locale === 'EN' ? normalizeHomeStats(stats) : localizedHomeStats(locale)),
+    stats: resolvePublicHomeStats(stats, locale),
     techCards: resolveLocaleDocument(techCards, locale, normalizeHomeTechCards) ?? (locale === 'EN' ? normalizeHomeTechCards(techCards) : localizedHomeTechCards(locale)),
     sections: resolveLocaleDocument(sections, locale, normalizeHomeSections) ?? (locale === 'EN' ? normalizeHomeSections(sections) : localizedHomeSections(locale)),
   };

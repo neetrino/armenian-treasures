@@ -7,6 +7,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { requireAdmin } from '@/lib/auth/require-admin';
 import { prisma } from '@/lib/db';
 import { fetchFeaturedBlogByIds } from '@/lib/queries/featured-blog-sql';
+import { facebookShareUrl } from '@/lib/blog-share';
 import { getAdminLocaleValue } from '@/lib/i18n/translatable-content';
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +15,19 @@ export const metadata: Metadata = { title: 'Edit blog post', robots: { index: fa
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+function PublishedPostActions({ slug }: { slug: string }) {
+  return (
+    <>
+      <ButtonLink href={facebookShareUrl(`/blog/${slug}`)} variant="secondary" external>
+        Share on Facebook
+      </ButtonLink>
+      <ButtonLink href={`/blog/${slug}`} variant="secondary" external>
+        View public page
+      </ButtonLink>
+    </>
+  );
 }
 
 async function EditBlogPostPage(props: PageProps) {
@@ -37,13 +51,7 @@ async function EditBlogPostPage(props: PageProps) {
       title=""
       size="full"
       beforeHeader={<AdminBackLink href="/admin/blog" label="All blog posts" />}
-      actions={
-        item.isPublished ? (
-          <ButtonLink href={`/blog/${item.slug}`} variant="secondary" external>
-            View public page
-          </ButtonLink>
-        ) : null
-      }
+      actions={item.isPublished ? <PublishedPostActions slug={item.slug} /> : null}
     >
       <BlogPostForm
         mode="edit"

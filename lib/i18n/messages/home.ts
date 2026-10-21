@@ -423,6 +423,30 @@ export const HOME_MESSAGES = {
     'Fundação do património cultural',
   ),
   footerHomeAria: row('գլխավոր էջ', 'home', 'главная', 'accueil', 'início'),
+  downloadsEyebrow: row('Ռեսուրսներ', 'Resources', 'Ресурсы', 'Ressources', 'Recursos'),
+  downloadsTitle: row('Ներբեռնումներ', 'Downloads', 'Загрузки', 'Téléchargements', 'Transferências'),
+  downloadsLead: row(
+    'Ներբեռնեք օրինակ գիրքը։ Նոր վերնագրեր կավելանան արխիվի հետ։',
+    'Download a sample book. More titles will appear as the archive grows.',
+    'Скачайте пример книги. Новые названия появятся по мере роста архива.',
+    'Téléchargez un livre d’exemple. D’autres titres arriveront avec les archives.',
+    'Transfira um livro de exemplo. Novos títulos surgirão à medida que o arquivo cresce.',
+  ),
+  sampleBookTitle: row(
+    'Ժառանգության օրինակ գիրք',
+    'Sample heritage book',
+    'Пример книги о наследии',
+    'Livre d’exemple du patrimoine',
+    'Livro de exemplo do património',
+  ),
+  sampleBookDescription: row(
+    'Կարճ ներածություն Հայկական գանձերի թվային կատալոգին։',
+    'A short introduction to the Armenian Treasures digital catalogue.',
+    'Краткое введение в цифровой каталог Армянских сокровищ.',
+    'Une courte introduction au catalogue numérique des Trésors arméniens.',
+    'Uma breve introdução ao catálogo digital dos Tesouros Arménios.',
+  ),
+  downloadPdf: row('Ներբեռնել PDF', 'Download PDF', 'Скачать PDF', 'Télécharger le PDF', 'Transferir PDF'),
 } as const satisfies Record<string, LocaleRow>;
 
 export type HomeMessageKey = keyof typeof HOME_MESSAGES;

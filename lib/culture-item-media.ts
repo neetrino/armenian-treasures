@@ -8,6 +8,7 @@ export const DEFAULT_MAP_COORDINATES = { latitude: 40.1792, longitude: 44.4991 }
 export const TOUR_TYPE_OPTIONS = [
   { value: 'LIDAR', label: 'LiDAR Scanning' },
   { value: 'SCAN_3D', label: '3D Scanning' },
+  { value: 'MATTERPORT', label: 'Matterport' },
   { value: 'DRONE', label: 'Drone Photogrammetry' },
 ] as const;
 
@@ -86,7 +87,8 @@ export function normalizeTourBlock(tour: CultureTourBlock): CultureTourBlock {
 }
 
 function asTourType(value: unknown): CultureTourType {
-  if (value === 'SCAN_3D' || value === 'MODEL_3D' || value === 'MATTERPORT') return 'SCAN_3D';
+  if (value === 'MATTERPORT') return 'MATTERPORT';
+  if (value === 'SCAN_3D' || value === 'MODEL_3D') return 'SCAN_3D';
   if (value === 'DRONE') return 'DRONE';
   return 'LIDAR';
 }
@@ -236,4 +238,9 @@ export function firstVideoUrl(media: CultureItemMediaContent): string | null {
 
 export function firstBlockBody(media: CultureItemMediaContent): string | null {
   return media.blocks.find((block) => block.body)?.body ?? null;
+}
+
+export function firstBlockSubtitle(media: CultureItemMediaContent): string | null {
+  const subtitle = media.blocks.find((block) => block.subtitle.trim())?.subtitle.trim() ?? '';
+  return subtitle || null;
 }

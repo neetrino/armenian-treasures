@@ -5,17 +5,19 @@ interface CulturalPortalStat {
 
 interface CulturalPortalStatsBarProps {
   stats: CulturalPortalStat[];
+  quiet?: boolean;
 }
 
-export function CulturalPortalStatsBar({ stats }: CulturalPortalStatsBarProps) {
-  if (stats.length === 0) {
+export function CulturalPortalStatsBar({ stats, quiet = false }: CulturalPortalStatsBarProps) {
+  const visible = stats.filter((stat) => stat.label.trim().length > 0);
+  if (visible.length === 0) {
     return null;
   }
 
   return (
-    <div className="stats-bar">
-      {stats.map((stat) => (
-        <div key={stat.label} className="stat-item reveal">
+    <div className={quiet ? 'stats-bar stats-bar--quiet' : 'stats-bar'}>
+      {visible.map((stat, index) => (
+        <div key={`${stat.label}-${index}`} className="stat-item reveal">
           <div className="stat-num">{stat.value}</div>
           <div className="stat-label">{stat.label}</div>
         </div>

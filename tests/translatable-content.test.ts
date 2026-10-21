@@ -20,11 +20,18 @@ describe('resolveLocalizedText', () => {
     expect(resolveLocalizedText(raw, 'EN')).not.toContain('__at_i18n_v1');
   });
 
-  it('attributes unmarked Armenian plain strings to HY only', () => {
+  it('attributes unmarked Armenian plain strings to HY and spells HYW classically', () => {
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HY')).toBe('ԽՆՁՈՐԵՍԿ');
-    expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HYW')).toBe('');
+    expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'HYW')).toBe('ԽՆՁՈՐԵՍԿ');
+    expect(resolveLocalizedText('Սյունիք', 'HYW')).toBe('Սիւնիք');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'EN')).toBe('');
     expect(resolveLocalizedText('ԽՆՁՈՐԵՍԿ', 'RU')).toBe('');
+  });
+
+  it('keeps a hand-written Western value and does not fall back for other locales', () => {
+    const raw = encodeTranslatableText({ HY: 'Սյունիք', HYW: 'Սիւնիք — ձեռքով' });
+    expect(resolveLocalizedText(raw, 'HYW')).toBe('Սիւնիք — ձեռքով');
+    expect(resolveLocalizedText(raw, 'EN')).toBe('');
   });
 
   it('keeps unmarked Latin text on English only', () => {

@@ -78,7 +78,7 @@ describe('collectMenuSitemapPaths', () => {
     const paths = collectMenuSitemapPaths(tree);
     expect(paths).toContain('/culture/architecture');
     expect(paths).toContain('/culture/architecture/churches');
-    expect(paths).toContain('/culture/architecture/new');
+    expect(paths).not.toContain('/culture/architecture/new');
     expect(paths).not.toContain('/culture/hidden');
     expect(paths).not.toContain('https://partner.example.org');
     expect(paths).toContain('/national-gallery-armenia');

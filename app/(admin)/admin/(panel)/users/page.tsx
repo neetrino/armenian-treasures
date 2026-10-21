@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ArrowDown, ArrowUp, ArrowUpDown, Search } from 'lucide-react';
 import { AdminPageShell } from '@/components/admin/AdminPageShell';
+import { MemberOutreachCopy } from '@/components/admin/MemberOutreachCopy';
 import { AdminTable, type AdminTableColumn } from '@/components/admin/AdminTable';
 import { AdminPagination } from '@/components/admin/AdminPagination';
 import { DeleteActionButton } from '@/components/admin/DeleteActionButton';
@@ -46,9 +47,14 @@ async function AdminUsersPage(props: PageProps) {
       }
     : {};
 
-  const [rows, total] = await Promise.all([
+  const [rows, total, pendingMembers] = await Promise.all([
     listAdminMembers(where, listQuery.skip, listQuery.pageSize, { donationSort }),
     prisma.member.count({ where }),
+    prisma.member.findMany({
+      where: { donations: { none: {} } },
+      select: { email: true },
+      orderBy: { email: 'asc' },
+    }),
   ]);
 
   const pageCount = buildAdminPageCount(total, listQuery.pageSize);
@@ -121,6 +127,7 @@ async function AdminUsersPage(props: PageProps) {
       description="Members who signed up on the public site. View profiles, donation history, and remove accounts when needed."
       size="wide"
     >
+      <MemberOutreachCopy emails={pendingMembers.map((member) => member.email)} />
       <form action="/admin/users" method="get" className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-stone-200/70 bg-white/95 p-4 shadow-card">
         <label htmlFor="users-search" className="min-w-[240px] flex-1">
           <span className="mb-1.5 block text-xs font-semibold uppercase tracking-eyebrow text-ink-muted">Search</span>

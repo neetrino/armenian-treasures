@@ -7,6 +7,7 @@ import {
   type CultureTourBlock,
   type CultureVideoBlock,
 } from '@/lib/culture-item-media';
+import { mediaSliceForLocale } from '@/lib/culture-item-western-media';
 import { SITE_LOCALE_CODES, type SiteLocaleCode } from '@/lib/i18n/locale-config';
 
 export interface CultureItemLocaleMedia {
@@ -122,7 +123,7 @@ export function mediaForLocale(
   byLocale: Partial<Record<SiteLocaleCode, CultureItemLocaleMedia>>,
   locale: SiteLocaleCode,
 ): CultureItemMediaContent {
-  const slice = byLocale[locale];
+  const slice = mediaSliceForLocale(byLocale, locale);
   // Tour, video, and gallery URLs stay on the shared root. Description images do too.
   if (!slice) {
     return {

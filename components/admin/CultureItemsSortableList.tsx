@@ -7,6 +7,7 @@ import { DeleteIconButton } from '@/components/admin/DeleteIconButton';
 import { SortableAdminList } from '@/components/admin/SortableAdminList';
 import { Badge } from '@/components/ui/Badge';
 import { StatusPill } from '@/components/ui/StatusPill';
+import { toggleCultureItemHomeShortcutAction } from '@/app/(admin)/admin/(panel)/culture-items/actions';
 import { reorderCultureItemsAction } from '@/app/(admin)/admin/(panel)/culture-items/reorder-action';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { resolveCultureItemHref } from '@/lib/culture-item-url';
@@ -20,6 +21,7 @@ export interface CultureItemListRow {
   region: string | null;
   periodLabel: string | null;
   showOnMap: boolean;
+  featuredOnHome: boolean;
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
   image: string | null;
   menuPath: string;
@@ -100,8 +102,40 @@ function CultureItemSortableRow({
       </button>
       <StatusPill status={row.status} />
       {row.showOnMap ? <Badge tone="green">On map</Badge> : null}
+      {overlay ? null : <HomeShortcutButton id={row.id} initial={row.featuredOnHome} />}
       {overlay ? null : <ItemActions row={row} onEdit={onEdit} onDelete={onDelete} />}
     </div>
+  );
+}
+
+function HomeShortcutButton({ id, initial }: { id: string; initial: boolean }) {
+  const [on, setOn] = useState(initial);
+  const [pending, setPending] = useState(false);
+
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      disabled={pending}
+      title="Show this published item on the homepage Stories row"
+      onClick={() => {
+        const next = !on;
+        setOn(next);
+        setPending(true);
+        void toggleCultureItemHomeShortcutAction(id, next)
+          .catch(() => setOn(!next))
+          .finally(() => setPending(false));
+      }}
+      className={cn(
+        'shrink-0 rounded-full border px-2.5 py-1 text-xs font-medium transition',
+        on
+          ? 'border-bronze-500 bg-bronze-500/10 text-ink'
+          : 'border-stone-200 text-ink-muted hover:border-stone-300 hover:text-ink',
+        pending && 'opacity-60',
+      )}
+    >
+      {on ? 'On home' : 'Home'}
+    </button>
   );
 }
 

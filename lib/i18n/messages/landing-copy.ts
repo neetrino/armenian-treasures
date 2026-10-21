@@ -127,13 +127,6 @@ export const LANDING_COPY_MESSAGES = {
     'D’Artachat antique à la scène Sundukian',
     'De Artashat antiga ao palco Sundukyan',
   ),
-  portalCatDescArmaments: row(
-    'Ռազմական պատմություն և դարերի զենքեր',
-    'Military history & weapons of the ages',
-    'Военная история и оружие эпох',
-    'Histoire militaire et armes des siècles',
-    'História militar e armas das épocas',
-  ),
   portalCatDescPublications: row(
     'Ձեռագրեր, հանդեսներ և գիտական աշխատանքներ',
     'Manuscripts, journals & scholarly works',

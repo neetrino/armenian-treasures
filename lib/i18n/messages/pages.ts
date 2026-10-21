@@ -15,6 +15,8 @@ export const PAGE_MESSAGES = {
     'Journal de la fondation',
     'Jornal da fundação',
   ),
+  blogHighlights: row('Առանձնացված', 'Highlighted', 'Избранное', 'À la une', 'Em destaque'),
+  blogChronology: row('Թարմացումներ', 'Updates', 'Обновления', 'Actualités', 'Atualizações'),
   noArticlesYet: row(
     'Դեռ հրապարակված հոդվածներ չկան։',
     'No articles published yet.',
@@ -30,6 +32,13 @@ export const PAGE_MESSAGES = {
     'Назад к блогу',
     'Retour au blog',
     'Voltar ao blog',
+  ),
+  shareOnFacebook: row(
+    'Կիսվել Facebook-ում',
+    'Share on Facebook',
+    'Поделиться в Facebook',
+    'Partager sur Facebook',
+    'Partilhar no Facebook',
   ),
   browseHighlights: row(
     'Դիտել ընտրյալները',

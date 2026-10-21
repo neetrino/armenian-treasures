@@ -22,8 +22,10 @@ describe('ui messages', () => {
     expect(uiMessage('FR', 'allBlogPosts')).toBe('Tous');
   });
 
-  it('mirrors HY for HYW', () => {
-    expect(uiMessage('HYW', 'supportMission')).toBe(uiMessage('HY', 'supportMission'));
+  it('writes Western Armenian in classical orthography', () => {
+    expect(uiMessage('HY', 'supportMission')).toBe('Աջակցել առաքելությանը');
+    expect(uiMessage('HYW', 'supportMission')).toBe('Աջակցել առաքելութեանը');
+    expect(uiMessage('HYW', 'menuArchitecture')).toBe('Ճարտարապետութիւն');
   });
 
   it('formats placeholders', () => {

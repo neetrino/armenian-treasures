@@ -9,6 +9,7 @@ export interface LandingHeroCta {
   label: string;
   href: string;
   variant: 'gold' | 'teal' | 'outline';
+  external?: boolean;
 }
 
 interface LandingHeroProps {
@@ -45,9 +46,13 @@ function LandingHeroCtaLink({ cta }: { cta: LandingHeroCta }) {
     CTA_CLASS[cta.variant],
     containsArmenianScript(cta.label) && 'btn--hy',
   );
-  if (cta.href.startsWith('#')) {
+  if (cta.external || cta.href.startsWith('#')) {
     return (
-      <a href={cta.href} className={className}>
+      <a
+        href={cta.href}
+        className={className}
+        {...(cta.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
         {cta.label}
       </a>
     );

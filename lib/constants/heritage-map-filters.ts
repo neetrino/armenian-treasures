@@ -74,6 +74,7 @@ export function filterMapItemsBySearch(
       item.periodLabel,
       item.yearLabel,
       item.shortDescription,
+      item.subtitle,
       item.description,
       item.mapType?.replaceAll('_', ' '),
     ];

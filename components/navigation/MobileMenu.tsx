@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import { CultureOrnamentalIcon } from '@/components/icons/CultureOrnamentalIcon';
 import type { MegaMenuColumn } from '@/lib/navigation/culture-mega-menu';
 import {
   PRIMARY_LINKS,
@@ -106,7 +107,7 @@ export function MobileMenu({
         {open ? (
           <>
             <motion.div
-              className="fixed inset-0 z-[1001] bg-[var(--mobile-menu-overlay)] backdrop-blur-sm"
+              className="fixed inset-0 z-[1001] bg-[var(--mobile-menu-overlay)]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -115,7 +116,7 @@ export function MobileMenu({
               aria-hidden
             />
             <motion.div
-              className="fixed inset-x-0 top-site-header z-[1002] flex max-h-[calc(100svh-var(--site-header-height))] flex-col overflow-y-auto border-t border-surface bg-[var(--mobile-menu-bg)] px-6 py-7 backdrop-blur-md"
+              className="fixed inset-x-0 top-site-header z-[1002] flex max-h-[calc(100svh-var(--site-header-height))] flex-col overflow-y-auto border-t border-surface bg-[var(--mobile-menu-bg)] px-6 py-7"
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
@@ -153,7 +154,7 @@ export function MobileMenu({
                         <Link
                           href={column.headingHref}
                           onClick={close}
-                          className="font-cinzel text-[11px] font-extrabold uppercase tracking-[0.22em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
+                          className="min-w-0 break-words font-cinzel text-[11px] font-extrabold uppercase leading-snug tracking-[0.08em] text-heritage-teal no-underline transition-colors hover:text-heritage-champagne"
                         >
                           {column.heading}
                         </Link>
@@ -185,9 +186,13 @@ export function MobileMenu({
                               <Link
                                 href={item.href}
                                 onClick={close}
-                                className={mobileLinkClass(pathname, item.href)}
+                                className={cn(
+                                  'flex items-start gap-2 py-2.5 font-display text-base text-[var(--nav-text)] transition hover:text-[var(--accent-hover)]',
+                                  isNavActive(pathname, item.href) && 'text-heritage-teal',
+                                )}
                               >
-                                {item.label}
+                                <CultureOrnamentalIcon iconKey={item.icon} size={16} className="mt-1 h-4 w-4 shrink-0" />
+                                <span className="min-w-0 flex-1 break-words">{item.label}</span>
                               </Link>
                             </li>
                           ))}

@@ -49,11 +49,6 @@ export function VirtualMuseumCard({
         tabIndex={0}
         className={cn(VIRTUAL_MUSEUM_CARD_SURFACE_CLASS, 'outline-none')}
       >
-        <span
-          aria-hidden
-          className="virtual-museum-card__grid pointer-events-none absolute inset-[1px] z-0 bg-hero-diamond-grid"
-        />
-
         <div className="virtual-museum-card__content relative z-[2] flex flex-col items-start text-left">
           <VirtualMuseumIconBadge icon={icon} />
 

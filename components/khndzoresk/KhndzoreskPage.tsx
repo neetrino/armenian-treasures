@@ -1,6 +1,6 @@
 import { KhndzoreskAbout, KhndzoreskStatsBar } from '@/components/khndzoresk/KhndzoreskAbout';
 
-import { KhndzoreskCredits, KhndzoreskMap, KhndzoreskRelated } from '@/components/khndzoresk/KhndzoreskFooterSections';
+import { KhndzoreskCredits, KhndzoreskMap } from '@/components/khndzoresk/KhndzoreskFooterSections';
 
 import { KhndzoreskGallery } from '@/components/khndzoresk/KhndzoreskGallery';
 
@@ -81,8 +81,6 @@ export async function KhndzoreskPage() {
         {isSectionEnabled(visibility, 'map') ? <KhndzoreskMap map={content.map} /> : null}
 
         {isSectionEnabled(visibility, 'credits') ? <KhndzoreskCredits imgBase={content.imgBase} /> : null}
-
-        {isSectionEnabled(visibility, 'related') ? <KhndzoreskRelated related={content.related} /> : null}
 
       </LandingSectionStack>
 

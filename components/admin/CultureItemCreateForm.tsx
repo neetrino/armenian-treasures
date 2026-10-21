@@ -20,6 +20,7 @@ function createDraftInitial(menuItemId: string): CultureItemFormInitial {
     slug: '',
     description: '',
     shortDescription: '',
+    subtitle: '',
     menuItemId,
     region: '',
     locationName: '',

@@ -190,18 +190,18 @@ const OVERRIDES: Record<string, Partial<CultureCatalogContent>> = {
   heritage: {
     eyebrow: '✦ Culture · Living Heritage · Armenia ✦',
     accent: 'Մշակույթ',
-    slogan: 'Eleven domains of Armenian material culture',
+    slogan: 'Ten domains of Armenian material culture',
     about: {
       label: 'Armenian Culture',
-      title: 'Living Heritage Across Eleven Domains',
+      title: 'Living Heritage Across Ten Domains',
       description: 'From khachkar carving to lavash bread — intangible and material traditions recognised by UNESCO and lived daily.',
       paragraphs: [
-        'The culture catalog spans paintings, music, taraz, carpets, food, dance, theatre, armaments and publications.',
+        'The culture catalog spans paintings, music, taraz, carpets, food, dance, theatre and publications.',
         'Each sub-catalog is curated independently — browse the domain that interests you or suggest new material for review.',
       ],
       facts: [
         { label: 'UNESCO Recognition', value: 'Lavash, khachkars, duduk music and more inscribed as intangible heritage.' },
-        { label: 'Eleven Domains', value: 'Paintings, music, writers, taraz, carpets, food, sculpting, dance, theatre, armaments, publications.' },
+        { label: 'Ten Domains', value: 'Paintings, music, writers, taraz, carpets, food, sculpting, dance, theatre, publications.' },
         { label: 'Diaspora Threads', value: 'Traditions carried across continents and preserved in museums and family practice.' },
         { label: 'Open Submission', value: 'Researchers and families can propose new entries through the archive.' },
       ],
@@ -209,7 +209,7 @@ const OVERRIDES: Record<string, Partial<CultureCatalogContent>> = {
     items: {
       label: 'Heritage Domains',
       title: 'Browse by Domain',
-      description: 'Eleven curated sub-catalogs — each a doorway into a living Armenian tradition.',
+      description: 'Ten curated sub-catalogs — each a doorway into a living Armenian tradition.',
       submitPrompt: 'Propose a new heritage domain or cultural entry.',
       emptyMessage: 'Heritage sub-catalogs will appear here once published.',
     },
@@ -333,6 +333,25 @@ function emptyCatalogContent(): CultureCatalogContent {
   };
 }
 
+function fillBlankStatLabels(content: CultureCatalogContent, locale: SiteLocaleCode): CultureCatalogContent {
+  const labels = content.statLabels;
+  const entries = labels.entries.trim();
+  const regions = labels.regions.trim();
+  const third = labels.third.trim();
+  const fourth = labels.fourth.trim();
+  if (entries && regions && third && fourth) return content;
+
+  return {
+    ...content,
+    statLabels: {
+      entries: entries || uiMessage(locale, 'statEntries'),
+      regions: regions || uiMessage(locale, 'statRegions'),
+      third: third || uiMessage(locale, 'statPeriods'),
+      fourth: fourth || uiMessage(locale, 'stat3dTours'),
+    },
+  };
+}
+
 function localizedCatalogTitle(node: MenuNode, parent: MenuNode | undefined, locale: SiteLocaleCode): string {
   const key = parent ? `${parent.slug}/${node.slug}` : node.slug;
   return cultureMenuLabel(locale, key) ?? cultureMenuLabel(locale, node.slug) ?? node.title;
@@ -396,7 +415,7 @@ export function resolveCultureCatalogContent(
     title,
   );
   const adminHero = dbOverride?.heroImage?.trim();
-  return { ...merged, heroImage: adminHero || undefined };
+  return fillBlankStatLabels({ ...merged, heroImage: adminHero || undefined }, locale);
 }
 
 export function resolveCultureCatalogFormContent(

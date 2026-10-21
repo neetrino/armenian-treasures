@@ -5,6 +5,7 @@ import {
   getFeaturedTreasureCardStyle,
   hasFeaturedTreasureCardBackground,
 } from '@/lib/featured-treasure-card-background';
+import { containsArmenianScript } from '@/lib/i18n/armenian-script';
 import { cn } from '@/lib/utils';
 
 interface FeaturedTreasureCardProps {
@@ -13,8 +14,14 @@ interface FeaturedTreasureCardProps {
 
 function CategoryLine({ first, second }: { first: string; second?: string }) {
   const secondary = second?.trim() ?? '';
+  const armenian = containsArmenianScript(first) || containsArmenianScript(secondary);
   return (
-    <p className="featured-treasure-card__categories font-cinzel text-[9px] font-extrabold uppercase tracking-[0.22em] sm:text-[10px]">
+    <p
+      className={cn(
+        'featured-treasure-card__categories font-cinzel text-[9px] font-extrabold uppercase tracking-[0.22em] sm:text-[10px]',
+        armenian && 'card-meta--hy',
+      )}
+    >
       {first}
       {secondary ? (
         <>
@@ -30,6 +37,8 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
   const { number, icon, categories, title, description, href, layout, cardBackgroundColor, cardBackgroundImage } =
     treasure;
   const isTile = layout === 'tile';
+  const titleIsArmenian = containsArmenianScript(title);
+  const descriptionIsArmenian = containsArmenianScript(description ?? '');
   const hasCustomBackground = hasFeaturedTreasureCardBackground(
     cardBackgroundColor,
     cardBackgroundImage,
@@ -53,12 +62,22 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
           {icon ? <CulturalCategoryIcon type={icon} className="featured-treasure-card__icon" /> : null}
           <div className="featured-treasure-card__content">
             <CategoryLine first={categories[0]} second={categories[1]} />
-            <h3 className="featured-treasure-card__title break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">
+            <h3
+              className={cn(
+                'featured-treasure-card__title break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]',
+                titleIsArmenian && 'card-title--hy',
+              )}
+            >
               {title}
             </h3>
             <div className="featured-treasure-card__meta">
               {description ? (
-                <p className="featured-treasure-card__description font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.5]">
+                <p
+                  className={cn(
+                    'featured-treasure-card__description font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.5]',
+                    descriptionIsArmenian && 'card-body--hy',
+                  )}
+                >
                   {description}
                 </p>
               ) : (
@@ -77,11 +96,21 @@ export function FeaturedTreasureCard({ treasure }: FeaturedTreasureCardProps) {
             <div className={icon ? 'mt-5' : undefined}>
               <CategoryLine first={categories[0]} second={categories[1]} />
             </div>
-            <h3 className="featured-treasure-card__title mt-3 max-w-[20rem] break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]">
+            <h3
+              className={cn(
+                'featured-treasure-card__title mt-3 max-w-[20rem] break-words font-cinzel text-[clamp(0.8125rem,1vw,0.9375rem)] font-extrabold uppercase leading-[1.25] tracking-[0.03em]',
+                titleIsArmenian && 'card-title--hy',
+              )}
+            >
               {title}
             </h3>
             {description ? (
-              <p className="featured-treasure-card__description mt-3 max-w-[21.25rem] flex-1 font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.5]">
+              <p
+                className={cn(
+                  'featured-treasure-card__description mt-3 max-w-[21.25rem] flex-1 font-display text-[clamp(0.8125rem,0.9vw,0.9375rem)] leading-[1.5]',
+                  descriptionIsArmenian && 'card-body--hy',
+                )}
+              >
                 {description}
               </p>
             ) : null}

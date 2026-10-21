@@ -9,7 +9,6 @@ export const PUBLIC_LAYOUT_PATHS = [
   '/',
   '/culture',
   '/search',
-  '/culture/submit',
   '/projects',
   '/donate',
   '/blog',

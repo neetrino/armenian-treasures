@@ -5,12 +5,12 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --site-header-logo-height: 7rem;
+    --site-header-logo-height: 5.5rem;
     --site-header-height: calc(var(--site-header-logo-height) + 1.25rem);
     --section-padding-y: 1rem;
     --section-padding-y-lg: 1.25rem;
     --section-divider-y: 0.75rem;
-    --heritage-black: #030504;
+    --heritage-black: #000;
     --heritage-green-black: #07110F;
     --heritage-dark-teal: #061B1B;
     --heritage-gold: #D6B85A;
@@ -67,7 +67,7 @@
     --font-serif-display: var(--font-cinzel), Georgia, serif;
     --font-serif-body: var(--font-cormorant), Georgia, serif;
     --layout-bg: #faf6ee;
-    --surface-bg: #030504;
+    --surface-bg: #000;
     --surface-text: rgba(232, 216, 155, 0.82);
     --surface-text-muted: rgba(232, 216, 155, 0.68);
     --surface-text-body: rgba(232, 216, 155, 0.58);
@@ -77,7 +77,7 @@
     --header-bg-scrolled: rgba(9, 9, 9, 0.99);
     --header-border: rgba(201, 168, 76, 0.14);
     --header-shadow: 0 4px 40px rgba(0, 0, 0, 0.75);
-    --footer-bg: #030504;
+    --footer-bg: #000;
     --nav-text: #d6b85a;
     --nav-text-active: #9ca3af;
     --nav-text-shadow: 0 0 12px rgba(214, 184, 90, 0.28);
@@ -112,7 +112,7 @@
       rgba(9, 9, 9, 0.82) 100%
     );
     --ring-offset: rgba(9, 9, 9, 0.9);
-    --hero-scrim-bg: #030504;
+    --hero-scrim-bg: #000;
     --hero-overlay-from: rgba(3, 5, 4, 0.6);
     --hero-overlay-via: rgba(3, 5, 4, 0.35);
     --hero-overlay-to: rgba(3, 5, 4, 0.78);
@@ -244,6 +244,28 @@
     );
   }
 
+  .hero-bg-base img,
+  .hero-img-overlay {
+    transform-origin: center center;
+    animation: hero-photo-drift 28s ease-in-out infinite alternate;
+  }
+
+  @keyframes hero-photo-drift {
+    from {
+      transform: scale(1.04);
+    }
+    to {
+      transform: scale(1.1) translate3d(-1.5%, -1%, 0);
+    }
+  }
+
+  @media (max-width: 767px), (prefers-reduced-motion: reduce) {
+    .hero-bg-base img,
+    .hero-img-overlay {
+      animation: none;
+    }
+  }
+
   .hero-bg-fallback-overlay {
     background: linear-gradient(
       to bottom,
@@ -350,27 +372,6 @@
       0 16px 48px rgba(8, 12, 18, 0.12);
   }
 
-  .culture-ornamental-icon {
-    position: relative;
-    color: var(--heritage-gold);
-  }
-
-  .culture-ornamental-icon__glyph {
-    display: block;
-    height: 100%;
-    width: 100%;
-    filter: brightness(0) saturate(100%) invert(78%) sepia(28%) saturate(620%)
-      hue-rotate(6deg) brightness(96%) contrast(92%);
-    opacity: 0.82;
-    transition: filter 150ms ease, opacity 150ms ease;
-  }
-
-  .group:hover .culture-ornamental-icon__glyph {
-    filter: brightness(0) saturate(100%) invert(86%) sepia(35%) saturate(720%)
-      hue-rotate(6deg) brightness(102%) contrast(96%);
-    opacity: 1;
-  }
-
   [data-site-hero] h1 {
     font-family: var(--font-cinzel), Georgia, serif;
     color: transparent;
@@ -455,6 +456,28 @@ html[lang='hyw'] .khndzoresk-page .hero h1,
   line-height: 1.25 !important;
   padding-block: 0.12em;
   overflow: visible;
+}
+
+/* Cinzel has no Armenian. Cards keep Cinzel for Latin and use Noto Serif Armenian per glyph. */
+.card-title--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.35 !important;
+}
+
+.card-meta--hy {
+  font-family: var(--font-noto-serif-armenian), Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  text-transform: none !important;
+}
+
+.card-body--hy {
+  font-family: var(--font-noto-serif-armenian), var(--font-kelvinch), Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
 }
 
 html[lang='hy'] .khndzoresk-page .hero h1 span,

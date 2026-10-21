@@ -66,7 +66,7 @@ export function makeHeritageMarkerIcon(
     : 'drop-shadow(0 2px 2px rgba(0,0,0,.42)) drop-shadow(0 6px 10px rgba(20,16,8,.3))';
 
   return L.divIcon({
-    className: 'at-marker',
+    className: selected ? 'at-marker at-marker--selected' : 'at-marker',
     html: `<span style="display:flex;width:${width}px;height:${height}px;line-height:0;filter:${shadow}">${pinSvg(marker.icon, marker.color, selected)}</span>`,
     iconSize: [width, height],
     iconAnchor: [width / 2, height - 1],
