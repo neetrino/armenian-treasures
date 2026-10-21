@@ -33,7 +33,6 @@ const PORTAL_GRID_MENU_PATHS: Partial<Record<CulturalPortalIconKey, string>> = {
   foodDrink: 'heritage/food',
   dance: 'heritage/dance',
   theatre: 'heritage/theatre',
-  armaments: 'heritage/armaments',
   publications: 'heritage/publications',
 };
 
@@ -56,7 +55,6 @@ const PORTAL_CATEGORY_DESC_KEYS: Partial<Record<CulturalPortalIconKey, UiMessage
   foodDrink: 'portalCatDescFoodDrink',
   dance: 'portalCatDescDance',
   theatre: 'portalCatDescTheatre',
-  armaments: 'portalCatDescArmaments',
   publications: 'portalCatDescPublications',
 };
 

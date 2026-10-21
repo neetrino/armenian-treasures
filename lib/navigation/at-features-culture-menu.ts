@@ -1,6 +1,8 @@
 /**
- * Canonical Culture Portal mega menu — aligned 1:1 with the AT Features sheet.
- * DB slugs/paths stay in prisma/seeds/culture-menu.ts; labels and column order live here.
+ * Culture Portal mega menu.
+ * Sheet columns stay in AT Features order, except B3 and B4: More Culture is mixed
+ * into Art & Culture, and Museums sits in that column. Ornaments stays after Castles.
+ * DB slugs/paths stay in prisma/seeds/culture-menu.ts.
  */
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
@@ -43,12 +45,6 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'architecture/ornaments',
         fallbackHref: '/culture/architecture/ornaments',
       },
-      {
-        label: 'Museums',
-        icon: 'museums',
-        menuPath: 'heritage/museums',
-        fallbackHref: '/culture/heritage/museums',
-      },
     ],
   },
   {
@@ -67,6 +63,12 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         icon: 'legends',
         menuPath: 'legends/legends-and-heroes',
         fallbackHref: '/culture/legends/legends-and-heroes',
+      },
+      {
+        label: 'Epic',
+        icon: 'epic',
+        menuPath: 'legends/epic',
+        fallbackHref: '/culture/legends/epic',
       },
     ],
   },
@@ -130,13 +132,12 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         menuPath: 'heritage/carpets',
         fallbackHref: '/culture/heritage/carpets',
       },
-    ],
-  },
-  {
-    heading: 'More Culture',
-    headingMenuPath: 'more-culture',
-    fallbackHeadingHref: '/culture',
-    items: [
+      {
+        label: 'Museums',
+        icon: 'museums',
+        menuPath: 'heritage/museums',
+        fallbackHref: '/culture/heritage/museums',
+      },
       {
         label: 'Sculptors',
         icon: 'sculptors',
@@ -166,12 +167,6 @@ export const AT_FEATURES_CULTURE_COLUMNS: AtFeaturesColumn[] = [
         icon: 'publications',
         menuPath: 'heritage/publications',
         fallbackHref: '/culture/heritage/publications',
-      },
-      {
-        label: 'Armaments',
-        icon: 'armaments',
-        menuPath: 'heritage/armaments',
-        fallbackHref: '/culture/heritage/armaments',
       },
     ],
   },

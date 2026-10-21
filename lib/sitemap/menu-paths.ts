@@ -1,4 +1,5 @@
 import { isFormRoute, resolveMenuHref, type MenuNode } from '@/lib/culture-menu';
+import { isRetiredCultureSlug } from '@/lib/culture-routes';
 
 const NON_INDEXABLE_PREFIXES = ['/admin', '/api'];
 
@@ -17,7 +18,7 @@ export function collectMenuSitemapPaths(tree: MenuNode[]): string[] {
   const paths = new Set<string>();
 
   const walk = (node: MenuNode, parent?: MenuNode): void => {
-    if (!node.isActive || isFormRoute(node.routeType)) return;
+    if (!node.isActive || isFormRoute(node.routeType) || isRetiredCultureSlug(node.slug)) return;
 
     const href = resolveMenuHref(node, parent);
     if (isIndexableInternalPath(href)) {

@@ -151,12 +151,6 @@ export const EXTENDED_CULTURE_CATALOG_OVERRIDES: Record<string, CatalogOverride>
     slogan: 'The world\'s oldest winemaking tradition',
     statLabels: { entries: 'Dishes', regions: 'Regions', third: 'Ingredients', fourth: 'UNESCO Items' },
   },
-  'heritage/armaments': {
-    eyebrow: '✦ Armaments · Military Heritage · Armenia ✦',
-    accent: 'Զենք',
-    slogan: 'Weapons and warriors across the ages',
-    statLabels: { entries: 'Artefacts', regions: 'Eras', third: 'Collections', fourth: 'Museums' },
-  },
   'heritage/publications': {
     eyebrow: '✦ Publications · Print · Armenia ✦',
     accent: 'Հրատարակություններ',

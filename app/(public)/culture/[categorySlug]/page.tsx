@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CultureCategoryPageView } from '@/components/culture-catalog/CultureCategoryPageView';
-import { findCategoryPageNode } from '@/lib/culture-routes';
+import { findCategoryPageNode, isRetiredCultureSlug } from '@/lib/culture-routes';
 import { isFormRoute } from '@/lib/culture-menu';
 import { parseCatalogSearchParams } from '@/lib/culture-catalog/catalog-search-params';
 import { getItemsByMenuItem } from '@/lib/queries/culture-items';
@@ -35,7 +35,7 @@ async function CultureCategoryPage(props: PageProps) {
   if (!node) notFound();
 
   const subcategories = (node.children ?? []).filter(
-    (child) => child.isActive && !isFormRoute(child.routeType),
+    (child) => child.isActive && !isFormRoute(child.routeType) && !isRetiredCultureSlug(child.slug),
   );
   const items = await getItemsByMenuItem(node.id);
 

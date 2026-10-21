@@ -3,6 +3,7 @@ import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { cultureMenuLabel } from '@/lib/i18n/messages/menu';
 import type { MegaMenuColumn, MegaMenuItem } from '@/lib/navigation/culture-mega-menu';
 import { resolveMenuIconKey } from '@/lib/navigation/menu-icons';
+import { isRetiredCultureSlug } from '@/lib/culture-routes';
 
 function columnItemKeys(column: MegaMenuColumn): Set<string> {
   const keys = new Set<string>();
@@ -34,8 +35,8 @@ function isOrnamentsAlias(parentSlug: string, childSlug: string): boolean {
   return parentSlug === 'architecture' && childSlug === 'armaments';
 }
 
-/** Linked-sheet rows only. Epic stays a catalog page, not a menu item. */
-const SHEET_OMITTED_SLUGS = new Set(['epic']);
+/** Armaments is removed. Epic stays in Myths & Gods. */
+const SHEET_OMITTED_SLUGS = new Set(['armaments']);
 
 function collectMissingLiveItems(
   column: MegaMenuColumn,
@@ -47,7 +48,7 @@ function collectMissingLiveItems(
   return (parent.children ?? [])
     .filter((child) => child.isActive && !isFormRoute(child.routeType))
     .filter((child) => !isOrnamentsAlias(parent.slug, child.slug))
-    .filter((child) => !SHEET_OMITTED_SLUGS.has(child.slug))
+    .filter((child) => !SHEET_OMITTED_SLUGS.has(child.slug) && !isRetiredCultureSlug(child.slug))
     .filter((child) => !listed.has(child.slug) && !listed.has(`${parent.slug}/${child.slug}`))
     .map((child) => toExtraMegaMenuItem(parent, child, locale));
 }

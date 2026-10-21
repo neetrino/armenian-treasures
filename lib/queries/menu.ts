@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { getCurrentSiteLocale } from '@/lib/i18n/active-locale';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
 import { buildMenuTree, type MenuNode } from '@/lib/culture-menu';
+import { omitRetiredCultureNodes } from '@/lib/culture-routes';
 import { toPublicMenuItem, type PublicCultureMenuItemDTO } from '@/lib/dto';
 
 async function fetchActiveMenu(locale: SiteLocaleCode): Promise<PublicCultureMenuItemDTO[]> {
@@ -31,7 +32,7 @@ export async function getActiveMenuItems(): Promise<PublicCultureMenuItemDTO[]> 
 
 export async function getMenuTree(): Promise<MenuNode[]> {
   const items = await getActiveMenuItems();
-  return buildMenuTree(items as unknown as MenuNode[]);
+  return omitRetiredCultureNodes(buildMenuTree(items as unknown as MenuNode[]));
 }
 
 export async function getMenuItemBySlug(
