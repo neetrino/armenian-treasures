@@ -1,18 +1,31 @@
 import { KhndzoreskDivider } from '@/components/khndzoresk/KhndzoreskDivider';
 import { HeritageLandingShell } from '@/components/landing/HeritageLandingShell';
-import { LandingHero } from '@/components/landing/LandingHero';
+import { LandingHero, type LandingHeroCta } from '@/components/landing/LandingHero';
 import { BlogContentBlocks } from '@/components/blog/BlogContentBlocks';
 import { formatBlogDate } from '@/lib/format-blog-date';
 import { resolvePublicAssetUrl } from '@/lib/assets/resolve-public-url';
 import { toBlogRenderHtml } from '@/lib/blog-content';
 import type { PublicBlogPostDetailDTO } from '@/lib/dto';
 import type { SiteLocaleCode } from '@/lib/i18n/locale-config';
+import { facebookShareUrl } from '@/lib/blog-share';
 import { uiMessage } from '@/lib/i18n/ui-messages';
 import '@/components/blog/blog.css';
 
 interface BlogDetailViewProps {
   post: PublicBlogPostDetailDTO;
   locale?: SiteLocaleCode;
+}
+
+function blogDetailCtas(locale: SiteLocaleCode, slug: string): LandingHeroCta[] {
+  return [
+    { label: uiMessage(locale, 'backToBlog'), href: '/blog', variant: 'outline' },
+    {
+      label: uiMessage(locale, 'shareOnFacebook'),
+      href: facebookShareUrl(`/blog/${slug}`),
+      variant: 'gold',
+      external: true,
+    },
+  ];
 }
 
 export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
@@ -36,7 +49,7 @@ export function BlogDetailView({ post, locale = 'EN' }: BlogDetailViewProps) {
         subtitle=""
         heroImage={resolvePublicAssetUrl(header)}
         heroClassName="culture-catalog-hero blog-detail-landing-hero"
-        ctas={[{ label: uiMessage(locale, 'backToBlog'), href: '/blog', variant: 'outline' }]}
+        ctas={blogDetailCtas(locale, post.slug)}
       />
 
       <KhndzoreskDivider />

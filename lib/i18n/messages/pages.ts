@@ -33,6 +33,13 @@ export const PAGE_MESSAGES = {
     'Retour au blog',
     'Voltar ao blog',
   ),
+  shareOnFacebook: row(
+    'Կիսվել Facebook-ում',
+    'Share on Facebook',
+    'Поделиться в Facebook',
+    'Partager sur Facebook',
+    'Partilhar no Facebook',
+  ),
   browseHighlights: row(
     'Դիտել ընտրյալները',
     'Browse Highlights',
