@@ -43,3 +43,11 @@
     transform: none;
   }
 }
+
+.leaflet-container.at-heritage-map {
+  background: #06110f;
+}
+
+.at-map-tiles {
+  filter: grayscale(0.62) brightness(0.72) contrast(1.08);
+}
