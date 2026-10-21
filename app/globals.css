@@ -372,27 +372,6 @@
       0 16px 48px rgba(8, 12, 18, 0.12);
   }
 
-  .culture-ornamental-icon {
-    position: relative;
-    color: var(--heritage-gold);
-  }
-
-  .culture-ornamental-icon__glyph {
-    display: block;
-    height: 100%;
-    width: 100%;
-    filter: brightness(0) saturate(100%) invert(78%) sepia(28%) saturate(620%)
-      hue-rotate(6deg) brightness(96%) contrast(92%);
-    opacity: 0.82;
-    transition: filter 150ms ease, opacity 150ms ease;
-  }
-
-  .group:hover .culture-ornamental-icon__glyph {
-    filter: brightness(0) saturate(100%) invert(86%) sepia(35%) saturate(720%)
-      hue-rotate(6deg) brightness(102%) contrast(96%);
-    opacity: 1;
-  }
-
   [data-site-hero] h1 {
     font-family: var(--font-cinzel), Georgia, serif;
     color: transparent;
