@@ -6,6 +6,7 @@ import { CultureCatalogItemGrid } from '@/components/culture-catalog/CultureCata
 import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalogShell';
 import { CultureCatalogSubcategoryGrid } from '@/components/culture-catalog/CultureCatalogSubcategoryGrid';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
+import { resolveMenuHeroImage } from '@/lib/culture-catalog/resolve-menu-hero-image';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
 import { buildCatalogSearchForm } from '@/lib/culture-catalog/catalog-filter-options';
 import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries';
@@ -39,8 +40,24 @@ function CultureCategoryHubPage({
   content: ReturnType<typeof resolveCultureCatalogContent>;
   locale: SiteLocaleCode;
 }) {
+  const heroImage = resolveMenuHeroImage(category.image, content.heroImage);
+  const showHero = content.sectionVisibility.hero && Boolean(heroImage);
+
   return (
     <CultureCatalogShell>
+      {showHero ? (
+        <CultureCatalogLandingHero
+          title={category.title}
+          eyebrow={content.eyebrow}
+          accent={content.accent}
+          slogan={content.slogan}
+          description={category.description ?? ''}
+          heroImage={heroImage}
+          showEyebrow
+          breadcrumb={buildCultureCatalogBreadcrumb(category)}
+          ctas={[{ label: uiMessage(locale, 'exploreEntries'), href: '#entries', variant: 'gold' }]}
+        />
+      ) : null}
       <CultureCatalogSubcategoryGrid
         parent={category}
         nodes={subcategories}
@@ -51,6 +68,7 @@ function CultureCategoryHubPage({
         }}
         variant="hub"
         locale={locale}
+        showHeading={!showHero}
       />
     </CultureCatalogShell>
   );
@@ -90,7 +108,7 @@ async function CultureCategoryLeafPage({
           accent={content.accent}
           slogan={content.slogan}
           description={category.description ?? content.about.description}
-          heroImage={content.heroImage}
+          heroImage={resolveMenuHeroImage(category.image, content.heroImage)}
           showEyebrow
           breadcrumb={buildCultureCatalogBreadcrumb(category)}
           ctas={

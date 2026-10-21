@@ -6,6 +6,7 @@ import { CultureCatalogShell } from '@/components/culture-catalog/CultureCatalog
 import type { MenuNode } from '@/lib/culture-menu';
 import { buildCultureCatalogBreadcrumb } from '@/lib/culture-catalog/build-culture-breadcrumb';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { resolveMenuHeroImage } from '@/lib/culture-catalog/resolve-menu-hero-image';
 import { LandingSectionStack } from '@/lib/landing/LandingSectionStack';
 import { buildCatalogSearchForm } from '@/lib/culture-catalog/catalog-filter-options';
 import { filterCatalogItems } from '@/lib/culture-catalog/filter-catalog-entries';
@@ -44,7 +45,7 @@ function SubcategoryHero({
       eyebrow={content.eyebrow}
       accent={content.accent}
       slogan={content.slogan}
-      heroImage={content.heroImage}
+      heroImage={resolveMenuHeroImage(subcategory.image, content.heroImage)}
       showEyebrow
       breadcrumb={buildCultureCatalogBreadcrumb(subcategory, parent)}
       ctas={[

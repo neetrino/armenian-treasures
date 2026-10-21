@@ -26,6 +26,8 @@ interface CultureCatalogSubcategoryGridProps {
   /** Hub mode: title + description, then large shortcut cards. */
   variant?: 'default' | 'hub';
   locale?: SiteLocaleCode;
+  /** Hub title stays in the hero when the category card image is on screen. */
+  showHeading?: boolean;
 }
 
 function SubcategoryCatalogCard({
@@ -82,14 +84,20 @@ function CultureCatalogHubGrid({
   parent,
   nodes,
   content,
+  showHeading = true,
 }: Omit<CultureCatalogSubcategoryGridProps, 'variant'>) {
   return (
-    <section id="entries" className="catalog-subcategory-hub">
-      <div className="catalog-hub-intro">
-        <p className="sec-label">{content.label}</p>
-        <h2 className="sec-title">{parent.title}</h2>
-        {content.description ? <p className="sec-desc">{content.description}</p> : null}
-      </div>
+    <section
+      id="entries"
+      className={cn('catalog-subcategory-hub', !showHeading && 'catalog-subcategory-hub--after-hero')}
+    >
+      {showHeading ? (
+        <div className="catalog-hub-intro">
+          <p className="sec-label">{content.label}</p>
+          <h2 className="sec-title">{parent.title}</h2>
+          {content.description ? <p className="sec-desc">{content.description}</p> : null}
+        </div>
+      ) : null}
       <div className="cat-grid cat-grid--hub">
         {nodes.map((node) => (
           <SubcategoryCatalogCard key={node.id} node={node} parent={parent} isHub />
@@ -105,6 +113,7 @@ export function CultureCatalogSubcategoryGrid({
   content,
   variant = 'default',
   locale = 'EN',
+  showHeading = true,
 }: CultureCatalogSubcategoryGridProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const visibleNodes = useMemo(
@@ -117,7 +126,9 @@ export function CultureCatalogSubcategoryGrid({
   }
 
   if (variant === 'hub') {
-    return <CultureCatalogHubGrid parent={parent} nodes={nodes} content={content} />;
+    return (
+      <CultureCatalogHubGrid parent={parent} nodes={nodes} content={content} showHeading={showHeading} />
+    );
   }
 
   return (
