@@ -267,7 +267,7 @@
 
 Պահանջ. Cultural Portal, map, Featured Treasures (ադմինը որոշի կարգը, աբստրակտ ոճ), blog, upcoming projects, log in միայն չգրանցվածներին։ Partnership և donation սեկցիաները գլխավորից հանել։
 
-Ինչպես է արված. գլխավորի կարգը՝ Cultural Portal → Map → Featured Treasures → News → Upcoming։ Partnership և donation սեկցիաները գլխավորից հանված են։ Featured-ը `featuredOnHome` + `featuredOrder` է։ Hero-ի երկրորդ կոճակը թաքնվում է, եթե օգտատերը մուտք է գործել և կոճակը տանում է `/login` կամ `/register`։
+Ինչպես է արված. գլխավորի կարգը C6-ն է՝ քարտեզ, մշակույթի իկոններ, featured, news, upcoming, գրքի ներբեռնում, partnership լոգոներ։ Donation սեկցիա գլխավորում չկա։ Featured-ը `featuredOnHome` + `featuredOrder` է։ Hero-ի երկրորդ կոճակը թաքնվում է, եթե օգտատերը մուտք է գործել և կոճակը տանում է `/login` կամ `/register`։
 
 Ստուգել. `/` սքրոլով անցնել սեկցիաները։ Մուտք գործած վիճակում hero-ի login կոճակը չկա, եթե այդ կոճակի հղումը login/register է։ `/donate` գլխավորի մեջտեղում չի նստած։
 

@@ -286,12 +286,40 @@ export const PAGE_CONTENT_TITLES: Record<PageContentSlug, string> = {
   'national-gallery-armenia': 'National Gallery landing',
 };
 
+function mergeDonationPage(
+  stored: DonationPageContent['page'] | undefined,
+  defaults: DonationPageContent['page'],
+): DonationPageContent['page'] {
+  if (!stored) return defaults;
+  return {
+    ...defaults,
+    ...stored,
+    metadata: { ...defaults.metadata, ...stored.metadata },
+    hero: { ...defaults.hero, ...stored.hero },
+    mission: { ...defaults.mission, ...stored.mission },
+    engine: { ...defaults.engine, ...stored.engine },
+    certificates: {
+      ...defaults.certificates,
+      ...stored.certificates,
+      slots: stored.certificates?.slots?.length ? stored.certificates.slots : defaults.certificates.slots,
+      fields: { ...defaults.certificates.fields, ...stored.certificates?.fields },
+    },
+    ledger: { ...defaults.ledger, ...stored.ledger },
+    patronWall: { ...defaults.patronWall, ...stored.patronWall },
+    quote: { ...defaults.quote, ...stored.quote },
+  };
+}
+
 export function parseDonationPageContent(value: unknown): DonationPageContent {
   const defaults = buildDefaultDonationPageContent();
-  if (typeof value === 'object' && value !== null) {
-    return { ...defaults, ...(value as Partial<DonationPageContent>) };
-  }
-  return defaults;
+  if (typeof value !== 'object' || value === null) return defaults;
+  const stored = value as Partial<DonationPageContent>;
+  return {
+    ...defaults,
+    ...stored,
+    page: mergeDonationPage(stored.page, defaults.page),
+    sectionVisibility: stored.sectionVisibility ?? defaults.sectionVisibility,
+  };
 }
 
 export function parsePartnershipPageContent(value: unknown): PartnershipPageContent {
