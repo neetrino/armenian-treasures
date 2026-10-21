@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { resolveCultureCatalogContent } from '@/lib/constants/culture-catalog-content';
+import { resolveMenuHeroImage } from '@/lib/culture-catalog/resolve-menu-hero-image';
 import { resolveCultureCatalogHubDescription } from '@/lib/mappers/culture-catalog-page';
 import type { MenuNode } from '@/lib/culture-menu';
 
@@ -40,12 +41,15 @@ describe('culture catalog hub description', () => {
 });
 
 describe('culture catalog hero image', () => {
-  it('uses the shared catalog hero instead of the menu card image', () => {
+  it('keeps the menu card image out of the banner field', () => {
     const content = resolveCultureCatalogContent(
       node({ image: '/images/culture/churches.webp' }),
       node({ id: 'parent', title: 'Architecture', slug: 'architecture' }),
     );
     expect(content.heroImage).toBeUndefined();
+    expect(resolveMenuHeroImage('/images/culture/churches.webp', content.heroImage)).toBe(
+      '/images/culture/churches.webp',
+    );
   });
 
   it('keeps copy empty until it is saved in admin', () => {
@@ -64,5 +68,8 @@ describe('culture catalog hero image', () => {
       }),
     );
     expect(content.heroImage).toBe('/images/culture/hero.webp');
+    expect(resolveMenuHeroImage('/images/culture/card.webp', content.heroImage)).toBe(
+      '/images/culture/hero.webp',
+    );
   });
 });
