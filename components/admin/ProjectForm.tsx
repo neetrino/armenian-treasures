@@ -59,9 +59,11 @@ export function ProjectForm({ mode, itemId, initial, onSuccess, onCancel }: Prop
       onSuccess();
       return;
     }
-    if (mode === 'edit') {
-      router.refresh();
+    if (mode === 'create') {
+      router.push('/admin/projects');
+      return;
     }
+    router.refresh();
   }, [mode, onSuccess, router, state.status]);
 
   const titleValues = decodeTranslatableText(initial?.title ?? '');
